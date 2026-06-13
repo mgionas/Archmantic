@@ -167,9 +167,9 @@ export function ProjectTabs({
 
         {tab === "data" && data ? (
           <div className="space-y-4">
-            <Card className="overflow-auto p-4">
+            <div className="h-[60vh]">
               <Mermaid id="erd" chart={data.mermaid} />
-            </Card>
+            </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {data.entities.map((e) => (
                 <Card key={e.name} className="p-4">

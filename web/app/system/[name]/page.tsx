@@ -43,9 +43,9 @@ export default async function SystemPage({ params }: { params: Promise<{ name: s
       </p>
 
       <h2 className="mb-3 mt-8 text-lg font-semibold">Cross-service context</h2>
-      <Card className="overflow-auto p-4">
+      <div className="h-[60vh]">
         <Mermaid id="sys" chart={view.mermaid} />
-      </Card>
+      </div>
 
       <h2 className="mb-3 mt-8 text-lg font-semibold">Services</h2>
       <Card className="p-0">

@@ -24,7 +24,7 @@ export function DiagramTabs({
 
   return (
     <Tabs value={tab} onValueChange={setTab}>
-      <TabsList>
+      <TabsList variant="line">
         <TabsTrigger value="context">Context</TabsTrigger>
         <TabsTrigger value="components">Components</TabsTrigger>
         {sequence ? <TabsTrigger value="sequence">Sequence</TabsTrigger> : null}
@@ -35,8 +35,8 @@ export function DiagramTabs({
         ) : null}
       </TabsList>
 
-      {/* Render only the active panel so each diagram mounts at full size. */}
-      <div className="overflow-auto pt-4">
+      {/* One tall, interactive canvas; render only the active diagram so it mounts at full size. */}
+      <div className="h-[72vh] pt-3">
         {tab === "context" ? <Mermaid id="ctx" chart={context} /> : null}
         {tab === "components" ? <Mermaid id="comp" chart={components} /> : null}
         {tab === "sequence" && sequence ? <Mermaid id="seq" chart={sequence} /> : null}
