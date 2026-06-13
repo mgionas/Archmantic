@@ -110,6 +110,24 @@ export interface ArchitectureModel {
   capabilities: Capability[];
 }
 
+/**
+ * Canonical ordering for serialization: sort element arrays by id so a full
+ * `analyze` and an incremental `update` produce byte-identical `model.json` for
+ * identical code — keeping the committed IR churn-free and PR diffs clean.
+ * Process/flow internal order (tasks, steps) is meaningful, so it's preserved.
+ */
+export function sortModel(m: ArchitectureModel): ArchitectureModel {
+  const byId = (a: { id: string }, b: { id: string }) => a.id.localeCompare(b.id);
+  return {
+    ...m,
+    systems: [...m.systems].sort(byId),
+    components: [...m.components].sort(byId),
+    actors: [...m.actors].sort(byId),
+    relations: [...m.relations].sort(byId),
+    capabilities: [...m.capabilities].sort(byId),
+  };
+}
+
 /** A fresh, empty model for `archmantic init`. */
 export function createEmptyModel(project: string): ArchitectureModel {
   return {

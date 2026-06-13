@@ -17,6 +17,48 @@
       "confidence": 0.95
     },
     {
+      "id": "sys:ext:@anthropic-ai/sdk",
+      "name": "@anthropic-ai/sdk",
+      "kind": "external",
+      "description": "External dependency",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "@anthropic-ai/sdk",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "sys:ext:@modelcontextprotocol/sdk",
+      "name": "@modelcontextprotocol/sdk",
+      "kind": "external",
+      "description": "External dependency",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "@modelcontextprotocol/sdk",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "sys:ext:node:child_process",
+      "name": "node:child_process",
+      "kind": "external",
+      "description": "Node.js runtime/builtin module",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "node:child_process",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "sys:ext:node:fs",
       "name": "node:fs",
       "kind": "external",
@@ -25,6 +67,20 @@
         {
           "source": "code",
           "ref": "node:fs",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "sys:ext:node:os",
+      "name": "node:os",
+      "kind": "external",
+      "description": "Node.js runtime/builtin module",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "node:os",
           "confidence": 0.95
         }
       ],
@@ -59,62 +115,6 @@
       "confidence": 0.95
     },
     {
-      "id": "sys:ext:@anthropic-ai/sdk",
-      "name": "@anthropic-ai/sdk",
-      "kind": "external",
-      "description": "External dependency",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "@anthropic-ai/sdk",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "sys:ext:node:child_process",
-      "name": "node:child_process",
-      "kind": "external",
-      "description": "Node.js runtime/builtin module",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "node:child_process",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "sys:ext:node:os",
-      "name": "node:os",
-      "kind": "external",
-      "description": "Node.js runtime/builtin module",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "node:os",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "sys:ext:@modelcontextprotocol/sdk",
-      "name": "@modelcontextprotocol/sdk",
-      "kind": "external",
-      "description": "External dependency",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "@modelcontextprotocol/sdk",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
       "id": "sys:ext:zod",
       "name": "zod",
       "kind": "external",
@@ -139,6 +139,20 @@
         {
           "source": "code",
           "ref": "src/analyze/derive.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:src/analyze/incremental.ts",
+      "name": "src/analyze/incremental.ts",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/incremental.ts:1",
           "confidence": 0.95
         }
       ],
@@ -456,6 +470,36 @@
   "actors": [],
   "relations": [
     {
+      "id": "rel:comp:src/analyze/derive.ts=>comp:src/ir/naming.ts",
+      "name": "comp:src/analyze/derive.ts → comp:src/ir/naming.ts",
+      "kind": "depends_on",
+      "from": "comp:src/analyze/derive.ts",
+      "to": "comp:src/ir/naming.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/derive.ts:25",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/analyze/derive.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/analyze/derive.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/analyze/derive.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/derive.ts:17",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "rel:comp:src/analyze/derive.ts=>sys:ext:node:fs",
       "name": "comp:src/analyze/derive.ts → sys:ext:node:fs",
       "kind": "depends_on",
@@ -501,60 +545,105 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/analyze/derive.ts=>comp:src/ir/types.ts",
-      "name": "comp:src/analyze/derive.ts → comp:src/ir/types.ts",
+      "id": "rel:comp:src/analyze/incremental.ts=>comp:src/analyze/derive.ts",
+      "name": "comp:src/analyze/incremental.ts → comp:src/analyze/derive.ts",
       "kind": "depends_on",
-      "from": "comp:src/analyze/derive.ts",
-      "to": "comp:src/ir/types.ts",
+      "from": "comp:src/analyze/incremental.ts",
+      "to": "comp:src/analyze/derive.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/analyze/derive.ts:17",
+          "ref": "src/analyze/incremental.ts:19",
           "confidence": 0.95
         }
       ],
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/analyze/derive.ts=>comp:src/ir/naming.ts",
-      "name": "comp:src/analyze/derive.ts → comp:src/ir/naming.ts",
+      "id": "rel:comp:src/analyze/incremental.ts=>comp:src/analyze/tier0.ts",
+      "name": "comp:src/analyze/incremental.ts → comp:src/analyze/tier0.ts",
       "kind": "depends_on",
-      "from": "comp:src/analyze/derive.ts",
-      "to": "comp:src/ir/naming.ts",
+      "from": "comp:src/analyze/incremental.ts",
+      "to": "comp:src/analyze/tier0.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/analyze/derive.ts:25",
+          "ref": "src/analyze/incremental.ts:17",
           "confidence": 0.95
         }
       ],
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/analyze/index.ts=>comp:src/ir/types.ts",
-      "name": "comp:src/analyze/index.ts → comp:src/ir/types.ts",
+      "id": "rel:comp:src/analyze/incremental.ts=>comp:src/analyze/tier1.ts",
+      "name": "comp:src/analyze/incremental.ts → comp:src/analyze/tier1.ts",
       "kind": "depends_on",
-      "from": "comp:src/analyze/index.ts",
-      "to": "comp:src/ir/types.ts",
+      "from": "comp:src/analyze/incremental.ts",
+      "to": "comp:src/analyze/tier1.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/analyze/index.ts:6",
+          "ref": "src/analyze/incremental.ts:18",
           "confidence": 0.95
         }
       ],
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/walk.ts",
-      "name": "comp:src/analyze/index.ts → comp:src/analyze/walk.ts",
+      "id": "rel:comp:src/analyze/incremental.ts=>comp:src/analyze/walk.ts",
+      "name": "comp:src/analyze/incremental.ts → comp:src/analyze/walk.ts",
       "kind": "depends_on",
-      "from": "comp:src/analyze/index.ts",
+      "from": "comp:src/analyze/incremental.ts",
       "to": "comp:src/analyze/walk.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/analyze/index.ts:7",
+          "ref": "src/analyze/incremental.ts:16",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/analyze/incremental.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/analyze/incremental.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/analyze/incremental.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/incremental.ts:15",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/analyze/incremental.ts=>sys:ext:node:child_process",
+      "name": "comp:src/analyze/incremental.ts → sys:ext:node:child_process",
+      "kind": "depends_on",
+      "from": "comp:src/analyze/incremental.ts",
+      "to": "sys:ext:node:child_process",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/incremental.ts:14",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/derive.ts",
+      "name": "comp:src/analyze/index.ts → comp:src/analyze/derive.ts",
+      "kind": "depends_on",
+      "from": "comp:src/analyze/index.ts",
+      "to": "comp:src/analyze/derive.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/index.ts:10",
           "confidence": 0.95
         }
       ],
@@ -591,15 +680,45 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/derive.ts",
-      "name": "comp:src/analyze/index.ts → comp:src/analyze/derive.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/walk.ts",
+      "name": "comp:src/analyze/index.ts → comp:src/analyze/walk.ts",
       "kind": "depends_on",
       "from": "comp:src/analyze/index.ts",
-      "to": "comp:src/analyze/derive.ts",
+      "to": "comp:src/analyze/walk.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/analyze/index.ts:10",
+          "ref": "src/analyze/index.ts:7",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/analyze/index.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/analyze/index.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/index.ts:6",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/analyze/tier0.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/analyze/tier0.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/analyze/tier0.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/tier0.ts:8",
           "confidence": 0.95
         }
       ],
@@ -636,60 +755,15 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/analyze/tier0.ts=>comp:src/ir/types.ts",
-      "name": "comp:src/analyze/tier0.ts → comp:src/ir/types.ts",
-      "kind": "depends_on",
-      "from": "comp:src/analyze/tier0.ts",
-      "to": "comp:src/ir/types.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/analyze/tier0.ts:8",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "rel:comp:src/analyze/tier1.ts=>sys:ext:node:fs",
-      "name": "comp:src/analyze/tier1.ts → sys:ext:node:fs",
+      "id": "rel:comp:src/analyze/tier1.ts=>comp:src/analyze/tier0.ts",
+      "name": "comp:src/analyze/tier1.ts → comp:src/analyze/tier0.ts",
       "kind": "depends_on",
       "from": "comp:src/analyze/tier1.ts",
-      "to": "sys:ext:node:fs",
+      "to": "comp:src/analyze/tier0.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/analyze/tier1.ts:12",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "rel:comp:src/analyze/tier1.ts=>sys:ext:node:path",
-      "name": "comp:src/analyze/tier1.ts → sys:ext:node:path",
-      "kind": "depends_on",
-      "from": "comp:src/analyze/tier1.ts",
-      "to": "sys:ext:node:path",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/analyze/tier1.ts:13",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "rel:comp:src/analyze/tier1.ts=>sys:ext:typescript",
-      "name": "comp:src/analyze/tier1.ts → sys:ext:typescript",
-      "kind": "depends_on",
-      "from": "comp:src/analyze/tier1.ts",
-      "to": "sys:ext:typescript",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/analyze/tier1.ts:14",
+          "ref": "src/analyze/tier1.ts:17",
           "confidence": 0.95
         }
       ],
@@ -704,6 +778,51 @@
       "provenance": [
         {
           "source": "code",
+          "ref": "src/analyze/tier1.ts:16",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/analyze/tier1.ts=>sys:ext:node:fs",
+      "name": "comp:src/analyze/tier1.ts → sys:ext:node:fs",
+      "kind": "depends_on",
+      "from": "comp:src/analyze/tier1.ts",
+      "to": "sys:ext:node:fs",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/tier1.ts:13",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/analyze/tier1.ts=>sys:ext:node:path",
+      "name": "comp:src/analyze/tier1.ts → sys:ext:node:path",
+      "kind": "depends_on",
+      "from": "comp:src/analyze/tier1.ts",
+      "to": "sys:ext:node:path",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/tier1.ts:14",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/analyze/tier1.ts=>sys:ext:typescript",
+      "name": "comp:src/analyze/tier1.ts → sys:ext:typescript",
+      "kind": "depends_on",
+      "from": "comp:src/analyze/tier1.ts",
+      "to": "sys:ext:typescript",
+      "provenance": [
+        {
+          "source": "code",
           "ref": "src/analyze/tier1.ts:15",
           "confidence": 0.95
         }
@@ -711,15 +830,15 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/analyze/tier1.ts=>comp:src/analyze/tier0.ts",
-      "name": "comp:src/analyze/tier1.ts → comp:src/analyze/tier0.ts",
+      "id": "rel:comp:src/analyze/tier2.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/analyze/tier2.ts → comp:src/ir/types.ts",
       "kind": "depends_on",
-      "from": "comp:src/analyze/tier1.ts",
-      "to": "comp:src/analyze/tier0.ts",
+      "from": "comp:src/analyze/tier2.ts",
+      "to": "comp:src/ir/types.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/analyze/tier1.ts:16",
+          "ref": "src/analyze/tier2.ts:17",
           "confidence": 0.95
         }
       ],
@@ -771,21 +890,6 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/analyze/tier2.ts=>comp:src/ir/types.ts",
-      "name": "comp:src/analyze/tier2.ts → comp:src/ir/types.ts",
-      "kind": "depends_on",
-      "from": "comp:src/analyze/tier2.ts",
-      "to": "comp:src/ir/types.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/analyze/tier2.ts:17",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
       "id": "rel:comp:src/analyze/walk.ts=>sys:ext:node:fs",
       "name": "comp:src/analyze/walk.ts → sys:ext:node:fs",
       "kind": "depends_on",
@@ -816,45 +920,15 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/cli.ts=>sys:ext:node:fs",
-      "name": "comp:src/cli.ts → sys:ext:node:fs",
+      "id": "rel:comp:src/cli.ts=>comp:src/analyze/incremental.ts",
+      "name": "comp:src/cli.ts → comp:src/analyze/incremental.ts",
       "kind": "depends_on",
       "from": "comp:src/cli.ts",
-      "to": "sys:ext:node:fs",
+      "to": "comp:src/analyze/incremental.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:14",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "rel:comp:src/cli.ts=>sys:ext:node:path",
-      "name": "comp:src/cli.ts → sys:ext:node:path",
-      "kind": "depends_on",
-      "from": "comp:src/cli.ts",
-      "to": "sys:ext:node:path",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/cli.ts:15",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "rel:comp:src/cli.ts=>comp:src/ir/types.ts",
-      "name": "comp:src/cli.ts → comp:src/ir/types.ts",
-      "kind": "depends_on",
-      "from": "comp:src/cli.ts",
-      "to": "comp:src/ir/types.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/cli.ts:18",
+          "ref": "src/cli.ts:21",
           "confidence": 0.95
         }
       ],
@@ -891,15 +965,15 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/cli.ts=>comp:src/project/index.ts",
-      "name": "comp:src/cli.ts → comp:src/project/index.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/diff/index.ts",
+      "name": "comp:src/cli.ts → comp:src/diff/index.ts",
       "kind": "depends_on",
       "from": "comp:src/cli.ts",
-      "to": "comp:src/project/index.ts",
+      "to": "comp:src/diff/index.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:21",
+          "ref": "src/cli.ts:26",
           "confidence": 0.95
         }
       ],
@@ -914,22 +988,22 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:22",
+          "ref": "src/cli.ts:23",
           "confidence": 0.95
         }
       ],
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/cli.ts=>comp:src/mcp/server.ts",
-      "name": "comp:src/cli.ts → comp:src/mcp/server.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/cli.ts → comp:src/ir/types.ts",
       "kind": "depends_on",
       "from": "comp:src/cli.ts",
-      "to": "comp:src/mcp/server.ts",
+      "to": "comp:src/ir/types.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:23",
+          "ref": "src/cli.ts:18",
           "confidence": 0.95
         }
       ],
@@ -944,6 +1018,21 @@
       "provenance": [
         {
           "source": "code",
+          "ref": "src/cli.ts:25",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/cli.ts=>comp:src/mcp/server.ts",
+      "name": "comp:src/cli.ts → comp:src/mcp/server.ts",
+      "kind": "depends_on",
+      "from": "comp:src/cli.ts",
+      "to": "comp:src/mcp/server.ts",
+      "provenance": [
+        {
+          "source": "code",
           "ref": "src/cli.ts:24",
           "confidence": 0.95
         }
@@ -951,15 +1040,45 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/cli.ts=>comp:src/diff/index.ts",
-      "name": "comp:src/cli.ts → comp:src/diff/index.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/project/index.ts",
+      "name": "comp:src/cli.ts → comp:src/project/index.ts",
       "kind": "depends_on",
       "from": "comp:src/cli.ts",
-      "to": "comp:src/diff/index.ts",
+      "to": "comp:src/project/index.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:25",
+          "ref": "src/cli.ts:22",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/cli.ts=>sys:ext:node:fs",
+      "name": "comp:src/cli.ts → sys:ext:node:fs",
+      "kind": "depends_on",
+      "from": "comp:src/cli.ts",
+      "to": "sys:ext:node:fs",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cli.ts:14",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/cli.ts=>sys:ext:node:path",
+      "name": "comp:src/cli.ts → sys:ext:node:path",
+      "kind": "depends_on",
+      "from": "comp:src/cli.ts",
+      "to": "sys:ext:node:path",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cli.ts:15",
           "confidence": 0.95
         }
       ],
@@ -996,6 +1115,21 @@
       "confidence": 0.95
     },
     {
+      "id": "rel:comp:src/diff/model-diff.ts=>comp:src/ir/naming.ts",
+      "name": "comp:src/diff/model-diff.ts → comp:src/ir/naming.ts",
+      "kind": "depends_on",
+      "from": "comp:src/diff/model-diff.ts",
+      "to": "comp:src/ir/naming.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/model-diff.ts:11",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "rel:comp:src/diff/model-diff.ts=>comp:src/ir/types.ts",
       "name": "comp:src/diff/model-diff.ts → comp:src/ir/types.ts",
       "kind": "depends_on",
@@ -1011,15 +1145,30 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/diff/model-diff.ts=>comp:src/ir/naming.ts",
-      "name": "comp:src/diff/model-diff.ts → comp:src/ir/naming.ts",
+      "id": "rel:comp:src/diff/snapshot.ts=>comp:src/analyze/index.ts",
+      "name": "comp:src/diff/snapshot.ts → comp:src/analyze/index.ts",
       "kind": "depends_on",
-      "from": "comp:src/diff/model-diff.ts",
-      "to": "comp:src/ir/naming.ts",
+      "from": "comp:src/diff/snapshot.ts",
+      "to": "comp:src/analyze/index.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/diff/model-diff.ts:11",
+          "ref": "src/diff/snapshot.ts:14",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/snapshot.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/diff/snapshot.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/diff/snapshot.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/snapshot.ts:13",
           "confidence": 0.95
         }
       ],
@@ -1086,36 +1235,6 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/diff/snapshot.ts=>comp:src/ir/types.ts",
-      "name": "comp:src/diff/snapshot.ts → comp:src/ir/types.ts",
-      "kind": "depends_on",
-      "from": "comp:src/diff/snapshot.ts",
-      "to": "comp:src/ir/types.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/diff/snapshot.ts:13",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "rel:comp:src/diff/snapshot.ts=>comp:src/analyze/index.ts",
-      "name": "comp:src/diff/snapshot.ts → comp:src/analyze/index.ts",
-      "kind": "depends_on",
-      "from": "comp:src/diff/snapshot.ts",
-      "to": "comp:src/analyze/index.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/diff/snapshot.ts:14",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
       "id": "rel:comp:src/env.ts=>sys:ext:node:fs",
       "name": "comp:src/env.ts → sys:ext:node:fs",
       "kind": "depends_on",
@@ -1161,6 +1280,51 @@
       "confidence": 0.95
     },
     {
+      "id": "rel:comp:src/mcp/bench.ts=>comp:src/analyze/walk.ts",
+      "name": "comp:src/mcp/bench.ts → comp:src/analyze/walk.ts",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/bench.ts",
+      "to": "comp:src/analyze/walk.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:14",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/bench.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/mcp/bench.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/bench.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:13",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/bench.ts=>comp:src/mcp/queries.ts",
+      "name": "comp:src/mcp/bench.ts → comp:src/mcp/queries.ts",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/bench.ts",
+      "to": "comp:src/mcp/queries.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:15",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "rel:comp:src/mcp/bench.ts=>sys:ext:node:fs",
       "name": "comp:src/mcp/bench.ts → sys:ext:node:fs",
       "kind": "depends_on",
@@ -1191,45 +1355,15 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/mcp/bench.ts=>comp:src/ir/types.ts",
-      "name": "comp:src/mcp/bench.ts → comp:src/ir/types.ts",
+      "id": "rel:comp:src/mcp/queries.ts=>comp:src/ir/naming.ts",
+      "name": "comp:src/mcp/queries.ts → comp:src/ir/naming.ts",
       "kind": "depends_on",
-      "from": "comp:src/mcp/bench.ts",
-      "to": "comp:src/ir/types.ts",
+      "from": "comp:src/mcp/queries.ts",
+      "to": "comp:src/ir/naming.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/mcp/bench.ts:13",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "rel:comp:src/mcp/bench.ts=>comp:src/analyze/walk.ts",
-      "name": "comp:src/mcp/bench.ts → comp:src/analyze/walk.ts",
-      "kind": "depends_on",
-      "from": "comp:src/mcp/bench.ts",
-      "to": "comp:src/analyze/walk.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/mcp/bench.ts:14",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "rel:comp:src/mcp/bench.ts=>comp:src/mcp/queries.ts",
-      "name": "comp:src/mcp/bench.ts → comp:src/mcp/queries.ts",
-      "kind": "depends_on",
-      "from": "comp:src/mcp/bench.ts",
-      "to": "comp:src/mcp/queries.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/mcp/bench.ts:15",
+          "ref": "src/mcp/queries.ts:11",
           "confidence": 0.95
         }
       ],
@@ -1251,15 +1385,50 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/mcp/queries.ts=>comp:src/ir/naming.ts",
-      "name": "comp:src/mcp/queries.ts → comp:src/ir/naming.ts",
+      "id": "rel:comp:src/mcp/server.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/mcp/server.ts → comp:src/ir/types.ts",
       "kind": "depends_on",
-      "from": "comp:src/mcp/queries.ts",
-      "to": "comp:src/ir/naming.ts",
+      "from": "comp:src/mcp/server.ts",
+      "to": "comp:src/ir/types.ts",
       "provenance": [
         {
           "source": "code",
-          "ref": "src/mcp/queries.ts:11",
+          "ref": "src/mcp/server.ts:14",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/server.ts=>comp:src/mcp/queries.ts",
+      "name": "comp:src/mcp/server.ts → comp:src/mcp/queries.ts",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/server.ts",
+      "to": "comp:src/mcp/queries.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:15",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/server.ts=>sys:ext:@modelcontextprotocol/sdk",
+      "name": "comp:src/mcp/server.ts → sys:ext:@modelcontextprotocol/sdk",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/server.ts",
+      "to": "sys:ext:@modelcontextprotocol/sdk",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:11",
+          "confidence": 0.95
+        },
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:12",
           "confidence": 0.95
         }
       ],
@@ -1296,26 +1465,6 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/mcp/server.ts=>sys:ext:@modelcontextprotocol/sdk",
-      "name": "comp:src/mcp/server.ts → sys:ext:@modelcontextprotocol/sdk",
-      "kind": "depends_on",
-      "from": "comp:src/mcp/server.ts",
-      "to": "sys:ext:@modelcontextprotocol/sdk",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/mcp/server.ts:11",
-          "confidence": 0.95
-        },
-        {
-          "source": "code",
-          "ref": "src/mcp/server.ts:12",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
       "id": "rel:comp:src/mcp/server.ts=>sys:ext:zod",
       "name": "comp:src/mcp/server.ts → sys:ext:zod",
       "kind": "depends_on",
@@ -1325,36 +1474,6 @@
         {
           "source": "code",
           "ref": "src/mcp/server.ts:13",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "rel:comp:src/mcp/server.ts=>comp:src/ir/types.ts",
-      "name": "comp:src/mcp/server.ts → comp:src/ir/types.ts",
-      "kind": "depends_on",
-      "from": "comp:src/mcp/server.ts",
-      "to": "comp:src/ir/types.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/mcp/server.ts:14",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "rel:comp:src/mcp/server.ts=>comp:src/mcp/queries.ts",
-      "name": "comp:src/mcp/server.ts → comp:src/mcp/queries.ts",
-      "kind": "depends_on",
-      "from": "comp:src/mcp/server.ts",
-      "to": "comp:src/mcp/queries.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/mcp/server.ts:15",
           "confidence": 0.95
         }
       ],
@@ -1421,21 +1540,6 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/project/html.ts=>comp:src/project/mermaid.ts",
-      "name": "comp:src/project/html.ts → comp:src/project/mermaid.ts",
-      "kind": "depends_on",
-      "from": "comp:src/project/html.ts",
-      "to": "comp:src/project/mermaid.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/project/html.ts:11",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
       "id": "rel:comp:src/project/html.ts=>comp:src/project/bpmn.ts",
       "name": "comp:src/project/html.ts → comp:src/project/bpmn.ts",
       "kind": "depends_on",
@@ -1466,6 +1570,21 @@
       "confidence": 0.95
     },
     {
+      "id": "rel:comp:src/project/html.ts=>comp:src/project/mermaid.ts",
+      "name": "comp:src/project/html.ts → comp:src/project/mermaid.ts",
+      "kind": "depends_on",
+      "from": "comp:src/project/html.ts",
+      "to": "comp:src/project/mermaid.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/project/html.ts:11",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "rel:comp:src/project/html.ts=>comp:src/project/trust.ts",
       "name": "comp:src/project/html.ts → comp:src/project/trust.ts",
       "kind": "depends_on",
@@ -1490,26 +1609,6 @@
         {
           "source": "code",
           "ref": "src/project/index.ts:6",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
-      "id": "rel:comp:src/project/index.ts=>comp:src/project/mermaid.ts",
-      "name": "comp:src/project/index.ts → comp:src/project/mermaid.ts",
-      "kind": "depends_on",
-      "from": "comp:src/project/index.ts",
-      "to": "comp:src/project/mermaid.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/project/index.ts:7",
-          "confidence": 0.95
-        },
-        {
-          "source": "code",
-          "ref": "src/project/index.ts:13",
           "confidence": 0.95
         }
       ],
@@ -1576,6 +1675,26 @@
       "confidence": 0.95
     },
     {
+      "id": "rel:comp:src/project/index.ts=>comp:src/project/mermaid.ts",
+      "name": "comp:src/project/index.ts → comp:src/project/mermaid.ts",
+      "kind": "depends_on",
+      "from": "comp:src/project/index.ts",
+      "to": "comp:src/project/mermaid.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/project/index.ts:7",
+          "confidence": 0.95
+        },
+        {
+          "source": "code",
+          "ref": "src/project/index.ts:13",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "rel:comp:src/project/index.ts=>comp:src/project/trust.ts",
       "name": "comp:src/project/index.ts → comp:src/project/trust.ts",
       "kind": "depends_on",
@@ -1596,21 +1715,6 @@
       "confidence": 0.95
     },
     {
-      "id": "rel:comp:src/project/mermaid.ts=>comp:src/ir/types.ts",
-      "name": "comp:src/project/mermaid.ts → comp:src/ir/types.ts",
-      "kind": "depends_on",
-      "from": "comp:src/project/mermaid.ts",
-      "to": "comp:src/ir/types.ts",
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/project/mermaid.ts:10",
-          "confidence": 0.95
-        }
-      ],
-      "confidence": 0.95
-    },
-    {
       "id": "rel:comp:src/project/mermaid.ts=>comp:src/ir/naming.ts",
       "name": "comp:src/project/mermaid.ts → comp:src/ir/naming.ts",
       "kind": "depends_on",
@@ -1620,6 +1724,21 @@
         {
           "source": "code",
           "ref": "src/project/mermaid.ts:11",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/project/mermaid.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/project/mermaid.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/project/mermaid.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/project/mermaid.ts:10",
           "confidence": 0.95
         }
       ],
@@ -1651,14 +1770,14 @@
         "comp:src/ir/types.ts",
         "comp:src/analyze/index.ts",
         "comp:src/analyze/tier2.ts",
+        "comp:src/analyze/incremental.ts",
         "comp:src/project/index.ts",
         "comp:src/env.ts",
         "comp:src/mcp/server.ts",
         "comp:src/mcp/bench.ts",
         "comp:src/diff/index.ts",
         "comp:src/analyze/walk.ts",
-        "comp:src/analyze/tier0.ts",
-        "comp:src/analyze/tier1.ts"
+        "comp:src/analyze/tier0.ts"
       ],
       "steps": [
         {
@@ -1700,11 +1819,23 @@
         {
           "participant": "comp:src/analyze/tier2.ts",
           "action": "uses",
-          "to": "comp:src/project/index.ts",
+          "to": "comp:src/analyze/incremental.ts",
           "provenance": [
             {
               "source": "code",
               "ref": "src/analyze/tier2.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
+          "participant": "comp:src/analyze/incremental.ts",
+          "action": "uses",
+          "to": "comp:src/project/index.ts",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/analyze/incremental.ts:1",
               "confidence": 0.6
             }
           ]
@@ -1780,18 +1911,6 @@
               "confidence": 0.6
             }
           ]
-        },
-        {
-          "participant": "comp:src/analyze/tier0.ts",
-          "action": "uses",
-          "to": "comp:src/analyze/tier1.ts",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/analyze/tier0.ts:1",
-              "confidence": 0.6
-            }
-          ]
         }
       ],
       "provenance": [
@@ -1850,6 +1969,17 @@
             {
               "source": "code",
               "ref": "src/analyze/tier2.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
+          "id": "task:comp:src/analyze/incremental.ts",
+          "name": "Incremental",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/analyze/incremental.ts:1",
               "confidence": 0.6
             }
           ]
@@ -1930,17 +2060,6 @@
               "confidence": 0.6
             }
           ]
-        },
-        {
-          "id": "task:comp:src/analyze/tier1.ts",
-          "name": "Tier 1",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/analyze/tier1.ts:1",
-              "confidence": 0.6
-            }
-          ]
         }
       ],
       "provenance": [
@@ -1955,6 +2074,22 @@
   ],
   "capabilities": [
     {
+      "id": "cap:src/analyze/derive.ts#deriveProcessAndFlow",
+      "name": "Derive Process And Flow",
+      "description": "Exported function `deriveProcessAndFlow` in src/analyze/derive.ts",
+      "componentIds": [
+        "comp:src/analyze/derive.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/derive.ts:161",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
       "id": "cap:src/analyze/derive.ts#deriveSemantics",
       "name": "Derive Semantics",
       "description": "Exported function `deriveSemantics` in src/analyze/derive.ts",
@@ -1964,7 +2099,39 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/analyze/derive.ts:135",
+          "ref": "src/analyze/derive.ts:214",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/analyze/derive.ts#extractFileCapabilities",
+      "name": "Extract File Capabilities",
+      "description": "Exported function `extractFileCapabilities` in src/analyze/derive.ts",
+      "componentIds": [
+        "comp:src/analyze/derive.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/derive.ts:138",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/analyze/incremental.ts#incrementalUpdate",
+      "name": "Incremental Update",
+      "description": "Exported function `incrementalUpdate` in src/analyze/incremental.ts",
+      "componentIds": [
+        "comp:src/analyze/incremental.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/incremental.ts:46",
           "confidence": 0.6
         }
       ],
@@ -1987,6 +2154,22 @@
       "confidence": 0.6
     },
     {
+      "id": "cap:src/analyze/tier0.ts#componentFor",
+      "name": "Component For",
+      "description": "Exported function `componentFor` in src/analyze/tier0.ts",
+      "componentIds": [
+        "comp:src/analyze/tier0.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/tier0.ts:14",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
       "id": "cap:src/analyze/tier0.ts#tier0",
       "name": "Tier 0",
       "description": "Exported function `tier0` in src/analyze/tier0.ts",
@@ -1996,7 +2179,39 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/analyze/tier0.ts:18",
+          "ref": "src/analyze/tier0.ts:30",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/analyze/tier1.ts#buildExternalSystem",
+      "name": "Build External System",
+      "description": "Exported function `buildExternalSystem` in src/analyze/tier1.ts",
+      "componentIds": [
+        "comp:src/analyze/tier1.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/tier1.ts:36",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/analyze/tier1.ts#extractFileEdges",
+      "name": "Extract File Edges",
+      "description": "Exported function `extractFileEdges` in src/analyze/tier1.ts",
+      "componentIds": [
+        "comp:src/analyze/tier1.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/tier1.ts:70",
           "confidence": 0.6
         }
       ],
@@ -2012,7 +2227,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/analyze/tier1.ts:31",
+          "ref": "src/analyze/tier1.ts:132",
           "confidence": 0.6
         }
       ],
@@ -2083,6 +2298,22 @@
       "confidence": 0.6
     },
     {
+      "id": "cap:src/diff/model-diff.ts#renderDiffMarkdown",
+      "name": "Render Diff Markdown",
+      "description": "Exported function `renderDiffMarkdown` in src/diff/model-diff.ts",
+      "componentIds": [
+        "comp:src/diff/model-diff.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/model-diff.ts:163",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
       "id": "cap:src/diff/model-diff.ts#renderDiffText",
       "name": "Render Diff Text",
       "description": "Exported function `renderDiffText` in src/diff/model-diff.ts",
@@ -2099,16 +2330,16 @@
       "confidence": 0.6
     },
     {
-      "id": "cap:src/diff/model-diff.ts#renderDiffMarkdown",
-      "name": "Render Diff Markdown",
-      "description": "Exported function `renderDiffMarkdown` in src/diff/model-diff.ts",
+      "id": "cap:src/diff/snapshot.ts#analyzeAtRef",
+      "name": "Analyze At Ref",
+      "description": "Exported function `analyzeAtRef` in src/diff/snapshot.ts",
       "componentIds": [
-        "comp:src/diff/model-diff.ts"
+        "comp:src/diff/snapshot.ts"
       ],
       "provenance": [
         {
           "source": "code",
-          "ref": "src/diff/model-diff.ts:163",
+          "ref": "src/diff/snapshot.ts:34",
           "confidence": 0.6
         }
       ],
@@ -2147,22 +2378,6 @@
       "confidence": 0.6
     },
     {
-      "id": "cap:src/diff/snapshot.ts#analyzeAtRef",
-      "name": "Analyze At Ref",
-      "description": "Exported function `analyzeAtRef` in src/diff/snapshot.ts",
-      "componentIds": [
-        "comp:src/diff/snapshot.ts"
-      ],
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/diff/snapshot.ts:34",
-          "confidence": 0.6
-        }
-      ],
-      "confidence": 0.6
-    },
-    {
       "id": "cap:src/env.ts#loadEnv",
       "name": "Load Env",
       "description": "Exported function `loadEnv` in src/env.ts",
@@ -2173,22 +2388,6 @@
         {
           "source": "code",
           "ref": "src/env.ts:12",
-          "confidence": 0.6
-        }
-      ],
-      "confidence": 0.6
-    },
-    {
-      "id": "cap:src/ir/naming.ts#humanize",
-      "name": "Humanize",
-      "description": "Exported function `humanize` in src/ir/naming.ts",
-      "componentIds": [
-        "comp:src/ir/naming.ts"
-      ],
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/ir/naming.ts:7",
           "confidence": 0.6
         }
       ],
@@ -2211,6 +2410,22 @@
       "confidence": 0.6
     },
     {
+      "id": "cap:src/ir/naming.ts#humanize",
+      "name": "Humanize",
+      "description": "Exported function `humanize` in src/ir/naming.ts",
+      "componentIds": [
+        "comp:src/ir/naming.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/ir/naming.ts:7",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
       "id": "cap:src/ir/types.ts#createEmptyModel",
       "name": "Create Empty Model",
       "description": "Exported function `createEmptyModel` in src/ir/types.ts",
@@ -2220,7 +2435,23 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/ir/types.ts:114",
+          "ref": "src/ir/types.ts:132",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/ir/types.ts#sortModel",
+      "name": "Sort Model",
+      "description": "Exported function `sortModel` in src/ir/types.ts",
+      "componentIds": [
+        "comp:src/ir/types.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/ir/types.ts:119",
           "confidence": 0.6
         }
       ],
@@ -2243,22 +2474,6 @@
       "confidence": 0.6
     },
     {
-      "id": "cap:src/mcp/bench.ts#runBenchmark",
-      "name": "Run Benchmark",
-      "description": "Exported function `runBenchmark` in src/mcp/bench.ts",
-      "componentIds": [
-        "comp:src/mcp/bench.ts"
-      ],
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/mcp/bench.ts:99",
-          "confidence": 0.6
-        }
-      ],
-      "confidence": 0.6
-    },
-    {
       "id": "cap:src/mcp/bench.ts#renderBench",
       "name": "Render Bench",
       "description": "Exported function `renderBench` in src/mcp/bench.ts",
@@ -2269,6 +2484,22 @@
         {
           "source": "code",
           "ref": "src/mcp/bench.ts:119",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/bench.ts#runBenchmark",
+      "name": "Run Benchmark",
+      "description": "Exported function `runBenchmark` in src/mcp/bench.ts",
+      "componentIds": [
+        "comp:src/mcp/bench.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:99",
           "confidence": 0.6
         }
       ],
@@ -2291,38 +2522,6 @@
       "confidence": 0.6
     },
     {
-      "id": "cap:src/mcp/queries.ts#getContext",
-      "name": "Get Context",
-      "description": "Exported function `getContext` in src/mcp/queries.ts",
-      "componentIds": [
-        "comp:src/mcp/queries.ts"
-      ],
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/mcp/queries.ts:40",
-          "confidence": 0.6
-        }
-      ],
-      "confidence": 0.6
-    },
-    {
-      "id": "cap:src/mcp/queries.ts#listComponents",
-      "name": "List Components",
-      "description": "Exported function `listComponents` in src/mcp/queries.ts",
-      "componentIds": [
-        "comp:src/mcp/queries.ts"
-      ],
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/mcp/queries.ts:55",
-          "confidence": 0.6
-        }
-      ],
-      "confidence": 0.6
-    },
-    {
       "id": "cap:src/mcp/queries.ts#getComponent",
       "name": "Get Component",
       "description": "Exported function `getComponent` in src/mcp/queries.ts",
@@ -2339,16 +2538,16 @@
       "confidence": 0.6
     },
     {
-      "id": "cap:src/mcp/queries.ts#searchCapabilities",
-      "name": "Search Capabilities",
-      "description": "Exported function `searchCapabilities` in src/mcp/queries.ts",
+      "id": "cap:src/mcp/queries.ts#getContext",
+      "name": "Get Context",
+      "description": "Exported function `getContext` in src/mcp/queries.ts",
       "componentIds": [
         "comp:src/mcp/queries.ts"
       ],
       "provenance": [
         {
           "source": "code",
-          "ref": "src/mcp/queries.ts:81",
+          "ref": "src/mcp/queries.ts:40",
           "confidence": 0.6
         }
       ],
@@ -2381,6 +2580,38 @@
         {
           "source": "code",
           "ref": "src/mcp/queries.ts:101",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/queries.ts#listComponents",
+      "name": "List Components",
+      "description": "Exported function `listComponents` in src/mcp/queries.ts",
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:55",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/queries.ts#searchCapabilities",
+      "name": "Search Capabilities",
+      "description": "Exported function `searchCapabilities` in src/mcp/queries.ts",
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:81",
           "confidence": 0.6
         }
       ],
@@ -2435,22 +2666,6 @@
       "confidence": 0.6
     },
     {
-      "id": "cap:src/project/capability.ts#groupCapabilities",
-      "name": "Group Capabilities",
-      "description": "Exported function `groupCapabilities` in src/project/capability.ts",
-      "componentIds": [
-        "comp:src/project/capability.ts"
-      ],
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/project/capability.ts:24",
-          "confidence": 0.6
-        }
-      ],
-      "confidence": 0.6
-    },
-    {
       "id": "cap:src/project/capability.ts#capabilityMapText",
       "name": "Capability Map Text",
       "description": "Exported function `capabilityMapText` in src/project/capability.ts",
@@ -2461,6 +2676,22 @@
         {
           "source": "code",
           "ref": "src/project/capability.ts:36",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/project/capability.ts#groupCapabilities",
+      "name": "Group Capabilities",
+      "description": "Exported function `groupCapabilities` in src/project/capability.ts",
+      "componentIds": [
+        "comp:src/project/capability.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/project/capability.ts:24",
           "confidence": 0.6
         }
       ],
@@ -2483,22 +2714,6 @@
       "confidence": 0.6
     },
     {
-      "id": "cap:src/project/index.ts#terminalPreview",
-      "name": "Terminal Preview",
-      "description": "Exported function `terminalPreview` in src/project/index.ts",
-      "componentIds": [
-        "comp:src/project/index.ts"
-      ],
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/project/index.ts:24",
-          "confidence": 0.6
-        }
-      ],
-      "confidence": 0.6
-    },
-    {
       "id": "cap:src/project/index.ts#projectionArtifacts",
       "name": "Projection Artifacts",
       "description": "Exported function `projectionArtifacts` in src/project/index.ts",
@@ -2515,16 +2730,16 @@
       "confidence": 0.6
     },
     {
-      "id": "cap:src/project/mermaid.ts#contextDiagram",
-      "name": "Context Diagram",
-      "description": "Exported function `contextDiagram` in src/project/mermaid.ts",
+      "id": "cap:src/project/index.ts#terminalPreview",
+      "name": "Terminal Preview",
+      "description": "Exported function `terminalPreview` in src/project/index.ts",
       "componentIds": [
-        "comp:src/project/mermaid.ts"
+        "comp:src/project/index.ts"
       ],
       "provenance": [
         {
           "source": "code",
-          "ref": "src/project/mermaid.ts:27",
+          "ref": "src/project/index.ts:24",
           "confidence": 0.6
         }
       ],
@@ -2547,6 +2762,22 @@
       "confidence": 0.6
     },
     {
+      "id": "cap:src/project/mermaid.ts#contextDiagram",
+      "name": "Context Diagram",
+      "description": "Exported function `contextDiagram` in src/project/mermaid.ts",
+      "componentIds": [
+        "comp:src/project/mermaid.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/project/mermaid.ts:27",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
       "id": "cap:src/project/mermaid.ts#sequenceDiagram",
       "name": "Sequence Diagram",
       "description": "Exported function `sequenceDiagram` in src/project/mermaid.ts",
@@ -2563,6 +2794,22 @@
       "confidence": 0.6
     },
     {
+      "id": "cap:src/project/trust.ts#badge",
+      "name": "Badge",
+      "description": "Exported function `badge` in src/project/trust.ts",
+      "componentIds": [
+        "comp:src/project/trust.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/project/trust.ts:41",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
       "id": "cap:src/project/trust.ts#band",
       "name": "Band",
       "description": "Exported function `band` in src/project/trust.ts",
@@ -2573,6 +2820,22 @@
         {
           "source": "code",
           "ref": "src/project/trust.ts:21",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/project/trust.ts#isLowConfidence",
+      "name": "Is Low Confidence",
+      "description": "Exported function `isLowConfidence` in src/project/trust.ts",
+      "componentIds": [
+        "comp:src/project/trust.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/project/trust.ts:36",
           "confidence": 0.6
         }
       ],
@@ -2611,38 +2874,6 @@
       "confidence": 0.6
     },
     {
-      "id": "cap:src/project/trust.ts#isLowConfidence",
-      "name": "Is Low Confidence",
-      "description": "Exported function `isLowConfidence` in src/project/trust.ts",
-      "componentIds": [
-        "comp:src/project/trust.ts"
-      ],
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/project/trust.ts:36",
-          "confidence": 0.6
-        }
-      ],
-      "confidence": 0.6
-    },
-    {
-      "id": "cap:src/project/trust.ts#badge",
-      "name": "Badge",
-      "description": "Exported function `badge` in src/project/trust.ts",
-      "componentIds": [
-        "comp:src/project/trust.ts"
-      ],
-      "provenance": [
-        {
-          "source": "code",
-          "ref": "src/project/trust.ts:41",
-          "confidence": 0.6
-        }
-      ],
-      "confidence": 0.6
-    },
-    {
       "id": "cap:src/project/trust.ts#summarize",
       "name": "Summarize",
       "description": "Exported function `summarize` in src/project/trust.ts",
@@ -2659,5 +2890,5 @@
       "confidence": 0.6
     }
   ],
-  "generatedAt": "2026-06-13T16:39:35.034Z"
+  "generatedAt": "2026-06-13T16:57:23.042Z"
 }

@@ -5,10 +5,22 @@
  */
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
-import { type ArchitectureModel, createEmptyModel } from "../ir/types.js";
+import { type ArchitectureModel, type Component, createEmptyModel } from "../ir/types.js";
 
 /** Confidence for deterministic structural facts (Tier 0/1). */
 export const STRUCTURAL_CONFIDENCE = 0.95;
+
+/** One Component per source file (reused by Tier 0 and the incremental updater). */
+export function componentFor(rel: string, systemId: string): Component {
+  return {
+    id: `comp:${rel}`,
+    name: rel,
+    kind: "module",
+    systemId,
+    provenance: [{ source: "code", ref: `${rel}:1`, confidence: STRUCTURAL_CONFIDENCE }],
+    confidence: STRUCTURAL_CONFIDENCE,
+  };
+}
 
 interface PackageJson {
   name?: string;
@@ -43,14 +55,7 @@ export function tier0(root: string, sourceFiles: string[]): ArchitectureModel {
   });
 
   for (const rel of sourceFiles) {
-    model.components.push({
-      id: `comp:${rel}`,
-      name: rel,
-      kind: "module",
-      systemId,
-      provenance: [{ source: "code", ref: `${rel}:1`, confidence: STRUCTURAL_CONFIDENCE }],
-      confidence: STRUCTURAL_CONFIDENCE,
-    });
+    model.components.push(componentFor(rel, systemId));
   }
 
   return model;

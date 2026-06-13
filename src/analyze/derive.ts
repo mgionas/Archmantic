@@ -108,54 +108,60 @@ function findEntryComponent(root: string, componentPaths: string[]): string | un
   );
 }
 
-/** DFS from the entry component over internal depends_on edges, in declaration order. */
+/** BFS from the entry over internal edges, neighbors ordered by import line.
+ *  Ordering by the edge's source line (not the relations-array order) makes the
+ *  chain deterministic — identical whether built by a full pass or incrementally. */
 function orderedChain(entryId: string, model: ArchitectureModel): string[] {
-  const adjacency = new Map<string, string[]>();
+  const lineOf = (ref: string) => Number(ref.split(":").pop()) || 0;
+  const adjacency = new Map<string, { to: string; line: number }[]>();
   for (const r of model.relations) {
     if (!r.to.startsWith("comp:")) continue; // internal edges only
-    (adjacency.get(r.from) ?? adjacency.set(r.from, []).get(r.from)!).push(r.to);
+    const list = adjacency.get(r.from) ?? adjacency.set(r.from, []).get(r.from)!;
+    list.push({ to: r.to, line: lineOf(r.provenance[0]?.ref ?? "") });
   }
+  for (const list of adjacency.values()) list.sort((a, b) => a.line - b.line);
+
   const visited = new Set<string>();
   const order: string[] = [];
   const stack = [entryId];
   while (stack.length && order.length < MAX_PROCESS_TASKS) {
-    const id = stack.shift()!; // BFS-ish: keep declaration order readable
+    const id = stack.shift()!; // BFS, keeping import order readable
     if (visited.has(id)) continue;
     visited.add(id);
     order.push(id);
-    for (const next of adjacency.get(id) ?? []) if (!visited.has(next)) stack.push(next);
+    for (const { to } of adjacency.get(id) ?? []) if (!visited.has(to)) stack.push(to);
   }
   return order;
 }
 
-/**
- * Enrich the model in place with structural Capabilities, one Process and one Flow.
- * Runs after Tier 1 (it needs the import graph). Pure structural — no network.
- */
-export function deriveSemantics(root: string, sourceFiles: string[], model: ArchitectureModel): void {
-  // --- Capabilities: exported functions/classes ---
-  for (const rel of sourceFiles) {
-    let text: string;
-    try {
-      text = readFileSync(join(root, rel), "utf8");
-    } catch {
-      continue;
-    }
-    const sf = ts.createSourceFile(rel, text, ts.ScriptTarget.Latest, true, scriptKindFor(rel));
-    for (const sym of collectExports(sf)) {
-      const cap: Capability = {
-        id: `cap:${rel}#${sym.name}`,
-        name: humanize(sym.name),
-        description: `Exported ${sym.kind} \`${sym.name}\` in ${rel}`,
-        componentIds: [`comp:${rel}`],
-        provenance: [{ source: "code", ref: `${rel}:${sym.line}`, confidence: HEURISTIC_CONFIDENCE }],
-        confidence: HEURISTIC_CONFIDENCE,
-      };
-      model.capabilities.push(cap);
-    }
+/** Derive the Capabilities for a single file (reused by the incremental updater). */
+export function extractFileCapabilities(root: string, rel: string): Capability[] {
+  let text: string;
+  try {
+    text = readFileSync(join(root, rel), "utf8");
+  } catch {
+    return [];
   }
+  const sf = ts.createSourceFile(rel, text, ts.ScriptTarget.Latest, true, scriptKindFor(rel));
+  return collectExports(sf).map((sym) => ({
+    id: `cap:${rel}#${sym.name}`,
+    name: humanize(sym.name),
+    description: `Exported ${sym.kind} \`${sym.name}\` in ${rel}`,
+    componentIds: [`comp:${rel}`],
+    provenance: [{ source: "code", ref: `${rel}:${sym.line}`, confidence: HEURISTIC_CONFIDENCE }],
+    confidence: HEURISTIC_CONFIDENCE,
+  }));
+}
 
-  // --- One Process + Flow from the main entry-point dependency chain ---
+/**
+ * (Re)derive the single Process + Flow from the entry-point dependency chain.
+ * Replaces any existing processes/flows — safe to call on an already-populated
+ * model (the incremental updater does this after patching the import graph).
+ */
+export function deriveProcessAndFlow(root: string, model: ArchitectureModel): void {
+  model.processes = [];
+  model.flows = [];
+
   const componentPaths = model.components.map((c) => c.id.slice("comp:".length));
   const entryRel = findEntryComponent(root, componentPaths);
   if (!entryRel) return;
@@ -199,4 +205,15 @@ export function deriveSemantics(root: string, sourceFiles: string[], model: Arch
     confidence: HEURISTIC_CONFIDENCE,
   };
   model.flows.push(flow);
+}
+
+/**
+ * Enrich the model in place with structural Capabilities, one Process and one
+ * Flow. Runs after Tier 1 (it needs the import graph). Pure structural — no network.
+ */
+export function deriveSemantics(root: string, sourceFiles: string[], model: ArchitectureModel): void {
+  for (const rel of sourceFiles) {
+    for (const cap of extractFileCapabilities(root, rel)) model.capabilities.push(cap);
+  }
+  deriveProcessAndFlow(root, model);
 }

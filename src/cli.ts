@@ -15,9 +15,10 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pkg = require("../package.json") as { version: string };
-import { type ArchitectureModel, createEmptyModel } from "./ir/types.js";
+import { type ArchitectureModel, createEmptyModel, sortModel } from "./ir/types.js";
 import { analyzeRepo } from "./analyze/index.js";
 import { tier2 } from "./analyze/tier2.js";
+import { incrementalUpdate } from "./analyze/incremental.js";
 import { terminalPreview, projectionArtifacts } from "./project/index.js";
 import { loadEnv } from "./env.js";
 import { startMcpServer } from "./mcp/server.js";
@@ -94,7 +95,7 @@ async function cmdAnalyze(args: string[]): Promise<number> {
 
   const dir = join(root, MODEL_DIR);
   mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, MODEL_FILE), JSON.stringify(model, null, 2) + "\n", "utf8");
+  writeFileSync(join(dir, MODEL_FILE), JSON.stringify(sortModel(model), null, 2) + "\n", "utf8");
 
   console.log(`  → ${MODEL_DIR}/${MODEL_FILE}`);
   console.log(`  Every element is grounded with file:line provenance.`);
@@ -203,6 +204,59 @@ function cmdDiff(args: string[]): number {
   return 0;
 }
 
+function printHookSnippet(): void {
+  console.log(`# Keep the Archmantic model in sync on every commit.
+# Save as .git/hooks/pre-commit and \`chmod +x\` it:
+
+#!/bin/sh
+npx archmantic update >/dev/null 2>&1
+git add .archmantic/model.json`);
+}
+
+/** M6: git-diff-driven incremental re-analysis — patch the IR, refresh projections, fast. */
+function cmdUpdate(args: string[]): number {
+  if (args.includes("--hook")) {
+    printHookSnippet();
+    return 0;
+  }
+  const root = process.cwd();
+  const file = join(root, MODEL_DIR, MODEL_FILE);
+  if (!existsSync(file)) {
+    console.error(`✗ No model at ${MODEL_DIR}/${MODEL_FILE}. Run \`archmantic analyze\` first.`);
+    return 1;
+  }
+  let base: ArchitectureModel;
+  try {
+    base = JSON.parse(readFileSync(file, "utf8")) as ArchitectureModel;
+  } catch {
+    console.error(`✗ ${MODEL_DIR}/${MODEL_FILE} is not valid JSON — run \`archmantic analyze\`.`);
+    return 1;
+  }
+
+  const start = Date.now();
+  const { model: updated, recomputed, removed, fullFallback } = incrementalUpdate(root, base);
+  const model = { ...updated, generatedAt: new Date().toISOString() };
+  const ms = Date.now() - start;
+
+  const dir = join(root, MODEL_DIR);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, MODEL_FILE), JSON.stringify(sortModel(model), null, 2) + "\n", "utf8");
+  for (const [name, content] of Object.entries(projectionArtifacts(model))) {
+    writeFileSync(join(dir, name), content, "utf8");
+  }
+
+  console.log(`✓ Incremental update${fullFallback ? " (no git — full recompute)" : ""}`);
+  console.log(
+    `  recomputed ${recomputed.length} of ${model.components.length} files` +
+      (removed.length ? `, removed ${removed.length}` : "") +
+      ` in ${ms}ms`,
+  );
+  const diff = diffModels(base, model, "previous model", "updated");
+  console.log(hasChanges(diff) ? "\n" + renderDiffText(diff) : "  No architecture changes since the last model.");
+  console.log(`\n  → refreshed ${MODEL_DIR}/${MODEL_FILE} + projections   (\`archmantic update --hook\` for a git hook)`);
+  return 0;
+}
+
 /** Start the MCP server over stdio (USP 7). Stays alive until the client disconnects. */
 async function cmdMcp(): Promise<number> {
   await startMcpServer(process.cwd());
@@ -251,6 +305,7 @@ Usage: archmantic <command> [options]
 Commands:
   init [name]    Create an empty .archmantic/model.json (defaults name to the folder)
   analyze [--tier N]  Reverse-engineer the model (--tier 2 adds the LLM pass, BYOK)
+  update [--hook]  Incrementally re-analyze only what changed (git-diff driven)
   view           Capability map + diagrams + trust report (writes view.html)
   drift [--check]  Compare the committed model vs the code (--check exits 1 on drift)
   diff [<ref>]   Architecture diff: a git ref → working tree (writes pr-diff.md)
@@ -281,6 +336,8 @@ async function main(argv: string[]): Promise<number> {
       return cmdInit(rest);
     case "analyze":
       return cmdAnalyze(rest);
+    case "update":
+      return cmdUpdate(rest);
     case "mcp":
       return cmdMcp();
     case "bench":
