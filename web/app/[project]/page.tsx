@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { listSnapshots, modelAtCommit, latestModel } from "@/lib/store";
 import { getProcessEdit } from "@/lib/admin";
@@ -12,21 +13,6 @@ import { ProjectTabs, type Group } from "../project-tabs";
 import { SnapshotPicker } from "../snapshot-picker";
 
 export const dynamic = "force-dynamic";
-
-const BAND_CLASS: Record<string, string> = {
-  high: "border-success/30 text-success",
-  medium: "border-warning/30 text-warning",
-  low: "border-danger/30 text-danger",
-};
-
-function Stat({ n, label }: { n: number | string; label: string }) {
-  return (
-    <div className="text-sm text-muted-foreground">
-      <span className="mr-1.5 text-xl font-semibold text-foreground">{n}</span>
-      {label}
-    </div>
-  );
-}
 
 function deltaSummary(d: ReturnType<typeof modelDelta>): string {
   const parts: string[] = [];
@@ -128,70 +114,38 @@ export default async function ProjectPage({
     externals: { added: d.externals.added.map(extName), removed: d.externals.removed.map(extName) },
   };
 
+  const overview = {
+    trust: { total: t.total, refs: t.refs, meanPct: t.meanPct, high: t.high, medium: t.medium, low: t.low },
+    externals: externals.map((s) => s.name),
+    technologies: (model.technologies ?? []).map((tech) => ({ name: tech.name, category: tech.category })),
+    analyzedAt: model.generatedAt ?? null,
+  };
+
   return (
     <div>
-      <a href="/" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-        ← projects
-      </a>
-      <h1 className="mt-2 text-2xl font-bold tracking-tight">{project}</h1>
-      <p className="text-sm text-muted-foreground">
-        {model.components.length} components · {externals.length} external systems · {model.capabilities.length}{" "}
-        capabilities{model.generatedAt ? ` · analyzed ${new Date(model.generatedAt).toLocaleString()}` : ""}
-      </p>
-
-      {snapshots.length > 0 ? (
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <span className="text-sm text-muted-foreground">Snapshot</span>
-          <SnapshotPicker snapshots={snapshots} current={selectedSha} />
-          <Badge variant="outline" className="font-normal text-muted-foreground">
-            vs previous: {prevModel ? deltaSummary(d) : "first snapshot"}
-          </Badge>
-          {idx > 0 ? (
-            <a href={`/${encodeURIComponent(project)}`} className={buttonVariants({ variant: "ghost", size: "sm" })}>
-              Jump to latest
-            </a>
-          ) : null}
-        </div>
-      ) : null}
-
-      <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_auto]">
-        <Card className="flex flex-wrap items-center gap-x-8 gap-y-3 p-4">
-          <Stat n={t.total} label="grounded elements" />
-          <Stat n={t.refs} label="code references" />
-          <Stat n={`${t.meanPct}%`} label="mean confidence" />
-          <div className="ml-auto flex gap-2">
-            <Badge variant="outline" className={BAND_CLASS.high}>{t.high} high</Badge>
-            <Badge variant="outline" className={BAND_CLASS.medium}>{t.medium} medium</Badge>
-            <Badge variant="outline" className={BAND_CLASS.low}>{t.low} low</Badge>
-          </div>
-        </Card>
-        <Card className="flex flex-wrap content-start gap-2 p-4 lg:max-w-sm">
-          <span className="w-full text-xs font-medium text-muted-foreground">External systems</span>
-          {externals.length ? (
-            externals.map((s) => (
-              <Badge key={s.id} variant="secondary">
-                {s.name}
-              </Badge>
-            ))
-          ) : (
-            <span className="text-sm text-muted-foreground">none</span>
-          )}
-        </Card>
-      </div>
-
-      {model.technologies?.length ? (
-        <Card className="mt-4 flex flex-wrap content-start gap-2 p-4">
-          <span className="w-full text-xs font-medium text-muted-foreground">Tech stack</span>
-          {model.technologies.map((t) => (
-            <Badge key={t.name} variant="outline" title={t.category}>
-              {t.name}
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight">{project}</h1>
+        <span className="text-sm text-muted-foreground">
+          {model.components.length} components · {externals.length} external · {model.capabilities.length} capabilities
+        </span>
+        {snapshots.length > 0 ? (
+          <div className="ml-auto flex flex-wrap items-center gap-3">
+            <SnapshotPicker snapshots={snapshots} current={selectedSha} />
+            <Badge variant="outline" className="font-normal text-muted-foreground">
+              vs previous: {prevModel ? deltaSummary(d) : "first snapshot"}
             </Badge>
-          ))}
-        </Card>
-      ) : null}
+            {idx > 0 ? (
+              <Link href={`/${encodeURIComponent(project)}`} className={buttonVariants({ variant: "ghost", size: "sm" })}>
+                Jump to latest
+              </Link>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
 
       <ProjectTabs
         project={project}
+        overview={overview}
         groups={groups}
         components={components}
         changes={changes}
