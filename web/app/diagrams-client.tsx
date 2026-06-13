@@ -92,7 +92,9 @@ export function BpmnEditor({ project, initialXml }: { project: string; initialXm
         >
           Save process
         </button>
-        <span className="sub">{status || "Drag, rename (double-click), and connect tasks — then save."}</span>
+        <span className="text-sm text-muted-foreground">
+          {status || "Drag, rename (double-click), and connect tasks — then save."}
+        </span>
       </div>
       <div ref={ref} style={{ height: 460, background: "#fff", borderRadius: 12 }} />
     </div>

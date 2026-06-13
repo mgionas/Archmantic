@@ -1,6 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface TokenRow {
   id: string;
@@ -11,10 +18,12 @@ interface TokenRow {
 
 export default function Settings() {
   const [tokens, setTokens] = useState<TokenRow[]>([]);
-  const [scope, setScope] = useState<string>("");
+  const [scope, setScope] = useState("");
   const [label, setLabel] = useState("");
   const [fresh, setFresh] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [editing, setEditing] = useState<TokenRow | null>(null);
+  const [editLabel, setEditLabel] = useState("");
 
   const load = useCallback(async () => {
     const res = await fetch("/api/tokens");
@@ -40,134 +49,152 @@ export default function Settings() {
       setFresh(data.token);
       setLabel("");
       await load();
+      toast.success("Token generated");
+    } catch {
+      toast.error("Could not generate token");
     } finally {
       setBusy(false);
     }
   }
 
-  async function rename(t: TokenRow) {
-    const next = window.prompt("Token label:", t.label ?? "");
-    if (next === null) return;
+  async function saveRename() {
+    if (!editing) return;
     await fetch("/api/tokens", {
       method: "PATCH",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ id: t.id, label: next }),
+      body: JSON.stringify({ id: editing.id, label: editLabel }),
     });
+    setEditing(null);
     await load();
+    toast.success("Renamed");
   }
 
   async function revoke(t: TokenRow) {
     if (!window.confirm(`Revoke ${t.label || "this token"}? Any CLI using it will stop working.`)) return;
     await fetch(`/api/tokens?id=${encodeURIComponent(t.id)}`, { method: "DELETE" });
     await load();
+    toast.success("Token revoked");
   }
 
   const apiUrl = typeof window !== "undefined" ? window.location.origin : "";
 
   return (
-    <main>
-      <h1>CLI tokens</h1>
-      <div className="sub">
-        Tokens let the <code>archmantic</code> CLI push your architecture model to{" "}
-        <strong>{scope || "this scope"}</strong> without the database URL. Stored hashed — shown once at creation.
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">CLI tokens</h1>
+        <p className="text-sm text-muted-foreground">
+          Let the <code className="rounded bg-muted px-1 py-0.5">archmantic</code> CLI push to{" "}
+          <strong>{scope || "this scope"}</strong> without the database URL. Stored hashed — shown once at creation.
+        </p>
       </div>
 
-      <div className="card" style={{ marginTop: 16, display: "flex", gap: 10, alignItems: "center" }}>
-        <input
+      <Card className="flex items-center gap-3 p-4">
+        <Input
           value={label}
           onChange={(e) => setLabel(e.target.value)}
           placeholder="Label (e.g. laptop, CI)"
-          style={{
-            background: "#0f1115",
-            border: "1px solid #232734",
-            borderRadius: 8,
-            color: "#e6e9ef",
-            padding: "8px 10px",
-            flex: 1,
-          }}
+          className="max-w-xs"
         />
-        <button onClick={generate} disabled={busy} style={btn}>
+        <Button onClick={generate} disabled={busy}>
           {busy ? "Generating…" : "Generate token"}
-        </button>
-      </div>
+        </Button>
+      </Card>
 
       {fresh ? (
-        <div className="card" style={{ marginTop: 12, borderColor: "#7aa2f7" }}>
-          <div className="sub">Copy it now — it won&apos;t be shown again:</div>
-          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-            <code style={{ ...codeBox, flex: 1, color: "#e6e9ef", userSelect: "all" }}>{fresh}</code>
-            <button onClick={() => navigator.clipboard?.writeText(fresh)} style={btn}>
-              Copy
-            </button>
-          </div>
-          <div className="sub" style={{ marginTop: 10 }}>Add to your repo&apos;s <code>.env.local</code>:</div>
-          <pre style={{ ...codeBox, marginTop: 6 }}>{`ARCHMANTIC_TOKEN=${fresh}\nARCHMANTIC_API_URL=${apiUrl}`}</pre>
-          <button onClick={() => setFresh(null)} style={{ ...btnGhost, marginTop: 8 }}>
-            Dismiss
-          </button>
-        </div>
-      ) : null}
-
-      <h2>Your tokens</h2>
-      {tokens.length === 0 ? (
-        <div className="card empty">No tokens yet. Generate one above.</div>
-      ) : (
-        <div className="card">
-          {tokens.map((t) => (
-            <div
-              key={t.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                padding: "10px 0",
-                borderBottom: "1px solid #1f232e",
+        <Card className="space-y-3 border-primary/60 p-4">
+          <p className="text-sm text-muted-foreground">Copy it now — it won&apos;t be shown again:</p>
+          <div className="flex gap-2">
+            <code className="flex-1 select-all overflow-auto rounded-md border bg-muted px-3 py-2 font-mono text-xs">
+              {fresh}
+            </code>
+            <Button
+              variant="outline"
+              onClick={() => {
+                navigator.clipboard?.writeText(fresh);
+                toast.success("Copied");
               }}
             >
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600 }}>{t.label || <span className="empty">unnamed</span>}</div>
-                <div className="sub">
-                  <code>{t.prefix ? `${t.prefix}••••••••` : "arch_••••"}</code> · created{" "}
-                  {new Date(t.created_at).toLocaleDateString()}
-                </div>
-              </div>
-              <button onClick={() => rename(t)} style={btnGhost}>
-                Rename
-              </button>
-              <button onClick={() => revoke(t)} style={{ ...btnGhost, color: "#f87171", borderColor: "#3a1f22" }}>
-                Revoke
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-    </main>
+              Copy
+            </Button>
+          </div>
+          <p className="text-sm text-muted-foreground">Add to your repo&apos;s .env.local:</p>
+          <pre className="overflow-auto rounded-md border bg-muted px-3 py-2 font-mono text-xs">{`ARCHMANTIC_TOKEN=${fresh}\nARCHMANTIC_API_URL=${apiUrl}`}</pre>
+          <Button variant="ghost" size="sm" onClick={() => setFresh(null)}>
+            Dismiss
+          </Button>
+        </Card>
+      ) : null}
+
+      <div>
+        <h2 className="mb-3 text-lg font-semibold">Your tokens</h2>
+        {tokens.length === 0 ? (
+          <Card className="p-6 text-sm text-muted-foreground">No tokens yet. Generate one above.</Card>
+        ) : (
+          <Card className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Label</TableHead>
+                  <TableHead>Token</TableHead>
+                  <TableHead>Created</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {tokens.map((t) => (
+                  <TableRow key={t.id}>
+                    <TableCell className="font-medium">
+                      {t.label || <span className="text-muted-foreground">unnamed</span>}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="font-mono">
+                        {t.prefix ? `${t.prefix}••••••••` : "arch_••••"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {new Date(t.created_at).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="space-x-2 text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setEditing(t);
+                          setEditLabel(t.label ?? "");
+                        }}
+                      >
+                        Rename
+                      </Button>
+                      <Button variant="ghost" size="sm" className="text-destructive" onClick={() => revoke(t)}>
+                        Revoke
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Card>
+        )}
+      </div>
+
+      <Dialog open={editing !== null} onOpenChange={(o) => !o && setEditing(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rename token</DialogTitle>
+          </DialogHeader>
+          <Input value={editLabel} onChange={(e) => setEditLabel(e.target.value)} placeholder="Token label" />
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setEditing(null)}>
+              Cancel
+            </Button>
+            <Button onClick={saveRename}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <a href="/" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+        ← Back to projects
+      </a>
+    </div>
   );
 }
-
-const btn: React.CSSProperties = {
-  background: "#7aa2f7",
-  color: "#0f1115",
-  border: 0,
-  borderRadius: 8,
-  padding: "8px 14px",
-  fontWeight: 600,
-  cursor: "pointer",
-};
-const btnGhost: React.CSSProperties = {
-  background: "transparent",
-  color: "#8b93a7",
-  border: "1px solid #232734",
-  borderRadius: 8,
-  padding: "6px 12px",
-  cursor: "pointer",
-};
-const codeBox: React.CSSProperties = {
-  background: "#0f1115",
-  border: "1px solid #232734",
-  borderRadius: 8,
-  padding: 12,
-  overflow: "auto",
-  fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-  fontSize: 12,
-};

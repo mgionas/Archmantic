@@ -1,13 +1,33 @@
-import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { latestModel } from "@/lib/store";
+import { getProcessEdit } from "@/lib/admin";
 import { band, componentLabel, groupCapabilities, trust } from "@/lib/format";
 import { componentDiagram, contextDiagram, sequenceDiagram } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
-import { getProcessEdit } from "@/lib/admin";
 import { BpmnEditor, Mermaid } from "../diagrams-client";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
+
+const BAND_CLASS: Record<string, string> = {
+  high: "border-green-500/30 text-green-400",
+  medium: "border-amber-500/30 text-amber-400",
+  low: "border-red-500/30 text-red-400",
+};
+
+function Section({ title, extra, children }: { title: string; extra?: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <section className="mt-8">
+      <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
+        {title}
+        {extra}
+      </h2>
+      {children}
+    </section>
+  );
+}
 
 export default async function ProjectPage({ params }: { params: Promise<{ project: string }> }) {
   const { project: raw } = await params;
@@ -18,13 +38,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
 
   if (!model) {
     return (
-      <main>
-        <div className="sub">
-          <Link href="/">← projects</Link>
-        </div>
-        <h1>{project}</h1>
-        <div className="card empty">No model pushed for this project yet.</div>
-      </main>
+      <div className="space-y-4">
+        <a href="/" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+          ← projects
+        </a>
+        <h1 className="text-2xl font-bold">{project}</h1>
+        <Card className="p-6 text-sm text-muted-foreground">No model pushed for this project yet.</Card>
+      </div>
     );
   }
 
@@ -38,102 +58,121 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
   const processXml = savedBpmn ?? generatedBpmn;
 
   return (
-    <main>
-      <div className="sub">
-        <Link href="/">← projects</Link>
-      </div>
-      <h1>{project}</h1>
-      <div className="sub">
-        {model.components.length} components · {externals.length} external systems · {model.capabilities.length} capabilities
-        {model.generatedAt ? ` · analyzed ${new Date(model.generatedAt).toLocaleString()}` : ""}
-      </div>
+    <div>
+      <a href="/" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+        ← projects
+      </a>
+      <h1 className="mt-2 text-2xl font-bold tracking-tight">{project}</h1>
+      <p className="text-sm text-muted-foreground">
+        {model.components.length} components · {externals.length} external systems · {model.capabilities.length}{" "}
+        capabilities{model.generatedAt ? ` · analyzed ${new Date(model.generatedAt).toLocaleString()}` : ""}
+      </p>
 
-      <section className="trust">
-        <div className="stat">
-          <span className="num">{t.total}</span>grounded elements
+      <Card className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 p-4">
+        <Stat n={t.total} label="grounded elements" />
+        <Stat n={t.refs} label="code references" />
+        <Stat n={`${t.meanPct}%`} label="mean confidence" />
+        <div className="ml-auto flex gap-2">
+          <Badge variant="outline" className={BAND_CLASS.high}>{t.high} high</Badge>
+          <Badge variant="outline" className={BAND_CLASS.medium}>{t.medium} medium</Badge>
+          <Badge variant="outline" className={BAND_CLASS.low}>{t.low} low</Badge>
         </div>
-        <div className="stat">
-          <span className="num">{t.refs}</span>code references
-        </div>
-        <div className="stat">
-          <span className="num">{t.meanPct}%</span>mean confidence
-        </div>
-        <div className="bands">
-          <span className="b high">{t.high} high</span>
-          <span className="b medium">{t.medium} medium</span>
-          <span className="b low">{t.low} low</span>
-        </div>
-      </section>
+      </Card>
 
-      <h2>Capability map — what can this system do?</h2>
-      {groups.length === 0 ? (
-        <div className="empty">No capabilities.</div>
-      ) : (
-        <div className="grid">
-          {groups.map((g) => (
-            <div key={g.area} className="card area">
-              <h3>{g.area}/</h3>
-              <ul className="caps">
-                {g.caps.map((c) => (
-                  <li key={c.id}>
-                    <span>{c.name}</span>
-                    <span className={`badge ${band(c.confidence)}`}>
-                      grounded in {c.provenance?.length ?? 0} ref{(c.provenance?.length ?? 0) === 1 ? "" : "s"}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
+      <Section title="Capability map" extra={<span className="text-sm font-normal text-muted-foreground">what can this system do?</span>}>
+        {groups.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No capabilities.</p>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {groups.map((g) => (
+              <Card key={g.area} className="p-4">
+                <div className="mb-2 font-mono text-xs text-muted-foreground">{g.area}/</div>
+                <ul className="space-y-1.5">
+                  {g.caps.map((c) => (
+                    <li key={c.id} className="flex items-baseline justify-between gap-2">
+                      <span className="text-sm">{c.name}</span>
+                      <Badge variant="outline" className={`shrink-0 ${BAND_CLASS[band(c.confidence)]}`}>
+                        {c.provenance?.length ?? 0} ref{(c.provenance?.length ?? 0) === 1 ? "" : "s"}
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            ))}
+          </div>
+        )}
+      </Section>
 
-      <h2>Context</h2>
-      <div className="card">
-        <Mermaid id="ctx" chart={contextDiagram(model)} />
-      </div>
+      <Section title="Context">
+        <Card className="overflow-auto p-4">
+          <Mermaid id="ctx" chart={contextDiagram(model)} />
+        </Card>
+      </Section>
 
-      <h2>Components &amp; dependencies</h2>
-      <div className="card">
-        <Mermaid id="comp" chart={componentDiagram(model)} />
-      </div>
+      <Section title="Components & dependencies">
+        <Card className="overflow-auto p-4">
+          <Mermaid id="comp" chart={componentDiagram(model)} />
+        </Card>
+      </Section>
 
       {seq ? (
-        <>
-          <h2>Sequence — {model.flows[0]?.name}</h2>
-          <div className="card">
+        <Section title={`Sequence — ${model.flows[0]?.name ?? ""}`}>
+          <Card className="overflow-auto p-4">
             <Mermaid id="seq" chart={seq} />
-          </div>
-        </>
+          </Card>
+        </Section>
       ) : null}
 
-      <h2>External systems</h2>
-      <div className="card">{externals.map((s) => s.name).join(" · ") || <span className="empty">none</span>}</div>
+      <Section title="External systems">
+        <Card className="flex flex-wrap gap-2 p-4">
+          {externals.length ? (
+            externals.map((s) => (
+              <Badge key={s.id} variant="secondary">
+                {s.name}
+              </Badge>
+            ))
+          ) : (
+            <span className="text-sm text-muted-foreground">none</span>
+          )}
+        </Card>
+      </Section>
 
       {proc ? (
-        <>
-          <h2>
-            Process (BPMN) — {proc.name} {savedBpmn ? <span className="sub">· edited</span> : null}
-          </h2>
-          <div className="card">
+        <Section
+          title={`Process (BPMN) — ${proc.name}`}
+          extra={savedBpmn ? <Badge variant="secondary">edited</Badge> : undefined}
+        >
+          <Card className="p-4">
             {processXml ? (
               <BpmnEditor project={project} initialXml={processXml} />
             ) : (
-              <span className="empty">no process</span>
+              <span className="text-sm text-muted-foreground">no process</span>
             )}
-          </div>
-        </>
+          </Card>
+        </Section>
       ) : null}
 
-      <h2>Component responsibilities</h2>
-      <div className="grid">
-        {model.components.map((c) => (
-          <div key={c.id} className="card">
-            <div style={{ fontWeight: 600 }}>{componentLabel(c.id)}</div>
-            <div className="sub">{c.responsibility ?? c.id.slice("comp:".length)}</div>
-          </div>
-        ))}
-      </div>
-    </main>
+      <Section title="Component responsibilities">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {model.components.map((c) => (
+            <Card key={c.id} className="p-4">
+              <div className="font-semibold">{componentLabel(c.id)}</div>
+              <div className="mt-1 text-sm text-muted-foreground">
+                {c.responsibility ?? c.id.slice("comp:".length)}
+              </div>
+            </Card>
+          ))}
+        </div>
+      </Section>
+    </div>
+  );
+}
+
+function Stat({ n, label }: { n: number | string; label: string }) {
+  return (
+    <div className="text-sm text-muted-foreground">
+      <span className="mr-1.5 text-xl font-semibold text-foreground">{n}</span>
+      {label}
+    </div>
   );
 }
