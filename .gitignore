@@ -1,0 +1,36 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Build output (compiled from src/ via `tsc`; published from npm, not git)
+/dist
+/out-tsc
+*.tsbuildinfo
+
+# Env / secrets (never commit real connection strings — see .env.example)
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/tmp
+
+# OS
+.DS_Store
+
+# Editors
+.vscode/*
+.idea/
+
+# Claude Code: keep shared agents/config, ignore per-user local settings
+.claude/settings.local.json
+
+# Archmantic: commit the model (the IR — our source of truth, reviewable in
+# PRs), but ignore the regenerable diagram projections (`archmantic view`
+# rebuilds view.html / *.mmd / *.bpmn from model.json).
+.archmantic/*
+!.archmantic/model.json
