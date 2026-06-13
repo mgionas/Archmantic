@@ -93,7 +93,8 @@ export default function Docs() {
           <p>
             Point Archmantic at a repo and it reverse-engineers a single <strong>architecture model</strong> (the IR).
             Every diagram — C4-style context, components, sequence (Mermaid), an auto-detected BPMN business process, and
-            an ERD of your data model — is a <strong>projection</strong> of that one model. Every element is traceable to <Inline>file:line</Inline>{" "}
+            an ERD of your data model (from Prisma, Drizzle, or SQL migrations) — is a{" "}
+            <strong>projection</strong> of that one model. Every element is traceable to <Inline>file:line</Inline>{" "}
             with a confidence band, so it&apos;s verifiable, not plausible AI guesswork.
           </p>
           <p>

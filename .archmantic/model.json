@@ -35,6 +35,22 @@
     },
     {
       "componentIds": [
+        "comp:src/analyze/datamodel.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `detectDataModel` in src/analyze/datamodel.ts",
+      "id": "cap:src/analyze/datamodel.ts#detectDataModel",
+      "name": "Detect Data Model",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/datamodel.ts:12",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
         "comp:src/analyze/derive.ts"
       ],
       "confidence": 0.6,
@@ -83,6 +99,38 @@
     },
     {
       "componentIds": [
+        "comp:src/analyze/drizzle.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `detectDrizzleModel` in src/analyze/drizzle.ts",
+      "id": "cap:src/analyze/drizzle.ts#detectDrizzleModel",
+      "name": "Detect Drizzle Model",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/drizzle.ts:47",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/fs-util.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `findFiles` in src/analyze/fs-util.ts",
+      "id": "cap:src/analyze/fs-util.ts#findFiles",
+      "name": "Find Files",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/fs-util.ts:17",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
         "comp:src/analyze/incremental.ts"
       ],
       "confidence": 0.6,
@@ -115,16 +163,64 @@
     },
     {
       "componentIds": [
-        "comp:src/analyze/prisma.ts"
+        "comp:src/analyze/parse-util.ts"
       ],
       "confidence": 0.6,
-      "description": "Exported function `detectDataModel` in src/analyze/prisma.ts",
-      "id": "cap:src/analyze/prisma.ts#detectDataModel",
-      "name": "Detect Data Model",
+      "description": "Exported function `balancedBlock` in src/analyze/parse-util.ts",
+      "id": "cap:src/analyze/parse-util.ts#balancedBlock",
+      "name": "Balanced Block",
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/prisma.ts:69",
+          "ref": "src/analyze/parse-util.ts:8",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/parse-util.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `splitTopLevel` in src/analyze/parse-util.ts",
+      "id": "cap:src/analyze/parse-util.ts#splitTopLevel",
+      "name": "Split Top Level",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/parse-util.ts:22",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/prisma.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `detectPrismaModel` in src/analyze/prisma.ts",
+      "id": "cap:src/analyze/prisma.ts#detectPrismaModel",
+      "name": "Detect Prisma Model",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/prisma.ts:34",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/sql.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `detectSqlModel` in src/analyze/sql.ts",
+      "id": "cap:src/analyze/sql.ts#detectSqlModel",
+      "name": "Detect Sql Model",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/sql.ts:71",
           "source": "code"
         }
       ]
@@ -972,7 +1068,23 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/erd.ts:13",
+          "ref": "src/project/erd.ts:57",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/erd.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `relationshipEdges` in src/project/erd.ts",
+      "id": "cap:src/project/erd.ts#relationshipEdges",
+      "name": "Relationship Edges",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/erd.ts:21",
           "source": "code"
         }
       ]
@@ -1283,6 +1395,20 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:src/analyze/datamodel.ts",
+      "kind": "module",
+      "name": "src/analyze/datamodel.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/datamodel.ts:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/analyze/derive.ts",
       "kind": "module",
       "name": "src/analyze/derive.ts",
@@ -1290,6 +1416,34 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/derive.ts:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/analyze/drizzle.ts",
+      "kind": "module",
+      "name": "src/analyze/drizzle.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/drizzle.ts:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/analyze/fs-util.ts",
+      "kind": "module",
+      "name": "src/analyze/fs-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/fs-util.ts:1",
           "source": "code"
         }
       ],
@@ -1325,6 +1479,20 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:src/analyze/parse-util.ts",
+      "kind": "module",
+      "name": "src/analyze/parse-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/parse-util.ts:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/analyze/prisma.ts",
       "kind": "module",
       "name": "src/analyze/prisma.ts",
@@ -1332,6 +1500,20 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/prisma.ts:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/analyze/sql.ts",
+      "kind": "module",
+      "name": "src/analyze/sql.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/sql.ts:1",
           "source": "code"
         }
       ],
@@ -2034,7 +2216,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-13T21:53:04.294Z",
+  "generatedAt": "2026-06-13T22:05:43.894Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -2263,6 +2445,66 @@
     },
     {
       "confidence": 0.95,
+      "from": "comp:src/analyze/datamodel.ts",
+      "id": "rel:comp:src/analyze/datamodel.ts=>comp:src/analyze/drizzle.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/datamodel.ts → comp:src/analyze/drizzle.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/datamodel.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/drizzle.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/datamodel.ts",
+      "id": "rel:comp:src/analyze/datamodel.ts=>comp:src/analyze/prisma.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/datamodel.ts → comp:src/analyze/prisma.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/datamodel.ts:8",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/prisma.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/datamodel.ts",
+      "id": "rel:comp:src/analyze/datamodel.ts=>comp:src/analyze/sql.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/datamodel.ts → comp:src/analyze/sql.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/datamodel.ts:10",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/sql.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/datamodel.ts",
+      "id": "rel:comp:src/analyze/datamodel.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/datamodel.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/datamodel.ts:7",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
       "from": "comp:src/analyze/derive.ts",
       "id": "rel:comp:src/analyze/derive.ts=>comp:src/ir/naming.ts",
       "kind": "depends_on",
@@ -2335,6 +2577,126 @@
         }
       ],
       "to": "sys:ext:typescript"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/drizzle.ts",
+      "id": "rel:comp:src/analyze/drizzle.ts=>comp:src/analyze/fs-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/drizzle.ts → comp:src/analyze/fs-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/drizzle.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/fs-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/drizzle.ts",
+      "id": "rel:comp:src/analyze/drizzle.ts=>comp:src/analyze/parse-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/drizzle.ts → comp:src/analyze/parse-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/drizzle.ts:15",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/parse-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/drizzle.ts",
+      "id": "rel:comp:src/analyze/drizzle.ts=>comp:src/analyze/tier0.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/drizzle.ts → comp:src/analyze/tier0.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/drizzle.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/tier0.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/drizzle.ts",
+      "id": "rel:comp:src/analyze/drizzle.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/drizzle.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/drizzle.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/drizzle.ts",
+      "id": "rel:comp:src/analyze/drizzle.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/drizzle.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/drizzle.ts:10",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/drizzle.ts",
+      "id": "rel:comp:src/analyze/drizzle.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/drizzle.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/drizzle.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/fs-util.ts",
+      "id": "rel:comp:src/analyze/fs-util.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/fs-util.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/fs-util.ts:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/fs-util.ts",
+      "id": "rel:comp:src/analyze/fs-util.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/fs-util.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/fs-util.ts:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
     },
     {
       "confidence": 0.95,
@@ -2444,6 +2806,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/index.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/datamodel.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/index.ts → comp:src/analyze/datamodel.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/index.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/datamodel.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/index.ts",
       "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/derive.ts",
       "kind": "depends_on",
       "name": "comp:src/analyze/index.ts → comp:src/analyze/derive.ts",
@@ -2455,21 +2832,6 @@
         }
       ],
       "to": "comp:src/analyze/derive.ts"
-    },
-    {
-      "confidence": 0.95,
-      "from": "comp:src/analyze/index.ts",
-      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/prisma.ts",
-      "kind": "depends_on",
-      "name": "comp:src/analyze/index.ts → comp:src/analyze/prisma.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/analyze/index.ts:14",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/analyze/prisma.ts"
     },
     {
       "confidence": 0.95,
@@ -2579,6 +2941,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/prisma.ts",
+      "id": "rel:comp:src/analyze/prisma.ts=>comp:src/analyze/fs-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/prisma.ts → comp:src/analyze/fs-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/prisma.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/fs-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/prisma.ts",
       "id": "rel:comp:src/analyze/prisma.ts=>comp:src/analyze/tier0.ts",
       "kind": "depends_on",
       "name": "comp:src/analyze/prisma.ts → comp:src/analyze/tier0.ts",
@@ -2631,6 +3008,96 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/prisma.ts:10",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/sql.ts",
+      "id": "rel:comp:src/analyze/sql.ts=>comp:src/analyze/fs-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/sql.ts → comp:src/analyze/fs-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/sql.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/fs-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/sql.ts",
+      "id": "rel:comp:src/analyze/sql.ts=>comp:src/analyze/parse-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/sql.ts → comp:src/analyze/parse-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/sql.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/parse-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/sql.ts",
+      "id": "rel:comp:src/analyze/sql.ts=>comp:src/analyze/tier0.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/sql.ts → comp:src/analyze/tier0.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/sql.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/tier0.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/sql.ts",
+      "id": "rel:comp:src/analyze/sql.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/sql.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/sql.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/sql.ts",
+      "id": "rel:comp:src/analyze/sql.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/sql.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/sql.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/sql.ts",
+      "id": "rel:comp:src/analyze/sql.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/sql.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/sql.ts:10",
           "source": "code"
         }
       ],

@@ -11,7 +11,7 @@ import { tier0 } from "./tier0.js";
 import { tier1 } from "./tier1.js";
 import { deriveSemantics } from "./derive.js";
 import { detectStack } from "./stack.js";
-import { detectDataModel } from "./prisma.js";
+import { detectDataModel } from "./datamodel.js";
 
 /** Read optional `.archmantic/config.json` → multi-repo system + project overrides. */
 function applyConfig(root: string, model: ArchitectureModel): void {

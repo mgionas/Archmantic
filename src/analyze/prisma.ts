@@ -6,46 +6,11 @@
  * Declarative source → high confidence, no LLM needed. Drizzle/TypeORM/SQL come
  * later (see docs/ROADMAP.md); this is the first cut.
  */
-import { readFileSync, readdirSync } from "node:fs";
-import { join, relative } from "node:path";
+import { readFileSync } from "node:fs";
+import { relative } from "node:path";
 import { type DataEntity, type DataField } from "../ir/types.js";
 import { STRUCTURAL_CONFIDENCE } from "./tier0.js";
-
-const IGNORE = new Set([
-  "node_modules",
-  ".git",
-  "dist",
-  "build",
-  ".next",
-  "coverage",
-  ".vercel",
-  ".archmantic",
-]);
-
-/** Find every `*.prisma` file under root (single- or multi-file schemas). */
-function findPrismaFiles(root: string): string[] {
-  const out: string[] = [];
-  const stack = [root];
-  while (stack.length) {
-    const dir = stack.pop()!;
-    let entries;
-    try {
-      entries = readdirSync(dir, { withFileTypes: true });
-    } catch {
-      continue;
-    }
-    for (const e of entries) {
-      const full = join(dir, e.name);
-      if (e.isDirectory()) {
-        if (IGNORE.has(e.name) || e.name.startsWith(".")) continue;
-        stack.push(full);
-      } else if (e.isFile() && e.name.endsWith(".prisma")) {
-        out.push(full);
-      }
-    }
-  }
-  return out.sort();
-}
+import { findFiles } from "./fs-util.js";
 
 interface PartialEntity {
   name: string;
@@ -66,8 +31,8 @@ function finalize(cur: PartialEntity, rel: string): DataEntity {
 }
 
 /** Parse the repo's Prisma schema(s) into data-model entities. Empty if none. */
-export function detectDataModel(root: string): DataEntity[] {
-  const files = findPrismaFiles(root);
+export function detectPrismaModel(root: string): DataEntity[] {
+  const files = findFiles(root, (n) => n.endsWith(".prisma"));
   if (!files.length) return [];
   const sources = files.map((f) => ({
     rel: relative(root, f).split("\\").join("/"),

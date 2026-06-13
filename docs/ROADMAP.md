@@ -20,7 +20,7 @@ code-graph commodity territory?
 |---|---|---|---|
 | ✅ done | npm publish (core) | Published `@archmantic/cli@0.1.0` (public) | High · Low |
 | ✅ done | In-app `/docs` | Shipped, public, linked from header + landing | High · Low |
-| ✅ done | Data model → ERD | Prisma → `DataEntity` IR + Mermaid ERD; CLI + web Data tab + MCP `get_data_model` | High · Med |
+| ✅ done | Data model → ERD | Prisma + Drizzle + SQL → `DataEntity` IR + Mermaid ERD; CLI + web Data tab + MCP `get_data_model` | High · Med |
 | **NEXT** | GitHub Action / PR diff | Makes the shipped "drift & PR diffs" USP real; retention | High · Med |
 | **NEXT** | MCP usage stats | Proof-of-value loop + metering substrate for billing | High · Med |
 | **LATER** | API surface (routes) | Completes the "what's the contract" layer | Med · Med |
@@ -66,10 +66,12 @@ Sections: About, Install, Quickstart (`analyze → push`), CLI reference, MCP
 setup, Cloud/teams, Multi-repo (`.archmantic/config.json`), Edit-then-build.
 MDX in the Next.js app; linked from the landing nav.
 
-### NEXT · Data model → ERD
+### ✅ done · Data model → ERD
 - IR: `DataEntity { fields, relations }` with provenance to schema file lines.
-- Detect: `schema.prisma`, Drizzle table defs, TypeORM entities, SQL migrations.
-- Project: Mermaid `erDiagram`. New "Data" tab in the project view + MCP query.
+- Detect: `schema.prisma` ✅, Drizzle table defs ✅, SQL `CREATE TABLE` migrations ✅.
+  TypeORM entities — still TODO.
+- Project: Mermaid `erDiagram` ✅. "Data" tab in the project view ✅ + MCP `get_data_model` ✅.
+- Cardinality inferred from FK direction so FK-only sources (Drizzle/SQL) render correctly.
 
 ### NEXT · GitHub Action / PR diff
 Reuse `diff/model-diff` + drift. Action runs `analyze`, compares against the

@@ -18,7 +18,7 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 - **Drift detection** — "your committed model vs. the code" diff.
 - **PR architecture diff** — how a change reshapes the architecture (not a line diff), postable as a PR comment.
 - **Architecture history** — how the system's shape evolved, commit by commit.
-- **Data model (ERD)** — entities, fields, and relations parsed from your Prisma schema, grounded to `schema.prisma:line` and projected as a Mermaid ERD.
+- **Data model (ERD)** — entities, fields, and relations parsed from your Prisma schema, Drizzle tables, or SQL `CREATE TABLE` migrations, grounded to `file:line` and projected as a Mermaid ERD.
 - **One model → many audiences** — C4-style context, components, sequence (Mermaid), BPMN, an ERD, capability list, and an MCP surface for agents.
 - **Token savings** — agents query the model over MCP instead of reading whole files (~98% fewer tokens on this repo, by the built-in benchmark).
 

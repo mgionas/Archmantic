@@ -112,7 +112,7 @@ export function getDataModel(model: ArchitectureModel): string {
   const out: string[] = [`Data model: ${entities.length} entities`];
   for (const e of entities) {
     const cols = e.fields
-      .filter((f) => !f.relationTo)
+      .filter((f) => !(f.relationTo && !f.isForeignKey))
       .map((f) => {
         const tags = [f.isId ? "PK" : "", f.isForeignKey ? "FK" : "", f.isUnique && !f.isId ? "unique" : ""]
           .filter(Boolean)

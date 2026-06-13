@@ -60,14 +60,14 @@ export function buildSpecMarkdown(model: ArchitectureModel): string {
     for (const e of model.dataEntities) {
       out.push(`### ${e.name} <sub>\`${refOf(e)}\`</sub>`);
       for (const f of e.fields) {
-        if (f.relationTo) {
-          out.push(`- → ${f.name}: ${f.type}${f.list ? "[]" : ""} _(relation)_`);
-        } else {
-          const tags = [f.isId ? "PK" : "", f.isForeignKey ? "FK" : "", f.isUnique && !f.isId ? "unique" : ""]
-            .filter(Boolean)
-            .join(", ");
-          out.push(`- ${f.name}: ${f.type}${f.list ? "[]" : ""}${f.optional ? "?" : ""}${tags ? ` (${tags})` : ""}`);
-        }
+        if (f.relationTo && !f.isForeignKey) continue; // pure nav field → shown as relation below
+        const tags = [f.isId ? "PK" : "", f.isForeignKey ? "FK" : "", f.isUnique && !f.isId ? "unique" : ""]
+          .filter(Boolean)
+          .join(", ");
+        out.push(`- ${f.name}: ${f.type}${f.list ? "[]" : ""}${f.optional ? "?" : ""}${tags ? ` (${tags})` : ""}`);
+      }
+      for (const f of e.fields.filter((f) => f.relationTo)) {
+        out.push(`- → ${f.name}: ${f.type}${f.list ? "[]" : ""} _(relation)_`);
       }
       out.push("");
     }
@@ -160,7 +160,7 @@ export function buildSpecJson(model: ArchitectureModel): BuildSpecJson {
       name: e.name,
       ref: refOf(e),
       fields: e.fields
-        .filter((f) => !f.relationTo)
+        .filter((f) => !(f.relationTo && !f.isForeignKey))
         .map((f) => ({
           name: f.name,
           type: f.type,

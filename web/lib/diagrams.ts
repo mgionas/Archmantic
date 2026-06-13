@@ -61,31 +61,35 @@ export function erDiagram(model: Model): string | null {
   const byId = new Map(entities.map((e) => [e.id, e]));
   const lines: string[] = ["erDiagram"];
 
-  const pairs = new Map<string, { a: string; b: string; aList: boolean; bList: boolean }>();
+  // Cardinality: list field → that side is parent ("one"); single/FK field → that
+  // side is child ("many"). Reads Prisma (inverse list) and Drizzle/SQL (FK-only).
+  const pairs = new Map<string, { x: string; y: string; listX: boolean; listY: boolean; singleX: boolean; singleY: boolean }>();
   for (const e of entities) {
     for (const f of e.fields) {
       const target = f.relationTo ? byId.get(f.relationTo) : undefined;
       if (!target) continue;
-      const sorted = [e.name, target.name].sort();
-      const x = sorted[0]!;
-      const y = sorted[1]!;
-      const key = `${x} ${y}`;
-      const p = pairs.get(key) ?? { a: x, b: y, aList: false, bList: false };
-      if (e.name === x) p.aList ||= !!f.list;
-      else p.bList ||= !!f.list;
-      pairs.set(key, p);
+      const [x, y] = [e.name, target.name].sort() as [string, string];
+      const p = pairs.get(`${x} ${y}`) ?? { x, y, listX: false, listY: false, singleX: false, singleY: false };
+      const eIsX = e.name === x;
+      if (f.list) eIsX ? (p.listX = true) : (p.listY = true);
+      else eIsX ? (p.singleX = true) : (p.singleY = true);
+      pairs.set(`${x} ${y}`, p);
     }
   }
   for (const p of pairs.values()) {
-    if (p.aList && p.bList) lines.push(`  ${token(p.a)} }o--o{ ${token(p.b)} : ""`);
-    else if (p.aList) lines.push(`  ${token(p.a)} ||--o{ ${token(p.b)} : ""`);
-    else if (p.bList) lines.push(`  ${token(p.b)} ||--o{ ${token(p.a)} : ""`);
-    else lines.push(`  ${token(p.a)} ||--|| ${token(p.b)} : ""`);
+    const X = token(p.x);
+    const Y = token(p.y);
+    if (p.listX && p.listY) lines.push(`  ${X} }o--o{ ${Y} : ""`);
+    else if (p.listX) lines.push(`  ${X} ||--o{ ${Y} : ""`);
+    else if (p.listY) lines.push(`  ${Y} ||--o{ ${X} : ""`);
+    else if (p.singleX && p.singleY) lines.push(`  ${X} ||--|| ${Y} : ""`);
+    else if (p.singleX) lines.push(`  ${Y} ||--o{ ${X} : ""`);
+    else lines.push(`  ${X} ||--o{ ${Y} : ""`);
   }
   for (const e of entities) {
     lines.push(`  ${token(e.name)} {`);
     for (const f of e.fields) {
-      if (f.relationTo) continue;
+      if (f.relationTo && !f.isForeignKey) continue;
       const type = token(f.type) + (f.list ? "_list" : "");
       const key = f.isId ? "PK" : f.isForeignKey ? "FK" : f.isUnique ? "UK" : "";
       const note = f.optional ? ' "nullable"' : "";
