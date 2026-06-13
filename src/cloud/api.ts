@@ -30,6 +30,17 @@ async function send(path: string, init: RequestInit): Promise<Response> {
   }
 }
 
+/** Guard against an auth redirect (HTML) being mistaken for a JSON API response. */
+function assertJson(res: Response, action: string): void {
+  const ct = res.headers.get("content-type") ?? "";
+  if (!ct.includes("application/json")) {
+    throw new ApiError(
+      `${action} did not reach the API (got ${ct || "non-JSON"} from ${baseUrl()}). ` +
+        `Check ARCHMANTIC_API_URL and that the deployment is current (the API route must be reachable).`,
+    );
+  }
+}
+
 export async function pushModelApi(model: ArchitectureModel, commit: string): Promise<void> {
   const res = await send("/api/push", {
     method: "POST",
@@ -37,12 +48,14 @@ export async function pushModelApi(model: ArchitectureModel, commit: string): Pr
     body: JSON.stringify({ model, commit }),
   });
   if (!res.ok) throw new ApiError(`push failed (${res.status}): ${(await res.text()).slice(0, 200)}`);
+  assertJson(res, "push");
 }
 
 export async function pullLatestApi(project: string): Promise<ArchitectureModel | null> {
   const res = await send(`/api/pull?project=${encodeURIComponent(project)}`, { headers: authHeader() });
   if (res.status === 404) return null;
   if (!res.ok) throw new ApiError(`pull failed (${res.status}): ${(await res.text()).slice(0, 200)}`);
+  assertJson(res, "pull");
   const data = (await res.json()) as { model?: ArchitectureModel };
   return data.model ?? null;
 }
