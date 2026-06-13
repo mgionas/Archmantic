@@ -66,7 +66,12 @@ Optionally link a global `archmantic` binary: `npm link`.
 
 ## Use it with your AI agent (MCP)
 
-This repo ships a project [`.mcp.json`](.mcp.json). In Claude Code / Cursor, approve the **archmantic** server, then your agent can call `get_context`, `search_capabilities`, `get_component`, `get_process`, `whats_related`, and more — querying the same model your team reads.
+This repo ships a project [`.mcp.json`](.mcp.json). In Claude Code / Cursor, approve the **archmantic** server, then your agent can:
+
+- **Read** the model: `get_context`, `search_capabilities`, `get_component`, `get_process`, `whats_related`, `list_components`, `get_sequence`.
+- **Keep it live:** `refresh` (re-analyze from disk after a change) and `sync` (re-analyze **and push to the team cloud**, org-scoped). So when you ask the agent to change something, it can update the shared architecture model in the same flow — no manual `push`.
+
+The MCP server reads credentials from `.env.local` (so `sync` uses your `ARCHMANTIC_TOKEN`). For fully hands-free syncing, add a Claude Code **Stop hook** that runs `archmantic update && archmantic push` after each turn.
 
 ## Team cloud knowledge (shared model)
 

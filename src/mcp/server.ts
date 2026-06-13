@@ -6,12 +6,16 @@
  * stdio transport: protocol travels on stdout, so all human logging goes to
  * stderr. Built on the official @modelcontextprotocol/sdk.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { type ArchitectureModel } from "../ir/types.js";
+import { type ArchitectureModel, serializeModel } from "../ir/types.js";
+import { analyzeRepo } from "../analyze/index.js";
+import { diffModels, summarizeChange } from "../diff/index.js";
+import { hasApiToken, pushModel, pushModelApi } from "../cloud/index.js";
 import {
   getComponent,
   getContext,
@@ -32,10 +36,28 @@ function loadModel(root: string): ArchitectureModel {
   return JSON.parse(readFileSync(file, "utf8")) as ArchitectureModel;
 }
 
+function currentCommit(root: string): string {
+  try {
+    return execFileSync("git", ["-C", root, "rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+  } catch {
+    return "working-tree";
+  }
+}
+
+/** Re-analyze the repo from disk, persist canonically, and return the fresh model. */
+function reanalyze(root: string): ArchitectureModel {
+  const model = { ...analyzeRepo(root), generatedAt: new Date().toISOString() };
+  const dir = join(root, ".archmantic");
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "model.json"), serializeModel(model), "utf8");
+  return model;
+}
+
 const text = (s: string) => ({ content: [{ type: "text" as const, text: s }] });
 
 export async function startMcpServer(root: string): Promise<void> {
-  const model = loadModel(root);
+  // Mutable so `refresh`/`sync` update what the read tools serve.
+  let model = loadModel(root);
   const server = new McpServer({ name: "archmantic", version: "0.0.1" });
 
   server.registerTool(
@@ -105,8 +127,50 @@ export async function startMcpServer(root: string): Promise<void> {
     async ({ name }) => text(whatsRelated(model, name)),
   );
 
+  // ── Write tools: the agent keeps the living model current ──────────────────
+
+  server.registerTool(
+    "refresh",
+    {
+      title: "Refresh the model",
+      description:
+        "Re-analyze the repository from disk and update the served model (and .archmantic/model.json). Call this after changing code so subsequent reads reflect reality.",
+    },
+    async () => {
+      model = reanalyze(root);
+      return text(`Refreshed — ${model.components.length} components, ${model.capabilities.length} capabilities.`);
+    },
+  );
+
+  server.registerTool(
+    "sync",
+    {
+      title: "Sync the model to the cloud",
+      description:
+        "Re-analyze the repo and push the updated architecture model to the team cloud (org-scoped via your token; direct via DATABASE_URL otherwise). Returns what changed. Call this after making architectural changes.",
+    },
+    async () => {
+      const before = model;
+      model = reanalyze(root);
+      const diff = diffModels(before, model, "previous", "updated");
+      const commit = currentCommit(root);
+      const viaApi = hasApiToken();
+      try {
+        if (viaApi) await pushModelApi(model, commit);
+        else await pushModel(model, commit);
+      } catch (err) {
+        return text(
+          `Model refreshed locally, but cloud push failed: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
+      return text(
+        `Synced "${model.project}" @ ${commit.slice(0, 7)} ${viaApi ? "(org-scoped API)" : "(direct)"}.\nChanges: ${summarizeChange(diff)}`,
+      );
+    },
+  );
+
   process.stderr.write(
-    `archmantic MCP server: serving "${model.project}" (${model.components.length} components, ${model.capabilities.length} capabilities) over stdio\n`,
+    `archmantic MCP server: serving "${model.project}" (${model.components.length} components, ${model.capabilities.length} capabilities) over stdio — read + sync tools\n`,
   );
   await server.connect(new StdioServerTransport());
 }
