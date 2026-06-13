@@ -20,6 +20,7 @@
     "node": ">=24"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.104.1",
     "typescript": "^6.0.3"
   },
   "devDependencies": {

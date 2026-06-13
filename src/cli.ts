@@ -17,7 +17,9 @@ import { basename, join } from "node:path";
 const pkg = require("../package.json") as { version: string };
 import { type ArchitectureModel, createEmptyModel } from "./ir/types.js";
 import { analyzeRepo } from "./analyze/index.js";
+import { tier2 } from "./analyze/tier2.js";
 import { terminalPreview, projectionArtifacts } from "./project/index.js";
+import { loadEnv } from "./env.js";
 import {
   diffModels,
   hasChanges,
@@ -51,13 +53,18 @@ function cmdInit(args: string[]): number {
   return 0;
 }
 
-function cmdAnalyze(): number {
-  const root = process.cwd();
-  const model = { ...analyzeRepo(root), generatedAt: new Date().toISOString() };
+function parseTier(args: string[]): number {
+  const i = args.indexOf("--tier");
+  if (i !== -1 && args[i + 1]) return Number(args[i + 1]) || 1;
+  const inline = args.find((a) => a.startsWith("--tier="));
+  if (inline) return Number(inline.split("=")[1]) || 1;
+  return 1;
+}
 
-  const dir = join(root, MODEL_DIR);
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, MODEL_FILE), JSON.stringify(model, null, 2) + "\n", "utf8");
+async function cmdAnalyze(args: string[]): Promise<number> {
+  const root = process.cwd();
+  const tier = parseTier(args);
+  const model = { ...analyzeRepo(root), generatedAt: new Date().toISOString() };
 
   const externalSystems = model.systems.filter((s) => s.kind === "external").length;
   const internalDeps = model.relations.filter((r) => r.to.startsWith("comp:")).length;
@@ -69,6 +76,24 @@ function cmdAnalyze(): number {
   console.log(`  external systems: ${externalSystems}`);
   console.log(`  capabilities:  ${model.capabilities.length}`);
   console.log(`  processes:     ${model.processes.length}, flows: ${model.flows.length}`);
+
+  if (tier >= 2) {
+    const t2 = await tier2(root, model);
+    if (!t2.ran) {
+      console.log(`\n⚠ Tier 2 (LLM) skipped: ${t2.reason}`);
+    } else {
+      console.log(`\n✓ Tier 2 (LLM semantic pass)`);
+      console.log(`  refined: ${t2.capabilitiesRefined} capabilities, ${t2.componentsRefined} components` +
+        `${t2.processRefined ? ", 1 process" : ""}`);
+      console.log(`  LLM usage: ${t2.calls} calls · ${t2.inputTokens} in / ${t2.outputTokens} out tokens · ~$${t2.estCostUsd.toFixed(4)}`);
+      if (t2.reason) console.log(`  note: ${t2.reason}`);
+    }
+  }
+
+  const dir = join(root, MODEL_DIR);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, MODEL_FILE), JSON.stringify(model, null, 2) + "\n", "utf8");
+
   console.log(`  → ${MODEL_DIR}/${MODEL_FILE}`);
   console.log(`  Every element is grounded with file:line provenance.`);
   console.log(`  Next: \`archmantic view\` for the capability map, diagrams & trust report.`);
@@ -189,7 +214,7 @@ Usage: archmantic <command> [options]
 
 Commands:
   init [name]    Create an empty .archmantic/model.json (defaults name to the folder)
-  analyze        Reverse-engineer the architecture model from this repo   [M1]
+  analyze [--tier N]  Reverse-engineer the model (--tier 2 adds the LLM pass, BYOK)
   view           Capability map + diagrams + trust report (writes view.html)
   drift [--check]  Compare the committed model vs the code (--check exits 1 on drift)
   diff [<ref>]   Architecture diff: a git ref → working tree (writes pr-diff.md)
@@ -200,7 +225,7 @@ Options:
   -h, --help     Show this help`);
 }
 
-function main(argv: string[]): number {
+async function main(argv: string[]): Promise<number> {
   const [command, ...rest] = argv;
 
   if (command === "-v" || command === "--version") {
@@ -212,11 +237,13 @@ function main(argv: string[]): number {
     return 0;
   }
 
+  loadEnv(process.cwd());
+
   switch (command) {
     case "init":
       return cmdInit(rest);
     case "analyze":
-      return cmdAnalyze();
+      return cmdAnalyze(rest);
     case "mcp":
       return notImplemented("mcp", "M5 (MCP server + token-savings proof)");
     case "view":
@@ -232,4 +259,10 @@ function main(argv: string[]): number {
   }
 }
 
-process.exit(main(process.argv.slice(2)));
+main(process.argv.slice(2)).then(
+  (code) => process.exit(code),
+  (err) => {
+    console.error(err instanceof Error ? err.message : err);
+    process.exit(1);
+  },
+);
