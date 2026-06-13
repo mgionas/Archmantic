@@ -92,8 +92,8 @@ export default function Docs() {
         <Section id="about" title="What is Archmantic">
           <p>
             Point Archmantic at a repo and it reverse-engineers a single <strong>architecture model</strong> (the IR).
-            Every diagram — C4-style context, components, sequence (Mermaid), and an auto-detected BPMN business process
-            — is a <strong>projection</strong> of that one model. Every element is traceable to <Inline>file:line</Inline>{" "}
+            Every diagram — C4-style context, components, sequence (Mermaid), an auto-detected BPMN business process, and
+            an ERD of your data model — is a <strong>projection</strong> of that one model. Every element is traceable to <Inline>file:line</Inline>{" "}
             with a confidence band, so it&apos;s verifiable, not plausible AI guesswork.
           </p>
           <p>
@@ -180,8 +180,8 @@ npx @archmantic/cli pull      # fetch the latest team model`}</Code>
   }
 }`}</Code>
           <p>
-            The agent can then query components, capabilities, context, sequences, and processes — and refresh or sync
-            the model — instead of reading source files.
+            The agent can then query components, capabilities, context, sequences, processes, and the data model — and
+            refresh or sync the model — instead of reading source files.
           </p>
         </Section>
 

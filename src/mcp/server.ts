@@ -19,6 +19,7 @@ import { hasApiToken, pushModel, pushModelApi } from "../cloud/index.js";
 import {
   getComponent,
   getContext,
+  getDataModel,
   getProcess,
   getSequence,
   listComponents,
@@ -58,7 +59,7 @@ const text = (s: string) => ({ content: [{ type: "text" as const, text: s }] });
 export async function startMcpServer(root: string): Promise<void> {
   // Mutable so `refresh`/`sync` update what the read tools serve.
   let model = loadModel(root);
-  const server = new McpServer({ name: "archmantic", version: "0.0.1" });
+  const server = new McpServer({ name: "archmantic", version: "0.1.0" });
 
   server.registerTool(
     "get_context",
@@ -115,6 +116,16 @@ export async function startMcpServer(root: string): Promise<void> {
       description: "The primary call/dependency sequence (sequence diagram) as ordered messages.",
     },
     async () => text(getSequence(model)),
+  );
+
+  server.registerTool(
+    "get_data_model",
+    {
+      title: "Get data model",
+      description:
+        "The persisted data model (DB entities/tables): each entity's fields with PK/FK/unique markers and its relations. Grounded in the schema file.",
+    },
+    async () => text(getDataModel(model)),
   );
 
   server.registerTool(

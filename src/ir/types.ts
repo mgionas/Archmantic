@@ -101,6 +101,30 @@ export interface Technology extends ElementBase {
   category: string;
 }
 
+/** One column/field on a DataEntity. */
+export interface DataField {
+  name: string;
+  /** scalar type (String, Int, DateTime…), an enum name, or a related entity's name. */
+  type: string;
+  /** nullable. */
+  optional?: boolean;
+  /** to-many (array). */
+  list?: boolean;
+  /** part of the primary key. */
+  isId?: boolean;
+  /** has a uniqueness constraint. */
+  isUnique?: boolean;
+  /** set when this field is a relation to another entity — the target entity id. */
+  relationTo?: string;
+  /** scalar foreign-key column (named in a relation's `fields: [...]`). */
+  isForeignKey?: boolean;
+}
+
+/** A persisted data model entity (DB table / ORM model) — projects to an ERD. */
+export interface DataEntity extends ElementBase {
+  fields: DataField[];
+}
+
 /** The whole model for one project. */
 export interface ArchitectureModel {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -119,6 +143,7 @@ export interface ArchitectureModel {
   processes: Process[];
   capabilities: Capability[];
   technologies: Technology[];
+  dataEntities: DataEntity[];
 }
 
 /**
@@ -137,6 +162,7 @@ export function sortModel(m: ArchitectureModel): ArchitectureModel {
     relations: [...m.relations].sort(byId),
     capabilities: [...m.capabilities].sort(byId),
     technologies: [...m.technologies].sort(byId),
+    dataEntities: [...m.dataEntities].sort(byId),
   };
 }
 
@@ -171,5 +197,6 @@ export function createEmptyModel(project: string): ArchitectureModel {
     processes: [],
     capabilities: [],
     technologies: [],
+    dataEntities: [],
   };
 }

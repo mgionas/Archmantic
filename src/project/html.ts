@@ -9,6 +9,7 @@
  */
 import { type ArchitectureModel } from "../ir/types.js";
 import { contextDiagram, componentDiagram, sequenceDiagram } from "./mermaid.js";
+import { erDiagram } from "./erd.js";
 import { bpmnXml } from "./bpmn.js";
 import { groupCapabilities } from "./capability.js";
 import { badge, band, isLowConfidence, summarize, type Grounded } from "./trust.js";
@@ -25,6 +26,7 @@ function allGrounded(model: ArchitectureModel): Grounded[] {
     ...model.capabilities,
     ...model.flows,
     ...model.processes,
+    ...(model.dataEntities ?? []),
   ];
 }
 
@@ -71,6 +73,7 @@ export function renderHtml(model: ArchitectureModel): string {
   const seq = flow ? mermaidBlock(sequenceDiagram(flow, model)) : "<p class='empty'>No flow derived.</p>";
   const proc = model.processes[0];
   const bpmn = proc ? bpmnXml(proc) : "";
+  const erd = model.dataEntities?.length ? mermaidBlock(erDiagram(model)) : "";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -122,6 +125,8 @@ export function renderHtml(model: ArchitectureModel): string {
 
   <h2>Components &amp; dependencies</h2>
   <div class="card">${comp}</div>
+
+  ${erd ? `<h2>Data model — ${model.dataEntities.length} entities</h2>\n  <div class="card">${erd}</div>` : ""}
 
   <h2>Sequence — ${esc(flow?.name ?? "")}</h2>
   <div class="card">${seq}</div>

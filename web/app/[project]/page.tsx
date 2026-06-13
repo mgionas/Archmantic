@@ -3,7 +3,7 @@ import { listSnapshots, modelAtCommit, latestModel } from "@/lib/store";
 import { getProcessEdit } from "@/lib/admin";
 import { modelDelta } from "@/lib/diff";
 import { componentLabel, groupCapabilities, trust } from "@/lib/format";
-import { componentDiagram, contextDiagram, sequenceDiagram } from "@/lib/diagrams";
+import { componentDiagram, contextDiagram, sequenceDiagram, erDiagram } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -94,6 +94,18 @@ export default async function ProjectPage({
   }));
   const d = modelDelta(prevModel, model);
 
+  const erd = erDiagram(model);
+  const data = erd
+    ? {
+        mermaid: erd,
+        entities: (model.dataEntities ?? []).map((e) => ({
+          name: e.name,
+          fields: e.fields.filter((f) => !f.relationTo).length,
+          relations: e.fields.filter((f) => f.relationTo).length,
+        })),
+      }
+    : null;
+
   const capName = new Map<string, string>();
   for (const c of model.capabilities) capName.set(c.id, c.name);
   if (prevModel) for (const c of prevModel.capabilities) capName.set(c.id, c.name);
@@ -176,6 +188,7 @@ export default async function ProjectPage({
         groups={groups}
         components={components}
         changes={changes}
+        data={data}
         diagrams={{
           context: contextDiagram(model),
           components: componentDiagram(model),

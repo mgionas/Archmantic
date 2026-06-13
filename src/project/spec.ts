@@ -53,6 +53,26 @@ export function buildSpecMarkdown(model: ArchitectureModel): string {
     for (const [cat, names] of [...byCat.entries()].sort()) out.push(`- **${cat}:** ${names.join(", ")}`);
   }
 
+  if (model.dataEntities?.length) {
+    out.push("");
+    out.push("## Data model");
+    out.push("");
+    for (const e of model.dataEntities) {
+      out.push(`### ${e.name} <sub>\`${refOf(e)}\`</sub>`);
+      for (const f of e.fields) {
+        if (f.relationTo) {
+          out.push(`- → ${f.name}: ${f.type}${f.list ? "[]" : ""} _(relation)_`);
+        } else {
+          const tags = [f.isId ? "PK" : "", f.isForeignKey ? "FK" : "", f.isUnique && !f.isId ? "unique" : ""]
+            .filter(Boolean)
+            .join(", ");
+          out.push(`- ${f.name}: ${f.type}${f.list ? "[]" : ""}${f.optional ? "?" : ""}${tags ? ` (${tags})` : ""}`);
+        }
+      }
+      out.push("");
+    }
+  }
+
   out.push("");
   out.push("## Capabilities to implement");
   out.push("");
@@ -100,6 +120,12 @@ export interface BuildSpecJson {
   technologies: { name: string; category: string }[];
   capabilities: { name: string; description?: string; ref: string; components: string[] }[];
   components: { id: string; label: string; path: string; responsibility?: string; dependsOn: string[]; implements: string[] }[];
+  dataModel: {
+    name: string;
+    ref: string;
+    fields: { name: string; type: string; optional?: boolean; list?: boolean; key?: "PK" | "FK" | "UK" }[];
+    relations: { field: string; to: string; list?: boolean }[];
+  }[];
   process?: { name: string; description?: string; steps: string[] };
 }
 
@@ -129,6 +155,22 @@ export function buildSpecJson(model: ArchitectureModel): BuildSpecJson {
       responsibility: c.responsibility,
       dependsOn: model.relations.filter((r) => r.from === c.id).map((r) => shortTarget(r.to)),
       implements: model.capabilities.filter((cap) => cap.componentIds.includes(c.id)).map((cap) => cap.name),
+    })),
+    dataModel: (model.dataEntities ?? []).map((e) => ({
+      name: e.name,
+      ref: refOf(e),
+      fields: e.fields
+        .filter((f) => !f.relationTo)
+        .map((f) => ({
+          name: f.name,
+          type: f.type,
+          optional: f.optional,
+          list: f.list,
+          key: f.isId ? ("PK" as const) : f.isForeignKey ? ("FK" as const) : f.isUnique ? ("UK" as const) : undefined,
+        })),
+      relations: e.fields
+        .filter((f) => f.relationTo)
+        .map((f) => ({ field: f.name, to: f.type, list: f.list })),
     })),
     process: proc
       ? { name: proc.name, description: proc.description, steps: proc.tasks.map((t) => t.name) }

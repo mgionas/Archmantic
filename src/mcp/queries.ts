@@ -106,6 +106,29 @@ export function getSequence(model: ArchitectureModel): string {
   return [`Sequence: ${f.name}`, ...steps].join("\n");
 }
 
+export function getDataModel(model: ArchitectureModel): string {
+  const entities = model.dataEntities ?? [];
+  if (!entities.length) return "No data model detected (no Prisma schema found).";
+  const out: string[] = [`Data model: ${entities.length} entities`];
+  for (const e of entities) {
+    const cols = e.fields
+      .filter((f) => !f.relationTo)
+      .map((f) => {
+        const tags = [f.isId ? "PK" : "", f.isForeignKey ? "FK" : "", f.isUnique && !f.isId ? "unique" : ""]
+          .filter(Boolean)
+          .join(" ");
+        return `${f.name}: ${f.type}${f.list ? "[]" : ""}${f.optional ? "?" : ""}${tags ? ` (${tags})` : ""}`;
+      });
+    const rels = e.fields
+      .filter((f) => f.relationTo)
+      .map((f) => `${f.name} → ${f.type}${f.list ? "[]" : ""}`);
+    out.push(`\n${e.name}  [${refOf(e)}]`);
+    out.push(`  fields: ${cols.join(", ") || "—"}`);
+    if (rels.length) out.push(`  relations: ${rels.join(", ")}`);
+  }
+  return out.join("\n");
+}
+
 export function whatsRelated(model: ArchitectureModel, name: string): string {
   const c = findComponent(model, name);
   if (!c) return `No component matches "${name}".`;

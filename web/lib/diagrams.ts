@@ -53,6 +53,49 @@ export function componentDiagram(model: Model): string {
   return lines.join("\n");
 }
 
+/** ERD projection — the data model as a Mermaid erDiagram (ported from src/project/erd.ts). */
+export function erDiagram(model: Model): string | null {
+  const entities = model.dataEntities ?? [];
+  if (!entities.length) return null;
+  const token = (s: string) => s.replace(/[^A-Za-z0-9_]/g, "_");
+  const byId = new Map(entities.map((e) => [e.id, e]));
+  const lines: string[] = ["erDiagram"];
+
+  const pairs = new Map<string, { a: string; b: string; aList: boolean; bList: boolean }>();
+  for (const e of entities) {
+    for (const f of e.fields) {
+      const target = f.relationTo ? byId.get(f.relationTo) : undefined;
+      if (!target) continue;
+      const sorted = [e.name, target.name].sort();
+      const x = sorted[0]!;
+      const y = sorted[1]!;
+      const key = `${x} ${y}`;
+      const p = pairs.get(key) ?? { a: x, b: y, aList: false, bList: false };
+      if (e.name === x) p.aList ||= !!f.list;
+      else p.bList ||= !!f.list;
+      pairs.set(key, p);
+    }
+  }
+  for (const p of pairs.values()) {
+    if (p.aList && p.bList) lines.push(`  ${token(p.a)} }o--o{ ${token(p.b)} : ""`);
+    else if (p.aList) lines.push(`  ${token(p.a)} ||--o{ ${token(p.b)} : ""`);
+    else if (p.bList) lines.push(`  ${token(p.b)} ||--o{ ${token(p.a)} : ""`);
+    else lines.push(`  ${token(p.a)} ||--|| ${token(p.b)} : ""`);
+  }
+  for (const e of entities) {
+    lines.push(`  ${token(e.name)} {`);
+    for (const f of e.fields) {
+      if (f.relationTo) continue;
+      const type = token(f.type) + (f.list ? "_list" : "");
+      const key = f.isId ? "PK" : f.isForeignKey ? "FK" : f.isUnique ? "UK" : "";
+      const note = f.optional ? ' "nullable"' : "";
+      lines.push(`    ${type} ${f.name}${key ? " " + key : ""}${note}`);
+    }
+    lines.push("  }");
+  }
+  return lines.join("\n");
+}
+
 export function sequenceDiagram(model: Model): string | null {
   const flow = model.flows[0];
   if (!flow) return null;

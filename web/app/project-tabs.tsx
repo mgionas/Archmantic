@@ -5,6 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DiagramTabs } from "./diagram-tabs";
+import { Mermaid } from "./diagrams-client";
 import { band } from "@/lib/format";
 
 export interface Cap {
@@ -64,18 +65,25 @@ const BAND_CLASS: Record<string, string> = {
   low: "border-red-500/30 text-red-400",
 };
 
+export interface DataModel {
+  mermaid: string;
+  entities: { name: string; fields: number; relations: number }[];
+}
+
 export function ProjectTabs({
   project,
   groups,
   components,
   diagrams,
   changes,
+  data,
 }: {
   project: string;
   groups: Group[];
   components: Comp[];
   diagrams: Diagrams;
   changes: Changes;
+  data: DataModel | null;
 }) {
   const [tab, setTab] = useState("diagrams");
 
@@ -85,6 +93,7 @@ export function ProjectTabs({
         <TabsTrigger value="diagrams">Diagrams</TabsTrigger>
         <TabsTrigger value="capabilities">Capabilities ({groups.reduce((n, g) => n + g.caps.length, 0)})</TabsTrigger>
         <TabsTrigger value="components">Components ({components.length})</TabsTrigger>
+        {data ? <TabsTrigger value="data">Data ({data.entities.length})</TabsTrigger> : null}
         <TabsTrigger value="changes">Changes{changes.total > 0 ? ` (${changes.total})` : ""}</TabsTrigger>
       </TabsList>
 
@@ -134,6 +143,25 @@ export function ProjectTabs({
                 <div className="mt-1 text-sm text-muted-foreground">{c.responsibility}</div>
               </Card>
             ))}
+          </div>
+        ) : null}
+
+        {tab === "data" && data ? (
+          <div className="space-y-4">
+            <Card className="overflow-auto p-4">
+              <Mermaid id="erd" chart={data.mermaid} />
+            </Card>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {data.entities.map((e) => (
+                <Card key={e.name} className="p-4">
+                  <div className="font-semibold">{e.name}</div>
+                  <div className="mt-1 text-sm text-muted-foreground">
+                    {e.fields} field{e.fields === 1 ? "" : "s"}
+                    {e.relations ? ` · ${e.relations} relation${e.relations === 1 ? "" : "s"}` : ""}
+                  </div>
+                </Card>
+              ))}
+            </div>
           </div>
         ) : null}
 

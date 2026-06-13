@@ -5,12 +5,14 @@
  */
 import { type ArchitectureModel } from "../ir/types.js";
 import { contextDiagram, componentDiagram, sequenceDiagram } from "./mermaid.js";
+import { erDiagram } from "./erd.js";
 import { bpmnXml } from "./bpmn.js";
 import { capabilityMapText } from "./capability.js";
 import { renderHtml } from "./html.js";
 import { summarize, type Grounded } from "./trust.js";
 
 export { contextDiagram, componentDiagram, sequenceDiagram } from "./mermaid.js";
+export { erDiagram } from "./erd.js";
 export { bpmnXml } from "./bpmn.js";
 export { capabilityMapText, groupCapabilities } from "./capability.js";
 export { renderHtml } from "./html.js";
@@ -31,6 +33,7 @@ export function terminalPreview(model: ArchitectureModel): string {
     ...model.capabilities,
     ...model.flows,
     ...model.processes,
+    ...(model.dataEntities ?? []),
   ];
   const s = summarize(grounded);
   const out: string[] = [];
@@ -55,6 +58,16 @@ export function terminalPreview(model: ArchitectureModel): string {
   out.push(`\n${BOLD}Context diagram${RESET} ${DIM}(Mermaid source)${RESET}`);
   out.push(contextDiagram(model));
 
+  if (model.dataEntities?.length) {
+    out.push(`\n${BOLD}Data model${RESET} ${DIM}— ${model.dataEntities.length} entities${RESET}`);
+    out.push(
+      "  " +
+        model.dataEntities
+          .map((e) => `${e.name} (${e.fields.filter((f) => !f.relationTo).length})`)
+          .join("  ·  "),
+    );
+  }
+
   const proc = model.processes[0];
   if (proc) {
     out.push(`\n${BOLD}Process${RESET} ${DIM}(BPMN)${RESET} — ${proc.name}`);
@@ -73,5 +86,6 @@ export function projectionArtifacts(model: ArchitectureModel): Record<string, st
   };
   if (model.flows[0]) artifacts["sequence.mmd"] = sequenceDiagram(model.flows[0], model);
   if (model.processes[0]) artifacts["process.bpmn"] = bpmnXml(model.processes[0]);
+  if (model.dataEntities?.length) artifacts["data.mmd"] = erDiagram(model);
   return artifacts;
 }

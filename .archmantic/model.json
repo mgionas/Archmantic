@@ -108,7 +108,23 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/index.ts:29",
+          "ref": "src/analyze/index.ts:30",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/prisma.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `detectDataModel` in src/analyze/prisma.ts",
+      "id": "cap:src/analyze/prisma.ts#detectDataModel",
+      "name": "Detect Data Model",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/prisma.ts:69",
           "source": "code"
         }
       ]
@@ -636,7 +652,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:162",
+          "ref": "src/ir/types.ts:188",
           "source": "code"
         }
       ]
@@ -652,7 +668,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:157",
+          "ref": "src/ir/types.ts:183",
           "source": "code"
         }
       ]
@@ -668,7 +684,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:130",
+          "ref": "src/ir/types.ts:155",
           "source": "code"
         }
       ]
@@ -774,6 +790,22 @@
         "comp:src/mcp/queries.ts"
       ],
       "confidence": 0.6,
+      "description": "Exported function `getDataModel` in src/mcp/queries.ts",
+      "id": "cap:src/mcp/queries.ts#getDataModel",
+      "name": "Get Data Model",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/mcp/queries.ts:109",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "confidence": 0.6,
       "description": "Exported function `getProcess` in src/mcp/queries.ts",
       "id": "cap:src/mcp/queries.ts#getProcess",
       "name": "Get Process",
@@ -844,7 +876,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:109",
+          "ref": "src/mcp/queries.ts:132",
           "source": "code"
         }
       ]
@@ -860,7 +892,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/server.ts:58",
+          "ref": "src/mcp/server.ts:59",
           "source": "code"
         }
       ]
@@ -931,6 +963,22 @@
     },
     {
       "componentIds": [
+        "comp:src/project/erd.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `erDiagram` in src/project/erd.ts",
+      "id": "cap:src/project/erd.ts#erDiagram",
+      "name": "Er Diagram",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/erd.ts:13",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
         "comp:src/project/html.ts"
       ],
       "confidence": 0.6,
@@ -940,7 +988,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/html.ts:67",
+          "ref": "src/project/html.ts:69",
           "source": "code"
         }
       ]
@@ -956,7 +1004,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:68",
+          "ref": "src/project/index.ts:81",
           "source": "code"
         }
       ]
@@ -972,7 +1020,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:26",
+          "ref": "src/project/index.ts:28",
           "source": "code"
         }
       ]
@@ -1036,7 +1084,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/spec.ts:106",
+          "ref": "src/project/spec.ts:132",
           "source": "code"
         }
       ]
@@ -1231,7 +1279,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1245,7 +1293,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1259,7 +1307,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1273,7 +1321,21 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/analyze/prisma.ts",
+      "kind": "module",
+      "name": "src/analyze/prisma.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/prisma.ts:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1287,7 +1349,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1301,7 +1363,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1315,7 +1377,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1329,7 +1391,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1343,7 +1405,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1357,7 +1419,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1371,7 +1433,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1385,7 +1447,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1399,7 +1461,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1413,7 +1475,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1427,7 +1489,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1441,7 +1503,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1455,7 +1517,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1469,7 +1531,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1483,7 +1545,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1497,7 +1559,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1511,7 +1573,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1525,7 +1587,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1539,7 +1601,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1553,7 +1615,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1567,7 +1629,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1581,7 +1643,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1595,7 +1657,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1609,7 +1671,21 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/project/erd.ts",
+      "kind": "module",
+      "name": "src/project/erd.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/erd.ts:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1623,7 +1699,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1637,7 +1713,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1651,7 +1727,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1665,7 +1741,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1679,7 +1755,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1693,7 +1769,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1707,7 +1783,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1721,7 +1797,21 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:test/data-model.test.mjs",
+      "kind": "module",
+      "name": "test/data-model.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/data-model.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1735,7 +1825,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1749,7 +1839,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1763,7 +1853,7 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     },
     {
       "confidence": 0.95,
@@ -1777,9 +1867,10 @@
           "source": "code"
         }
       ],
-      "systemId": "sys:archmantic"
+      "systemId": "sys:@archmantic/cli"
     }
   ],
+  "dataEntities": [],
   "flows": [
     {
       "confidence": 0.6,
@@ -1943,7 +2034,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-13T21:31:56.126Z",
+  "generatedAt": "2026-06-13T21:53:04.294Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -2093,7 +2184,7 @@
       ]
     }
   ],
-  "project": "archmantic",
+  "project": "@archmantic/cli",
   "relations": [
     {
       "confidence": 0.95,
@@ -2368,6 +2459,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/index.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/prisma.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/index.ts → comp:src/analyze/prisma.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/index.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/prisma.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/index.ts",
       "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/stack.ts",
       "kind": "depends_on",
       "name": "comp:src/analyze/index.ts → comp:src/analyze/stack.ts",
@@ -2465,6 +2571,66 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/index.ts:7",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/prisma.ts",
+      "id": "rel:comp:src/analyze/prisma.ts=>comp:src/analyze/tier0.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/prisma.ts → comp:src/analyze/tier0.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/prisma.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/tier0.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/prisma.ts",
+      "id": "rel:comp:src/analyze/prisma.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/prisma.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/prisma.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/prisma.ts",
+      "id": "rel:comp:src/analyze/prisma.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/prisma.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/prisma.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/prisma.ts",
+      "id": "rel:comp:src/analyze/prisma.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/prisma.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/prisma.ts:10",
           "source": "code"
         }
       ],
@@ -3647,6 +3813,21 @@
     },
     {
       "confidence": 0.95,
+      "from": "comp:src/project/erd.ts",
+      "id": "rel:comp:src/project/erd.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/erd.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/erd.ts:6",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
       "from": "comp:src/project/html.ts",
       "id": "rel:comp:src/project/html.ts=>comp:src/ir/types.ts",
       "kind": "depends_on",
@@ -3669,7 +3850,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/html.ts:12",
+          "ref": "src/project/html.ts:13",
           "source": "code"
         }
       ],
@@ -3684,11 +3865,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/html.ts:13",
+          "ref": "src/project/html.ts:14",
           "source": "code"
         }
       ],
       "to": "comp:src/project/capability.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/html.ts",
+      "id": "rel:comp:src/project/html.ts=>comp:src/project/erd.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/html.ts → comp:src/project/erd.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/html.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/erd.ts"
     },
     {
       "confidence": 0.95,
@@ -3714,7 +3910,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/html.ts:14",
+          "ref": "src/project/html.ts:15",
           "source": "code"
         }
       ],
@@ -3744,7 +3940,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:18",
+          "ref": "src/project/index.ts:20",
           "source": "code"
         }
       ],
@@ -3759,12 +3955,12 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:8",
+          "ref": "src/project/index.ts:9",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:14",
+          "ref": "src/project/index.ts:16",
           "source": "code"
         }
       ],
@@ -3779,7 +3975,27 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:9",
+          "ref": "src/project/index.ts:10",
+          "source": "code"
+        },
+        {
+          "confidence": 0.95,
+          "ref": "src/project/index.ts:17",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/capability.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/index.ts",
+      "id": "rel:comp:src/project/index.ts=>comp:src/project/erd.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/index.ts → comp:src/project/erd.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/index.ts:8",
           "source": "code"
         },
         {
@@ -3788,7 +4004,7 @@
           "source": "code"
         }
       ],
-      "to": "comp:src/project/capability.ts"
+      "to": "comp:src/project/erd.ts"
     },
     {
       "confidence": 0.95,
@@ -3799,12 +4015,12 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:10",
+          "ref": "src/project/index.ts:11",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:16",
+          "ref": "src/project/index.ts:18",
           "source": "code"
         }
       ],
@@ -3824,7 +4040,7 @@
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:13",
+          "ref": "src/project/index.ts:14",
           "source": "code"
         }
       ],
@@ -3839,7 +4055,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:17",
+          "ref": "src/project/index.ts:19",
           "source": "code"
         }
       ],
@@ -3854,12 +4070,12 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:11",
+          "ref": "src/project/index.ts:12",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:19",
+          "ref": "src/project/index.ts:21",
           "source": "code"
         }
       ],
@@ -4032,6 +4248,81 @@
     },
     {
       "confidence": 0.95,
+      "from": "comp:test/data-model.test.mjs",
+      "id": "rel:comp:test/data-model.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/data-model.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/data-model.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/data-model.test.mjs",
+      "id": "rel:comp:test/data-model.test.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:test/data-model.test.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/data-model.test.mjs:4",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/data-model.test.mjs",
+      "id": "rel:comp:test/data-model.test.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:test/data-model.test.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/data-model.test.mjs:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/data-model.test.mjs",
+      "id": "rel:comp:test/data-model.test.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:test/data-model.test.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/data-model.test.mjs:5",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/data-model.test.mjs",
+      "id": "rel:comp:test/data-model.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/data-model.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/data-model.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
       "from": "comp:test/diff.test.mjs",
       "id": "rel:comp:test/diff.test.mjs=>sys:ext:node:assert/strict",
       "kind": "depends_on",
@@ -4156,9 +4447,9 @@
     {
       "confidence": 0.95,
       "description": "Archmantic — an always-on Solution Architect: living architecture model + diagrams for humans and AI agents (via MCP).",
-      "id": "sys:archmantic",
+      "id": "sys:@archmantic/cli",
       "kind": "internal",
-      "name": "archmantic",
+      "name": "@archmantic/cli",
       "provenance": [
         {
           "confidence": 0.95,

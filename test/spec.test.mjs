@@ -8,14 +8,14 @@ const model = analyzeRepo(process.cwd());
 
 test("build spec markdown includes project, capabilities, and components", () => {
   const md = buildSpecMarkdown(model);
-  assert.match(md, /# Build Spec — archmantic/);
+  assert.match(md, /# Build Spec — @archmantic\/cli/);
   assert.match(md, /## Capabilities to implement/);
   assert.match(md, /## Components/);
 });
 
 test("build spec json is structured and grounded", () => {
   const spec = buildSpecJson(model);
-  assert.equal(spec.project, "archmantic");
+  assert.equal(spec.project, "@archmantic/cli");
   assert.ok(spec.capabilities.length > 0);
   assert.ok(spec.components.length > 0);
   assert.ok(spec.capabilities.every((c) => typeof c.ref === "string" && c.ref.length > 0));

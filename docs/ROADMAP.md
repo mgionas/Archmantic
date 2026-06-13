@@ -18,9 +18,9 @@ code-graph commodity territory?
 
 | Tier | Item | Why now | Impact · Effort |
 |---|---|---|---|
-| **NOW** | npm publish (core) | Unblocks the whole funnel — landing already promises `npx archmantic` | High · Low |
-| **NOW** | In-app `/docs` | Required the instant npm is live | High · Low |
-| **NEXT** | Data model → ERD | Best differentiated IR extension; agents need the schema | High · Med |
+| ✅ done | npm publish (core) | Published `@archmantic/cli@0.1.0` (public) | High · Low |
+| ✅ done | In-app `/docs` | Shipped, public, linked from header + landing | High · Low |
+| ✅ done | Data model → ERD | Prisma → `DataEntity` IR + Mermaid ERD; CLI + web Data tab + MCP `get_data_model` | High · Med |
 | **NEXT** | GitHub Action / PR diff | Makes the shipped "drift & PR diffs" USP real; retention | High · Med |
 | **NEXT** | MCP usage stats | Proof-of-value loop + metering substrate for billing | High · Med |
 | **LATER** | API surface (routes) | Completes the "what's the contract" layer | Med · Med |

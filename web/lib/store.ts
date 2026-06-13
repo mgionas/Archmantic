@@ -16,6 +16,19 @@ export interface Element {
   provenance: Provenance[];
   componentIds?: string[];
 }
+export interface DataField {
+  name: string;
+  type: string;
+  optional?: boolean;
+  list?: boolean;
+  isId?: boolean;
+  isUnique?: boolean;
+  relationTo?: string;
+  isForeignKey?: boolean;
+}
+export interface DataEntity extends Element {
+  fields: DataField[];
+}
 export interface Model {
   project: string;
   generatedAt?: string;
@@ -26,6 +39,7 @@ export interface Model {
   relations: (Element & { from: string; to: string })[];
   capabilities: Element[];
   technologies?: { name: string; category: string }[];
+  dataEntities?: DataEntity[];
   processes: { id: string; name: string; description?: string; confidence: number; tasks: { id: string; name: string }[] }[];
   flows: (Element & {
     participants: string[];
