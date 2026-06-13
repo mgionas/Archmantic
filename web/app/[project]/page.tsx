@@ -160,6 +160,17 @@ export default async function ProjectPage({
         </Card>
       </div>
 
+      {model.technologies?.length ? (
+        <Card className="mt-4 flex flex-wrap content-start gap-2 p-4">
+          <span className="w-full text-xs font-medium text-muted-foreground">Tech stack</span>
+          {model.technologies.map((t) => (
+            <Badge key={t.name} variant="outline" title={t.category}>
+              {t.name}
+            </Badge>
+          ))}
+        </Card>
+      ) : null}
+
       <ProjectTabs
         project={project}
         groups={groups}

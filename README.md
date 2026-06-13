@@ -48,6 +48,7 @@ Optionally link a global `archmantic` binary: `npm link`.
 | `drift [--check]` | Compare the committed model vs. the code; `--check` exits 1 on drift (CI gate) |
 | `diff [<ref>]` | Architecture diff from a git ref → working tree; writes PR-comment-ready `pr-diff.md` |
 | `log [-n N]` | Architecture history: how the architecture changed per commit |
+| `system [name] --repos a,b,c` | Unified cross-service view across multiple repos (microservices / split front-back). Declare links per repo in `.archmantic/config.json` → `{ "system": "...", "consumes": ["other-service"] }` |
 | `mcp` | Start the MCP server exposing the model to AI agents (stdio) |
 | `bench [--exact]` | Token-savings benchmark; `--exact` uses the Anthropic token counter (BYOK) |
 

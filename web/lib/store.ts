@@ -23,6 +23,7 @@ export interface Model {
   components: Element[];
   relations: (Element & { from: string; to: string })[];
   capabilities: Element[];
+  technologies?: { name: string; category: string }[];
   processes: { id: string; name: string; description?: string; confidence: number; tasks: { id: string; name: string }[] }[];
   flows: (Element & {
     participants: string[];

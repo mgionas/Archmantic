@@ -24,6 +24,7 @@ import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson,
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 import { runHandoff, runAutonomousBuild } from "./agent.js";
+import { buildSystemView, systemHtml } from "./system.js";
 import {
   pushModel,
   pullLatest,
@@ -380,6 +381,54 @@ function defaultCheckCommand(root: string): string {
   return "npm run build";
 }
 
+/** Multi-repo unified system view across several repos' committed models. */
+function cmdSystem(args: string[]): number {
+  const root = process.cwd();
+  const ri = args.indexOf("--repos");
+  const reposArg = ri !== -1 ? args[ri + 1] : undefined;
+  if (!reposArg) {
+    console.error(`✗ Usage: archmantic system [name] --repos <pathA,pathB,...>`);
+    console.error(`  Each repo needs a committed ${MODEL_DIR}/${MODEL_FILE} (run \`archmantic analyze\` there).`);
+    console.error(`  Declare links per repo in ${MODEL_DIR}/config.json: { "system": "...", "consumes": ["other-service"] }`);
+    return 1;
+  }
+  const models: ArchitectureModel[] = [];
+  for (const p of reposArg.split(",").map((s) => s.trim()).filter(Boolean)) {
+    const mf = join(p, MODEL_DIR, MODEL_FILE);
+    if (!existsSync(mf)) {
+      console.error(`  ⚠ skipping ${p}: no ${MODEL_DIR}/${MODEL_FILE} (run \`archmantic analyze\` there)`);
+      continue;
+    }
+    try {
+      models.push(JSON.parse(readFileSync(mf, "utf8")) as ArchitectureModel);
+    } catch {
+      console.error(`  ⚠ skipping ${p}: invalid model.json`);
+    }
+  }
+  if (!models.length) {
+    console.error(`✗ No valid repo models found.`);
+    return 1;
+  }
+  const name = args.find((a) => !a.startsWith("--") && a !== reposArg) ?? models.find((m) => m.system)?.system ?? "system";
+  const view = buildSystemView(models, name);
+
+  const dir = join(root, MODEL_DIR);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "system-context.mmd"), view.mermaid + "\n", "utf8");
+  writeFileSync(join(dir, "system.html"), systemHtml(view), "utf8");
+
+  console.log(`✓ Unified system view: "${name}"`);
+  console.log(`  ${view.totals.services} services · ${view.totals.components} components · ${view.totals.capabilities} capabilities`);
+  for (const s of view.services) {
+    console.log(`  • ${s.project} (${s.components} comp, ${s.capabilities} cap)${s.consumes.length ? ` → ${s.consumes.join(", ")}` : ""}`);
+  }
+  if (view.crossServiceEdges.length) {
+    console.log(`  cross-service calls: ${view.crossServiceEdges.map((e) => `${e.from}→${e.to}`).join(", ")}`);
+  }
+  console.log(`  → ${MODEL_DIR}/system.html (open in a browser) + system-context.mmd`);
+  return 0;
+}
+
 /** Agent hand-off: run the build spec through Claude. Plan-only, or --apply to edit the repo. */
 async function cmdHandoff(args: string[]): Promise<number> {
   const root = process.cwd();
@@ -641,6 +690,7 @@ Commands:
   spec           Emit an agent-ready build spec (build-spec.md + .json)
   apply [--from f]  Merge a human BPMN canvas edit back into the model (edit-then-build)
   handoff [--apply] [--check "<cmd>"]  Build spec → plan; --apply: agent edits repo + self-verifies (BYOK)
+  system [name] --repos a,b,c  Unified cross-service view across multiple repos
   drift [--check]  Compare the committed model vs the code (--check exits 1 on drift)
   diff [<ref>]   Architecture diff: a git ref → working tree (writes pr-diff.md)
   log [-n N]     Architecture history: how the architecture changed per commit
@@ -694,6 +744,8 @@ async function main(argv: string[]): Promise<number> {
       return cmdApply(rest);
     case "handoff":
       return cmdHandoff(rest);
+    case "system":
+      return cmdSystem(rest);
     case "drift":
       return cmdDrift(rest);
     case "diff":

@@ -44,6 +44,15 @@ export function buildSpecMarkdown(model: ArchitectureModel): string {
   );
   out.push(`- **External systems:** ${externals.map((s) => s.name).join(", ") || "none"}`);
 
+  if (model.technologies?.length) {
+    out.push("");
+    out.push("## Tech stack");
+    out.push("");
+    const byCat = new Map<string, string[]>();
+    for (const t of model.technologies) (byCat.get(t.category) ?? byCat.set(t.category, []).get(t.category)!).push(t.name);
+    for (const [cat, names] of [...byCat.entries()].sort()) out.push(`- **${cat}:** ${names.join(", ")}`);
+  }
+
   out.push("");
   out.push("## Capabilities to implement");
   out.push("");
@@ -88,6 +97,7 @@ export interface BuildSpecJson {
   project: string;
   generatedAt?: string;
   overview: { components: number; internalDependencies: number; capabilities: number; externals: string[] };
+  technologies: { name: string; category: string }[];
   capabilities: { name: string; description?: string; ref: string; components: string[] }[];
   components: { id: string; label: string; path: string; responsibility?: string; dependsOn: string[]; implements: string[] }[];
   process?: { name: string; description?: string; steps: string[] };
@@ -105,6 +115,7 @@ export function buildSpecJson(model: ArchitectureModel): BuildSpecJson {
       capabilities: model.capabilities.length,
       externals: externals.map((s) => s.name),
     },
+    technologies: (model.technologies ?? []).map((t) => ({ name: t.name, category: t.category })),
     capabilities: model.capabilities.map((cap) => ({
       name: cap.name,
       description: cap.description,

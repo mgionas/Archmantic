@@ -95,12 +95,22 @@ export interface Capability extends ElementBase {
   componentIds: string[];
 }
 
+/** A detected technology/framework — the "what is this built with?" layer. */
+export interface Technology extends ElementBase {
+  /** framework | ui | database | orm | auth | ai | testing | build | language | infra | library */
+  category: string;
+}
+
 /** The whole model for one project. */
 export interface ArchitectureModel {
   schemaVersion: typeof SCHEMA_VERSION;
   project: string;
   /** ISO timestamp; stamped by the caller (kept out of pure helpers). */
   generatedAt?: string;
+  /** Optional: the multi-repo system this project belongs to (from config). */
+  system?: string;
+  /** Optional: sibling services this project calls (declared in config). */
+  consumes?: string[];
   systems: System[];
   components: Component[];
   actors: Actor[];
@@ -108,6 +118,7 @@ export interface ArchitectureModel {
   flows: Flow[];
   processes: Process[];
   capabilities: Capability[];
+  technologies: Technology[];
 }
 
 /**
@@ -125,6 +136,7 @@ export function sortModel(m: ArchitectureModel): ArchitectureModel {
     actors: [...m.actors].sort(byId),
     relations: [...m.relations].sort(byId),
     capabilities: [...m.capabilities].sort(byId),
+    technologies: [...m.technologies].sort(byId),
   };
 }
 
@@ -158,5 +170,6 @@ export function createEmptyModel(project: string): ArchitectureModel {
     flows: [],
     processes: [],
     capabilities: [],
+    technologies: [],
   };
 }

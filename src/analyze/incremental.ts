@@ -17,6 +17,7 @@ import { walkSourceFiles } from "./walk.js";
 import { componentFor } from "./tier0.js";
 import { extractFileEdges, buildExternalSystem } from "./tier1.js";
 import { extractFileCapabilities, deriveProcessAndFlow } from "./derive.js";
+import { detectStack } from "./stack.js";
 
 const relOf = (id: string) => id.slice(id.indexOf(":") + 1);
 
@@ -102,6 +103,9 @@ export function incrementalUpdate(root: string, base: ArchitectureModel): Increm
     return currentSet.has(f) && !drop.has(f);
   });
   for (const f of recomputed) for (const cap of extractFileCapabilities(root, f)) model.capabilities.push(cap);
+
+  // --- Tech stack: cheap re-detect from package.json ---
+  model.technologies = detectStack(root);
 
   // --- Process + flow: cheap full re-derive over the patched graph ---
   deriveProcessAndFlow(root, model);
