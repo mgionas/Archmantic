@@ -7,6 +7,8 @@
  * Anthropic credential (API key or `ant auth login`), like the Tier-2 pass.
  */
 import Anthropic from "@anthropic-ai/sdk";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 
 const OPUS = "claude-opus-4-8";
@@ -58,4 +60,149 @@ export async function runHandoff(specMarkdown: string, project: string): Promise
     }
     throw err;
   }
+}
+
+// ── Autonomous build: a tool-use agent loop that edits the repo ───────────────
+
+const MAX_TURNS = 30;
+const IGNORE_DIRS = new Set(["node_modules", ".git", "dist", ".next", ".archmantic", "out-tsc", ".vercel"]);
+
+export interface BuildResult extends HandoffResult {
+  filesChanged: string[];
+  turns: number;
+  summary?: string;
+}
+
+/** Resolve a model-provided path inside the repo; reject escapes and heavy dirs. */
+function safePath(root: string, p: string): string | null {
+  const abs = resolve(root, p);
+  const base = resolve(root);
+  if (abs !== base && !abs.startsWith(base + sep)) return null; // outside the repo
+  const rel = relative(base, abs);
+  if (rel.split(sep).some((seg) => IGNORE_DIRS.has(seg))) return null;
+  return abs;
+}
+
+function listFiles(root: string, dir: string): string {
+  const start = safePath(root, dir || ".");
+  if (!start) return "error: path outside repo";
+  const out: string[] = [];
+  const stack = [start];
+  const baseAbs = resolve(root);
+  while (stack.length && out.length < 600) {
+    const cur = stack.pop()!;
+    let entries;
+    try {
+      entries = readdirSync(cur, { withFileTypes: true });
+    } catch {
+      continue;
+    }
+    for (const e of entries) {
+      const abs = join(cur, e.name);
+      if (e.isDirectory()) {
+        if (IGNORE_DIRS.has(e.name) || e.name.startsWith(".")) continue;
+        stack.push(abs);
+      } else {
+        out.push(relative(baseAbs, abs).split("\\").join("/"));
+      }
+    }
+  }
+  return out.sort().join("\n") || "(empty)";
+}
+
+const TOOLS = [
+  { name: "list_files", description: "List repository files (relative paths).", input_schema: { type: "object", properties: { dir: { type: "string", description: "optional subdirectory" } } } },
+  { name: "read_file", description: "Read a file's contents.", input_schema: { type: "object", properties: { path: { type: "string" } }, required: ["path"] } },
+  { name: "write_file", description: "Create or overwrite a file with the given content.", input_schema: { type: "object", properties: { path: { type: "string" }, content: { type: "string" } }, required: ["path", "content"] } },
+];
+
+const BUILD_SYSTEM = `You are a careful coding agent operating inside a repository. You are given an Archmantic build plan/spec. Use the tools to read existing files and make the MINIMAL, correct changes needed to realize the plan. Prefer editing existing files over adding new ones. Do not touch generated/vendor files. When the work is complete (or there is nothing to change), stop calling tools and reply with a short summary of what you changed and why.`;
+
+function runTool(root: string, name: string, input: Record<string, unknown>, changed: Set<string>): { text: string; isError?: boolean } {
+  try {
+    if (name === "list_files") return { text: listFiles(root, String(input.dir ?? "")) };
+    if (name === "read_file") {
+      const abs = safePath(root, String(input.path));
+      if (!abs) return { text: "error: path outside repo", isError: true };
+      if (!existsSync(abs)) return { text: "error: file not found", isError: true };
+      return { text: readFileSync(abs, "utf8") };
+    }
+    if (name === "write_file") {
+      const rel = String(input.path);
+      const abs = safePath(root, rel);
+      if (!abs) return { text: "error: path outside repo or in an ignored dir", isError: true };
+      mkdirSync(dirname(abs), { recursive: true });
+      writeFileSync(abs, String(input.content ?? ""), "utf8");
+      changed.add(rel);
+      process.stderr.write(`  ✎ wrote ${rel}\n`);
+      return { text: `wrote ${rel}` };
+    }
+    return { text: `unknown tool ${name}`, isError: true };
+  } catch (err) {
+    return { text: `error: ${err instanceof Error ? err.message : String(err)}`, isError: true };
+  }
+}
+
+/** Autonomous build: agent reads/writes files in `root` to execute the plan. */
+export async function runAutonomousBuild(root: string, plan: string, project: string): Promise<BuildResult> {
+  const base: BuildResult = { ran: false, filesChanged: [], turns: 0, inputTokens: 0, outputTokens: 0, estCostUsd: 0 };
+  if (!hasAnthropicCredentials()) {
+    return { ...base, reason: `${NO_CREDENTIAL_HINT} (autonomous build skipped)` };
+  }
+  const client = new Anthropic();
+  const changed = new Set<string>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const messages: any[] = [{ role: "user", content: `Implement this build plan in the repo "${project}":\n\n${plan}` }];
+  let summary = "";
+  let inTok = 0;
+  let outTok = 0;
+  let turns = 0;
+
+  try {
+    for (; turns < MAX_TURNS; turns++) {
+      const resp = await client.messages.create({
+        model: OPUS,
+        max_tokens: 16000,
+        system: BUILD_SYSTEM,
+        thinking: { type: "adaptive" },
+        tools: TOOLS,
+        messages,
+      } as never);
+      inTok += resp.usage.input_tokens;
+      outTok += resp.usage.output_tokens;
+      messages.push({ role: "assistant", content: resp.content });
+
+      const toolUses = (resp.content as Anthropic.ContentBlock[]).filter(
+        (b): b is Anthropic.ToolUseBlock => b.type === "tool_use",
+      );
+      if (resp.stop_reason !== "tool_use" || toolUses.length === 0) {
+        summary = (resp.content as Anthropic.ContentBlock[])
+          .filter((b): b is Anthropic.TextBlock => b.type === "text")
+          .map((b) => b.text)
+          .join("\n")
+          .trim();
+        break;
+      }
+      const results = toolUses.map((tu) => {
+        const r = runTool(root, tu.name, tu.input as Record<string, unknown>, changed);
+        return { type: "tool_result" as const, tool_use_id: tu.id, content: r.text, is_error: r.isError };
+      });
+      messages.push({ role: "user", content: results });
+    }
+  } catch (err) {
+    if (err instanceof Anthropic.AuthenticationError) {
+      return { ...base, reason: `Anthropic authentication failed — ${NO_CREDENTIAL_HINT}` };
+    }
+    throw err;
+  }
+
+  return {
+    ran: true,
+    filesChanged: [...changed],
+    turns,
+    summary,
+    inputTokens: inTok,
+    outputTokens: outTok,
+    estCostUsd: (inTok * PRICING[0] + outTok * PRICING[1]) / 1_000_000,
+  };
 }

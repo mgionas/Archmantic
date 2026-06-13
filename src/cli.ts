@@ -23,7 +23,7 @@ import { incrementalUpdate } from "./analyze/incremental.js";
 import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess } from "./project/index.js";
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
-import { runHandoff } from "./agent.js";
+import { runHandoff, runAutonomousBuild } from "./agent.js";
 import {
   pushModel,
   pullLatest,
@@ -365,8 +365,8 @@ function cmdSpec(): number {
   return 0;
 }
 
-/** Agent hand-off: run the build spec through Claude → an implementation plan. */
-async function cmdHandoff(): Promise<number> {
+/** Agent hand-off: run the build spec through Claude. Plan-only, or --apply to edit the repo. */
+async function cmdHandoff(args: string[]): Promise<number> {
   const root = process.cwd();
   const file = join(root, MODEL_DIR, MODEL_FILE);
   if (!existsSync(file)) {
@@ -382,6 +382,23 @@ async function cmdHandoff(): Promise<number> {
   }
 
   const spec = buildSpecMarkdown(model);
+
+  if (args.includes("--apply")) {
+    console.log(`⚠ Autonomous build: an agent will EDIT files in this repo to realize the model.`);
+    console.log(`  Commit or stash first; review with \`git diff\` afterward.\n`);
+    const r = await runAutonomousBuild(root, spec, model.project);
+    if (!r.ran) {
+      console.log(`⚠ Autonomous build skipped: ${r.reason}`);
+      return 0;
+    }
+    console.log(`\n✓ Autonomous build — ${r.filesChanged.length} file(s) changed in ${r.turns} turn(s)`);
+    for (const f of r.filesChanged) console.log(`  • ${f}`);
+    console.log(`  LLM: ${r.inputTokens} in / ${r.outputTokens} out tokens · ~$${r.estCostUsd.toFixed(4)}`);
+    if (r.summary) console.log(`\n${r.summary}`);
+    console.log(`\n  Review with \`git diff\` before committing.`);
+    return 0;
+  }
+
   const r = await runHandoff(spec, model.project);
   if (!r.ran) {
     console.log(`⚠ Agent hand-off skipped: ${r.reason}`);
@@ -393,7 +410,7 @@ async function cmdHandoff(): Promise<number> {
 
   console.log(`✓ Agent hand-off — implementation plan for "${model.project}"`);
   console.log(`  LLM: ${r.inputTokens} in / ${r.outputTokens} out tokens · ~$${r.estCostUsd.toFixed(4)}`);
-  console.log(`  → ${MODEL_DIR}/build-plan.md  (hand to a coding agent to execute)`);
+  console.log(`  → ${MODEL_DIR}/build-plan.md  (hand to a coding agent, or run \`handoff --apply\`)`);
   return 0;
 }
 
@@ -603,7 +620,7 @@ Commands:
   view           Capability map + diagrams + trust report (writes view.html)
   spec           Emit an agent-ready build spec (build-spec.md + .json)
   apply [--from f]  Merge a human BPMN canvas edit back into the model (edit-then-build)
-  handoff        Run the build spec through Claude → an implementation plan (BYOK)
+  handoff [--apply]  Build spec → implementation plan; --apply lets an agent edit the repo (BYOK)
   drift [--check]  Compare the committed model vs the code (--check exits 1 on drift)
   diff [<ref>]   Architecture diff: a git ref → working tree (writes pr-diff.md)
   log [-n N]     Architecture history: how the architecture changed per commit
@@ -656,7 +673,7 @@ async function main(argv: string[]): Promise<number> {
     case "apply":
       return cmdApply(rest);
     case "handoff":
-      return cmdHandoff();
+      return cmdHandoff(rest);
     case "drift":
       return cmdDrift(rest);
     case "diff":
