@@ -25,6 +25,78 @@ const STEPS = [
   ["Share & build", "Your team and agents read the same model; edit the canvas, emit a build spec."],
 ];
 
+function HeroPreview() {
+  const caps: [string, "high" | "medium"][] = [
+    ["Charge a card", "high"],
+    ["Refund payment", "high"],
+    ["Dispatch webhook", "medium"],
+    ["Reconcile ledger", "medium"],
+  ];
+  const Node = ({ x, y, w, label, primary }: { x: number; y: number; w: number; label: string; primary?: boolean }) => (
+    <g>
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={26}
+        rx={6}
+        className={primary ? "fill-primary stroke-primary" : "fill-card stroke-border"}
+      />
+      <text
+        x={x + w / 2}
+        y={y + 17}
+        textAnchor="middle"
+        fontSize={9}
+        className={primary ? "fill-primary-foreground" : "fill-foreground"}
+      >
+        {label}
+      </text>
+    </g>
+  );
+  return (
+    <div className="mt-14 w-full max-w-4xl">
+      <div className="overflow-hidden rounded-xl border bg-card shadow-2xl shadow-primary/10">
+        <div className="flex items-center gap-2 border-b bg-muted/40 px-4 py-2.5">
+          <span className="size-2.5 rounded-full bg-red-400/70" />
+          <span className="size-2.5 rounded-full bg-amber-400/70" />
+          <span className="size-2.5 rounded-full bg-green-400/70" />
+          <span className="ml-3 font-mono text-xs text-muted-foreground">archmantic · payments-api</span>
+        </div>
+        <div className="grid gap-4 p-5 text-left sm:grid-cols-[1fr_1.2fr]">
+          <div className="space-y-2">
+            <div className="text-xs font-medium text-muted-foreground">Capability map</div>
+            {caps.map(([n, b]) => (
+              <div
+                key={n}
+                className="flex items-center justify-between rounded-md border bg-background/50 px-3 py-2 text-sm"
+              >
+                <span>{n}</span>
+                <span className={`text-xs ${b === "high" ? "text-green-400" : "text-amber-400"}`}>● {b}</span>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-md border bg-background/50 p-3">
+            <div className="mb-1 text-xs font-medium text-muted-foreground">Context</div>
+            <svg viewBox="0 0 320 170" className="w-full">
+              <g className="stroke-border" strokeWidth={1.5}>
+                <line x1={60} y1={75} x2={130} y2={75} />
+                <line x1={210} y1={75} x2={262} y2={30} />
+                <line x1={210} y1={75} x2={262} y2={120} />
+                <line x1={170} y1={88} x2={170} y2={135} />
+              </g>
+              <Node x={8} y={62} w={52} label="Gateway" />
+              <Node x={130} y={62} w={80} label="payments-api" primary />
+              <Node x={262} y={17} w={50} label="Stripe" />
+              <Node x={262} y={107} w={50} label="Ledger" />
+              <Node x={132} y={135} w={76} label="Webhooks" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Landing() {
   return (
     <div className="relative isolate">
@@ -66,6 +138,7 @@ function Landing() {
         <code className="mt-8 rounded-lg border bg-card/60 px-4 py-2 font-mono text-sm text-muted-foreground backdrop-blur">
           <span className="text-primary">$</span> npx archmantic analyze && archmantic push
         </code>
+        <HeroPreview />
       </section>
 
       <section className="mt-24">

@@ -29,6 +29,34 @@ export interface Diagrams {
   processXml: string | null;
   edited: boolean;
 }
+export interface Changes {
+  hasPrev: boolean;
+  total: number;
+  components: { added: string[]; removed: string[] };
+  capabilities: { added: string[]; removed: string[] };
+  externals: { added: string[]; removed: string[] };
+}
+
+function ChangeGroup({ title, added, removed }: { title: string; added: string[]; removed: string[] }) {
+  if (!added.length && !removed.length) return null;
+  return (
+    <div>
+      <div className="mb-1.5 text-sm font-medium">{title}</div>
+      <ul className="space-y-1 text-sm">
+        {added.map((x) => (
+          <li key={`a-${x}`} className="text-green-400">
+            + {x}
+          </li>
+        ))}
+        {removed.map((x) => (
+          <li key={`r-${x}`} className="text-red-400">
+            − {x}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 const BAND_CLASS: Record<string, string> = {
   high: "border-green-500/30 text-green-400",
@@ -41,11 +69,13 @@ export function ProjectTabs({
   groups,
   components,
   diagrams,
+  changes,
 }: {
   project: string;
   groups: Group[];
   components: Comp[];
   diagrams: Diagrams;
+  changes: Changes;
 }) {
   const [tab, setTab] = useState("diagrams");
 
@@ -55,6 +85,7 @@ export function ProjectTabs({
         <TabsTrigger value="diagrams">Diagrams</TabsTrigger>
         <TabsTrigger value="capabilities">Capabilities ({groups.reduce((n, g) => n + g.caps.length, 0)})</TabsTrigger>
         <TabsTrigger value="components">Components ({components.length})</TabsTrigger>
+        <TabsTrigger value="changes">Changes{changes.total > 0 ? ` (${changes.total})` : ""}</TabsTrigger>
       </TabsList>
 
       <div className="pt-5">
@@ -104,6 +135,21 @@ export function ProjectTabs({
               </Card>
             ))}
           </div>
+        ) : null}
+
+        {tab === "changes" ? (
+          !changes.hasPrev ? (
+            <p className="text-sm text-muted-foreground">First snapshot — nothing to compare against yet.</p>
+          ) : changes.total === 0 ? (
+            <p className="text-sm text-muted-foreground">No architecture changes since the previous snapshot.</p>
+          ) : (
+            <Card className="space-y-5 p-5">
+              <div className="text-sm text-muted-foreground">Architecture changes vs the previous snapshot:</div>
+              <ChangeGroup title="Components" added={changes.components.added} removed={changes.components.removed} />
+              <ChangeGroup title="Capabilities" added={changes.capabilities.added} removed={changes.capabilities.removed} />
+              <ChangeGroup title="External systems" added={changes.externals.added} removed={changes.externals.removed} />
+            </Card>
+          )
         ) : null}
       </div>
     </Tabs>

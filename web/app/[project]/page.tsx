@@ -94,6 +94,21 @@ export default async function ProjectPage({
   }));
   const d = modelDelta(prevModel, model);
 
+  const capName = new Map<string, string>();
+  for (const c of model.capabilities) capName.set(c.id, c.name);
+  if (prevModel) for (const c of prevModel.capabilities) capName.set(c.id, c.name);
+  const extName = (id: string) => id.slice("sys:ext:".length);
+  const changes = {
+    hasPrev: Boolean(prevModel),
+    total: d.total,
+    components: { added: d.components.added.map(componentLabel), removed: d.components.removed.map(componentLabel) },
+    capabilities: {
+      added: d.capabilities.added.map((id) => capName.get(id) ?? id),
+      removed: d.capabilities.removed.map((id) => capName.get(id) ?? id),
+    },
+    externals: { added: d.externals.added.map(extName), removed: d.externals.removed.map(extName) },
+  };
+
   return (
     <div>
       <a href="/" className={buttonVariants({ variant: "ghost", size: "sm" })}>
@@ -149,6 +164,7 @@ export default async function ProjectPage({
         project={project}
         groups={groups}
         components={components}
+        changes={changes}
         diagrams={{
           context: contextDiagram(model),
           components: componentDiagram(model),
