@@ -1,13 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
 import { latestModel } from "@/lib/store";
 import { getProcessEdit } from "@/lib/admin";
-import { band, componentLabel, groupCapabilities, trust } from "@/lib/format";
+import { componentLabel, groupCapabilities, trust } from "@/lib/format";
 import { componentDiagram, contextDiagram, sequenceDiagram } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
-import { DiagramTabs } from "../diagram-tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { ProjectTabs, type Group } from "../project-tabs";
 
 export const dynamic = "force-dynamic";
 
@@ -17,15 +17,12 @@ const BAND_CLASS: Record<string, string> = {
   low: "border-red-500/30 text-red-400",
 };
 
-function Section({ title, extra, children }: { title: string; extra?: React.ReactNode; children: React.ReactNode }) {
+function Stat({ n, label }: { n: number | string; label: string }) {
   return (
-    <section className="mt-8">
-      <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-        {title}
-        {extra}
-      </h2>
-      {children}
-    </section>
+    <div className="text-sm text-muted-foreground">
+      <span className="mr-1.5 text-xl font-semibold text-foreground">{n}</span>
+      {label}
+    </div>
   );
 }
 
@@ -49,12 +46,23 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
   }
 
   const t = trust(model);
-  const groups = groupCapabilities(model);
   const externals = model.systems.filter((s) => s.kind === "external");
-  const seq = sequenceDiagram(model);
-  const generatedBpmn = bpmnXml(model);
   const savedBpmn = owner ? await getProcessEdit(owner, project) : null;
-  const processXml = savedBpmn ?? generatedBpmn;
+
+  const groups: Group[] = groupCapabilities(model).map((g) => ({
+    area: g.area,
+    caps: g.caps.map((c) => ({
+      id: c.id,
+      name: c.name,
+      refs: c.provenance?.length ?? 0,
+      confidence: c.confidence,
+    })),
+  }));
+  const components = model.components.map((c) => ({
+    id: c.id,
+    label: componentLabel(c.id),
+    responsibility: c.responsibility ?? c.id.slice("comp:".length),
+  }));
 
   return (
     <div>
@@ -67,56 +75,19 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
         capabilities{model.generatedAt ? ` · analyzed ${new Date(model.generatedAt).toLocaleString()}` : ""}
       </p>
 
-      <Card className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 p-4">
-        <Stat n={t.total} label="grounded elements" />
-        <Stat n={t.refs} label="code references" />
-        <Stat n={`${t.meanPct}%`} label="mean confidence" />
-        <div className="ml-auto flex gap-2">
-          <Badge variant="outline" className={BAND_CLASS.high}>{t.high} high</Badge>
-          <Badge variant="outline" className={BAND_CLASS.medium}>{t.medium} medium</Badge>
-          <Badge variant="outline" className={BAND_CLASS.low}>{t.low} low</Badge>
-        </div>
-      </Card>
-
-      <Section title="Capability map" extra={<span className="text-sm font-normal text-muted-foreground">what can this system do?</span>}>
-        {groups.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No capabilities.</p>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {groups.map((g) => (
-              <Card key={g.area} className="p-4">
-                <div className="mb-2 font-mono text-xs text-muted-foreground">{g.area}/</div>
-                <ul className="space-y-1.5">
-                  {g.caps.map((c) => (
-                    <li key={c.id} className="flex items-baseline justify-between gap-2">
-                      <span className="text-sm">{c.name}</span>
-                      <Badge variant="outline" className={`shrink-0 ${BAND_CLASS[band(c.confidence)]}`}>
-                        {c.provenance?.length ?? 0} ref{(c.provenance?.length ?? 0) === 1 ? "" : "s"}
-                      </Badge>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            ))}
+      <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_auto]">
+        <Card className="flex flex-wrap items-center gap-x-8 gap-y-3 p-4">
+          <Stat n={t.total} label="grounded elements" />
+          <Stat n={t.refs} label="code references" />
+          <Stat n={`${t.meanPct}%`} label="mean confidence" />
+          <div className="ml-auto flex gap-2">
+            <Badge variant="outline" className={BAND_CLASS.high}>{t.high} high</Badge>
+            <Badge variant="outline" className={BAND_CLASS.medium}>{t.medium} medium</Badge>
+            <Badge variant="outline" className={BAND_CLASS.low}>{t.low} low</Badge>
           </div>
-        )}
-      </Section>
-
-      <Section title="Diagrams">
-        <Card className="p-4">
-          <DiagramTabs
-            project={project}
-            context={contextDiagram(model)}
-            components={componentDiagram(model)}
-            sequence={seq}
-            processXml={processXml}
-            edited={Boolean(savedBpmn)}
-          />
         </Card>
-      </Section>
-
-      <Section title="External systems">
-        <Card className="flex flex-wrap gap-2 p-4">
+        <Card className="flex flex-wrap content-start gap-2 p-4 lg:max-w-sm">
+          <span className="w-full text-xs font-medium text-muted-foreground">External systems</span>
           {externals.length ? (
             externals.map((s) => (
               <Badge key={s.id} variant="secondary">
@@ -127,29 +98,20 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
             <span className="text-sm text-muted-foreground">none</span>
           )}
         </Card>
-      </Section>
+      </div>
 
-      <Section title="Component responsibilities">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {model.components.map((c) => (
-            <Card key={c.id} className="p-4">
-              <div className="font-semibold">{componentLabel(c.id)}</div>
-              <div className="mt-1 text-sm text-muted-foreground">
-                {c.responsibility ?? c.id.slice("comp:".length)}
-              </div>
-            </Card>
-          ))}
-        </div>
-      </Section>
-    </div>
-  );
-}
-
-function Stat({ n, label }: { n: number | string; label: string }) {
-  return (
-    <div className="text-sm text-muted-foreground">
-      <span className="mr-1.5 text-xl font-semibold text-foreground">{n}</span>
-      {label}
+      <ProjectTabs
+        project={project}
+        groups={groups}
+        components={components}
+        diagrams={{
+          context: contextDiagram(model),
+          components: componentDiagram(model),
+          sequence: sequenceDiagram(model),
+          processXml: savedBpmn ?? bpmnXml(model),
+          edited: Boolean(savedBpmn),
+        }}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { SignInButton } from "@clerk/nextjs";
+import { Boxes, Workflow, ShieldCheck, GitCompareArrows, Bot, PencilRuler, ArrowRight } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -9,71 +10,106 @@ import { ProjectsClient } from "./projects-client";
 
 export const dynamic = "force-dynamic";
 
-const USPS: [string, string][] = [
-  ["Capability map", "Plain-English “what can this system do?” — for PMs, architects, and new hires, not just engineers."],
-  ["BPMN business process", "Auto-detected business processes from code — white space no code-graph tool occupies."],
-  ["Provenance & trust", "Every element shows “grounded in N refs” + confidence. Verifiable, not plausible AI guesswork."],
-  ["Drift & PR diffs", "“Your docs vs reality,” and how a PR reshapes the architecture — not a line diff."],
-  ["MCP for agents", "Your AI agent queries the same model — ~98% fewer tokens than reading files."],
-  ["Edit-then-build", "Edit the diagram; it becomes the source. Emit a build spec for an agent to implement."],
+const USPS = [
+  { icon: Boxes, title: "Capability map", body: "Plain-English “what can this system do?” — for PMs, architects, and new hires, not just engineers." },
+  { icon: Workflow, title: "BPMN business process", body: "Auto-detected business processes from code — white space no code-graph tool occupies." },
+  { icon: ShieldCheck, title: "Provenance & trust", body: "Every element shows “grounded in N refs” + confidence. Verifiable, not plausible AI guesswork." },
+  { icon: GitCompareArrows, title: "Drift & PR diffs", body: "“Your docs vs reality,” and how a PR reshapes the architecture — not a line diff." },
+  { icon: Bot, title: "MCP for agents", body: "Your AI agent queries the same model — ~98% fewer tokens than reading files." },
+  { icon: PencilRuler, title: "Edit-then-build", body: "Edit the diagram; it becomes the source. Emit a build spec for an agent to implement." },
+];
+
+const STEPS = [
+  ["Analyze", "archmantic analyze — reverse-engineer a grounded model from any repo."],
+  ["Connect", "Generate a CLI token here, then archmantic push to your org."],
+  ["Share & build", "Your team and agents read the same model; edit the canvas, emit a build spec."],
 ];
 
 function Landing() {
   return (
-    <div className="flex flex-col gap-12">
-      <section className="pt-6">
-        <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-          A living, <span className="text-primary">trustworthy</span> architecture model your team and your AI agents
-          share.
+    <div className="relative isolate">
+      {/* ambient gradient + dot grid */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-24 -z-10 h-[520px] bg-[radial-gradient(60%_60%_at_50%_0%,oklch(0.65_0.2_285/0.18),transparent_70%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(oklch(0.65_0.2_285/0.15)_1px,transparent_1px)] [background-size:18px_18px] [mask-image:radial-gradient(60%_50%_at_50%_0%,black,transparent)]"
+      />
+
+      <section className="flex flex-col items-center pt-16 text-center">
+        <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+          <span className="size-1.5 rounded-full bg-primary" /> Living architecture · humans + agents
+        </span>
+        <h1 className="mt-6 max-w-4xl text-balance text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl">
+          The architecture model your team and your{" "}
+          <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
+            AI agents
+          </span>{" "}
+          actually trust.
         </h1>
-        <p className="mt-5 max-w-2xl text-lg text-muted-foreground">
+        <p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
           Point Archmantic at a repo → an accurate capability map, context &amp; sequence diagrams, and an auto-detected
-          BPMN process — every element grounded in code. Your agents query the same model over MCP.
+          BPMN process. Every element grounded in code. Your agents query the same model over MCP.
         </p>
-        <div className="mt-7 flex flex-wrap gap-3">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <SignInButton>
-            <Button size="lg">Sign in / Get started</Button>
+            <Button size="lg" className="gap-2">
+              Get started <ArrowRight className="size-4" />
+            </Button>
           </SignInButton>
-          <a
-            href="https://github.com/mgionas/Archmantic"
-            className={buttonVariants({ size: "lg", variant: "outline" })}
-          >
+          <a href="https://github.com/mgionas/Archmantic" className={buttonVariants({ size: "lg", variant: "outline" })}>
             View on GitHub
           </a>
         </div>
+        <code className="mt-8 rounded-lg border bg-card/60 px-4 py-2 font-mono text-sm text-muted-foreground backdrop-blur">
+          <span className="text-primary">$</span> npx archmantic analyze && archmantic push
+        </code>
       </section>
 
-      <section>
-        <h2 className="mb-4 text-lg font-semibold">What you get</h2>
+      <section className="mt-24">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {USPS.map(([title, body]) => (
-            <Card key={title} className="p-5">
-              <div className="mb-1.5 font-semibold">{title}</div>
-              <p className="text-sm text-muted-foreground">{body}</p>
+          {USPS.map(({ icon: Icon, title, body }) => (
+            <Card key={title} className="group p-5 transition-colors hover:border-primary/40">
+              <div className="mb-3 inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20">
+                <Icon className="size-4.5" />
+              </div>
+              <div className="font-semibold">{title}</div>
+              <p className="mt-1 text-sm text-muted-foreground">{body}</p>
             </Card>
           ))}
         </div>
       </section>
 
-      <section>
-        <h2 className="mb-4 text-lg font-semibold">Get started</h2>
-        <Card className="p-6">
-          <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed">
-            <li>
-              Analyze your repo: <code className="rounded bg-muted px-1.5 py-0.5">npm i -g archmantic</code> →{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5">archmantic analyze</code>.
-            </li>
-            <li>Sign in here, open <strong>CLI tokens</strong>, and generate a token for your organization.</li>
-            <li>
-              Add <code className="rounded bg-muted px-1.5 py-0.5">ARCHMANTIC_TOKEN</code> +{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5">ARCHMANTIC_API_URL</code> to{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5">.env.local</code>, then{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5">archmantic push</code>.
-            </li>
-            <li>Your model appears here — capability map, diagrams, trust, and an editable BPMN canvas.</li>
-          </ol>
-        </Card>
+      <section className="mt-24">
+        <h2 className="text-center text-2xl font-bold tracking-tight">From repo to shared model in three steps</h2>
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          {STEPS.map(([title, body], i) => (
+            <Card key={title} className="p-5">
+              <div className="flex size-8 items-center justify-center rounded-full bg-primary/15 font-semibold text-primary">
+                {i + 1}
+              </div>
+              <div className="mt-3 font-semibold">{title}</div>
+              <p className="mt-1 text-sm text-muted-foreground">{body}</p>
+            </Card>
+          ))}
+        </div>
+        <div className="mt-10 flex justify-center">
+          <SignInButton>
+            <Button size="lg" className="gap-2">
+              Start free <ArrowRight className="size-4" />
+            </Button>
+          </SignInButton>
+        </div>
       </section>
+
+      <footer className="mt-24 border-t pt-8 text-center text-sm text-muted-foreground">
+        Archmantic — a living, trustworthy architecture model. ·{" "}
+        <a href="https://github.com/mgionas/Archmantic" className="text-primary hover:underline">
+          GitHub
+        </a>
+      </footer>
     </div>
   );
 }
