@@ -23,7 +23,7 @@ code-graph commodity territory?
 | ✅ done | Data model → ERD | Prisma + Drizzle + SQL → `DataEntity` IR + Mermaid ERD; CLI + web Data tab + MCP `get_data_model` | High · Med |
 | ✅ done | GitHub Action / PR diff | Reusable `action.yml` + sticky PR comment via `archmantic diff`; self CI dogfoods it | High · Med |
 | ✅ done | MCP usage stats | Per-tool-call recording + token savings; CLI `usage` + web `/usage` dashboard; metering substrate | High · Med |
-| **LATER** | API surface (routes) | Completes the "what's the contract" layer | Med · Med |
+| ✅ done | API surface (routes) | REST/tRPC/GraphQL → `Endpoint` IR; CLI/HTML/spec + web API tab + MCP `get_api_surface` | Med · Med |
 | **LATER** | Multi-repo auto-link | Novel cross-repo gap detection; smarter after ERD/API | High · Med-High |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
 
@@ -89,9 +89,12 @@ re-pushes; web `/usage` aggregates totals, per-tool, per-project, and a 14-day
 activity chart. Idempotent by event UUID; the same event stream is the metering
 substrate for future billing.
 
-### LATER · API surface (routes)
-Detect REST/tRPC/GraphQL endpoints → `Endpoint` IR element. The contract layer
-both architects and agents ask for first; pairs naturally with ERD.
+### ✅ done · API surface (routes)
+`Endpoint` IR element from REST (Next.js App Router + Pages API, Express/Fastify/
+Koa/Hono calls), tRPC procedures, and GraphQL SDL (files + inline `gql`). Leading-
+slash guard avoids `.get()` false positives. Surfaced in terminal/HTML/build-spec,
+the web **API** tab, and MCP `get_api_surface`. TypeORM data-model source remains
+the only open detector item.
 
 ### LATER · Multi-repo auto-link
 Surface three states in `/systems`: **connected** (declared + confirmed),

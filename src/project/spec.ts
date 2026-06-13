@@ -73,6 +73,15 @@ export function buildSpecMarkdown(model: ArchitectureModel): string {
     }
   }
 
+  if (model.endpoints?.length) {
+    out.push("");
+    out.push("## API surface");
+    out.push("");
+    for (const e of model.endpoints) {
+      out.push(`- \`${e.method} ${e.path}\` <sub>${e.protocol} · \`${refOf(e)}\`</sub>`);
+    }
+  }
+
   out.push("");
   out.push("## Capabilities to implement");
   out.push("");
@@ -126,6 +135,7 @@ export interface BuildSpecJson {
     fields: { name: string; type: string; optional?: boolean; list?: boolean; key?: "PK" | "FK" | "UK" }[];
     relations: { field: string; to: string; list?: boolean }[];
   }[];
+  endpoints: { method: string; path: string; protocol: string; ref: string }[];
   process?: { name: string; description?: string; steps: string[] };
 }
 
@@ -171,6 +181,12 @@ export function buildSpecJson(model: ArchitectureModel): BuildSpecJson {
       relations: e.fields
         .filter((f) => f.relationTo)
         .map((f) => ({ field: f.name, to: f.type, list: f.list })),
+    })),
+    endpoints: (model.endpoints ?? []).map((e) => ({
+      method: e.method,
+      path: e.path,
+      protocol: e.protocol,
+      ref: refOf(e),
     })),
     process: proc
       ? { name: proc.name, description: proc.description, steps: proc.tasks.map((t) => t.name) }

@@ -21,6 +21,7 @@ const BROAD_TOOLS = new Set([
   "list_components",
   "search_capabilities",
   "get_data_model",
+  "get_api_surface",
   "get_process",
   "get_sequence",
   "whats_related",

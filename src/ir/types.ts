@@ -125,6 +125,15 @@ export interface DataEntity extends ElementBase {
   fields: DataField[];
 }
 
+/** An API endpoint — the contract layer (REST route, tRPC procedure, GraphQL field). */
+export interface Endpoint extends ElementBase {
+  /** HTTP verb (GET/POST/PUT/PATCH/DELETE…) or QUERY/MUTATION/SUBSCRIPTION. */
+  method: string;
+  /** Route path (REST) or operation name (tRPC/GraphQL). */
+  path: string;
+  protocol: "rest" | "trpc" | "graphql";
+}
+
 /** The whole model for one project. */
 export interface ArchitectureModel {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -144,6 +153,7 @@ export interface ArchitectureModel {
   capabilities: Capability[];
   technologies: Technology[];
   dataEntities: DataEntity[];
+  endpoints: Endpoint[];
 }
 
 /**
@@ -163,6 +173,7 @@ export function sortModel(m: ArchitectureModel): ArchitectureModel {
     capabilities: [...m.capabilities].sort(byId),
     technologies: [...m.technologies].sort(byId),
     dataEntities: [...m.dataEntities].sort(byId),
+    endpoints: [...m.endpoints].sort(byId),
   };
 }
 
@@ -198,5 +209,6 @@ export function createEmptyModel(project: string): ArchitectureModel {
     capabilities: [],
     technologies: [],
     dataEntities: [],
+    endpoints: [],
   };
 }

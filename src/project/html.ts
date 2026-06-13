@@ -27,7 +27,26 @@ function allGrounded(model: ArchitectureModel): Grounded[] {
     ...model.flows,
     ...model.processes,
     ...(model.dataEntities ?? []),
+    ...(model.endpoints ?? []),
   ];
+}
+
+function apiSection(model: ArchitectureModel): string {
+  const eps = model.endpoints ?? [];
+  if (!eps.length) return "";
+  const rows = eps
+    .map(
+      (e) =>
+        `<tr><td class="method m-${esc(e.method.toLowerCase())}">${esc(e.method)}</td>` +
+        `<td class="path">${esc(e.path)}</td><td class="proto">${esc(e.protocol)}</td></tr>`,
+    )
+    .join("\n");
+  return `
+  <h2>API surface — ${eps.length} endpoints</h2>
+  <div class="card"><table class="api">
+    <thead><tr><th>Method</th><th>Path / operation</th><th>Protocol</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
 }
 
 function trustBanner(model: ArchitectureModel): string {
@@ -105,6 +124,15 @@ export function renderHtml(model: ArchitectureModel): string {
   .badge { font-size: 11px; color: #8b93a7; white-space: nowrap; }
   .badge.low { color: #f87171; } .badge.medium { color: #facc15; } .badge.high { color: #4ade80; }
   .empty { color: #8b93a7; font-style: italic; }
+  table.api { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.api th { text-align: left; color: #8b93a7; font-weight: 600; padding: 6px 10px; border-bottom: 1px solid #232734; }
+  table.api td { padding: 6px 10px; border-bottom: 1px solid #1f232e; }
+  table.api td.path { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  table.api td.proto { color: #8b93a7; }
+  td.method { font-family: ui-monospace, monospace; font-weight: 600; white-space: nowrap; }
+  td.method.m-get { color: #4ade80; } td.method.m-post { color: #facc15; }
+  td.method.m-put, td.method.m-patch { color: #60a5fa; } td.method.m-delete { color: #f87171; }
+  td.method.m-query { color: #4ade80; } td.method.m-mutation { color: #facc15; }
   #bpmn { height: 420px; background: #fff; border-radius: 12px; }
   footer { color: #5a6172; font-size: 12px; padding: 0 32px 40px; }
 </style>
@@ -127,6 +155,8 @@ export function renderHtml(model: ArchitectureModel): string {
   <div class="card">${comp}</div>
 
   ${erd ? `<h2>Data model — ${model.dataEntities.length} entities</h2>\n  <div class="card">${erd}</div>` : ""}
+
+  ${apiSection(model)}
 
   <h2>Sequence — ${esc(flow?.name ?? "")}</h2>
   <div class="card">${seq}</div>

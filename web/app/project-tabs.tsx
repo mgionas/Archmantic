@@ -69,6 +69,22 @@ export interface DataModel {
   mermaid: string;
   entities: { name: string; fields: number; relations: number }[];
 }
+export interface Endpoint {
+  id: string;
+  method: string;
+  path: string;
+  protocol: string;
+}
+
+const METHOD_CLASS: Record<string, string> = {
+  GET: "text-green-400",
+  QUERY: "text-green-400",
+  POST: "text-amber-400",
+  MUTATION: "text-amber-400",
+  PUT: "text-blue-400",
+  PATCH: "text-blue-400",
+  DELETE: "text-red-400",
+};
 
 export function ProjectTabs({
   project,
@@ -77,6 +93,7 @@ export function ProjectTabs({
   diagrams,
   changes,
   data,
+  endpoints,
 }: {
   project: string;
   groups: Group[];
@@ -84,6 +101,7 @@ export function ProjectTabs({
   diagrams: Diagrams;
   changes: Changes;
   data: DataModel | null;
+  endpoints: Endpoint[];
 }) {
   const [tab, setTab] = useState("diagrams");
 
@@ -94,6 +112,7 @@ export function ProjectTabs({
         <TabsTrigger value="capabilities">Capabilities ({groups.reduce((n, g) => n + g.caps.length, 0)})</TabsTrigger>
         <TabsTrigger value="components">Components ({components.length})</TabsTrigger>
         {data ? <TabsTrigger value="data">Data ({data.entities.length})</TabsTrigger> : null}
+        {endpoints.length ? <TabsTrigger value="api">API ({endpoints.length})</TabsTrigger> : null}
         <TabsTrigger value="changes">Changes{changes.total > 0 ? ` (${changes.total})` : ""}</TabsTrigger>
       </TabsList>
 
@@ -163,6 +182,29 @@ export function ProjectTabs({
               ))}
             </div>
           </div>
+        ) : null}
+
+        {tab === "api" && endpoints.length ? (
+          <Card className="p-0">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-border/60 text-muted-foreground">
+                <tr>
+                  <th className="px-4 py-2.5 font-medium">Method</th>
+                  <th className="px-4 py-2.5 font-medium">Path / operation</th>
+                  <th className="px-4 py-2.5 font-medium">Protocol</th>
+                </tr>
+              </thead>
+              <tbody>
+                {endpoints.map((e) => (
+                  <tr key={e.id} className="border-b border-border/40 last:border-0">
+                    <td className={`px-4 py-2 font-mono font-semibold ${METHOD_CLASS[e.method] ?? ""}`}>{e.method}</td>
+                    <td className="px-4 py-2 font-mono">{e.path}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{e.protocol}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Card>
         ) : null}
 
         {tab === "changes" ? (

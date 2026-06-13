@@ -29,6 +29,11 @@ export interface DataField {
 export interface DataEntity extends Element {
   fields: DataField[];
 }
+export interface Endpoint extends Element {
+  method: string;
+  path: string;
+  protocol: "rest" | "trpc" | "graphql";
+}
 export interface Model {
   project: string;
   generatedAt?: string;
@@ -40,6 +45,7 @@ export interface Model {
   capabilities: Element[];
   technologies?: { name: string; category: string }[];
   dataEntities?: DataEntity[];
+  endpoints?: Endpoint[];
   processes: { id: string; name: string; description?: string; confidence: number; tasks: { id: string; name: string }[] }[];
   flows: (Element & {
     participants: string[];

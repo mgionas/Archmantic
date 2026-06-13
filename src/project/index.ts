@@ -34,6 +34,7 @@ export function terminalPreview(model: ArchitectureModel): string {
     ...model.flows,
     ...model.processes,
     ...(model.dataEntities ?? []),
+    ...(model.endpoints ?? []),
   ];
   const s = summarize(grounded);
   const out: string[] = [];
@@ -66,6 +67,12 @@ export function terminalPreview(model: ArchitectureModel): string {
           .map((e) => `${e.name} (${e.fields.filter((f) => !f.relationTo).length})`)
           .join("  ·  "),
     );
+  }
+
+  if (model.endpoints?.length) {
+    out.push(`\n${BOLD}API surface${RESET} ${DIM}— ${model.endpoints.length} endpoints${RESET}`);
+    for (const e of model.endpoints.slice(0, 12)) out.push(`  ${e.method.padEnd(7)} ${e.path} ${DIM}(${e.protocol})${RESET}`);
+    if (model.endpoints.length > 12) out.push(`  ${DIM}… and ${model.endpoints.length - 12} more${RESET}`);
   }
 
   const proc = model.processes[0];

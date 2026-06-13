@@ -115,6 +115,22 @@
     },
     {
       "componentIds": [
+        "comp:src/analyze/endpoints.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `detectEndpoints` in src/analyze/endpoints.ts",
+      "id": "cap:src/analyze/endpoints.ts#detectEndpoints",
+      "name": "Detect Endpoints",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/endpoints.ts:84",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
         "comp:src/analyze/fs-util.ts"
       ],
       "confidence": 0.6,
@@ -156,7 +172,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/index.ts:30",
+          "ref": "src/analyze/index.ts:31",
           "source": "code"
         }
       ]
@@ -796,7 +812,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:188",
+          "ref": "src/ir/types.ts:199",
           "source": "code"
         }
       ]
@@ -812,7 +828,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:183",
+          "ref": "src/ir/types.ts:194",
           "source": "code"
         }
       ]
@@ -828,7 +844,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:155",
+          "ref": "src/ir/types.ts:165",
           "source": "code"
         }
       ]
@@ -893,6 +909,22 @@
         {
           "confidence": 0.6,
           "ref": "src/mcp/queries.ts:28",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `getApiSurface` in src/mcp/queries.ts",
+      "id": "cap:src/mcp/queries.ts#getApiSurface",
+      "name": "Get Api Surface",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/mcp/queries.ts:132",
           "source": "code"
         }
       ]
@@ -1020,7 +1052,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:132",
+          "ref": "src/mcp/queries.ts:145",
           "source": "code"
         }
       ]
@@ -1036,7 +1068,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/server.ts:67",
+          "ref": "src/mcp/server.ts:68",
           "source": "code"
         }
       ]
@@ -1052,7 +1084,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:111",
+          "ref": "src/mcp/usage.ts:112",
           "source": "code"
         }
       ]
@@ -1068,7 +1100,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:35",
+          "ref": "src/mcp/usage.ts:36",
           "source": "code"
         }
       ]
@@ -1180,7 +1212,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/html.ts:69",
+          "ref": "src/project/html.ts:88",
           "source": "code"
         }
       ]
@@ -1196,7 +1228,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:81",
+          "ref": "src/project/index.ts:88",
           "source": "code"
         }
       ]
@@ -1276,7 +1308,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/spec.ts:132",
+          "ref": "src/project/spec.ts:142",
           "source": "code"
         }
       ]
@@ -1510,6 +1542,20 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/drizzle.ts:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/analyze/endpoints.ts",
+      "kind": "module",
+      "name": "src/analyze/endpoints.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/endpoints.ts:1",
           "source": "code"
         }
       ],
@@ -2105,6 +2151,20 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:test/endpoints.test.mjs",
+      "kind": "module",
+      "name": "test/endpoints.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/endpoints.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:test/mcp.test.mjs",
       "kind": "module",
       "name": "test/mcp.test.mjs",
@@ -2161,6 +2221,83 @@
     }
   ],
   "dataEntities": [],
+  "endpoints": [
+    {
+      "confidence": 0.95,
+      "id": "endpoint:rest:GET:/…",
+      "method": "GET",
+      "name": "GET /…",
+      "path": "/…",
+      "protocol": "rest",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/endpoints.ts:5",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.95,
+      "id": "endpoint:rest:GET:/widgets",
+      "method": "GET",
+      "name": "GET /widgets",
+      "path": "/widgets",
+      "protocol": "rest",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/endpoints.test.mjs:46",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.95,
+      "id": "endpoint:rest:POST:/widgets",
+      "method": "POST",
+      "name": "POST /widgets",
+      "path": "/widgets",
+      "protocol": "rest",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/endpoints.test.mjs:47",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.8,
+      "id": "endpoint:trpc:MUTATION:addUser",
+      "method": "MUTATION",
+      "name": "MUTATION addUser",
+      "path": "addUser",
+      "protocol": "trpc",
+      "provenance": [
+        {
+          "confidence": 0.8,
+          "ref": "test/endpoints.test.mjs:64",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.8,
+      "id": "endpoint:trpc:QUERY:getUser",
+      "method": "QUERY",
+      "name": "QUERY getUser",
+      "path": "getUser",
+      "protocol": "trpc",
+      "provenance": [
+        {
+          "confidence": 0.8,
+          "ref": "test/endpoints.test.mjs:64",
+          "source": "code"
+        }
+      ]
+    }
+  ],
   "flows": [
     {
       "confidence": 0.6,
@@ -2324,7 +2461,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-13T22:31:33.832Z",
+  "generatedAt": "2026-06-13T22:45:31.372Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -2778,6 +2915,111 @@
     },
     {
       "confidence": 0.95,
+      "from": "comp:src/analyze/endpoints.ts",
+      "id": "rel:comp:src/analyze/endpoints.ts=>comp:src/analyze/fs-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/endpoints.ts → comp:src/analyze/fs-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/endpoints.ts:15",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/fs-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/endpoints.ts",
+      "id": "rel:comp:src/analyze/endpoints.ts=>comp:src/analyze/parse-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/endpoints.ts → comp:src/analyze/parse-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/endpoints.ts:16",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/parse-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/endpoints.ts",
+      "id": "rel:comp:src/analyze/endpoints.ts=>comp:src/analyze/tier0.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/endpoints.ts → comp:src/analyze/tier0.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/endpoints.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/tier0.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/endpoints.ts",
+      "id": "rel:comp:src/analyze/endpoints.ts=>comp:src/analyze/walk.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/endpoints.ts → comp:src/analyze/walk.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/endpoints.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/walk.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/endpoints.ts",
+      "id": "rel:comp:src/analyze/endpoints.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/endpoints.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/endpoints.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/endpoints.ts",
+      "id": "rel:comp:src/analyze/endpoints.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/endpoints.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/endpoints.ts:10",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/endpoints.ts",
+      "id": "rel:comp:src/analyze/endpoints.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/endpoints.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/endpoints.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
       "from": "comp:src/analyze/fs-util.ts",
       "id": "rel:comp:src/analyze/fs-util.ts=>sys:ext:node:fs",
       "kind": "depends_on",
@@ -2940,6 +3182,21 @@
         }
       ],
       "to": "comp:src/analyze/derive.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/index.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/endpoints.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/index.ts → comp:src/analyze/endpoints.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/index.ts:15",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/endpoints.ts"
     },
     {
       "confidence": 0.95,
@@ -5041,6 +5298,81 @@
         {
           "confidence": 0.95,
           "ref": "test/diff.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/endpoints.test.mjs",
+      "id": "rel:comp:test/endpoints.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/endpoints.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/endpoints.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/endpoints.test.mjs",
+      "id": "rel:comp:test/endpoints.test.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:test/endpoints.test.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/endpoints.test.mjs:4",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/endpoints.test.mjs",
+      "id": "rel:comp:test/endpoints.test.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:test/endpoints.test.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/endpoints.test.mjs:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/endpoints.test.mjs",
+      "id": "rel:comp:test/endpoints.test.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:test/endpoints.test.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/endpoints.test.mjs:5",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/endpoints.test.mjs",
+      "id": "rel:comp:test/endpoints.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/endpoints.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/endpoints.test.mjs:2",
           "source": "code"
         }
       ],

@@ -129,6 +129,19 @@ export function getDataModel(model: ArchitectureModel): string {
   return out.join("\n");
 }
 
+export function getApiSurface(model: ArchitectureModel): string {
+  const eps = model.endpoints ?? [];
+  if (!eps.length) return "No API endpoints detected (no routes/procedures/GraphQL schema found).";
+  const byProto = new Map<string, typeof eps>();
+  for (const e of eps) (byProto.get(e.protocol) ?? byProto.set(e.protocol, []).get(e.protocol)!).push(e);
+  const out: string[] = [`API surface: ${eps.length} endpoints`];
+  for (const [proto, list] of [...byProto.entries()].sort()) {
+    out.push(`\n${proto.toUpperCase()} (${list.length})`);
+    for (const e of list) out.push(`  ${e.method} ${e.path}  [${refOf(e)}]`);
+  }
+  return out.join("\n");
+}
+
 export function whatsRelated(model: ArchitectureModel, name: string): string {
   const c = findComponent(model, name);
   if (!c) return `No component matches "${name}".`;

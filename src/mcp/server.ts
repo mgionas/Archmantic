@@ -25,6 +25,7 @@ import {
 } from "../cloud/index.js";
 import { UsageRecorder } from "./usage.js";
 import {
+  getApiSurface,
   getComponent,
   getContext,
   getDataModel,
@@ -149,6 +150,16 @@ export async function startMcpServer(root: string): Promise<void> {
         "The persisted data model (DB entities/tables): each entity's fields with PK/FK/unique markers and its relations. Grounded in the schema file.",
     },
     async () => served("get_data_model", getDataModel(model)),
+  );
+
+  server.registerTool(
+    "get_api_surface",
+    {
+      title: "Get API surface",
+      description:
+        "The API contract: REST routes, tRPC procedures, and GraphQL operations with HTTP methods/paths, grouped by protocol. Grounded in code.",
+    },
+    async () => served("get_api_surface", getApiSurface(model)),
   );
 
   server.registerTool(

@@ -19,6 +19,7 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 - **PR architecture diff** — how a change reshapes the architecture (not a line diff), postable as a PR comment.
 - **Architecture history** — how the system's shape evolved, commit by commit.
 - **Data model (ERD)** — entities, fields, and relations parsed from your Prisma schema, Drizzle tables, or SQL `CREATE TABLE` migrations, grounded to `file:line` and projected as a Mermaid ERD.
+- **API surface** — REST routes (Next.js App Router/Pages, Express/Fastify/Koa/Hono), tRPC procedures, and GraphQL operations, grounded to `file:line` — the contract layer for humans and agents.
 - **One model → many audiences** — C4-style context, components, sequence (Mermaid), BPMN, an ERD, capability list, and an MCP surface for agents.
 - **Token savings** — agents query the model over MCP instead of reading whole files (~98% fewer tokens on this repo, by the built-in benchmark).
 - **Usage stats** — every MCP tool call is recorded with the tokens it saved; `archmantic usage` and the web `/usage` dashboard prove the model is earning its keep (and meter agent activity).

@@ -12,6 +12,7 @@ import { tier1 } from "./tier1.js";
 import { deriveSemantics } from "./derive.js";
 import { detectStack } from "./stack.js";
 import { detectDataModel } from "./datamodel.js";
+import { detectEndpoints } from "./endpoints.js";
 
 /** Read optional `.archmantic/config.json` → multi-repo system + project overrides. */
 function applyConfig(root: string, model: ArchitectureModel): void {
@@ -34,6 +35,7 @@ export function analyzeRepo(root: string): ArchitectureModel {
   deriveSemantics(root, files, model);
   model.technologies = detectStack(root);
   model.dataEntities = detectDataModel(root);
+  model.endpoints = detectEndpoints(root);
   applyConfig(root, model);
   return model;
 }

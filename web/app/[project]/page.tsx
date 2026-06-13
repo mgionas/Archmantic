@@ -94,6 +94,13 @@ export default async function ProjectPage({
   }));
   const d = modelDelta(prevModel, model);
 
+  const endpoints = (model.endpoints ?? []).map((e) => ({
+    id: e.id,
+    method: e.method,
+    path: e.path,
+    protocol: e.protocol,
+  }));
+
   const erd = erDiagram(model);
   const data = erd
     ? {
@@ -189,6 +196,7 @@ export default async function ProjectPage({
         components={components}
         changes={changes}
         data={data}
+        endpoints={endpoints}
         diagrams={{
           context: contextDiagram(model),
           components: componentDiagram(model),
