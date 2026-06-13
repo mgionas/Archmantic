@@ -4,7 +4,8 @@ import { latestModel } from "@/lib/store";
 import { band, componentLabel, groupCapabilities, trust } from "@/lib/format";
 import { componentDiagram, contextDiagram, sequenceDiagram } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
-import { Bpmn, Mermaid } from "../diagrams-client";
+import { getProcessEdit } from "@/lib/admin";
+import { BpmnEditor, Mermaid } from "../diagrams-client";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
   const externals = model.systems.filter((s) => s.kind === "external");
   const proc = model.processes[0];
   const seq = sequenceDiagram(model);
-  const bpmn = bpmnXml(model);
+  const generatedBpmn = bpmnXml(model);
+  const savedBpmn = owner ? await getProcessEdit(owner, project) : null;
+  const processXml = savedBpmn ?? generatedBpmn;
 
   return (
     <main>
@@ -109,8 +112,16 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
 
       {proc ? (
         <>
-          <h2>Process (BPMN) — {proc.name}</h2>
-          <div className="card">{bpmn ? <Bpmn xml={bpmn} /> : <span className="empty">no process</span>}</div>
+          <h2>
+            Process (BPMN) — {proc.name} {savedBpmn ? <span className="sub">· edited</span> : null}
+          </h2>
+          <div className="card">
+            {processXml ? (
+              <BpmnEditor project={project} initialXml={processXml} />
+            ) : (
+              <span className="empty">no process</span>
+            )}
+          </div>
         </>
       ) : null}
 

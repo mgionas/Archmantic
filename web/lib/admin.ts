@@ -74,6 +74,40 @@ export async function pushModelApi(owner: string, model: Model, commit: string):
     do update set model = excluded.model, generated_at = excluded.generated_at, pushed_at = now()`;
 }
 
+// ── Human-edited process diagrams (the edit-then-build moat, step 1) ──────────
+
+export async function ensureProcessSchema(): Promise<void> {
+  await db()`
+    create table if not exists archmantic_process_edits (
+      owner text not null,
+      project text not null,
+      bpmn_xml text not null,
+      updated_at timestamptz not null default now(),
+      primary key (owner, project)
+    )`;
+}
+
+/** Persist a human-edited BPMN for (owner, project) — the org's authoritative process. */
+export async function saveProcessEdit(owner: string, project: string, xml: string): Promise<void> {
+  await ensureProcessSchema();
+  await db()`
+    insert into archmantic_process_edits (owner, project, bpmn_xml)
+    values (${owner}, ${project}, ${xml})
+    on conflict (owner, project) do update set bpmn_xml = excluded.bpmn_xml, updated_at = now()`;
+}
+
+/** The human-edited BPMN for (owner, project), or null if never edited. */
+export async function getProcessEdit(owner: string, project: string): Promise<string | null> {
+  try {
+    const rows = (await db()`
+      select bpmn_xml from archmantic_process_edits
+      where owner = ${owner} and project = ${project}`) as { bpmn_xml: string }[];
+    return rows[0]?.bpmn_xml ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function pullLatestForOwner(owner: string, project: string): Promise<Model | null> {
   try {
     const rows = (await db()`

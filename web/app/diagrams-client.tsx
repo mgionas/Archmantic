@@ -28,7 +28,78 @@ export function Mermaid({ id, chart }: { id: string; chart: string }) {
   return <div ref={ref} style={{ overflow: "auto" }} />;
 }
 
-/** Render BPMN 2.0 XML with bpmn-js, client-side. */
+/** Editable BPMN canvas (bpmn-js Modeler) with save — the edit-then-build moat. */
+export function BpmnEditor({ project, initialXml }: { project: string; initialXml: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const modelerRef = useRef<any>(null);
+  const [status, setStatus] = useState<string>("");
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let modeler: any = null;
+    let cancelled = false;
+    (async () => {
+      const Modeler = (await import("bpmn-js/lib/Modeler")).default;
+      if (cancelled || !ref.current) return;
+      modeler = new Modeler({ container: ref.current });
+      modelerRef.current = modeler;
+      try {
+        await modeler.importXML(initialXml);
+        modeler.get("canvas").zoom("fit-viewport");
+      } catch {
+        setStatus("Could not load the diagram.");
+      }
+    })();
+    return () => {
+      cancelled = true;
+      modeler?.destroy?.();
+      modelerRef.current = null;
+    };
+  }, [initialXml]);
+
+  async function save() {
+    const modeler = modelerRef.current;
+    if (!modeler) return;
+    setStatus("Saving…");
+    try {
+      const { xml } = await modeler.saveXML({ format: true });
+      const res = await fetch("/api/process", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ project, xml }),
+      });
+      setStatus(res.ok ? "Saved ✓ — this is now your org's process" : `Save failed (${res.status})`);
+    } catch {
+      setStatus("Save failed");
+    }
+  }
+
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 8 }}>
+        <button
+          onClick={save}
+          style={{
+            background: "#7aa2f7",
+            color: "#0f1115",
+            border: 0,
+            borderRadius: 8,
+            padding: "7px 13px",
+            fontWeight: 600,
+            cursor: "pointer",
+          }}
+        >
+          Save process
+        </button>
+        <span className="sub">{status || "Drag, rename (double-click), and connect tasks — then save."}</span>
+      </div>
+      <div ref={ref} style={{ height: 460, background: "#fff", borderRadius: 12 }} />
+    </div>
+  );
+}
+
+/** Render BPMN 2.0 XML with bpmn-js, client-side (read-only). */
 export function Bpmn({ xml }: { xml: string }) {
   const ref = useRef<HTMLDivElement>(null);
 
