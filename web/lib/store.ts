@@ -24,7 +24,10 @@ export interface Model {
   relations: (Element & { from: string; to: string })[];
   capabilities: Element[];
   processes: { id: string; name: string; description?: string; confidence: number; tasks: { id: string; name: string }[] }[];
-  flows: Element[];
+  flows: (Element & {
+    participants: string[];
+    steps: { participant: string; action: string; to?: string }[];
+  })[];
 }
 
 export interface ProjectRow {

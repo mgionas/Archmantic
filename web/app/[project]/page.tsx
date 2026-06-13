@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { latestModel } from "@/lib/store";
 import { band, componentLabel, groupCapabilities, trust } from "@/lib/format";
+import { componentDiagram, contextDiagram, sequenceDiagram } from "@/lib/diagrams";
+import { bpmnXml } from "@/lib/bpmn";
+import { Bpmn, Mermaid } from "../diagrams-client";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +28,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
   const groups = groupCapabilities(model);
   const externals = model.systems.filter((s) => s.kind === "external");
   const proc = model.processes[0];
+  const seq = sequenceDiagram(model);
+  const bpmn = bpmnXml(model);
 
   return (
     <main>
@@ -77,17 +82,36 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
         </div>
       )}
 
+      <h2>Context</h2>
+      <div className="card">
+        <Mermaid id="ctx" chart={contextDiagram(model)} />
+      </div>
+
+      <h2>Components &amp; dependencies</h2>
+      <div className="card">
+        <Mermaid id="comp" chart={componentDiagram(model)} />
+      </div>
+
+      {seq ? (
+        <>
+          <h2>Sequence — {model.flows[0]?.name}</h2>
+          <div className="card">
+            <Mermaid id="seq" chart={seq} />
+          </div>
+        </>
+      ) : null}
+
       <h2>External systems</h2>
       <div className="card">{externals.map((s) => s.name).join(" · ") || <span className="empty">none</span>}</div>
 
       {proc ? (
         <>
-          <h2>Process — {proc.name}</h2>
-          <div className="card">{proc.tasks.map((task) => task.name).join("  →  ")}</div>
+          <h2>Process (BPMN) — {proc.name}</h2>
+          <div className="card">{bpmn ? <Bpmn xml={bpmn} /> : <span className="empty">no process</span>}</div>
         </>
       ) : null}
 
-      <h2>Components</h2>
+      <h2>Component responsibilities</h2>
       <div className="grid">
         {model.components.map((c) => (
           <div key={c.id} className="card">
