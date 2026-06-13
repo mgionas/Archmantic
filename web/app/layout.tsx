@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ClerkProvider, OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 
 export const metadata = {
   title: "Archmantic",
@@ -29,17 +30,31 @@ const css = `
   .badge.high { color: #4ade80; } .badge.medium { color: #facc15; } .badge.low { color: #f87171; }
   .empty { color: #8b93a7; font-style: italic; }
   code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #8b93a7; }
+  .topbar { display: flex; align-items: center; gap: 16px; padding: 12px 32px; border-bottom: 1px solid #232734; }
+  .brand { font-weight: 700; color: #e6e9ef; } .brand:hover { text-decoration: none; }
+  .spacer { flex: 1; }
 `;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <style dangerouslySetInnerHTML={{ __html: css }} />
-      </head>
-      <body>
-        <div className="wrap">{children}</div>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <head>
+          <style dangerouslySetInnerHTML={{ __html: css }} />
+        </head>
+        <body>
+          <header className="topbar">
+            <a href="/" className="brand">
+              Archmantic
+            </a>
+            <div className="spacer" />
+            {/* Middleware guarantees the user is signed in by the time this renders. */}
+            <OrganizationSwitcher hidePersonal={false} />
+            <UserButton />
+          </header>
+          <div className="wrap">{children}</div>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

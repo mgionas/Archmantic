@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.5.2",
     "@neondatabase/serverless": "^1.1.0",
     "bpmn-js": "^18.18.0",
     "mermaid": "^11.15.0",
