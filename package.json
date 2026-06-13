@@ -1,8 +1,28 @@
 {
   "name": "archmantic",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Archmantic — an always-on Solution Architect: living architecture model + diagrams for humans and AI agents (via MCP).",
   "license": "Apache-2.0",
+  "homepage": "https://github.com/mgionas/Archmantic#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mgionas/Archmantic.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mgionas/Archmantic/issues"
+  },
+  "keywords": [
+    "architecture",
+    "diagrams",
+    "mcp",
+    "ai-agents",
+    "bpmn",
+    "c4",
+    "mermaid",
+    "reverse-engineering",
+    "documentation",
+    "static-analysis"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -22,6 +42,9 @@
   "engines": {
     "node": ">=24"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.1",
     "@modelcontextprotocol/sdk": "^1.29.0",
@@ -30,6 +53,5 @@
   },
   "devDependencies": {
     "@types/node": "^24.13.2"
-  },
-  "private": true
+  }
 }

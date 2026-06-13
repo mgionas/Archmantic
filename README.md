@@ -23,16 +23,27 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 
 ## Quickstart
 
-```bash
-npm install
-npm run build
+No install needed — run it straight from npm:
 
-node dist/cli.js analyze     # reverse-engineer the model → .archmantic/model.json
-node dist/cli.js view        # capability map + diagrams + trust report → .archmantic/view.html
-node dist/cli.js bench       # token-savings benchmark (MCP vs raw file reads)
+```bash
+npx archmantic analyze     # reverse-engineer the model → .archmantic/model.json
+npx archmantic view        # capability map + diagrams + trust report → .archmantic/view.html
+npx archmantic bench       # token-savings benchmark (MCP vs raw file reads)
 ```
 
-Optionally link a global `archmantic` binary: `npm link`.
+Or install the CLI globally:
+
+```bash
+npm install -g archmantic
+archmantic analyze
+```
+
+**From source** (for contributors):
+
+```bash
+npm install && npm run build
+node dist/cli.js analyze
+```
 
 ## Commands
 

@@ -179,6 +179,10 @@ function Landing() {
 
       <footer className="mt-24 border-t pt-8 text-center text-sm text-muted-foreground">
         Archmantic — a living, trustworthy architecture model. ·{" "}
+        <Link href="/docs" className="text-primary hover:underline">
+          Docs
+        </Link>{" "}
+        ·{" "}
         <a href="https://github.com/mgionas/Archmantic" className="text-primary hover:underline">
           GitHub
         </a>

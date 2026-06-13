@@ -31,6 +31,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   Archmantic
                 </Link>
                 <div className="flex-1" />
+                <Link
+                  href="/docs"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Docs
+                </Link>
                 <ThemeToggle />
                 <OrganizationSwitcher hidePersonal={false} appearance={{ elements: { rootBox: "flex items-center" } }} />
                 <UserButton />

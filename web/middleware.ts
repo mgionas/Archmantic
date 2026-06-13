@@ -6,6 +6,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 // instead of the route — a silent push failure.)
 const isPublic = createRouteMatcher([
   "/",
+  "/docs",
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/api/push",
