@@ -1,5 +1,5 @@
 {
-  "name": "archmantic",
+  "name": "@archmantic/cli",
   "version": "0.1.0",
   "description": "Archmantic — an always-on Solution Architect: living architecture model + diagrams for humans and AI agents (via MCP).",
   "license": "Apache-2.0",

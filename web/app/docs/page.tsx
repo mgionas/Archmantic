@@ -104,10 +104,10 @@ export default function Docs() {
 
         <Section id="install" title="Install">
           <p>No install needed — run it straight from npm:</p>
-          <Code>{`npx archmantic analyze
-npx archmantic view`}</Code>
+          <Code>{`npx @archmantic/cli analyze
+npx @archmantic/cli view`}</Code>
           <p>Or install the CLI globally:</p>
-          <Code>{`npm install -g archmantic
+          <Code>{`npm install -g @archmantic/cli
 archmantic analyze`}</Code>
           <p>
             Requires <strong>Node 24+</strong>. The core CLI is Apache-2.0 and dependency-light.
@@ -116,9 +116,9 @@ archmantic analyze`}</Code>
 
         <Section id="quickstart" title="Quickstart">
           <p>From the root of any repo:</p>
-          <Code>{`npx archmantic analyze   # → .archmantic/model.json  (the model)
-npx archmantic view      # → .archmantic/view.html   (diagrams + trust report)
-npx archmantic bench     # token savings: MCP vs raw file reads`}</Code>
+          <Code>{`npx @archmantic/cli analyze   # → .archmantic/model.json  (the model)
+npx @archmantic/cli view      # → .archmantic/view.html   (diagrams + trust report)
+npx @archmantic/cli bench     # token savings: MCP vs raw file reads`}</Code>
           <p>
             <Inline>analyze</Inline> runs cheapest-first: repo structure, then a static import graph (TypeScript compiler
             API), then structural capabilities and a process flow. Add <Inline>--tier 2</Inline> for the optional LLM
@@ -134,8 +134,8 @@ npx archmantic bench     # token savings: MCP vs raw file reads`}</Code>
           <Code>{`# .env.local
 ARCHMANTIC_TOKEN=am_xxx
 
-npx archmantic push      # upload the model to your org
-npx archmantic pull      # fetch the latest team model`}</Code>
+npx @archmantic/cli push      # upload the model to your org
+npx @archmantic/cli pull      # fetch the latest team model`}</Code>
           <p>
             Each push is stored per commit, so you get an <strong>architecture history</strong> and per-PR diffs. Your
             teammates and agents read the same model in this web app.
@@ -169,13 +169,13 @@ npx archmantic pull      # fetch the latest team model`}</Code>
           <p>
             Expose the model to any MCP-compatible agent (Claude Code, Claude Desktop, etc.). The server runs over stdio:
           </p>
-          <Code>{`npx archmantic mcp`}</Code>
+          <Code>{`npx @archmantic/cli mcp`}</Code>
           <p>Register it with your agent — for example, in a Claude Desktop config:</p>
           <Code>{`{
   "mcpServers": {
     "archmantic": {
       "command": "npx",
-      "args": ["archmantic", "mcp"]
+      "args": ["@archmantic/cli", "mcp"]
     }
   }
 }`}</Code>
@@ -202,9 +202,9 @@ npx archmantic pull      # fetch the latest team model`}</Code>
 
         <Section id="edit-build" title="Edit-then-build">
           <p>The model is a source you can edit, not just a read-out:</p>
-          <Code>{`npx archmantic spec               # emit an agent-ready build spec from the model
-npx archmantic handoff            # → an implementation plan (Claude, BYOK)
-npx archmantic handoff --apply    # autonomous agent edits the repo and self-verifies`}</Code>
+          <Code>{`npx @archmantic/cli spec               # emit an agent-ready build spec from the model
+npx @archmantic/cli handoff            # → an implementation plan (Claude, BYOK)
+npx @archmantic/cli handoff --apply    # autonomous agent edits the repo and self-verifies`}</Code>
           <p>
             Edit the BPMN canvas in the web app, <Inline>apply</Inline> it back into the model, emit a build spec, and
             hand it to an agent that implements <em>and</em> verifies (runs build + tests, fixes failures until green).

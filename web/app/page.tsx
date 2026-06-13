@@ -136,7 +136,7 @@ function Landing() {
           </a>
         </div>
         <code className="mt-8 rounded-lg border bg-card/60 px-4 py-2 font-mono text-sm text-muted-foreground backdrop-blur">
-          <span className="text-primary">$</span> npx archmantic analyze && archmantic push
+          <span className="text-primary">$</span> npx @archmantic/cli analyze && archmantic push
         </code>
         <HeroPreview />
       </section>
