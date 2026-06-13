@@ -34,6 +34,8 @@ export interface ProjectRow {
   project: string;
   snapshots: number;
   latest: string;
+  components: number;
+  capabilities: number;
 }
 
 function sql() {
@@ -50,8 +52,15 @@ function missingTable(err: unknown): boolean {
 export async function listProjects(owner: string): Promise<ProjectRow[]> {
   try {
     const rows = await sql()`
-      select project, count(*)::int as snapshots, max(pushed_at) as latest
-      from archmantic_models where owner = ${owner} group by project order by project`;
+      select distinct on (m.project)
+        m.project,
+        m.pushed_at as latest,
+        coalesce(jsonb_array_length(m.model->'components'), 0) as components,
+        coalesce(jsonb_array_length(m.model->'capabilities'), 0) as capabilities,
+        (select count(*)::int from archmantic_models s where s.owner = ${owner} and s.project = m.project) as snapshots
+      from archmantic_models m
+      where m.owner = ${owner}
+      order by m.project, m.pushed_at desc`;
     return rows as ProjectRow[];
   } catch (err) {
     if (missingTable(err)) return [];

@@ -1,62 +1,43 @@
+import "./globals.css";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { ClerkProvider, OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 // bpmn-js editor styles (palette, context pad, icons) — global CSS, layout-only.
 import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata = {
   title: "Archmantic",
-  description: "Living architecture model — shared team knowledge.",
+  description: "A living, trustworthy architecture model for humans and AI agents.",
 };
-
-const css = `
-  :root { color-scheme: dark; }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: #0f1115; color: #e6e9ef;
-    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  a { color: #7aa2f7; text-decoration: none; } a:hover { text-decoration: underline; }
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 32px 64px; }
-  h1 { font-size: 22px; margin: 0 0 4px; } h2 { font-size: 16px; margin: 32px 0 12px;
-    padding-bottom: 8px; border-bottom: 1px solid #232734; }
-  .sub { color: #8b93a7; font-size: 13px; }
-  .card { background: #171a21; border: 1px solid #232734; border-radius: 12px; padding: 16px 18px; }
-  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
-  .trust { display: flex; gap: 24px; flex-wrap: wrap; align-items: center; margin: 16px 0; }
-  .stat .num { font-size: 20px; font-weight: 600; margin-right: 6px; } .stat { font-size: 13px; color: #8b93a7; }
-  .bands { margin-left: auto; display: flex; gap: 8px; }
-  .b { font-size: 12px; padding: 3px 9px; border-radius: 999px; }
-  .b.high { background: #14331f; color: #4ade80; } .b.medium { background: #33300f; color: #facc15; } .b.low { background: #331616; color: #f87171; }
-  ul.caps { list-style: none; margin: 0; padding: 0; }
-  ul.caps li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid #1f232e; align-items: baseline; }
-  .area h3 { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; color: #8b93a7; margin: 0 0 8px; }
-  .badge { font-size: 11px; white-space: nowrap; }
-  .badge.high { color: #4ade80; } .badge.medium { color: #facc15; } .badge.low { color: #f87171; }
-  .empty { color: #8b93a7; font-style: italic; }
-  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #8b93a7; }
-  .topbar { display: flex; align-items: center; gap: 16px; padding: 12px 32px; border-bottom: 1px solid #232734; }
-  .brand { font-weight: 700; color: #e6e9ef; } .brand:hover { text-decoration: none; }
-  .spacer { flex: 1; }
-`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <head>
-          <style dangerouslySetInnerHTML={{ __html: css }} />
-        </head>
-        <body>
-          <header className="topbar">
-            <a href="/" className="brand">
-              Archmantic
-            </a>
-            <div className="spacer" />
-            {/* Middleware guarantees the user is signed in by the time this renders. */}
-            <OrganizationSwitcher hidePersonal={false} />
-            <UserButton />
+      <html lang="en" className={cn("dark", geist.variable)} suppressHydrationWarning>
+        <body className="min-h-screen bg-background font-sans text-foreground antialiased">
+          <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
+            <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-6">
+              <Link href="/" className="flex items-center gap-2 font-bold tracking-tight">
+                <span className="inline-block size-2.5 rounded-sm bg-primary" />
+                Archmantic
+              </Link>
+              <div className="flex-1" />
+              <OrganizationSwitcher
+                hidePersonal={false}
+                appearance={{ elements: { rootBox: "flex items-center" } }}
+              />
+              <UserButton />
+            </div>
           </header>
-          <div className="wrap">{children}</div>
+          <div className="mx-auto max-w-6xl px-6 py-10">{children}</div>
+          <Toaster richColors position="top-center" />
         </body>
       </html>
     </ClerkProvider>

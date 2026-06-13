@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { SignInButton } from "@clerk/nextjs";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { listProjects, type ProjectRow } from "@/lib/store";
+import { ProjectsClient } from "./projects-client";
 
 export const dynamic = "force-dynamic";
 
@@ -16,59 +20,76 @@ const USPS: [string, string][] = [
 
 function Landing() {
   return (
-    <main>
-      <section style={{ padding: "32px 0 8px" }}>
-        <h1 style={{ fontSize: 34, lineHeight: 1.15, maxWidth: 720 }}>
-          A living, <em>trustworthy</em> architecture model your team and your AI agents share.
+    <div className="flex flex-col gap-12">
+      <section className="pt-6">
+        <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+          A living, <span className="text-primary">trustworthy</span> architecture model your team and your AI agents
+          share.
         </h1>
-        <p className="sub" style={{ fontSize: 16, maxWidth: 680, marginTop: 12 }}>
-          Point Archmantic at a repo → get an accurate capability map, context &amp; sequence diagrams, and an
-          auto-detected BPMN process — every element grounded in code. Your agents query the same model over MCP.
+        <p className="mt-5 max-w-2xl text-lg text-muted-foreground">
+          Point Archmantic at a repo → an accurate capability map, context &amp; sequence diagrams, and an auto-detected
+          BPMN process — every element grounded in code. Your agents query the same model over MCP.
         </p>
-        <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
+        <div className="mt-7 flex flex-wrap gap-3">
           <SignInButton>
-            <button
-              style={{ background: "#7aa2f7", color: "#0f1115", border: 0, borderRadius: 8, padding: "10px 18px", fontWeight: 700, cursor: "pointer", fontSize: 15 }}
-            >
-              Sign in / Get started
-            </button>
+            <Button size="lg">Sign in / Get started</Button>
           </SignInButton>
           <a
             href="https://github.com/mgionas/Archmantic"
-            style={{ border: "1px solid #232734", borderRadius: 8, padding: "10px 18px", color: "#e6e9ef" }}
+            className={buttonVariants({ size: "lg", variant: "outline" })}
           >
             View on GitHub
           </a>
         </div>
       </section>
 
-      <h2>What you get</h2>
-      <div className="grid">
-        {USPS.map(([title, body]) => (
-          <div key={title} className="card">
-            <div style={{ fontWeight: 600, marginBottom: 4 }}>{title}</div>
-            <div className="sub">{body}</div>
-          </div>
-        ))}
-      </div>
+      <section>
+        <h2 className="mb-4 text-lg font-semibold">What you get</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {USPS.map(([title, body]) => (
+            <Card key={title} className="p-5">
+              <div className="mb-1.5 font-semibold">{title}</div>
+              <p className="text-sm text-muted-foreground">{body}</p>
+            </Card>
+          ))}
+        </div>
+      </section>
 
-      <h2>Get started</h2>
-      <div className="card">
-        <ol style={{ margin: 0, paddingLeft: 20, lineHeight: 1.9 }}>
-          <li>
-            Install &amp; analyze your repo: <code>npm i -g archmantic</code> then <code>archmantic analyze</code>.
-          </li>
-          <li>
-            Sign in here, open <strong>CLI tokens</strong>, and generate a token for your organization.
-          </li>
-          <li>
-            Add <code>ARCHMANTIC_TOKEN</code> + <code>ARCHMANTIC_API_URL</code> to your repo&apos;s{" "}
-            <code>.env.local</code>, then run <code>archmantic push</code>.
-          </li>
-          <li>Your model appears here — capability map, diagrams, trust, and an editable BPMN canvas.</li>
-        </ol>
-      </div>
-    </main>
+      <section>
+        <h2 className="mb-4 text-lg font-semibold">Get started</h2>
+        <Card className="p-6">
+          <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed">
+            <li>
+              Analyze your repo: <code className="rounded bg-muted px-1.5 py-0.5">npm i -g archmantic</code> →{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5">archmantic analyze</code>.
+            </li>
+            <li>Sign in here, open <strong>CLI tokens</strong>, and generate a token for your organization.</li>
+            <li>
+              Add <code className="rounded bg-muted px-1.5 py-0.5">ARCHMANTIC_TOKEN</code> +{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5">ARCHMANTIC_API_URL</code> to{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5">.env.local</code>, then{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5">archmantic push</code>.
+            </li>
+            <li>Your model appears here — capability map, diagrams, trust, and an editable BPMN canvas.</li>
+          </ol>
+        </Card>
+      </section>
+    </div>
+  );
+}
+
+function EmptyState() {
+  return (
+    <Card className="flex flex-col items-start gap-3 p-8">
+      <div className="text-lg font-semibold">No projects in this organization yet</div>
+      <p className="max-w-md text-sm text-muted-foreground">
+        Generate a CLI token, add it to your repo&apos;s <code className="rounded bg-muted px-1.5 py-0.5">.env.local</code>,
+        and run <code className="rounded bg-muted px-1.5 py-0.5">archmantic push</code>.
+      </p>
+      <Link href="/settings" className={cn(buttonVariants(), "mt-1")}>
+        Get a CLI token →
+      </Link>
+    </Card>
   );
 }
 
@@ -86,33 +107,24 @@ export default async function Home() {
   }
 
   return (
-    <main>
-      <h1>Your projects</h1>
-      <div className="sub">
-        Shared architecture knowledge for your organization. <Link href="/settings">Manage CLI tokens →</Link>
+    <div>
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Your projects</h1>
+          <p className="text-sm text-muted-foreground">Shared architecture knowledge for your organization.</p>
+        </div>
+        <Link href="/settings" className={buttonVariants({ variant: "outline" })}>
+          Manage CLI tokens
+        </Link>
       </div>
 
-      <h2>Projects</h2>
       {error ? (
-        <div className="card empty">Could not reach the store: {error}</div>
+        <Card className="p-6 text-sm text-muted-foreground">Could not reach the store: {error}</Card>
       ) : projects.length === 0 ? (
-        <div className="card empty">
-          No projects in this organization yet. Get a <Link href="/settings">CLI token</Link>, then run{" "}
-          <code>archmantic push</code> in a repo.
-        </div>
+        <EmptyState />
       ) : (
-        <div className="grid">
-          {projects.map((p) => (
-            <Link key={p.project} href={`/${encodeURIComponent(p.project)}`} className="card">
-              <div style={{ fontWeight: 600, fontSize: 16 }}>{p.project}</div>
-              <div className="sub" style={{ marginTop: 6 }}>
-                {p.snapshots} commit snapshot{p.snapshots === 1 ? "" : "s"} · updated{" "}
-                {new Date(p.latest).toLocaleDateString()}
-              </div>
-            </Link>
-          ))}
-        </div>
+        <ProjectsClient projects={projects} />
       )}
-    </main>
+    </div>
   );
 }
