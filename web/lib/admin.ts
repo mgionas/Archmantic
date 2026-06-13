@@ -18,9 +18,23 @@ export async function ensureSchema(): Promise<void> {
     create table if not exists archmantic_models (
       project text not null, commit_sha text not null,
       generated_at timestamptz, pushed_at timestamptz not null default now(),
-      model jsonb not null, owner text, primary key (project, commit_sha)
+      model jsonb not null, owner text not null default 'local',
+      primary key (owner, project, commit_sha)
     )`;
   await q`alter table archmantic_models add column if not exists owner text`;
+  await q`update archmantic_models set owner = 'local' where owner is null`;
+
+  // Migrate older tables (PK on project+commit only) to the org-scoped PK.
+  const pkCols = (await q`
+    select a.attname from pg_index i
+    join pg_attribute a on a.attrelid = i.indrelid and a.attnum = any (i.indkey)
+    where i.indrelid = 'archmantic_models'::regclass and i.indisprimary`) as { attname: string }[];
+  if (!pkCols.some((r) => r.attname === "owner")) {
+    await q`alter table archmantic_models alter column owner set not null`;
+    await q`alter table archmantic_models drop constraint if exists archmantic_models_pkey`;
+    await q`alter table archmantic_models add primary key (owner, project, commit_sha)`;
+  }
+
   await q`
     create table if not exists archmantic_tokens (
       token_hash text primary key,
@@ -54,10 +68,10 @@ export async function ownerForToken(token: string): Promise<string | null> {
 export async function pushModelApi(owner: string, model: Model, commit: string): Promise<void> {
   await ensureSchema();
   await db()`
-    insert into archmantic_models (project, commit_sha, generated_at, model, owner)
-    values (${model.project}, ${commit}, ${model.generatedAt ?? null}, ${JSON.stringify(model)}, ${owner})
-    on conflict (project, commit_sha)
-    do update set model = excluded.model, generated_at = excluded.generated_at, owner = excluded.owner, pushed_at = now()`;
+    insert into archmantic_models (owner, project, commit_sha, generated_at, model)
+    values (${owner}, ${model.project}, ${commit}, ${model.generatedAt ?? null}, ${JSON.stringify(model)})
+    on conflict (owner, project, commit_sha)
+    do update set model = excluded.model, generated_at = excluded.generated_at, pushed_at = now()`;
 }
 
 export async function pullLatestForOwner(owner: string, project: string): Promise<Model | null> {
