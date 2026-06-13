@@ -105,6 +105,29 @@ node dist/cli.js cloud-log  # list the per-commit snapshots in the cloud (direct
 
 Mint a SaaS token from the web app's **Settings** page (signed in, in your org); it tags every push with your organization, so customers never hold the raw database URL. The committed `.archmantic/model.json` stays the source of truth; the cloud holds a **per-commit history** powering the team timeline and the web viewer.
 
+## CI: architecture diff on every PR
+
+A reusable GitHub Action comments on each PR with the **architecture-level** delta — new/removed components, capabilities, data-model entities, and external systems — not a line diff. It posts a single sticky comment and updates it on every push.
+
+```yaml
+# .github/workflows/architecture-diff.yml
+name: Architecture diff
+on: pull_request
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # so the base ref can be analyzed
+      - uses: mgionas/Archmantic@main # the reusable action (action.yml)
+```
+
+Inputs: `base-ref` (default: the PR base branch), `working-directory` (default `.`), `version` (default `latest`), `comment` (default `true`), `github-token` (default `${{ github.token }}`). It runs `archmantic diff` under the hood, so no install step is needed.
+
 ## Tier 2 (LLM) & credentials
 
 The LLM pass (`analyze --tier 2`) and `bench --exact` are **BYOK** and gated. Authenticate either way:

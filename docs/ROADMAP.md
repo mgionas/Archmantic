@@ -21,7 +21,7 @@ code-graph commodity territory?
 | ✅ done | npm publish (core) | Published `@archmantic/cli@0.1.0` (public) | High · Low |
 | ✅ done | In-app `/docs` | Shipped, public, linked from header + landing | High · Low |
 | ✅ done | Data model → ERD | Prisma + Drizzle + SQL → `DataEntity` IR + Mermaid ERD; CLI + web Data tab + MCP `get_data_model` | High · Med |
-| **NEXT** | GitHub Action / PR diff | Makes the shipped "drift & PR diffs" USP real; retention | High · Med |
+| ✅ done | GitHub Action / PR diff | Reusable `action.yml` + sticky PR comment via `archmantic diff`; self CI dogfoods it | High · Med |
 | **NEXT** | MCP usage stats | Proof-of-value loop + metering substrate for billing | High · Med |
 | **LATER** | API surface (routes) | Completes the "what's the contract" layer | Med · Med |
 | **LATER** | Multi-repo auto-link | Novel cross-repo gap detection; smarter after ERD/API | High · Med-High |
@@ -73,10 +73,12 @@ MDX in the Next.js app; linked from the landing nav.
 - Project: Mermaid `erDiagram` ✅. "Data" tab in the project view ✅ + MCP `get_data_model` ✅.
 - Cardinality inferred from FK direction so FK-only sources (Drizzle/SQL) render correctly.
 
-### NEXT · GitHub Action / PR diff
-Reuse `diff/model-diff` + drift. Action runs `analyze`, compares against the
-base-branch model, comments the **architecture** delta (new components/relations/
-capabilities/entities) on the PR — not a line diff.
+### ✅ done · GitHub Action / PR diff
+Reusable composite `action.yml` (`uses: mgionas/Archmantic@…`) runs
+`archmantic diff origin/<base>` and posts a **sticky** PR comment with the
+architecture delta (components/capabilities/data-model/externals) — not a line
+diff. Self-hosted CI (`.github/workflows/`) dogfoods it against this repo's own
+PRs (source build) plus a build+test job.
 
 ### NEXT · MCP usage stats
 MCP server logs each tool call (tool, tokens in/out, project, est. tokens-saved

@@ -14,6 +14,7 @@ const NAV: { id: string; label: string }[] = [
   { id: "cli", label: "CLI reference" },
   { id: "mcp", label: "MCP for agents" },
   { id: "multirepo", label: "Multi-repo systems" },
+  { id: "ci", label: "CI / PR diffs" },
   { id: "edit-build", label: "Edit-then-build" },
 ];
 
@@ -198,6 +199,33 @@ npx @archmantic/cli pull      # fetch the latest team model`}</Code>
           <p>
             Push each repo, then open <Link href="/systems">Systems</Link> for a unified cross-service context diagram and
             drill-down — no central config, each repo declares its own edges.
+          </p>
+        </Section>
+
+        <Section id="ci" title="CI / PR diffs">
+          <p>
+            A reusable GitHub Action comments on each PR with the <strong>architecture-level</strong> delta — new or
+            removed components, capabilities, data-model entities, and external systems — not a line diff. It keeps a
+            single sticky comment, updated on every push.
+          </p>
+          <Code>{`# .github/workflows/architecture-diff.yml
+name: Architecture diff
+on: pull_request
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: mgionas/Archmantic@main`}</Code>
+          <p>
+            Inputs: <Inline>base-ref</Inline> (default: the PR base branch), <Inline>working-directory</Inline>,{" "}
+            <Inline>version</Inline>, <Inline>comment</Inline>, and <Inline>github-token</Inline>. It runs{" "}
+            <Inline>archmantic diff</Inline> under the hood — no install step needed.
           </p>
         </Section>
 

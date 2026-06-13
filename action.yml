@@ -1,0 +1,86 @@
+name: "Archmantic Architecture Diff"
+description: "Comment on a PR with the architecture-level diff — capabilities, components, data model, externals — not a line diff."
+author: "Archmantic"
+branding:
+  icon: "git-pull-request"
+  color: "purple"
+
+inputs:
+  base-ref:
+    description: "Branch/ref to diff against. Defaults to the PR's base branch."
+    required: false
+    default: ${{ github.event.pull_request.base.ref }}
+  working-directory:
+    description: "Directory to analyze (the package root)."
+    required: false
+    default: "."
+  version:
+    description: "Version of @archmantic/cli to run (npm dist-tag or semver)."
+    required: false
+    default: "latest"
+  comment:
+    description: "Post a sticky PR comment with the diff (true/false)."
+    required: false
+    default: "true"
+  github-token:
+    description: "Token with `pull-requests: write` to post the comment."
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: "24"
+
+    - name: Architecture diff
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        BASE_REF: ${{ inputs.base-ref }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        REPO: ${{ github.repository }}
+        CLI_VERSION: ${{ inputs.version }}
+        WANT_COMMENT: ${{ inputs.comment }}
+      run: |
+        set -euo pipefail
+
+        if [ -z "${BASE_REF:-}" ]; then
+          echo "No base ref (not a pull_request event?). Falling back to the CLI default."
+          npx -y "@archmantic/cli@${CLI_VERSION}" diff || true
+        else
+          # Fetch just the base tip so `git archive` can read its tree (works on shallow clones).
+          git fetch --no-tags --depth=1 --quiet origin "+refs/heads/${BASE_REF}:refs/remotes/origin/${BASE_REF}" || true
+          npx -y "@archmantic/cli@${CLI_VERSION}" diff "origin/${BASE_REF}"
+        fi
+
+        BODY=".archmantic/pr-diff.md"
+        if [ ! -f "$BODY" ]; then
+          echo "No diff report produced — nothing to comment."
+          exit 0
+        fi
+
+        if [ "${WANT_COMMENT}" != "true" ] || [ -z "${PR_NUMBER:-}" ]; then
+          echo "Skipping PR comment. Diff report:"
+          cat "$BODY"
+          exit 0
+        fi
+
+        # Sticky comment: find ours by a hidden marker, update it, else create one.
+        TMP="${RUNNER_TEMP:-/tmp}"
+        MARKER="<!-- archmantic-arch-diff -->"
+        { printf '%s\n\n' "$MARKER"; cat "$BODY"; } > "$TMP/archmantic-body.md"
+        # jq --rawfile is robust against backticks/quotes/newlines in the body.
+        jq -n --rawfile body "$TMP/archmantic-body.md" '{body: $body}' > "$TMP/archmantic-payload.json"
+        CID=$(gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" --paginate \
+              --jq "map(select(.body | contains(\"${MARKER}\"))) | .[0].id // empty")
+        if [ -n "$CID" ]; then
+          gh api -X PATCH "repos/${REPO}/issues/comments/${CID}" --input "$TMP/archmantic-payload.json" >/dev/null
+          echo "Updated architecture-diff comment (${CID})."
+        else
+          gh api -X POST "repos/${REPO}/issues/${PR_NUMBER}/comments" --input "$TMP/archmantic-payload.json" >/dev/null
+          echo "Posted architecture-diff comment."
+        fi
