@@ -68,6 +68,38 @@ export async function listProjects(owner: string): Promise<ProjectRow[]> {
   }
 }
 
+export interface Snapshot {
+  commit_sha: string;
+  generated_at: string | null;
+  pushed_at: string;
+}
+
+/** Per-commit snapshots for a project (newest first) — the architecture timeline. */
+export async function listSnapshots(owner: string, project: string): Promise<Snapshot[]> {
+  try {
+    return (await sql()`
+      select commit_sha, generated_at, pushed_at from archmantic_models
+      where owner = ${owner} and project = ${project}
+      order by pushed_at desc`) as Snapshot[];
+  } catch (err) {
+    if (missingTable(err)) return [];
+    throw err;
+  }
+}
+
+/** The model stored at a specific commit. */
+export async function modelAtCommit(owner: string, project: string, commit: string): Promise<Model | null> {
+  try {
+    const rows = (await sql()`
+      select model from archmantic_models
+      where owner = ${owner} and project = ${project} and commit_sha = ${commit} limit 1`) as { model: Model }[];
+    return rows[0]?.model ?? null;
+  } catch (err) {
+    if (missingTable(err)) return null;
+    throw err;
+  }
+}
+
 export async function latestModel(owner: string, project: string): Promise<Model | null> {
   try {
     const rows = (await sql()`

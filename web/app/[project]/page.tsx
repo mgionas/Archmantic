@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
-import { latestModel } from "@/lib/store";
+import { listSnapshots, modelAtCommit, latestModel } from "@/lib/store";
 import { getProcessEdit } from "@/lib/admin";
+import { modelDelta } from "@/lib/diff";
 import { componentLabel, groupCapabilities, trust } from "@/lib/format";
 import { componentDiagram, contextDiagram, sequenceDiagram } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
@@ -8,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ProjectTabs, type Group } from "../project-tabs";
+import { SnapshotPicker } from "../snapshot-picker";
 
 export const dynamic = "force-dynamic";
 
@@ -26,12 +28,39 @@ function Stat({ n, label }: { n: number | string; label: string }) {
   );
 }
 
-export default async function ProjectPage({ params }: { params: Promise<{ project: string }> }) {
+function deltaSummary(d: ReturnType<typeof modelDelta>): string {
+  const parts: string[] = [];
+  const seg = (label: string, a: number, r: number) => {
+    if (a) parts.push(`+${a} ${label}`);
+    if (r) parts.push(`−${r} ${label}`);
+  };
+  seg("components", d.components.added.length, d.components.removed.length);
+  seg("capabilities", d.capabilities.added.length, d.capabilities.removed.length);
+  seg("external systems", d.externals.added.length, d.externals.removed.length);
+  return parts.length ? parts.join(" · ") : "no architecture change";
+}
+
+export default async function ProjectPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ project: string }>;
+  searchParams: Promise<{ commit?: string }>;
+}) {
   const { project: raw } = await params;
+  const { commit } = await searchParams;
   const project = decodeURIComponent(raw);
   const { userId, orgId } = await auth();
   const owner = orgId ?? userId;
-  const model = owner ? await latestModel(owner, project) : null;
+
+  const snapshots = owner ? await listSnapshots(owner, project) : [];
+  const selectedSha = (commit && snapshots.some((s) => s.commit_sha === commit) ? commit : snapshots[0]?.commit_sha) ?? "";
+  const model = owner && selectedSha ? await modelAtCommit(owner, project, selectedSha) : owner ? await latestModel(owner, project) : null;
+
+  // delta vs the previous snapshot (the one pushed just before the selected one)
+  const idx = snapshots.findIndex((s) => s.commit_sha === selectedSha);
+  const prevSha = idx >= 0 ? snapshots[idx + 1]?.commit_sha : undefined;
+  const prevModel = owner && prevSha ? await modelAtCommit(owner, project, prevSha) : null;
 
   if (!model) {
     return (
@@ -63,6 +92,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
     label: componentLabel(c.id),
     responsibility: c.responsibility ?? c.id.slice("comp:".length),
   }));
+  const d = modelDelta(prevModel, model);
 
   return (
     <div>
@@ -74,6 +104,21 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
         {model.components.length} components · {externals.length} external systems · {model.capabilities.length}{" "}
         capabilities{model.generatedAt ? ` · analyzed ${new Date(model.generatedAt).toLocaleString()}` : ""}
       </p>
+
+      {snapshots.length > 0 ? (
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <span className="text-sm text-muted-foreground">Snapshot</span>
+          <SnapshotPicker snapshots={snapshots} current={selectedSha} />
+          <Badge variant="outline" className="font-normal text-muted-foreground">
+            vs previous: {prevModel ? deltaSummary(d) : "first snapshot"}
+          </Badge>
+          {idx > 0 ? (
+            <a href={`/${encodeURIComponent(project)}`} className={buttonVariants({ variant: "ghost", size: "sm" })}>
+              Jump to latest
+            </a>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_auto]">
         <Card className="flex flex-wrap items-center gap-x-8 gap-y-3 p-4">
