@@ -20,7 +20,7 @@ import { type ArchitectureModel, createEmptyModel, serializeModel } from "./ir/t
 import { analyzeRepo } from "./analyze/index.js";
 import { tier2 } from "./analyze/tier2.js";
 import { incrementalUpdate } from "./analyze/incremental.js";
-import { terminalPreview, projectionArtifacts } from "./project/index.js";
+import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson } from "./project/index.js";
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 import {
@@ -336,6 +336,33 @@ async function cmdBench(args: string[]): Promise<number> {
   return 0;
 }
 
+/** Emit an agent-consumable build spec (Markdown + JSON) from the model. */
+function cmdSpec(): number {
+  const root = process.cwd();
+  const file = join(root, MODEL_DIR, MODEL_FILE);
+  if (!existsSync(file)) {
+    console.error(`✗ No model at ${MODEL_DIR}/${MODEL_FILE}. Run \`archmantic analyze\` first.`);
+    return 1;
+  }
+  let model: ArchitectureModel;
+  try {
+    model = JSON.parse(readFileSync(file, "utf8")) as ArchitectureModel;
+  } catch {
+    console.error(`✗ ${MODEL_DIR}/${MODEL_FILE} is not valid JSON — run \`archmantic analyze\`.`);
+    return 1;
+  }
+  const dir = join(root, MODEL_DIR);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "build-spec.md"), buildSpecMarkdown(model) + "\n", "utf8");
+  writeFileSync(join(dir, "build-spec.json"), JSON.stringify(buildSpecJson(model), null, 2) + "\n", "utf8");
+
+  console.log(`✓ Build spec for "${model.project}"`);
+  console.log(`  ${model.capabilities.length} capabilities, ${model.components.length} components`);
+  console.log(`  → ${MODEL_DIR}/build-spec.md  (hand to a coding agent to implement/verify)`);
+  console.log(`  → ${MODEL_DIR}/build-spec.json (machine-readable)`);
+  return 0;
+}
+
 // ── Cloud knowledge (shared team model over Neon) ────────────────────────────
 
 function currentCommit(root: string): string {
@@ -466,6 +493,7 @@ Commands:
   analyze [--tier N]  Reverse-engineer the model (--tier 2 adds the LLM pass, BYOK)
   update [--hook]  Incrementally re-analyze only what changed (git-diff driven)
   view           Capability map + diagrams + trust report (writes view.html)
+  spec           Emit an agent-ready build spec (build-spec.md + .json)
   drift [--check]  Compare the committed model vs the code (--check exits 1 on drift)
   diff [<ref>]   Architecture diff: a git ref → working tree (writes pr-diff.md)
   log [-n N]     Architecture history: how the architecture changed per commit
@@ -513,6 +541,8 @@ async function main(argv: string[]): Promise<number> {
       return cmdCloudLog();
     case "view":
       return cmdView();
+    case "spec":
+      return cmdSpec();
     case "drift":
       return cmdDrift(rest);
     case "diff":

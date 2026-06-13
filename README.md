@@ -42,6 +42,7 @@ Optionally link a global `archmantic` binary: `npm link`.
 | `analyze [--tier N]` | Reverse-engineer the model. `--tier 2` adds the LLM semantic pass (BYOK) |
 | `update [--hook]` | Incrementally re-analyze only what changed (git-diff driven). `--hook` prints a pre-commit hook |
 | `view` | Capability map, diagrams, and trust report; writes a self-contained `view.html` |
+| `spec` | Emit an agent-ready **build spec** (`build-spec.md` + `.json`) from the model |
 | `drift [--check]` | Compare the committed model vs. the code; `--check` exits 1 on drift (CI gate) |
 | `diff [<ref>]` | Architecture diff from a git ref → working tree; writes PR-comment-ready `pr-diff.md` |
 | `log [-n N]` | Architecture history: how the architecture changed per commit |

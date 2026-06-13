@@ -14,6 +14,7 @@ export { contextDiagram, componentDiagram, sequenceDiagram } from "./mermaid.js"
 export { bpmnXml } from "./bpmn.js";
 export { capabilityMapText, groupCapabilities } from "./capability.js";
 export { renderHtml } from "./html.js";
+export { buildSpecMarkdown, buildSpecJson, type BuildSpecJson } from "./spec.js";
 export * from "./trust.js";
 
 const DIM = "\x1b[2m";
