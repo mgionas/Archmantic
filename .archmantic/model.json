@@ -57,6 +57,34 @@
         }
       ],
       "confidence": 0.95
+    },
+    {
+      "id": "sys:ext:node:child_process",
+      "name": "node:child_process",
+      "kind": "external",
+      "description": "Node.js runtime/builtin module",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "node:child_process",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "sys:ext:node:os",
+      "name": "node:os",
+      "kind": "external",
+      "description": "Node.js runtime/builtin module",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "node:os",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
     }
   ],
   "components": [
@@ -139,6 +167,48 @@
         {
           "source": "code",
           "ref": "src/cli.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:src/diff/index.ts",
+      "name": "src/diff/index.ts",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/index.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:src/diff/model-diff.ts",
+      "name": "src/diff/model-diff.ts",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/model-diff.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:src/diff/snapshot.ts",
+      "name": "src/diff/snapshot.ts",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/snapshot.ts:1",
           "confidence": 0.95
         }
       ],
@@ -649,6 +719,171 @@
       "confidence": 0.95
     },
     {
+      "id": "rel:comp:src/cli.ts=>comp:src/diff/index.ts",
+      "name": "comp:src/cli.ts → comp:src/diff/index.ts",
+      "kind": "depends_on",
+      "from": "comp:src/cli.ts",
+      "to": "comp:src/diff/index.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cli.ts:21",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/index.ts=>comp:src/diff/model-diff.ts",
+      "name": "comp:src/diff/index.ts → comp:src/diff/model-diff.ts",
+      "kind": "depends_on",
+      "from": "comp:src/diff/index.ts",
+      "to": "comp:src/diff/model-diff.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/index.ts:2",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/index.ts=>comp:src/diff/snapshot.ts",
+      "name": "comp:src/diff/index.ts → comp:src/diff/snapshot.ts",
+      "kind": "depends_on",
+      "from": "comp:src/diff/index.ts",
+      "to": "comp:src/diff/snapshot.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/index.ts:3",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/model-diff.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/diff/model-diff.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/diff/model-diff.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/model-diff.ts:10",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/model-diff.ts=>comp:src/ir/naming.ts",
+      "name": "comp:src/diff/model-diff.ts → comp:src/ir/naming.ts",
+      "kind": "depends_on",
+      "from": "comp:src/diff/model-diff.ts",
+      "to": "comp:src/ir/naming.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/model-diff.ts:11",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/snapshot.ts=>sys:ext:node:child_process",
+      "name": "comp:src/diff/snapshot.ts → sys:ext:node:child_process",
+      "kind": "depends_on",
+      "from": "comp:src/diff/snapshot.ts",
+      "to": "sys:ext:node:child_process",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/snapshot.ts:9",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/snapshot.ts=>sys:ext:node:fs",
+      "name": "comp:src/diff/snapshot.ts → sys:ext:node:fs",
+      "kind": "depends_on",
+      "from": "comp:src/diff/snapshot.ts",
+      "to": "sys:ext:node:fs",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/snapshot.ts:10",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/snapshot.ts=>sys:ext:node:os",
+      "name": "comp:src/diff/snapshot.ts → sys:ext:node:os",
+      "kind": "depends_on",
+      "from": "comp:src/diff/snapshot.ts",
+      "to": "sys:ext:node:os",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/snapshot.ts:11",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/snapshot.ts=>sys:ext:node:path",
+      "name": "comp:src/diff/snapshot.ts → sys:ext:node:path",
+      "kind": "depends_on",
+      "from": "comp:src/diff/snapshot.ts",
+      "to": "sys:ext:node:path",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/snapshot.ts:12",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/snapshot.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/diff/snapshot.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/diff/snapshot.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/snapshot.ts:13",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/snapshot.ts=>comp:src/analyze/index.ts",
+      "name": "comp:src/diff/snapshot.ts → comp:src/analyze/index.ts",
+      "kind": "depends_on",
+      "from": "comp:src/diff/snapshot.ts",
+      "to": "comp:src/analyze/index.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/snapshot.ts:14",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "rel:comp:src/index.ts=>comp:src/ir/types.ts",
       "name": "comp:src/index.ts → comp:src/ir/types.ts",
       "kind": "depends_on",
@@ -954,14 +1189,14 @@
         "comp:src/ir/types.ts",
         "comp:src/analyze/index.ts",
         "comp:src/project/index.ts",
+        "comp:src/diff/index.ts",
         "comp:src/analyze/walk.ts",
         "comp:src/analyze/tier0.ts",
         "comp:src/analyze/tier1.ts",
         "comp:src/analyze/derive.ts",
         "comp:src/project/mermaid.ts",
         "comp:src/project/bpmn.ts",
-        "comp:src/project/capability.ts",
-        "comp:src/project/html.ts"
+        "comp:src/project/capability.ts"
       ],
       "steps": [
         {
@@ -1003,11 +1238,23 @@
         {
           "participant": "comp:src/project/index.ts",
           "action": "uses",
-          "to": "comp:src/analyze/walk.ts",
+          "to": "comp:src/diff/index.ts",
           "provenance": [
             {
               "source": "code",
               "ref": "src/project/index.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
+          "participant": "comp:src/diff/index.ts",
+          "action": "uses",
+          "to": "comp:src/analyze/walk.ts",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/diff/index.ts:1",
               "confidence": 0.6
             }
           ]
@@ -1083,18 +1330,6 @@
               "confidence": 0.6
             }
           ]
-        },
-        {
-          "participant": "comp:src/project/capability.ts",
-          "action": "uses",
-          "to": "comp:src/project/html.ts",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/project/capability.ts:1",
-              "confidence": 0.6
-            }
-          ]
         }
       ],
       "provenance": [
@@ -1153,6 +1388,17 @@
             {
               "source": "code",
               "ref": "src/project/index.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
+          "id": "task:comp:src/diff/index.ts",
+          "name": "Diff",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/diff/index.ts:1",
               "confidence": 0.6
             }
           ]
@@ -1230,17 +1476,6 @@
             {
               "source": "code",
               "ref": "src/project/capability.ts:1",
-              "confidence": 0.6
-            }
-          ]
-        },
-        {
-          "id": "task:comp:src/project/html.ts",
-          "name": "Html",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/project/html.ts:1",
               "confidence": 0.6
             }
           ]
@@ -1332,6 +1567,118 @@
         {
           "source": "code",
           "ref": "src/analyze/walk.ts:19",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/diff/model-diff.ts#diffModels",
+      "name": "Diff Models",
+      "description": "Exported function `diffModels` in src/diff/model-diff.ts",
+      "componentIds": [
+        "comp:src/diff/model-diff.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/model-diff.ts:86",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/diff/model-diff.ts#hasChanges",
+      "name": "Has Changes",
+      "description": "Exported function `hasChanges` in src/diff/model-diff.ts",
+      "componentIds": [
+        "comp:src/diff/model-diff.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/model-diff.ts:125",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/diff/model-diff.ts#renderDiffText",
+      "name": "Render Diff Text",
+      "description": "Exported function `renderDiffText` in src/diff/model-diff.ts",
+      "componentIds": [
+        "comp:src/diff/model-diff.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/model-diff.ts:145",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/diff/model-diff.ts#renderDiffMarkdown",
+      "name": "Render Diff Markdown",
+      "description": "Exported function `renderDiffMarkdown` in src/diff/model-diff.ts",
+      "componentIds": [
+        "comp:src/diff/model-diff.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/model-diff.ts:163",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/diff/snapshot.ts#GitRefError",
+      "name": "Git Ref Error",
+      "description": "Exported class `GitRefError` in src/diff/snapshot.ts",
+      "componentIds": [
+        "comp:src/diff/snapshot.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/snapshot.ts:19",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/diff/snapshot.ts#resolveRef",
+      "name": "Resolve Ref",
+      "description": "Exported function `resolveRef` in src/diff/snapshot.ts",
+      "componentIds": [
+        "comp:src/diff/snapshot.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/snapshot.ts:22",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/diff/snapshot.ts#analyzeAtRef",
+      "name": "Analyze At Ref",
+      "description": "Exported function `analyzeAtRef` in src/diff/snapshot.ts",
+      "componentIds": [
+        "comp:src/diff/snapshot.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/snapshot.ts:34",
           "confidence": 0.6
         }
       ],
@@ -1626,5 +1973,5 @@
       "confidence": 0.6
     }
   ],
-  "generatedAt": "2026-06-13T16:02:31.347Z"
+  "generatedAt": "2026-06-13T16:19:44.597Z"
 }

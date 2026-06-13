@@ -18,6 +18,15 @@ const pkg = require("../package.json") as { version: string };
 import { type ArchitectureModel, createEmptyModel } from "./ir/types.js";
 import { analyzeRepo } from "./analyze/index.js";
 import { terminalPreview, projectionArtifacts } from "./project/index.js";
+import {
+  diffModels,
+  hasChanges,
+  renderDiffText,
+  renderDiffMarkdown,
+  analyzeAtRef,
+  resolveRef,
+  GitRefError,
+} from "./diff/index.js";
 
 const MODEL_DIR = ".archmantic";
 const MODEL_FILE = "model.json";
@@ -94,6 +103,79 @@ function cmdView(): number {
   return 0;
 }
 
+/** Drift (USP 4): the committed model snapshot vs a fresh analysis of the code. */
+function cmdDrift(args: string[]): number {
+  const check = args.includes("--check");
+  const root = process.cwd();
+  const file = join(root, MODEL_DIR, MODEL_FILE);
+  if (!existsSync(file)) {
+    console.error(`✗ No committed model at ${MODEL_DIR}/${MODEL_FILE} to compare against.`);
+    console.error(`  Run \`archmantic analyze\` (and commit the model) first.`);
+    return 1;
+  }
+
+  let snapshot: ArchitectureModel;
+  try {
+    snapshot = JSON.parse(readFileSync(file, "utf8")) as ArchitectureModel;
+  } catch {
+    console.error(`✗ ${MODEL_DIR}/${MODEL_FILE} is not valid JSON — re-run \`archmantic analyze\`.`);
+    return 1;
+  }
+
+  const fresh = analyzeRepo(root);
+  const diff = diffModels(snapshot, fresh, "committed model", "working tree");
+  console.log(renderDiffText(diff));
+  if (hasChanges(diff)) {
+    console.log(`\nThe committed model is out of date. Run \`archmantic analyze\` to refresh it.`);
+  }
+  return check && hasChanges(diff) ? 1 : 0;
+}
+
+/** Pick a sensible base ref when none is given (a PR's target branch, usually). */
+function defaultBaseRef(root: string): string | undefined {
+  for (const ref of ["origin/main", "main", "origin/master", "master", "HEAD~1"]) {
+    try {
+      resolveRef(root, ref);
+      return ref;
+    } catch {
+      /* try next */
+    }
+  }
+  return undefined;
+}
+
+/** PR architecture diff (USP 5): how the working tree reshapes a base ref. */
+function cmdDiff(args: string[]): number {
+  const root = process.cwd();
+  const baseRef = args.find((a) => !a.startsWith("-")) ?? defaultBaseRef(root);
+  if (!baseRef) {
+    console.error(`✗ No base ref to compare against (no main/master/previous commit found).`);
+    console.error(`  Usage: archmantic diff [<git-ref>]`);
+    return 1;
+  }
+
+  let base: ArchitectureModel;
+  try {
+    base = analyzeAtRef(root, baseRef);
+  } catch (err) {
+    if (err instanceof GitRefError) {
+      console.error(`✗ ${err.message}`);
+      return 1;
+    }
+    throw err;
+  }
+
+  const head = analyzeRepo(root);
+  const diff = diffModels(base, head, baseRef, "working tree");
+  console.log(renderDiffText(diff));
+
+  const dir = join(root, MODEL_DIR);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "pr-diff.md"), renderDiffMarkdown(diff) + "\n", "utf8");
+  console.log(`\nMarkdown report (PR-comment ready) → ${MODEL_DIR}/pr-diff.md`);
+  return 0;
+}
+
 function notImplemented(name: string, milestone: string): number {
   console.log(`\`archmantic ${name}\` is not implemented yet (planned for ${milestone}).`);
   console.log("See docs/MVP_PLAN.md for the roadmap.");
@@ -108,8 +190,10 @@ Usage: archmantic <command> [options]
 Commands:
   init [name]    Create an empty .archmantic/model.json (defaults name to the folder)
   analyze        Reverse-engineer the architecture model from this repo   [M1]
-  mcp            Start the MCP server exposing the model to AI agents      [M5]
   view           Capability map + diagrams + trust report (writes view.html)
+  drift [--check]  Compare the committed model vs the code (--check exits 1 on drift)
+  diff [<ref>]   Architecture diff: a git ref → working tree (writes pr-diff.md)
+  mcp            Start the MCP server exposing the model to AI agents      [M5]
 
 Options:
   -v, --version  Print version
@@ -137,6 +221,10 @@ function main(argv: string[]): number {
       return notImplemented("mcp", "M5 (MCP server + token-savings proof)");
     case "view":
       return cmdView();
+    case "drift":
+      return cmdDrift(rest);
+    case "diff":
+      return cmdDiff(rest);
     default:
       console.error(`Unknown command: ${command}\n`);
       printHelp();
