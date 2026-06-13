@@ -20,6 +20,8 @@ import { analyzeRepo } from "./analyze/index.js";
 import { tier2 } from "./analyze/tier2.js";
 import { terminalPreview, projectionArtifacts } from "./project/index.js";
 import { loadEnv } from "./env.js";
+import { startMcpServer } from "./mcp/server.js";
+import { runBenchmark, renderBench, estimateCounter, type TokenCounter } from "./mcp/bench.js";
 import {
   diffModels,
   hasChanges,
@@ -201,6 +203,40 @@ function cmdDiff(args: string[]): number {
   return 0;
 }
 
+/** Start the MCP server over stdio (USP 7). Stays alive until the client disconnects. */
+async function cmdMcp(): Promise<number> {
+  await startMcpServer(process.cwd());
+  return new Promise<number>(() => {}); // never resolve — keep the process alive for stdio
+}
+
+/** Token-savings benchmark: MCP queries vs raw file reads (the second proof). */
+async function cmdBench(args: string[]): Promise<number> {
+  const root = process.cwd();
+  const file = join(root, MODEL_DIR, MODEL_FILE);
+  if (!existsSync(file)) {
+    console.error(`✗ No model at ${MODEL_DIR}/${MODEL_FILE}. Run \`archmantic analyze\` first.`);
+    return 1;
+  }
+  const model = JSON.parse(readFileSync(file, "utf8")) as ArchitectureModel;
+
+  let counter: TokenCounter = estimateCounter;
+  let mode: "estimate" | "exact" = "estimate";
+  if (args.includes("--exact")) {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.log("⚠ --exact needs ANTHROPIC_API_KEY (in .env.local); using offline estimate instead.\n");
+    } else {
+      const { default: Anthropic } = await import("@anthropic-ai/sdk");
+      const client = new Anthropic();
+      counter = async (t) =>
+        t ? (await client.messages.countTokens({ model: "claude-opus-4-8", messages: [{ role: "user", content: t }] })).input_tokens : 0;
+      mode = "exact";
+    }
+  }
+
+  console.log(renderBench(await runBenchmark(root, model, counter, mode)));
+  return 0;
+}
+
 function notImplemented(name: string, milestone: string): number {
   console.log(`\`archmantic ${name}\` is not implemented yet (planned for ${milestone}).`);
   console.log("See docs/MVP_PLAN.md for the roadmap.");
@@ -218,7 +254,8 @@ Commands:
   view           Capability map + diagrams + trust report (writes view.html)
   drift [--check]  Compare the committed model vs the code (--check exits 1 on drift)
   diff [<ref>]   Architecture diff: a git ref → working tree (writes pr-diff.md)
-  mcp            Start the MCP server exposing the model to AI agents      [M5]
+  mcp            Start the MCP server exposing the model to AI agents (stdio)
+  bench [--exact]  Token-savings benchmark: MCP queries vs raw file reads
 
 Options:
   -v, --version  Print version
@@ -245,7 +282,9 @@ async function main(argv: string[]): Promise<number> {
     case "analyze":
       return cmdAnalyze(rest);
     case "mcp":
-      return notImplemented("mcp", "M5 (MCP server + token-savings proof)");
+      return cmdMcp();
+    case "bench":
+      return cmdBench(rest);
     case "view":
       return cmdView();
     case "drift":

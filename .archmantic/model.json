@@ -99,6 +99,34 @@
         }
       ],
       "confidence": 0.95
+    },
+    {
+      "id": "sys:ext:@modelcontextprotocol/sdk",
+      "name": "@modelcontextprotocol/sdk",
+      "kind": "external",
+      "description": "External dependency",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "@modelcontextprotocol/sdk",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "sys:ext:zod",
+      "name": "zod",
+      "kind": "external",
+      "description": "External dependency",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "zod",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
     }
   ],
   "components": [
@@ -293,6 +321,48 @@
         {
           "source": "code",
           "ref": "src/ir/types.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:src/mcp/bench.ts",
+      "name": "src/mcp/bench.ts",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:src/mcp/queries.ts",
+      "name": "src/mcp/queries.ts",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:src/mcp/server.ts",
+      "name": "src/mcp/server.ts",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:1",
           "confidence": 0.95
         }
       ],
@@ -851,6 +921,36 @@
       "confidence": 0.95
     },
     {
+      "id": "rel:comp:src/cli.ts=>comp:src/mcp/server.ts",
+      "name": "comp:src/cli.ts → comp:src/mcp/server.ts",
+      "kind": "depends_on",
+      "from": "comp:src/cli.ts",
+      "to": "comp:src/mcp/server.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cli.ts:23",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/cli.ts=>comp:src/mcp/bench.ts",
+      "name": "comp:src/cli.ts → comp:src/mcp/bench.ts",
+      "kind": "depends_on",
+      "from": "comp:src/cli.ts",
+      "to": "comp:src/mcp/bench.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cli.ts:24",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "rel:comp:src/cli.ts=>comp:src/diff/index.ts",
       "name": "comp:src/cli.ts → comp:src/diff/index.ts",
       "kind": "depends_on",
@@ -859,7 +959,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:23",
+          "ref": "src/cli.ts:25",
           "confidence": 0.95
         }
       ],
@@ -1055,6 +1155,206 @@
         {
           "source": "code",
           "ref": "src/index.ts:6",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/bench.ts=>sys:ext:node:fs",
+      "name": "comp:src/mcp/bench.ts → sys:ext:node:fs",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/bench.ts",
+      "to": "sys:ext:node:fs",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:11",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/bench.ts=>sys:ext:node:path",
+      "name": "comp:src/mcp/bench.ts → sys:ext:node:path",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/bench.ts",
+      "to": "sys:ext:node:path",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:12",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/bench.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/mcp/bench.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/bench.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:13",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/bench.ts=>comp:src/analyze/walk.ts",
+      "name": "comp:src/mcp/bench.ts → comp:src/analyze/walk.ts",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/bench.ts",
+      "to": "comp:src/analyze/walk.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:14",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/bench.ts=>comp:src/mcp/queries.ts",
+      "name": "comp:src/mcp/bench.ts → comp:src/mcp/queries.ts",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/bench.ts",
+      "to": "comp:src/mcp/queries.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:15",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/queries.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/mcp/queries.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/queries.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:10",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/queries.ts=>comp:src/ir/naming.ts",
+      "name": "comp:src/mcp/queries.ts → comp:src/ir/naming.ts",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/queries.ts",
+      "to": "comp:src/ir/naming.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:11",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/server.ts=>sys:ext:node:fs",
+      "name": "comp:src/mcp/server.ts → sys:ext:node:fs",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/server.ts",
+      "to": "sys:ext:node:fs",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:9",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/server.ts=>sys:ext:node:path",
+      "name": "comp:src/mcp/server.ts → sys:ext:node:path",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/server.ts",
+      "to": "sys:ext:node:path",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:10",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/server.ts=>sys:ext:@modelcontextprotocol/sdk",
+      "name": "comp:src/mcp/server.ts → sys:ext:@modelcontextprotocol/sdk",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/server.ts",
+      "to": "sys:ext:@modelcontextprotocol/sdk",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:11",
+          "confidence": 0.95
+        },
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:12",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/server.ts=>sys:ext:zod",
+      "name": "comp:src/mcp/server.ts → sys:ext:zod",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/server.ts",
+      "to": "sys:ext:zod",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:13",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/server.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/mcp/server.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/server.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:14",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/mcp/server.ts=>comp:src/mcp/queries.ts",
+      "name": "comp:src/mcp/server.ts → comp:src/mcp/queries.ts",
+      "kind": "depends_on",
+      "from": "comp:src/mcp/server.ts",
+      "to": "comp:src/mcp/queries.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:15",
           "confidence": 0.95
         }
       ],
@@ -1353,12 +1653,12 @@
         "comp:src/analyze/tier2.ts",
         "comp:src/project/index.ts",
         "comp:src/env.ts",
+        "comp:src/mcp/server.ts",
+        "comp:src/mcp/bench.ts",
         "comp:src/diff/index.ts",
         "comp:src/analyze/walk.ts",
         "comp:src/analyze/tier0.ts",
-        "comp:src/analyze/tier1.ts",
-        "comp:src/analyze/derive.ts",
-        "comp:src/project/mermaid.ts"
+        "comp:src/analyze/tier1.ts"
       ],
       "steps": [
         {
@@ -1424,11 +1724,35 @@
         {
           "participant": "comp:src/env.ts",
           "action": "uses",
-          "to": "comp:src/diff/index.ts",
+          "to": "comp:src/mcp/server.ts",
           "provenance": [
             {
               "source": "code",
               "ref": "src/env.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
+          "participant": "comp:src/mcp/server.ts",
+          "action": "uses",
+          "to": "comp:src/mcp/bench.ts",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/mcp/server.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
+          "participant": "comp:src/mcp/bench.ts",
+          "action": "uses",
+          "to": "comp:src/diff/index.ts",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/mcp/bench.ts:1",
               "confidence": 0.6
             }
           ]
@@ -1465,30 +1789,6 @@
             {
               "source": "code",
               "ref": "src/analyze/tier0.ts:1",
-              "confidence": 0.6
-            }
-          ]
-        },
-        {
-          "participant": "comp:src/analyze/tier1.ts",
-          "action": "uses",
-          "to": "comp:src/analyze/derive.ts",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/analyze/tier1.ts:1",
-              "confidence": 0.6
-            }
-          ]
-        },
-        {
-          "participant": "comp:src/analyze/derive.ts",
-          "action": "uses",
-          "to": "comp:src/project/mermaid.ts",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/analyze/derive.ts:1",
               "confidence": 0.6
             }
           ]
@@ -1577,6 +1877,28 @@
           ]
         },
         {
+          "id": "task:comp:src/mcp/server.ts",
+          "name": "Server",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/mcp/server.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
+          "id": "task:comp:src/mcp/bench.ts",
+          "name": "Bench",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/mcp/bench.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
           "id": "task:comp:src/diff/index.ts",
           "name": "Diff",
           "provenance": [
@@ -1616,28 +1938,6 @@
             {
               "source": "code",
               "ref": "src/analyze/tier1.ts:1",
-              "confidence": 0.6
-            }
-          ]
-        },
-        {
-          "id": "task:comp:src/analyze/derive.ts",
-          "name": "Derive",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/analyze/derive.ts:1",
-              "confidence": 0.6
-            }
-          ]
-        },
-        {
-          "id": "task:comp:src/project/mermaid.ts",
-          "name": "Mermaid",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/project/mermaid.ts:1",
               "confidence": 0.6
             }
           ]
@@ -1927,6 +2227,198 @@
       "confidence": 0.6
     },
     {
+      "id": "cap:src/mcp/bench.ts#estimateCounter",
+      "name": "Estimate Counter",
+      "description": "Exported function `estimateCounter` in src/mcp/bench.ts",
+      "componentIds": [
+        "comp:src/mcp/bench.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:41",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/bench.ts#runBenchmark",
+      "name": "Run Benchmark",
+      "description": "Exported function `runBenchmark` in src/mcp/bench.ts",
+      "componentIds": [
+        "comp:src/mcp/bench.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:99",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/bench.ts#renderBench",
+      "name": "Render Bench",
+      "description": "Exported function `renderBench` in src/mcp/bench.ts",
+      "componentIds": [
+        "comp:src/mcp/bench.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/bench.ts:119",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/queries.ts#findComponent",
+      "name": "Find Component",
+      "description": "Exported function `findComponent` in src/mcp/queries.ts",
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:28",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/queries.ts#getContext",
+      "name": "Get Context",
+      "description": "Exported function `getContext` in src/mcp/queries.ts",
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:40",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/queries.ts#listComponents",
+      "name": "List Components",
+      "description": "Exported function `listComponents` in src/mcp/queries.ts",
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:55",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/queries.ts#getComponent",
+      "name": "Get Component",
+      "description": "Exported function `getComponent` in src/mcp/queries.ts",
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:63",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/queries.ts#searchCapabilities",
+      "name": "Search Capabilities",
+      "description": "Exported function `searchCapabilities` in src/mcp/queries.ts",
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:81",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/queries.ts#getProcess",
+      "name": "Get Process",
+      "description": "Exported function `getProcess` in src/mcp/queries.ts",
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:92",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/queries.ts#getSequence",
+      "name": "Get Sequence",
+      "description": "Exported function `getSequence` in src/mcp/queries.ts",
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:101",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/queries.ts#whatsRelated",
+      "name": "Whats Related",
+      "description": "Exported function `whatsRelated` in src/mcp/queries.ts",
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/queries.ts:109",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/mcp/server.ts#startMcpServer",
+      "name": "Start Mcp Server",
+      "description": "Exported function `startMcpServer` in src/mcp/server.ts",
+      "componentIds": [
+        "comp:src/mcp/server.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/mcp/server.ts:37",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
       "id": "cap:src/project/bpmn.ts#bpmnXml",
       "name": "Bpmn Xml",
       "description": "Exported function `bpmnXml` in src/project/bpmn.ts",
@@ -2167,5 +2659,5 @@
       "confidence": 0.6
     }
   ],
-  "generatedAt": "2026-06-13T16:29:40.871Z"
+  "generatedAt": "2026-06-13T16:39:35.034Z"
 }
