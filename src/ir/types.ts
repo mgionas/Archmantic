@@ -128,6 +128,24 @@ export function sortModel(m: ArchitectureModel): ArchitectureModel {
   };
 }
 
+/** Recursively sort object keys so serialization is byte-stable regardless of
+ *  source — a fresh analyze, an incremental patch, or a DB round-trip (Postgres
+ *  JSONB reorders keys). Combined with sortModel's array ordering, this makes
+ *  `model.json` deterministic → churn-free committed IR. */
+function sortKeys(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(sortKeys);
+  if (value && typeof value === "object") {
+    const obj = value as Record<string, unknown>;
+    return Object.fromEntries(Object.keys(obj).sort().map((k) => [k, sortKeys(obj[k])]));
+  }
+  return value;
+}
+
+/** Canonical, byte-stable serialization of a model for writing to disk. */
+export function serializeModel(m: ArchitectureModel): string {
+  return JSON.stringify(sortKeys(sortModel(m)), null, 2) + "\n";
+}
+
 /** A fresh, empty model for `archmantic init`. */
 export function createEmptyModel(project: string): ArchitectureModel {
   return {

@@ -16,7 +16,7 @@ import { basename, join } from "node:path";
 import { execFileSync } from "node:child_process";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pkg = require("../package.json") as { version: string };
-import { type ArchitectureModel, createEmptyModel, sortModel } from "./ir/types.js";
+import { type ArchitectureModel, createEmptyModel, serializeModel } from "./ir/types.js";
 import { analyzeRepo } from "./analyze/index.js";
 import { tier2 } from "./analyze/tier2.js";
 import { incrementalUpdate } from "./analyze/incremental.js";
@@ -53,7 +53,7 @@ function cmdInit(args: string[]): number {
 
   const model = { ...createEmptyModel(project), generatedAt: new Date().toISOString() };
   mkdirSync(dir, { recursive: true });
-  writeFileSync(file, JSON.stringify(model, null, 2) + "\n", "utf8");
+  writeFileSync(file, serializeModel(model), "utf8");
 
   console.log(`✓ Initialized Archmantic model for "${project}"`);
   console.log(`  → ${MODEL_DIR}/${MODEL_FILE}`);
@@ -100,7 +100,7 @@ async function cmdAnalyze(args: string[]): Promise<number> {
 
   const dir = join(root, MODEL_DIR);
   mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, MODEL_FILE), JSON.stringify(sortModel(model), null, 2) + "\n", "utf8");
+  writeFileSync(join(dir, MODEL_FILE), serializeModel(model), "utf8");
 
   console.log(`  → ${MODEL_DIR}/${MODEL_FILE}`);
   console.log(`  Every element is grounded with file:line provenance.`);
@@ -276,7 +276,7 @@ function cmdUpdate(args: string[]): number {
 
   const dir = join(root, MODEL_DIR);
   mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, MODEL_FILE), JSON.stringify(sortModel(model), null, 2) + "\n", "utf8");
+  writeFileSync(join(dir, MODEL_FILE), serializeModel(model), "utf8");
   for (const [name, content] of Object.entries(projectionArtifacts(model))) {
     writeFileSync(join(dir, name), content, "utf8");
   }
@@ -408,7 +408,7 @@ async function cmdPull(): Promise<number> {
   }
   const dir = join(root, MODEL_DIR);
   mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, MODEL_FILE), JSON.stringify(sortModel(model), null, 2) + "\n", "utf8");
+  writeFileSync(join(dir, MODEL_FILE), serializeModel(model), "utf8");
   console.log(`✓ Pulled "${project}" → ${MODEL_DIR}/${MODEL_FILE} (${model.components.length} components, ${model.capabilities.length} capabilities)`);
   console.log(`  Run \`archmantic view\` to render it.`);
   return 0;
