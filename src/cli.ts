@@ -23,6 +23,7 @@ import { incrementalUpdate } from "./analyze/incremental.js";
 import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess } from "./project/index.js";
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
+import { runHandoff } from "./agent.js";
 import {
   pushModel,
   pullLatest,
@@ -364,6 +365,38 @@ function cmdSpec(): number {
   return 0;
 }
 
+/** Agent hand-off: run the build spec through Claude → an implementation plan. */
+async function cmdHandoff(): Promise<number> {
+  const root = process.cwd();
+  const file = join(root, MODEL_DIR, MODEL_FILE);
+  if (!existsSync(file)) {
+    console.error(`✗ No model at ${MODEL_DIR}/${MODEL_FILE}. Run \`archmantic analyze\` first.`);
+    return 1;
+  }
+  let model: ArchitectureModel;
+  try {
+    model = JSON.parse(readFileSync(file, "utf8")) as ArchitectureModel;
+  } catch {
+    console.error(`✗ ${MODEL_DIR}/${MODEL_FILE} is not valid JSON — run \`archmantic analyze\`.`);
+    return 1;
+  }
+
+  const spec = buildSpecMarkdown(model);
+  const r = await runHandoff(spec, model.project);
+  if (!r.ran) {
+    console.log(`⚠ Agent hand-off skipped: ${r.reason}`);
+    return 0;
+  }
+  const dir = join(root, MODEL_DIR);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "build-plan.md"), (r.plan ?? "") + "\n", "utf8");
+
+  console.log(`✓ Agent hand-off — implementation plan for "${model.project}"`);
+  console.log(`  LLM: ${r.inputTokens} in / ${r.outputTokens} out tokens · ~$${r.estCostUsd.toFixed(4)}`);
+  console.log(`  → ${MODEL_DIR}/build-plan.md  (hand to a coding agent to execute)`);
+  return 0;
+}
+
 /** Edit-then-build: merge a human BPMN canvas edit back into the IR's process. */
 async function cmdApply(args: string[]): Promise<number> {
   const root = process.cwd();
@@ -570,6 +603,7 @@ Commands:
   view           Capability map + diagrams + trust report (writes view.html)
   spec           Emit an agent-ready build spec (build-spec.md + .json)
   apply [--from f]  Merge a human BPMN canvas edit back into the model (edit-then-build)
+  handoff        Run the build spec through Claude → an implementation plan (BYOK)
   drift [--check]  Compare the committed model vs the code (--check exits 1 on drift)
   diff [<ref>]   Architecture diff: a git ref → working tree (writes pr-diff.md)
   log [-n N]     Architecture history: how the architecture changed per commit
@@ -621,6 +655,8 @@ async function main(argv: string[]): Promise<number> {
       return cmdSpec();
     case "apply":
       return cmdApply(rest);
+    case "handoff":
+      return cmdHandoff();
     case "drift":
       return cmdDrift(rest);
     case "diff":

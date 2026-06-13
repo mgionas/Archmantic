@@ -3,6 +3,22 @@
   "capabilities": [
     {
       "componentIds": [
+        "comp:src/agent.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `runHandoff` in src/agent.ts",
+      "id": "cap:src/agent.ts#runHandoff",
+      "name": "Run Handoff",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/agent.ts:29",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
         "comp:src/analyze/derive.ts"
       ],
       "confidence": 0.6,
@@ -1109,6 +1125,20 @@
   "components": [
     {
       "confidence": 0.95,
+      "id": "comp:src/agent.ts",
+      "kind": "module",
+      "name": "src/agent.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/agent.ts:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/analyze/derive.ts",
       "kind": "module",
       "name": "src/analyze/derive.ts",
@@ -1627,10 +1657,10 @@
         "comp:src/project/index.ts",
         "comp:src/env.ts",
         "comp:src/auth.ts",
+        "comp:src/agent.ts",
         "comp:src/cloud/index.ts",
         "comp:src/mcp/server.ts",
-        "comp:src/mcp/bench.ts",
-        "comp:src/diff/index.ts"
+        "comp:src/mcp/bench.ts"
       ],
       "provenance": [
         {
@@ -1734,6 +1764,18 @@
               "source": "code"
             }
           ],
+          "to": "comp:src/agent.ts"
+        },
+        {
+          "action": "uses",
+          "participant": "comp:src/agent.ts",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/agent.ts:1",
+              "source": "code"
+            }
+          ],
           "to": "comp:src/cloud/index.ts"
         },
         {
@@ -1759,23 +1801,11 @@
             }
           ],
           "to": "comp:src/mcp/bench.ts"
-        },
-        {
-          "action": "uses",
-          "participant": "comp:src/mcp/bench.ts",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/mcp/bench.ts:1",
-              "source": "code"
-            }
-          ],
-          "to": "comp:src/diff/index.ts"
         }
       ]
     }
   ],
-  "generatedAt": "2026-06-13T20:06:07.526Z",
+  "generatedAt": "2026-06-13T20:10:55.242Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -1879,6 +1909,17 @@
           ]
         },
         {
+          "id": "task:comp:src/agent.ts",
+          "name": "Agent",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/agent.ts:1",
+              "source": "code"
+            }
+          ]
+        },
+        {
           "id": "task:comp:src/cloud/index.ts",
           "name": "Cloud",
           "provenance": [
@@ -1910,23 +1951,42 @@
               "source": "code"
             }
           ]
-        },
-        {
-          "id": "task:comp:src/diff/index.ts",
-          "name": "Diff",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/diff/index.ts:1",
-              "source": "code"
-            }
-          ]
         }
       ]
     }
   ],
   "project": "archmantic",
   "relations": [
+    {
+      "confidence": 0.95,
+      "from": "comp:src/agent.ts",
+      "id": "rel:comp:src/agent.ts=>comp:src/auth.ts",
+      "kind": "depends_on",
+      "name": "comp:src/agent.ts → comp:src/auth.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/agent.ts:10",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/auth.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/agent.ts",
+      "id": "rel:comp:src/agent.ts=>sys:ext:@anthropic-ai/sdk",
+      "kind": "depends_on",
+      "name": "comp:src/agent.ts → sys:ext:@anthropic-ai/sdk",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/agent.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:@anthropic-ai/sdk"
+    },
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/derive.ts",
@@ -2410,6 +2470,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/agent.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/agent.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:26",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/agent.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
       "id": "rel:comp:src/cli.ts=>comp:src/analyze/incremental.ts",
       "kind": "depends_on",
       "name": "comp:src/cli.ts → comp:src/analyze/incremental.ts",
@@ -2476,7 +2551,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:26",
+          "ref": "src/cli.ts:27",
           "source": "code"
         }
       ],
@@ -2491,7 +2566,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:39",
+          "ref": "src/cli.ts:40",
           "source": "code"
         }
       ],
@@ -2536,7 +2611,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:38",
+          "ref": "src/cli.ts:39",
           "source": "code"
         }
       ],
@@ -2551,7 +2626,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:37",
+          "ref": "src/cli.ts:38",
           "source": "code"
         }
       ],
