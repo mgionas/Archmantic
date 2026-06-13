@@ -243,6 +243,20 @@
       "confidence": 0.95
     },
     {
+      "id": "comp:src/diff/history.ts",
+      "name": "src/diff/history.ts",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/history.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "comp:src/diff/index.ts",
       "name": "src/diff/index.ts",
       "kind": "module",
@@ -1079,6 +1093,66 @@
         {
           "source": "code",
           "ref": "src/cli.ts:15",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/history.ts=>comp:src/diff/model-diff.ts",
+      "name": "comp:src/diff/history.ts → comp:src/diff/model-diff.ts",
+      "kind": "depends_on",
+      "from": "comp:src/diff/history.ts",
+      "to": "comp:src/diff/model-diff.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/history.ts:12",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/history.ts=>comp:src/diff/snapshot.ts",
+      "name": "comp:src/diff/history.ts → comp:src/diff/snapshot.ts",
+      "kind": "depends_on",
+      "from": "comp:src/diff/history.ts",
+      "to": "comp:src/diff/snapshot.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/history.ts:11",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/history.ts=>sys:ext:node:child_process",
+      "name": "comp:src/diff/history.ts → sys:ext:node:child_process",
+      "kind": "depends_on",
+      "from": "comp:src/diff/history.ts",
+      "to": "sys:ext:node:child_process",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/history.ts:10",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/diff/index.ts=>comp:src/diff/history.ts",
+      "name": "comp:src/diff/index.ts → comp:src/diff/history.ts",
+      "kind": "depends_on",
+      "from": "comp:src/diff/index.ts",
+      "to": "comp:src/diff/history.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/index.ts:4",
           "confidence": 0.95
         }
       ],
@@ -2266,6 +2340,22 @@
       "confidence": 0.6
     },
     {
+      "id": "cap:src/diff/history.ts#architectureLog",
+      "name": "Architecture Log",
+      "description": "Exported function `architectureLog` in src/diff/history.ts",
+      "componentIds": [
+        "comp:src/diff/history.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/history.ts:23",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
       "id": "cap:src/diff/model-diff.ts#diffModels",
       "name": "Diff Models",
       "description": "Exported function `diffModels` in src/diff/model-diff.ts",
@@ -2307,7 +2397,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/diff/model-diff.ts:163",
+          "ref": "src/diff/model-diff.ts:177",
           "confidence": 0.6
         }
       ],
@@ -2323,7 +2413,23 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/diff/model-diff.ts:145",
+          "ref": "src/diff/model-diff.ts:159",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/diff/model-diff.ts#summarizeChange",
+      "name": "Summarize Change",
+      "description": "Exported function `summarizeChange` in src/diff/model-diff.ts",
+      "componentIds": [
+        "comp:src/diff/model-diff.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/diff/model-diff.ts:130",
           "confidence": 0.6
         }
       ],
@@ -2890,5 +2996,5 @@
       "confidence": 0.6
     }
   ],
-  "generatedAt": "2026-06-13T16:57:23.042Z"
+  "generatedAt": "2026-06-13T17:03:11.983Z"
 }

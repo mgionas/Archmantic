@@ -126,6 +126,20 @@ export function hasChanges(diff: ModelDiff): boolean {
   return diff.changedCount > 0;
 }
 
+/** One-line summary like "+3 components, +12 deps, -1 capabilities". */
+export function summarizeChange(d: ModelDiff): string {
+  const parts: string[] = [];
+  const add = (cat: "components" | "dependencies" | "externalSystems" | "capabilities", label: string) => {
+    if (d[cat].added.length) parts.push(`+${d[cat].added.length} ${label}`);
+    if (d[cat].removed.length) parts.push(`-${d[cat].removed.length} ${label}`);
+  };
+  add("components", "components");
+  add("dependencies", "deps");
+  add("externalSystems", "ext");
+  add("capabilities", "capabilities");
+  return parts.length ? parts.join(", ") : "no architecture change";
+}
+
 // ── Renderers ───────────────────────────────────────────────────────────────
 
 const CATEGORY_TITLES: [keyof Pick<ModelDiff, "components" | "dependencies" | "externalSystems" | "capabilities">, string][] = [

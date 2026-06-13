@@ -28,6 +28,8 @@ import {
   hasChanges,
   renderDiffText,
   renderDiffMarkdown,
+  summarizeChange,
+  architectureLog,
   analyzeAtRef,
   resolveRef,
   GitRefError,
@@ -204,6 +206,37 @@ function cmdDiff(args: string[]): number {
   return 0;
 }
 
+/** Architecture history: how the architecture changed over the last N commits. */
+function cmdLog(args: string[]): number {
+  const root = process.cwd();
+  const i = args.indexOf("-n");
+  const n = i !== -1 && args[i + 1] ? Math.max(1, Number(args[i + 1]) || 5) : 5;
+
+  let changes;
+  try {
+    changes = architectureLog(root, n);
+  } catch (err) {
+    console.error(`✗ ${err instanceof Error ? err.message : String(err)}`);
+    return 1;
+  }
+  if (!changes.length) {
+    console.log("Not enough commit history to show architecture changes.");
+    return 0;
+  }
+
+  const DIM = "\x1b[2m";
+  const BOLD = "\x1b[1m";
+  const GREEN = "\x1b[32m";
+  const RESET = "\x1b[0m";
+  console.log(`${BOLD}Architecture history${RESET} ${DIM}(last ${changes.length} commits, newest first)${RESET}\n`);
+  for (const c of changes) {
+    const summary = summarizeChange(c.diff);
+    console.log(`${BOLD}${c.sha.slice(0, 7)}${RESET} ${c.subject}`);
+    console.log(`  ${hasChanges(c.diff) ? GREEN + summary + RESET : DIM + summary + RESET}  ${DIM}(${c.diff.driftPct}% drift)${RESET}`);
+  }
+  return 0;
+}
+
 function printHookSnippet(): void {
   console.log(`# Keep the Archmantic model in sync on every commit.
 # Save as .git/hooks/pre-commit and \`chmod +x\` it:
@@ -309,6 +342,7 @@ Commands:
   view           Capability map + diagrams + trust report (writes view.html)
   drift [--check]  Compare the committed model vs the code (--check exits 1 on drift)
   diff [<ref>]   Architecture diff: a git ref → working tree (writes pr-diff.md)
+  log [-n N]     Architecture history: how the architecture changed per commit
   mcp            Start the MCP server exposing the model to AI agents (stdio)
   bench [--exact]  Token-savings benchmark: MCP queries vs raw file reads
 
@@ -348,6 +382,8 @@ async function main(argv: string[]): Promise<number> {
       return cmdDrift(rest);
     case "diff":
       return cmdDiff(rest);
+    case "log":
+      return cmdLog(rest);
     default:
       console.error(`Unknown command: ${command}\n`);
       printHelp();
