@@ -222,9 +222,14 @@ export default async function Home() {
           <h1 className="text-2xl font-bold tracking-tight">Your projects</h1>
           <p className="text-sm text-muted-foreground">Shared architecture knowledge for your organization.</p>
         </div>
-        <Link href="/settings" className={buttonVariants({ variant: "outline" })}>
-          Manage CLI tokens
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/systems" className={buttonVariants({ variant: "outline" })}>
+            Systems
+          </Link>
+          <Link href="/settings" className={buttonVariants({ variant: "outline" })}>
+            Manage CLI tokens
+          </Link>
+        </div>
       </div>
 
       {error ? (

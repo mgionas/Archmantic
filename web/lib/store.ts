@@ -19,6 +19,8 @@ export interface Element {
 export interface Model {
   project: string;
   generatedAt?: string;
+  system?: string;
+  consumes?: string[];
   systems: Element[];
   components: Element[];
   relations: (Element & { from: string; to: string })[];
@@ -63,6 +65,19 @@ export async function listProjects(owner: string): Promise<ProjectRow[]> {
       where m.owner = ${owner}
       order by m.project, m.pushed_at desc`;
     return rows as ProjectRow[];
+  } catch (err) {
+    if (missingTable(err)) return [];
+    throw err;
+  }
+}
+
+/** Latest model per project for an owner — for the multi-repo system view. */
+export async function latestModelsForOwner(owner: string): Promise<Model[]> {
+  try {
+    const rows = (await sql()`
+      select distinct on (project) model from archmantic_models
+      where owner = ${owner} order by project, pushed_at desc`) as { model: Model }[];
+    return rows.map((r) => r.model);
   } catch (err) {
     if (missingTable(err)) return [];
     throw err;
