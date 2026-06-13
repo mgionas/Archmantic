@@ -47,11 +47,11 @@ function missingTable(err: unknown): boolean {
   return e?.code === "42P01" || /relation .* does not exist/i.test(e?.message ?? "");
 }
 
-export async function listProjects(): Promise<ProjectRow[]> {
+export async function listProjects(owner: string): Promise<ProjectRow[]> {
   try {
     const rows = await sql()`
       select project, count(*)::int as snapshots, max(pushed_at) as latest
-      from archmantic_models group by project order by project`;
+      from archmantic_models where owner = ${owner} group by project order by project`;
     return rows as ProjectRow[];
   } catch (err) {
     if (missingTable(err)) return [];
@@ -59,11 +59,11 @@ export async function listProjects(): Promise<ProjectRow[]> {
   }
 }
 
-export async function latestModel(project: string): Promise<Model | null> {
+export async function latestModel(owner: string, project: string): Promise<Model | null> {
   try {
     const rows = (await sql()`
       select model from archmantic_models
-      where project = ${project} order by pushed_at desc limit 1`) as { model: Model }[];
+      where owner = ${owner} and project = ${project} order by pushed_at desc limit 1`) as { model: Model }[];
     return rows[0]?.model ?? null;
   } catch (err) {
     if (missingTable(err)) return null;

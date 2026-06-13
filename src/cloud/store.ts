@@ -39,8 +39,12 @@ export async function ensureSchema(): Promise<void> {
       generated_at timestamptz,
       pushed_at    timestamptz not null default now(),
       model        jsonb       not null,
+      owner        text,
       primary key (project, commit_sha)
     )`;
+  // `owner` tags which org/user a row belongs to (set by the SaaS API; null for
+  // direct self-host pushes). Added idempotently for tables created before it.
+  await q`alter table archmantic_models add column if not exists owner text`;
 }
 
 /** Upsert the model under (project, commit). Returns the project key used. */

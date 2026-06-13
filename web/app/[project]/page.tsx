@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
 import { latestModel } from "@/lib/store";
 import { band, componentLabel, groupCapabilities, trust } from "@/lib/format";
 import { componentDiagram, contextDiagram, sequenceDiagram } from "@/lib/diagrams";
@@ -10,7 +11,9 @@ export const dynamic = "force-dynamic";
 export default async function ProjectPage({ params }: { params: Promise<{ project: string }> }) {
   const { project: raw } = await params;
   const project = decodeURIComponent(raw);
-  const model = await latestModel(project);
+  const { userId, orgId } = await auth();
+  const owner = orgId ?? userId;
+  const model = owner ? await latestModel(owner, project) : null;
 
   if (!model) {
     return (

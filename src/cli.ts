@@ -23,7 +23,16 @@ import { incrementalUpdate } from "./analyze/incremental.js";
 import { terminalPreview, projectionArtifacts } from "./project/index.js";
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
-import { pushModel, pullLatest, history, NoDatabaseError } from "./cloud/index.js";
+import {
+  pushModel,
+  pullLatest,
+  history,
+  NoDatabaseError,
+  hasApiToken,
+  pushModelApi,
+  pullLatestApi,
+  ApiError,
+} from "./cloud/index.js";
 import { startMcpServer } from "./mcp/server.js";
 import { runBenchmark, renderBench, estimateCounter, type TokenCounter } from "./mcp/bench.js";
 import {
@@ -374,16 +383,20 @@ async function cmdPush(): Promise<number> {
     return 1;
   }
   const commit = currentCommit(root);
+  const viaApi = hasApiToken();
   try {
-    await pushModel(model, commit);
+    if (viaApi) await pushModelApi(model, commit);
+    else await pushModel(model, commit);
   } catch (err) {
-    if (err instanceof NoDatabaseError) {
+    if (err instanceof NoDatabaseError || err instanceof ApiError) {
       console.error(`✗ ${err.message}`);
       return 1;
     }
     throw err;
   }
-  console.log(`✓ Pushed "${model.project}" @ ${commit.slice(0, 7)} to the cloud knowledge store.`);
+  console.log(
+    `✓ Pushed "${model.project}" @ ${commit.slice(0, 7)} ${viaApi ? "via the Archmantic API (org-scoped)" : "to the cloud store (direct)"}.`,
+  );
   console.log(`  Teammates can \`archmantic pull\` to get the shared model.`);
   return 0;
 }
@@ -394,9 +407,9 @@ async function cmdPull(): Promise<number> {
   const project = resolveProject(root);
   let model: ArchitectureModel | null;
   try {
-    model = await pullLatest(project);
+    model = hasApiToken() ? await pullLatestApi(project) : await pullLatest(project);
   } catch (err) {
-    if (err instanceof NoDatabaseError) {
+    if (err instanceof NoDatabaseError || err instanceof ApiError) {
       console.error(`✗ ${err.message}`);
       return 1;
     }

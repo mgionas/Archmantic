@@ -69,15 +69,20 @@ This repo ships a project [`.mcp.json`](.mcp.json). In Claude Code / Cursor, app
 
 ## Team cloud knowledge (shared model)
 
-Share the architecture model across a team via Neon Postgres — set `DATABASE_URL` in `.env.local`:
+Share the architecture model across a team. `push`/`pull`/`cloud-log` work in **two modes**:
 
 ```bash
-node dist/cli.js push       # upload the model to the shared store, under the current commit
+node dist/cli.js push       # upload the model under the current commit
 node dist/cli.js pull       # fetch the team's latest shared model into .archmantic/
-node dist/cli.js cloud-log  # list the per-commit snapshots stored in the cloud
+node dist/cli.js cloud-log  # list the per-commit snapshots in the cloud (direct mode)
 ```
 
-The committed `.archmantic/model.json` stays the source of truth; the DB is a shared cache/index that holds a **per-commit history** — the basis for a team architecture timeline and the future web platform.
+| Mode | Auth | For |
+|---|---|---|
+| **Self-host (free)** | `DATABASE_URL` in `.env.local` — writes Neon directly | OSS users / your own infra |
+| **Managed SaaS** | `ARCHMANTIC_TOKEN` (+ `ARCHMANTIC_API_URL`) — pushes through the platform's authenticated, **org-scoped** API | teams / customers |
+
+Mint a SaaS token from the web app's **Settings** page (signed in, in your org); it tags every push with your organization, so customers never hold the raw database URL. The committed `.archmantic/model.json` stays the source of truth; the cloud holds a **per-commit history** powering the team timeline and the web viewer.
 
 ## Tier 2 (LLM) & credentials
 
