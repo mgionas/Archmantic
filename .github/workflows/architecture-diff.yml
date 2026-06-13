@@ -1,0 +1,48 @@
+name: Architecture diff
+
+# Posts an architecture-level review on every PR: how this change reshapes the
+# system (new components, dependencies, capabilities) — not a line diff.
+on:
+  pull_request:
+
+jobs:
+  arch-diff:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # need history so we can analyze the base ref
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Compute architecture diff (base → PR)
+        run: |
+          git fetch origin "${{ github.base_ref }}" --depth=1 || true
+          node dist/cli.js diff "origin/${{ github.base_ref }}" || true
+
+      - name: Post / update PR comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = '.archmantic/pr-diff.md';
+            if (!fs.existsSync(path)) { core.info('No pr-diff.md produced; skipping.'); return; }
+            const marker = '<!-- archmantic-arch-diff -->';
+            const body = marker + '\n' + fs.readFileSync(path, 'utf8');
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
