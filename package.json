@@ -2,6 +2,7 @@
   "name": "archmantic",
   "version": "0.0.1",
   "description": "Archmantic — an always-on Solution Architect: living architecture model + diagrams for humans and AI agents (via MCP).",
+  "license": "Apache-2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {

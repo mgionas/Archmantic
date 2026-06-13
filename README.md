@@ -119,3 +119,14 @@ Deploy: import `web/` as the Vercel project root and set `DATABASE_URL` as an en
 The team **cloud knowledge** layer is taking shape: shared model across a team (`push`/`pull`), the CI architecture-diff bot ([already included](.github/workflows/architecture-diff.yml)), and the web platform above. Next: diagram rendering (Mermaid/BPMN) in the web viewer, an editable `bpmn-js` canvas, auth/multi-tenant, and the edit-then-build loop.
 
 See [`docs/MVP_PLAN.md`](docs/MVP_PLAN.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), and [`docs/CONCEPT.md`](docs/CONCEPT.md).
+
+## License & model
+
+Archmantic is **open-SaaS**:
+
+- The **CLI & engine** (`/src`) are **Apache-2.0** ([`LICENSE`](LICENSE)) — free, local-first, your code never leaves your machine.
+- The **web platform** (`/web`) is **AGPL-3.0** ([`web/LICENSE`](web/LICENSE)) — source-available.
+- **Free** includes the full CLI + MCP + self-host (BYO database) + BYOK AI, and managed cloud for **up to 3 seats**.
+- Paid: **Team** (per seat), **Managed AI** (metered — no-BYOK Tier-2 / `handoff` / autonomous build), **Enterprise** (SSO/RBAC/audit/on-prem/SLA).
+
+Full business model: [`docs/STRATEGY.md`](docs/STRATEGY.md).
