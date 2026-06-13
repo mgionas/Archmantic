@@ -7,6 +7,7 @@
  * `ARCHMANTIC_API_URL` overrides the endpoint (defaults to localhost for dev).
  */
 import { type ArchitectureModel } from "../ir/types.js";
+import { type UsageEvent } from "./store.js";
 
 export class ApiError extends Error {}
 
@@ -58,6 +59,18 @@ export async function pullLatestApi(project: string): Promise<ArchitectureModel 
   assertJson(res, "pull");
   const data = (await res.json()) as { model?: ArchitectureModel };
   return data.model ?? null;
+}
+
+/** Record a batch of MCP usage events through the org-scoped API (idempotent). */
+export async function recordUsageApi(events: UsageEvent[]): Promise<void> {
+  if (!events.length) return;
+  const res = await send("/api/usage", {
+    method: "POST",
+    headers: { "content-type": "application/json", ...authHeader() },
+    body: JSON.stringify({ events }),
+  });
+  if (!res.ok) throw new ApiError(`usage record failed (${res.status}): ${(await res.text()).slice(0, 200)}`);
+  assertJson(res, "usage");
 }
 
 /** Fetch the org's human-edited BPMN for a project (null if none saved). */

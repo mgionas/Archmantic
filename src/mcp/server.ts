@@ -15,7 +15,15 @@ import { z } from "zod";
 import { type ArchitectureModel, serializeModel } from "../ir/types.js";
 import { analyzeRepo } from "../analyze/index.js";
 import { diffModels, summarizeChange } from "../diff/index.js";
-import { hasApiToken, pushModel, pushModelApi } from "../cloud/index.js";
+import {
+  hasApiToken,
+  pushModel,
+  pushModelApi,
+  recordUsage,
+  recordUsageApi,
+  type UsageEvent,
+} from "../cloud/index.js";
+import { UsageRecorder } from "./usage.js";
 import {
   getComponent,
   getContext,
@@ -61,13 +69,28 @@ export async function startMcpServer(root: string): Promise<void> {
   let model = loadModel(root);
   const server = new McpServer({ name: "archmantic", version: "0.1.0" });
 
+  // Usage stats: record each read tool, best-effort flush to the cloud (API if a
+  // token is set, else direct DB, else local-log only). Never breaks the agent.
+  const flushUsage = async (events: UsageEvent[]): Promise<void> => {
+    if (hasApiToken()) await recordUsageApi(events);
+    else if (process.env.DATABASE_URL) await recordUsage(events);
+    // no creds → local log only (still queryable via `archmantic usage`)
+  };
+  const usage = new UsageRecorder(root, () => model.project, flushUsage);
+  usage.start();
+  /** Record the read, then return it as an MCP text result. */
+  const served = (tool: string, answer: string) => {
+    usage.record(tool, answer, new Date().toISOString());
+    return text(answer);
+  };
+
   server.registerTool(
     "get_context",
     {
       title: "Get architecture context",
       description: "High-level architecture context: project, systems, external dependencies, counts, primary process.",
     },
-    async () => text(getContext(model)),
+    async () => served("get_context", getContext(model)),
   );
 
   server.registerTool(
@@ -77,7 +100,7 @@ export async function startMcpServer(root: string): Promise<void> {
       description: "List components (optionally filtered by a substring) with their responsibilities.",
       inputSchema: { filter: z.string().optional().describe("optional substring to filter by path/name") },
     },
-    async ({ filter }) => text(listComponents(model, filter)),
+    async ({ filter }) => served("list_components", listComponents(model, filter)),
   );
 
   server.registerTool(
@@ -87,7 +110,7 @@ export async function startMcpServer(root: string): Promise<void> {
       description: "Responsibility, dependencies, dependents, and capabilities for one component (by name or path).",
       inputSchema: { name: z.string().describe("component name, basename, or repo path") },
     },
-    async ({ name }) => text(getComponent(model, name)),
+    async ({ name }) => served("get_component", getComponent(model, name)),
   );
 
   server.registerTool(
@@ -97,7 +120,7 @@ export async function startMcpServer(root: string): Promise<void> {
       description: "Plain-English 'what can this system do?' capabilities matching a query (empty = all).",
       inputSchema: { query: z.string().default("").describe("search text; empty returns all capabilities") },
     },
-    async ({ query }) => text(searchCapabilities(model, query)),
+    async ({ query }) => served("search_capabilities", searchCapabilities(model, query)),
   );
 
   server.registerTool(
@@ -106,7 +129,7 @@ export async function startMcpServer(root: string): Promise<void> {
       title: "Get business process",
       description: "The primary business process (BPMN) as an ordered list of steps.",
     },
-    async () => text(getProcess(model)),
+    async () => served("get_process", getProcess(model)),
   );
 
   server.registerTool(
@@ -115,7 +138,7 @@ export async function startMcpServer(root: string): Promise<void> {
       title: "Get sequence",
       description: "The primary call/dependency sequence (sequence diagram) as ordered messages.",
     },
-    async () => text(getSequence(model)),
+    async () => served("get_sequence", getSequence(model)),
   );
 
   server.registerTool(
@@ -125,7 +148,7 @@ export async function startMcpServer(root: string): Promise<void> {
       description:
         "The persisted data model (DB entities/tables): each entity's fields with PK/FK/unique markers and its relations. Grounded in the schema file.",
     },
-    async () => text(getDataModel(model)),
+    async () => served("get_data_model", getDataModel(model)),
   );
 
   server.registerTool(
@@ -135,7 +158,7 @@ export async function startMcpServer(root: string): Promise<void> {
       description: "Immediate architectural neighbors (depends-on / used-by) of a component.",
       inputSchema: { name: z.string().describe("component name, basename, or repo path") },
     },
-    async ({ name }) => text(whatsRelated(model, name)),
+    async ({ name }) => served("whats_related", whatsRelated(model, name)),
   );
 
   // ── Write tools: the agent keeps the living model current ──────────────────
@@ -180,8 +203,16 @@ export async function startMcpServer(root: string): Promise<void> {
     },
   );
 
+  // Flush buffered usage on shutdown so short sessions still report.
+  for (const sig of ["SIGINT", "SIGTERM"] as const) {
+    process.on(sig, () => {
+      void usage.stop().finally(() => process.exit(0));
+    });
+  }
+  process.on("beforeExit", () => void usage.stop());
+
   process.stderr.write(
-    `archmantic MCP server: serving "${model.project}" (${model.components.length} components, ${model.capabilities.length} capabilities) over stdio — read + sync tools\n`,
+    `archmantic MCP server: serving "${model.project}" (${model.components.length} components, ${model.capabilities.length} capabilities) over stdio — read + sync tools, usage stats on\n`,
   );
   await server.connect(new StdioServerTransport());
 }

@@ -22,7 +22,7 @@ code-graph commodity territory?
 | ✅ done | In-app `/docs` | Shipped, public, linked from header + landing | High · Low |
 | ✅ done | Data model → ERD | Prisma + Drizzle + SQL → `DataEntity` IR + Mermaid ERD; CLI + web Data tab + MCP `get_data_model` | High · Med |
 | ✅ done | GitHub Action / PR diff | Reusable `action.yml` + sticky PR comment via `archmantic diff`; self CI dogfoods it | High · Med |
-| **NEXT** | MCP usage stats | Proof-of-value loop + metering substrate for billing | High · Med |
+| ✅ done | MCP usage stats | Per-tool-call recording + token savings; CLI `usage` + web `/usage` dashboard; metering substrate | High · Med |
 | **LATER** | API surface (routes) | Completes the "what's the contract" layer | Med · Med |
 | **LATER** | Multi-repo auto-link | Novel cross-repo gap detection; smarter after ERD/API | High · Med-High |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
@@ -80,11 +80,14 @@ architecture delta (components/capabilities/data-model/externals) — not a line
 diff. Self-hosted CI (`.github/workflows/`) dogfoods it against this repo's own
 PRs (source build) plus a build+test job.
 
-### NEXT · MCP usage stats
-MCP server logs each tool call (tool, tokens in/out, project, est. tokens-saved
-vs raw file read — reuse `mcp/bench`). Pushed to cloud → web `/usage` dashboard:
-"your agents made N queries, ~X% fewer tokens." Same event stream later feeds
-metered-AI billing.
+### ✅ done · MCP usage stats
+MCP server records each read tool call (tool, project, est. tokens-out + tokens
+saved vs raw file reads). Events append to a durable local log
+(`.archmantic/usage.jsonl`) and best-effort batch-flush to the cloud (API token →
+direct DB → local-only). `archmantic usage [--sync]` summarizes locally and
+re-pushes; web `/usage` aggregates totals, per-tool, per-project, and a 14-day
+activity chart. Idempotent by event UUID; the same event stream is the metering
+substrate for future billing.
 
 ### LATER · API surface (routes)
 Detect REST/tRPC/GraphQL endpoints → `Endpoint` IR element. The contract layer

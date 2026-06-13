@@ -133,6 +133,78 @@ export async function getProcessEdit(owner: string, project: string): Promise<st
   }
 }
 
+// ── MCP usage stats (proof-of-value + metering) ───────────────────────────────
+
+export interface UsageEvent {
+  id: string;
+  project: string;
+  tool: string;
+  tokensOut: number;
+  tokensSaved: number;
+  at: string;
+}
+
+export async function ensureUsageSchema(): Promise<void> {
+  const q = db();
+  await q`
+    create table if not exists archmantic_usage (
+      id uuid primary key, owner text not null, project text not null, tool text not null,
+      tokens_out integer not null default 0, tokens_saved integer not null default 0,
+      at timestamptz not null
+    )`;
+  await q`create index if not exists archmantic_usage_owner_at on archmantic_usage (owner, at desc)`;
+}
+
+/** Record a batch of usage events for an org (idempotent by event id). */
+export async function recordUsageForOwner(owner: string, events: UsageEvent[]): Promise<void> {
+  if (!events.length) return;
+  await ensureUsageSchema();
+  await db()`
+    insert into archmantic_usage (id, owner, project, tool, tokens_out, tokens_saved, at)
+    select (e->>'id')::uuid, ${owner}, e->>'project', e->>'tool',
+           (e->>'tokensOut')::int, (e->>'tokensSaved')::int, (e->>'at')::timestamptz
+    from jsonb_array_elements(${JSON.stringify(events)}::jsonb) e
+    on conflict (id) do nothing`;
+}
+
+export interface UsageSummary {
+  calls: number;
+  tokensOut: number;
+  tokensSaved: number;
+  savedPct: number;
+  byTool: { tool: string; calls: number; saved: number }[];
+  byProject: { project: string; calls: number; saved: number }[];
+  daily: { day: string; calls: number }[];
+}
+
+export async function usageSummary(owner: string): Promise<UsageSummary> {
+  const empty: UsageSummary = { calls: 0, tokensOut: 0, tokensSaved: 0, savedPct: 0, byTool: [], byProject: [], daily: [] };
+  try {
+    await ensureUsageSchema();
+    const q = db();
+    const [totals] = (await q`
+      select count(*)::int calls, coalesce(sum(tokens_out),0)::int out, coalesce(sum(tokens_saved),0)::int saved
+      from archmantic_usage where owner = ${owner}`) as { calls: number; out: number; saved: number }[];
+    const byTool = (await q`
+      select tool, count(*)::int calls, coalesce(sum(tokens_saved),0)::int saved
+      from archmantic_usage where owner = ${owner} group by tool order by calls desc`) as UsageSummary["byTool"];
+    const byProject = (await q`
+      select project, count(*)::int calls, coalesce(sum(tokens_saved),0)::int saved
+      from archmantic_usage where owner = ${owner} group by project order by calls desc limit 12`) as UsageSummary["byProject"];
+    const daily = (await q`
+      select to_char(date_trunc('day', at), 'YYYY-MM-DD') day, count(*)::int calls
+      from archmantic_usage where owner = ${owner} and at > now() - interval '14 days'
+      group by 1 order by 1`) as UsageSummary["daily"];
+    const calls = totals?.calls ?? 0;
+    const out = totals?.out ?? 0;
+    const saved = totals?.saved ?? 0;
+    const savedPct = out + saved === 0 ? 0 : Math.round((saved / (out + saved)) * 1000) / 10;
+    return { calls, tokensOut: out, tokensSaved: saved, savedPct, byTool, byProject, daily };
+  } catch {
+    return empty;
+  }
+}
+
 export async function pullLatestForOwner(owner: string, project: string): Promise<Model | null> {
   try {
     const rows = (await db()`

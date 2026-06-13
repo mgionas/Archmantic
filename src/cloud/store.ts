@@ -90,6 +90,46 @@ export async function pullLatest(project: string): Promise<ArchitectureModel | n
   }
 }
 
+// ── MCP usage stats (proof-of-value + metering substrate) ─────────────────────
+
+/** One recorded MCP tool call. `id` is a UUID → inserts are idempotent (the MCP
+ *  auto-flush and a later `usage --sync` can push the same event safely). */
+export interface UsageEvent {
+  id: string;
+  project: string;
+  tool: string;
+  tokensOut: number;
+  tokensSaved: number;
+  at: string; // ISO timestamp
+}
+
+export async function ensureUsageSchema(): Promise<void> {
+  const q = sql();
+  await q`
+    create table if not exists archmantic_usage (
+      id           uuid        primary key,
+      owner        text        not null,
+      project      text        not null,
+      tool         text        not null,
+      tokens_out   integer     not null default 0,
+      tokens_saved integer     not null default 0,
+      at           timestamptz not null
+    )`;
+  await q`create index if not exists archmantic_usage_owner_at on archmantic_usage (owner, at desc)`;
+}
+
+/** Record a batch of usage events for the direct/self-host owner (idempotent). */
+export async function recordUsage(events: UsageEvent[]): Promise<void> {
+  if (!events.length) return;
+  await ensureUsageSchema();
+  await sql()`
+    insert into archmantic_usage (id, owner, project, tool, tokens_out, tokens_saved, at)
+    select (e->>'id')::uuid, ${OWNER}, e->>'project', e->>'tool',
+           (e->>'tokensOut')::int, (e->>'tokensSaved')::int, (e->>'at')::timestamptz
+    from jsonb_array_elements(${JSON.stringify(events)}::jsonb) e
+    on conflict (id) do nothing`;
+}
+
 export interface CloudSnapshot {
   commit_sha: string;
   generated_at: string | null;

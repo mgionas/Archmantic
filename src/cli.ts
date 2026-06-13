@@ -34,9 +34,12 @@ import {
   pushModelApi,
   pullLatestApi,
   pullProcessEditApi,
+  recordUsage,
+  recordUsageApi,
   ApiError,
 } from "./cloud/index.js";
 import { startMcpServer } from "./mcp/server.js";
+import { readUsageLog } from "./mcp/usage.js";
 import { runBenchmark, renderBench, estimateCounter, type TokenCounter } from "./mcp/bench.js";
 import {
   diffModels,
@@ -677,6 +680,64 @@ function notImplemented(name: string, milestone: string): number {
   return 0;
 }
 
+/** Show local MCP usage stats; `--sync` re-pushes the local log to the cloud. */
+async function cmdUsage(args: string[]): Promise<number> {
+  const root = process.cwd();
+  const events = readUsageLog(root);
+  if (!events.length) {
+    console.log(`No MCP usage recorded yet (${MODEL_DIR}/usage.jsonl is empty).`);
+    console.log(`  Usage is recorded automatically while \`archmantic mcp\` serves an agent.`);
+    return 0;
+  }
+
+  const calls = events.length;
+  const tokensOut = events.reduce((n, e) => n + e.tokensOut, 0);
+  const tokensSaved = events.reduce((n, e) => n + e.tokensSaved, 0);
+  const savedPct = tokensOut + tokensSaved === 0 ? 0 : Math.round((tokensSaved / (tokensOut + tokensSaved)) * 1000) / 10;
+
+  const byTool = new Map<string, { calls: number; saved: number }>();
+  for (const e of events) {
+    const t = byTool.get(e.tool) ?? { calls: 0, saved: 0 };
+    t.calls++;
+    t.saved += e.tokensSaved;
+    byTool.set(e.tool, t);
+  }
+
+  const BOLD = "\x1b[1m";
+  const DIM = "\x1b[2m";
+  const GREEN = "\x1b[32m";
+  const RESET = "\x1b[0m";
+  console.log(`${BOLD}MCP usage${RESET} ${DIM}— proof your agents read the model, not the files${RESET}`);
+  console.log(
+    `  ${BOLD}${calls}${RESET} tool calls · ${tokensOut.toLocaleString()} tokens served · ` +
+      `${GREEN}${BOLD}~${tokensSaved.toLocaleString()} tokens saved${RESET} ${DIM}(${savedPct}% fewer vs reading files)${RESET}`,
+  );
+  console.log(`\n  ${BOLD}By tool${RESET}`);
+  for (const [tool, t] of [...byTool.entries()].sort((a, b) => b[1].calls - a[1].calls)) {
+    console.log(`    ${tool.padEnd(20)} ${String(t.calls).padStart(4)} calls   ${DIM}~${t.saved.toLocaleString()} saved${RESET}`);
+  }
+
+  if (args.includes("--sync")) {
+    const viaApi = hasApiToken();
+    if (!viaApi && !process.env.DATABASE_URL) {
+      console.error(`\n✗ No cloud credentials — set ARCHMANTIC_TOKEN or DATABASE_URL to sync.`);
+      return 1;
+    }
+    try {
+      if (viaApi) await recordUsageApi(events);
+      else await recordUsage(events);
+    } catch (err) {
+      if (err instanceof NoDatabaseError || err instanceof ApiError) {
+        console.error(`\n✗ ${err.message}`);
+        return 1;
+      }
+      throw err;
+    }
+    console.log(`\n✓ Synced ${calls} events to the cloud ${viaApi ? "(org-scoped API)" : "(direct)"} — see the web /usage dashboard.`);
+  }
+  return 0;
+}
+
 function printHelp(): void {
   console.log(`Archmantic v${pkg.version} — living architecture model for humans + agents
 
@@ -699,6 +760,7 @@ Commands:
   push           Share the model to the team cloud store (Neon) @ this commit
   pull           Fetch the team's latest shared model into .archmantic/
   cloud-log      List per-commit snapshots stored in the cloud
+  usage [--sync]  MCP usage + token savings (--sync pushes the local log to the cloud)
 
 Options:
   -v, --version  Print version
@@ -736,6 +798,8 @@ async function main(argv: string[]): Promise<number> {
       return cmdPull();
     case "cloud-log":
       return cmdCloudLog();
+    case "usage":
+      return cmdUsage(rest);
     case "view":
       return cmdView();
     case "spec":

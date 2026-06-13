@@ -396,7 +396,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/api.ts:11",
+          "ref": "src/cloud/api.ts:12",
           "source": "code"
         }
       ]
@@ -412,7 +412,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/api.ts:13",
+          "ref": "src/cloud/api.ts:14",
           "source": "code"
         }
       ]
@@ -428,7 +428,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/api.ts:54",
+          "ref": "src/cloud/api.ts:55",
           "source": "code"
         }
       ]
@@ -444,7 +444,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/api.ts:64",
+          "ref": "src/cloud/api.ts:77",
           "source": "code"
         }
       ]
@@ -460,7 +460,23 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/api.ts:44",
+          "ref": "src/cloud/api.ts:45",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/cloud/api.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `recordUsageApi` in src/cloud/api.ts",
+      "id": "cap:src/cloud/api.ts#recordUsageApi",
+      "name": "Record Usage Api",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/cloud/api.ts:65",
           "source": "code"
         }
       ]
@@ -486,13 +502,29 @@
         "comp:src/cloud/store.ts"
       ],
       "confidence": 0.6,
+      "description": "Exported function `ensureUsageSchema` in src/cloud/store.ts",
+      "id": "cap:src/cloud/store.ts#ensureUsageSchema",
+      "name": "Ensure Usage Schema",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/cloud/store.ts:106",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/cloud/store.ts"
+      ],
+      "confidence": 0.6,
       "description": "Exported function `history` in src/cloud/store.ts",
       "id": "cap:src/cloud/store.ts#history",
       "name": "History",
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/store.ts:100",
+          "ref": "src/cloud/store.ts:140",
           "source": "code"
         }
       ]
@@ -541,6 +573,22 @@
         {
           "confidence": 0.6,
           "ref": "src/cloud/store.ts:67",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/cloud/store.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `recordUsage` in src/cloud/store.ts",
+      "id": "cap:src/cloud/store.ts#recordUsage",
+      "name": "Record Usage",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/cloud/store.ts:122",
           "source": "code"
         }
       ]
@@ -988,7 +1036,39 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/server.ts:59",
+          "ref": "src/mcp/server.ts:67",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/mcp/usage.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `readUsageLog` in src/mcp/usage.ts",
+      "id": "cap:src/mcp/usage.ts#readUsageLog",
+      "name": "Read Usage Log",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/mcp/usage.ts:111",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/mcp/usage.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported class `UsageRecorder` in src/mcp/usage.ts",
+      "id": "cap:src/mcp/usage.ts#UsageRecorder",
+      "name": "Usage Recorder",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/mcp/usage.ts:35",
           "source": "code"
         }
       ]
@@ -1815,6 +1895,20 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:src/mcp/usage.ts",
+      "kind": "module",
+      "name": "src/mcp/usage.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/usage.ts:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/project/bpmn-parse.ts",
       "kind": "module",
       "name": "src/project/bpmn-parse.ts",
@@ -2050,6 +2144,20 @@
         }
       ],
       "systemId": "sys:@archmantic/cli"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:test/usage.test.mjs",
+      "kind": "module",
+      "name": "test/usage.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/usage.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:@archmantic/cli"
     }
   ],
   "dataEntities": [],
@@ -2216,7 +2324,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-13T22:12:38.198Z",
+  "generatedAt": "2026-06-13T22:31:33.832Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -3502,7 +3610,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:41",
+          "ref": "src/cli.ts:44",
           "source": "code"
         }
       ],
@@ -3547,7 +3655,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:40",
+          "ref": "src/cli.ts:43",
           "source": "code"
         }
       ],
@@ -3562,11 +3670,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:39",
+          "ref": "src/cli.ts:41",
           "source": "code"
         }
       ],
       "to": "comp:src/mcp/server.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/mcp/usage.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/mcp/usage.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:42",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/mcp/usage.ts"
     },
     {
       "confidence": 0.95,
@@ -3646,6 +3769,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/cloud/api.ts",
+      "id": "rel:comp:src/cloud/api.ts=>comp:src/cloud/store.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cloud/api.ts → comp:src/cloud/store.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cloud/api.ts:10",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/cloud/store.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cloud/api.ts",
       "id": "rel:comp:src/cloud/api.ts=>comp:src/ir/types.ts",
       "kind": "depends_on",
       "name": "comp:src/cloud/api.ts → comp:src/ir/types.ts",
@@ -3667,7 +3805,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cloud/index.ts:10",
+          "ref": "src/cloud/index.ts:13",
           "source": "code"
         }
       ],
@@ -4147,11 +4285,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:19",
+          "ref": "src/mcp/server.ts:27",
           "source": "code"
         }
       ],
       "to": "comp:src/mcp/queries.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/server.ts",
+      "id": "rel:comp:src/mcp/server.ts=>comp:src/mcp/usage.ts",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/server.ts → comp:src/mcp/usage.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/server.ts:26",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/mcp/usage.ts"
     },
     {
       "confidence": 0.95,
@@ -4232,6 +4385,81 @@
         }
       ],
       "to": "sys:ext:zod"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/usage.ts",
+      "id": "rel:comp:src/mcp/usage.ts=>comp:src/analyze/walk.ts",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/usage.ts → comp:src/analyze/walk.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/usage.ts:15",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/walk.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/usage.ts",
+      "id": "rel:comp:src/mcp/usage.ts=>comp:src/cloud/store.ts",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/usage.ts → comp:src/cloud/store.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/usage.ts:16",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/cloud/store.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/usage.ts",
+      "id": "rel:comp:src/mcp/usage.ts=>sys:ext:node:crypto",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/usage.ts → sys:ext:node:crypto",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/usage.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:crypto"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/usage.ts",
+      "id": "rel:comp:src/mcp/usage.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/usage.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/usage.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/usage.ts",
+      "id": "rel:comp:src/mcp/usage.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/usage.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/usage.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
     },
     {
       "confidence": 0.95,
@@ -4907,6 +5135,81 @@
         }
       ],
       "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/usage.test.mjs",
+      "id": "rel:comp:test/usage.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/usage.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/usage.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/usage.test.mjs",
+      "id": "rel:comp:test/usage.test.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:test/usage.test.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/usage.test.mjs:4",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/usage.test.mjs",
+      "id": "rel:comp:test/usage.test.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:test/usage.test.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/usage.test.mjs:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/usage.test.mjs",
+      "id": "rel:comp:test/usage.test.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:test/usage.test.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/usage.test.mjs:5",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/usage.test.mjs",
+      "id": "rel:comp:test/usage.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/usage.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/usage.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
     }
   ],
   "schemaVersion": "0.1.0",
@@ -4991,6 +5294,20 @@
         {
           "confidence": 0.95,
           "ref": "node:child_process",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.95,
+      "description": "Node.js runtime/builtin module",
+      "id": "sys:ext:node:crypto",
+      "kind": "external",
+      "name": "node:crypto",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "node:crypto",
           "source": "code"
         }
       ]

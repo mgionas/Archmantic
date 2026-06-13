@@ -59,6 +59,7 @@ const COMMANDS: [string, string][] = [
   ["log [-n N]", "Architecture history: how the architecture changed per commit"],
   ["system [name]", "Unified cross-service view across repos (declare links in .archmantic/config.json)"],
   ["push / pull", "Sync the model to/from the Archmantic cloud (token or DATABASE_URL)"],
+  ["usage [--sync]", "MCP usage + token savings; --sync pushes the local log to the cloud /usage dashboard"],
   ["mcp", "Start the MCP server exposing the model to AI agents (stdio)"],
   ["bench [--exact]", "Token-savings benchmark; --exact uses the Anthropic token counter (BYOK)"],
 ];
@@ -184,6 +185,11 @@ npx @archmantic/cli pull      # fetch the latest team model`}</Code>
           <p>
             The agent can then query components, capabilities, context, sequences, processes, and the data model — and
             refresh or sync the model — instead of reading source files.
+          </p>
+          <p>
+            Every tool call is recorded with the tokens it saved. See it in the terminal with{" "}
+            <Inline>archmantic usage</Inline>, or on the team <Link href="/usage">Usage dashboard</Link> (the MCP server
+            flushes events to the cloud when a token is set).
           </p>
         </Section>
 

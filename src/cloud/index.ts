@@ -4,7 +4,17 @@ export {
   pullLatest,
   history,
   ensureSchema,
+  recordUsage,
+  ensureUsageSchema,
   NoDatabaseError,
   type CloudSnapshot,
+  type UsageEvent,
 } from "./store.js";
-export { hasApiToken, pushModelApi, pullLatestApi, pullProcessEditApi, ApiError } from "./api.js";
+export {
+  hasApiToken,
+  pushModelApi,
+  pullLatestApi,
+  pullProcessEditApi,
+  recordUsageApi,
+  ApiError,
+} from "./api.js";

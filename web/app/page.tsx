@@ -230,6 +230,9 @@ export default async function Home() {
           <Link href="/systems" className={buttonVariants({ variant: "outline" })}>
             Systems
           </Link>
+          <Link href="/usage" className={buttonVariants({ variant: "outline" })}>
+            Usage
+          </Link>
           <Link href="/settings" className={buttonVariants({ variant: "outline" })}>
             Manage CLI tokens
           </Link>
