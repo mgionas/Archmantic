@@ -7,4 +7,4 @@ export {
   NoDatabaseError,
   type CloudSnapshot,
 } from "./store.js";
-export { hasApiToken, pushModelApi, pullLatestApi, ApiError } from "./api.js";
+export { hasApiToken, pushModelApi, pullLatestApi, pullProcessEditApi, ApiError } from "./api.js";
