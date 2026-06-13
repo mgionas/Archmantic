@@ -88,8 +88,21 @@ The LLM pass (`analyze --tier 2`) and `bench --exact` are **BYOK** and gated. Au
 
 Without a credential, those paths skip gracefully and everything else runs fully offline.
 
+## Web platform (`web/`)
+
+A read-only architecture viewer over the shared Neon store — Next.js (App Router), deployable to Vercel.
+
+```bash
+cd web
+npm install
+echo 'DATABASE_URL="<your Neon URL>"' > .env.local   # same URL as the CLI
+npm run dev        # http://localhost:3000 — project list + capability map + trust
+```
+
+Deploy: import `web/` as the Vercel project root and set `DATABASE_URL` as an environment variable. Pages are server-rendered on demand (no build-time DB access).
+
 ## Roadmap
 
-The team **cloud knowledge** layer: shared model across a team, the CI architecture-diff bot ([already included](.github/workflows/architecture-diff.yml)), and a web platform (Next.js + Neon) with an editable `bpmn-js` canvas and the edit-then-build loop.
+The team **cloud knowledge** layer is taking shape: shared model across a team (`push`/`pull`), the CI architecture-diff bot ([already included](.github/workflows/architecture-diff.yml)), and the web platform above. Next: diagram rendering (Mermaid/BPMN) in the web viewer, an editable `bpmn-js` canvas, auth/multi-tenant, and the edit-then-build loop.
 
 See [`docs/MVP_PLAN.md`](docs/MVP_PLAN.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), and [`docs/CONCEPT.md`](docs/CONCEPT.md).
