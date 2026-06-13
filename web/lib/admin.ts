@@ -40,15 +40,40 @@ export async function ensureSchema(): Promise<void> {
       token_hash text primary key,
       owner text not null,
       label text,
+      token_prefix text,
       created_at timestamptz not null default now()
     )`;
+  await q`alter table archmantic_tokens add column if not exists token_prefix text`;
+}
+
+export interface TokenRow {
+  id: string; // token_hash — opaque, safe to expose; used to address rename/revoke
+  prefix: string | null;
+  label: string | null;
+  created_at: string;
+}
+
+export async function listTokens(owner: string): Promise<TokenRow[]> {
+  await ensureSchema();
+  return (await db()`
+    select token_hash as id, token_prefix as prefix, label, created_at
+    from archmantic_tokens where owner = ${owner} order by created_at desc`) as TokenRow[];
+}
+
+export async function renameToken(owner: string, id: string, label: string): Promise<void> {
+  await db()`update archmantic_tokens set label = ${label} where token_hash = ${id} and owner = ${owner}`;
+}
+
+export async function deleteToken(owner: string, id: string): Promise<void> {
+  await db()`delete from archmantic_tokens where token_hash = ${id} and owner = ${owner}`;
 }
 
 /** Mint a token for an owner (org or user id). Returned once; only the hash is stored. */
 export async function createToken(owner: string, label: string | null): Promise<string> {
   await ensureSchema();
   const token = "arch_" + randomBytes(24).toString("hex");
-  await db()`insert into archmantic_tokens (token_hash, owner, label) values (${hashToken(token)}, ${owner}, ${label})`;
+  const prefix = token.slice(0, 12); // shown masked in the UI; full token only returned once
+  await db()`insert into archmantic_tokens (token_hash, owner, label, token_prefix) values (${hashToken(token)}, ${owner}, ${label}, ${prefix})`;
   return token;
 }
 

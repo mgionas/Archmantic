@@ -4,7 +4,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 // machine API routes, which do their own Bearer-token auth in the handler.
 // (If Clerk protected these, the CLI's token request would get the sign-in HTML
 // instead of the route — a silent push failure.)
-const isPublic = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)", "/api/push", "/api/pull"]);
+const isPublic = createRouteMatcher(["/", "/sign-in(.*)", "/sign-up(.*)", "/api/push", "/api/pull"]);
 
 export default clerkMiddleware(async (auth, req) => {
   if (!isPublic(req)) await auth.protect();
