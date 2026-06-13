@@ -24,7 +24,7 @@ code-graph commodity territory?
 | ✅ done | GitHub Action / PR diff | Reusable `action.yml` + sticky PR comment via `archmantic diff`; self CI dogfoods it | High · Med |
 | ✅ done | MCP usage stats | Per-tool-call recording + token savings; CLI `usage` + web `/usage` dashboard; metering substrate | High · Med |
 | ✅ done | API surface (routes) | REST/tRPC/GraphQL → `Endpoint` IR; CLI/HTML/spec + web API tab + MCP `get_api_surface` | Med · Med |
-| **LATER** | Multi-repo auto-link | Novel cross-repo gap detection; smarter after ERD/API | High · Med-High |
+| ✅ done | Multi-repo auto-link | `analyzeLinks` → connected/inferred/dangling; web `/systems` panel + CLI `system` | High · Med-High |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
 
 Recommended sequence: **npm + docs** (coupled, cheap) → **ERD** → **GitHub
@@ -96,10 +96,15 @@ slash guard avoids `.get()` false positives. Surfaced in terminal/HTML/build-spe
 the web **API** tab, and MCP `get_api_surface`. TypeORM data-model source remains
 the only open detector item.
 
-### LATER · Multi-repo auto-link
-Surface three states in `/systems`: **connected** (declared + confirmed),
-**inferred** (we think these link — confirm?), **dangling** (calls an external
-matching no known repo → a real gap). Heuristic → then agent/MCP assisted.
+### ✅ done · Multi-repo auto-link
+`analyzeLinks(models)` classifies cross-repo links across an org: **connected**
+(declared `consumes` resolving to a present repo), **inferred** (an imported
+external fuzzy-matches a sibling repo but isn't declared — confirm by adding to
+`consumes`), **dangling** (declared `consumes` with no matching repo → a real
+gap). Fuzzy match drops npm scopes/separators/common suffixes, guarded against
+short/ambiguous keys. Surfaced in the web `/systems` panel and CLI `system`
+output. Next step (deferred): an MCP `suggest_links` tool so an agent can apply
+inferred links.
 
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need

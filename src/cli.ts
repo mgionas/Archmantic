@@ -24,7 +24,7 @@ import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson,
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 import { runHandoff, runAutonomousBuild } from "./agent.js";
-import { buildSystemView, systemHtml } from "./system.js";
+import { buildSystemView, systemHtml, analyzeLinks } from "./system.js";
 import {
   pushModel,
   pullLatest,
@@ -427,6 +427,24 @@ function cmdSystem(args: string[]): number {
   }
   if (view.crossServiceEdges.length) {
     console.log(`  cross-service calls: ${view.crossServiceEdges.map((e) => `${e.from}→${e.to}`).join(", ")}`);
+  }
+
+  const GREEN = "\x1b[32m";
+  const YELLOW = "\x1b[33m";
+  const RED = "\x1b[31m";
+  const DIM = "\x1b[2m";
+  const RESET = "\x1b[0m";
+  const la = analyzeLinks(models);
+  if (la.counts.inferred || la.counts.dangling) {
+    console.log(
+      `\n  Cross-repo links: ${GREEN}${la.counts.connected} connected${RESET} · ${YELLOW}${la.counts.inferred} inferred${RESET} · ${RED}${la.counts.dangling} dangling${RESET}`,
+    );
+    for (const l of la.links.filter((l) => l.status === "inferred")) {
+      console.log(`    ${YELLOW}? ${l.from} → ${l.to}${RESET} ${DIM}${l.reason}${RESET}`);
+    }
+    for (const l of la.links.filter((l) => l.status === "dangling")) {
+      console.log(`    ${RED}⚠ ${l.from} → ${l.to}${RESET} ${DIM}${l.reason}${RESET}`);
+    }
   }
   console.log(`  → ${MODEL_DIR}/system.html (open in a browser) + system-context.mmd`);
   return 0;

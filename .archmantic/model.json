@@ -1430,6 +1430,22 @@
         "comp:src/system.ts"
       ],
       "confidence": 0.6,
+      "description": "Exported function `analyzeLinks` in src/system.ts",
+      "id": "cap:src/system.ts#analyzeLinks",
+      "name": "Analyze Links",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/system.ts:126",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/system.ts"
+      ],
+      "confidence": 0.6,
       "description": "Exported function `buildSystemView` in src/system.ts",
       "id": "cap:src/system.ts#buildSystemView",
       "name": "Build System View",
@@ -1484,7 +1500,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/system.ts:93",
+          "ref": "src/system.ts:184",
           "source": "code"
         }
       ]
@@ -2461,7 +2477,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-13T22:45:31.372Z",
+  "generatedAt": "2026-06-13T22:54:35.226Z",
   "processes": [
     {
       "confidence": 0.6,

@@ -89,6 +89,97 @@ export function buildSystemView(models: ArchitectureModel[], name: string): Syst
   };
 }
 
+// ── Cross-repo link auto-detection ────────────────────────────────────────────
+
+export type LinkStatus = "connected" | "inferred" | "dangling";
+
+export interface RepoLink {
+  from: string;
+  to: string;
+  status: LinkStatus;
+  reason: string;
+}
+
+export interface LinkAnalysis {
+  repos: string[];
+  links: RepoLink[];
+  counts: Record<LinkStatus, number>;
+}
+
+/** Normalize a service/package name for fuzzy matching (scope + separators + common suffixes). */
+function normName(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/^@[^/]+\//, "") // drop npm scope
+    .replace(/[^a-z0-9]+/g, "") // strip separators
+    .replace(/(service|svc|server|api|backend|frontend|app)$/, ""); // common service suffixes
+}
+
+/**
+ * Classify cross-repo links across a set of models (typically a whole org):
+ *  - connected: a declared `consumes` that resolves to a repo present here
+ *  - inferred:  an imported external that matches a sibling repo but isn't declared
+ *  - dangling:  a declared `consumes` with no matching repo (a real gap)
+ * Fuzzy matching is guarded: normalized keys shorter than 3 chars or shared by
+ * multiple repos are not used (exact name match still applies).
+ */
+export function analyzeLinks(models: ArchitectureModel[]): LinkAnalysis {
+  const repos = models.map((m) => m.project);
+  const repoSet = new Set(repos);
+
+  // Build an unambiguous fuzzy index: normalized → repo, dropping short/ambiguous keys.
+  const byNorm = new Map<string, string[]>();
+  for (const p of repos) {
+    const n = normName(p);
+    if (n.length < 3) continue;
+    (byNorm.get(n) ?? byNorm.set(n, []).get(n)!).push(p);
+  }
+  const fuzzy = new Map<string, string>();
+  for (const [n, ps] of byNorm) if (ps.length === 1) fuzzy.set(n, ps[0]!);
+  const resolve = (name: string): string | undefined => {
+    if (repoSet.has(name)) return name;
+    const n = normName(name);
+    return n.length >= 3 ? fuzzy.get(n) : undefined;
+  };
+
+  const links: RepoLink[] = [];
+  const seen = new Set<string>();
+  const add = (from: string, to: string, status: LinkStatus, reason: string) => {
+    const key = `${from}|${to}|${status}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    links.push({ from, to, status, reason });
+  };
+
+  for (const m of models) {
+    const from = m.project;
+    const connectedTargets = new Set<string>();
+    for (const dep of m.consumes ?? []) {
+      const match = resolve(dep);
+      if (match) {
+        add(from, match, "connected", dep === match ? "declared in consumes" : `declared consumes "${dep}" → ${match}`);
+        connectedTargets.add(match);
+      } else {
+        add(from, dep, "dangling", `declared consumes "${dep}" — no matching repo in the org`);
+      }
+    }
+    const externals = m.systems.filter((s) => s.kind === "external").map((s) => s.name);
+    for (const ext of externals) {
+      const match = resolve(ext);
+      if (match && match !== from && !connectedTargets.has(match)) {
+        add(from, match, "inferred", `imports "${ext}" → repo ${match} (not declared in consumes)`);
+      }
+    }
+  }
+
+  const counts: Record<LinkStatus, number> = {
+    connected: links.filter((l) => l.status === "connected").length,
+    inferred: links.filter((l) => l.status === "inferred").length,
+    dangling: links.filter((l) => l.status === "dangling").length,
+  };
+  return { repos, links, counts };
+}
+
 /** Self-contained HTML for the unified system view (Mermaid via CDN). */
 export function systemHtml(view: SystemView): string {
   const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");

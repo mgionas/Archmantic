@@ -206,6 +206,12 @@ npx @archmantic/cli pull      # fetch the latest team model`}</Code>
             Push each repo, then open <Link href="/systems">Systems</Link> for a unified cross-service context diagram and
             drill-down — no central config, each repo declares its own edges.
           </p>
+          <p>
+            The Systems page also <strong>auto-links</strong> your repos: it flags{" "}
+            <strong>inferred</strong> couplings (a repo imports something matching a sibling repo but hasn&apos;t declared
+            it) and <strong>dangling</strong> ones (a declared <Inline>consumes</Inline> with no matching repo — a real
+            gap), alongside the confirmed <strong>connected</strong> links.
+          </p>
         </Section>
 
         <Section id="ci" title="CI / PR diffs">
