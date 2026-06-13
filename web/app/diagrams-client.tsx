@@ -26,10 +26,15 @@ export function Mermaid({ id, chart, source }: { id: string; chart: string; sour
         const { svg } = await mermaid.render(`mmd-${id}-${theme}`, chart);
         if (cancelled || !ref.current) return;
         ref.current.innerHTML = svg;
+        // Fit-to-viewport: let the SVG fill the canvas (viewBox + preserveAspectRatio
+        // keep it sharp and centered), so it's readable by default — not tiny.
         const el = ref.current.querySelector("svg");
         if (el) {
+          el.removeAttribute("width");
+          el.removeAttribute("height");
+          el.style.width = "100%";
+          el.style.height = "100%";
           el.style.maxWidth = "none";
-          el.style.height = "auto";
         }
         setLoading(false);
       } catch (e) {
@@ -55,7 +60,7 @@ export function Mermaid({ id, chart, source }: { id: string; chart: string; sour
   return (
     <div className="relative h-full w-full">
       <DiagramCanvas source={source ?? chart} ariaLabel="Architecture diagram">
-        <div ref={ref} className="grid min-h-full place-items-center p-8" />
+        <div ref={ref} className="h-full w-full p-3" />
       </DiagramCanvas>
       {loading ? (
         <div className="absolute inset-0 grid place-items-center rounded-lg bg-canvas">

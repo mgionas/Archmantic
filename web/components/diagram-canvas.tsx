@@ -85,11 +85,16 @@ export function DiagramCanvas({
       </div>
       <TransformWrapper
         ref={apiRef}
-        minScale={0.2}
-        maxScale={8}
+        minScale={0.1}
+        maxScale={16}
         centerOnInit
         limitToBounds={false}
-        wheel={{ step: 0.08 }}
+        // Google-Maps-style gestures: two-finger trackpad drag pans, pinch /
+        // mouse-wheel zooms toward the cursor. No pan momentum (crisper).
+        wheel={{ step: 0.12, touchPadDisabled: true }}
+        trackPadPanning={{ disabled: false }}
+        pinch={{ step: 5 }}
+        panning={{ velocityDisabled: true }}
         onTransform={(_ref, state) => setScale(state.scale)}
       >
         <TransformComponent wrapperClass="!h-full !w-full" contentClass="!h-full !w-full">
