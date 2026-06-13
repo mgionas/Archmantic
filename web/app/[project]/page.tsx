@@ -14,9 +14,9 @@ import { SnapshotPicker } from "../snapshot-picker";
 export const dynamic = "force-dynamic";
 
 const BAND_CLASS: Record<string, string> = {
-  high: "border-green-500/30 text-green-400",
-  medium: "border-amber-500/30 text-amber-400",
-  low: "border-red-500/30 text-red-400",
+  high: "border-success/30 text-success",
+  medium: "border-warning/30 text-warning",
+  low: "border-danger/30 text-danger",
 };
 
 function Stat({ n, label }: { n: number | string; label: string }) {

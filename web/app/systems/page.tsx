@@ -10,9 +10,9 @@ import { listSystems, analyzeLinks, type RepoLink } from "@/lib/system";
 export const dynamic = "force-dynamic";
 
 const LINK_STYLE: Record<string, { dot: string; label: string }> = {
-  connected: { dot: "bg-green-400", label: "connected" },
-  inferred: { dot: "bg-amber-400", label: "inferred — confirm?" },
-  dangling: { dot: "bg-red-400", label: "dangling — gap" },
+  connected: { dot: "bg-success", label: "connected" },
+  inferred: { dot: "bg-warning", label: "inferred — confirm?" },
+  dangling: { dot: "bg-danger", label: "dangling — gap" },
 };
 
 function LinkRow({ link }: { link: RepoLink }) {
@@ -95,8 +95,8 @@ export default async function Systems() {
           ) : (
             <Card className="p-5">
               <p className="mb-2 text-sm text-muted-foreground">
-                Detected couplings not yet declared (<span className="text-amber-400">inferred</span>) and declared
-                dependencies with no matching repo (<span className="text-red-400">dangling</span>). Confirm an inferred
+                Detected couplings not yet declared (<span className="text-warning">inferred</span>) and declared
+                dependencies with no matching repo (<span className="text-danger">dangling</span>). Confirm an inferred
                 link by adding it to that repo&apos;s{" "}
                 <code className="rounded bg-muted px-1.5 py-0.5">.archmantic/config.json</code>{" "}
                 <code className="rounded bg-muted px-1.5 py-0.5">consumes</code>.

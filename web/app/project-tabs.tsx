@@ -45,12 +45,12 @@ function ChangeGroup({ title, added, removed }: { title: string; added: string[]
       <div className="mb-1.5 text-sm font-medium">{title}</div>
       <ul className="space-y-1 text-sm">
         {added.map((x) => (
-          <li key={`a-${x}`} className="text-green-400">
+          <li key={`a-${x}`} className="text-success">
             + {x}
           </li>
         ))}
         {removed.map((x) => (
-          <li key={`r-${x}`} className="text-red-400">
+          <li key={`r-${x}`} className="text-danger">
             − {x}
           </li>
         ))}
@@ -60,9 +60,9 @@ function ChangeGroup({ title, added, removed }: { title: string; added: string[]
 }
 
 const BAND_CLASS: Record<string, string> = {
-  high: "border-green-500/30 text-green-400",
-  medium: "border-amber-500/30 text-amber-400",
-  low: "border-red-500/30 text-red-400",
+  high: "border-success/30 text-success",
+  medium: "border-warning/30 text-warning",
+  low: "border-danger/30 text-danger",
 };
 
 export interface DataModel {
@@ -77,13 +77,13 @@ export interface Endpoint {
 }
 
 const METHOD_CLASS: Record<string, string> = {
-  GET: "text-green-400",
-  QUERY: "text-green-400",
-  POST: "text-amber-400",
-  MUTATION: "text-amber-400",
-  PUT: "text-blue-400",
-  PATCH: "text-blue-400",
-  DELETE: "text-red-400",
+  GET: "text-success",
+  QUERY: "text-success",
+  POST: "text-warning",
+  MUTATION: "text-warning",
+  PUT: "text-primary",
+  PATCH: "text-primary",
+  DELETE: "text-danger",
 };
 
 export function ProjectTabs({
