@@ -52,6 +52,12 @@
  56px   190px                          full-bleed
 ```
 
+## Status
+
+**Decisions (confirmed):** icon rail + facet column · full redesign P0–P3 · ship
+phase-by-phase. **P0–P3 all shipped.** P4 (⌘K palette, clickable nodes →
+cross-facet panel, ERD inspector split, deep-linkable URL facets) remains optional.
+
 ## Phases (each independently shippable; app never breaks between them)
 
 - **P0 · Tokens** — radius/spacing/type/semantic-color tokens in `globals.css`;
