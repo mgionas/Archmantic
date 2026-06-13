@@ -365,6 +365,21 @@ function cmdSpec(): number {
   return 0;
 }
 
+/** Default verification command for the autonomous build, from package.json scripts. */
+function defaultCheckCommand(root: string): string {
+  try {
+    const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as { scripts?: Record<string, string> };
+    const s = pkg.scripts ?? {};
+    const parts: string[] = [];
+    if (s.build) parts.push("npm run build");
+    if (s.test) parts.push("npm test");
+    if (parts.length) return parts.join(" && ");
+  } catch {
+    /* fall through */
+  }
+  return "npm run build";
+}
+
 /** Agent hand-off: run the build spec through Claude. Plan-only, or --apply to edit the repo. */
 async function cmdHandoff(args: string[]): Promise<number> {
   const root = process.cwd();
@@ -384,15 +399,20 @@ async function cmdHandoff(args: string[]): Promise<number> {
   const spec = buildSpecMarkdown(model);
 
   if (args.includes("--apply")) {
+    const ci = args.indexOf("--check");
+    const checkCommand = ci !== -1 && args[ci + 1] ? args[ci + 1]! : defaultCheckCommand(root);
     console.log(`⚠ Autonomous build: an agent will EDIT files in this repo to realize the model.`);
-    console.log(`  Commit or stash first; review with \`git diff\` afterward.\n`);
-    const r = await runAutonomousBuild(root, spec, model.project);
+    console.log(`  Commit or stash first; review with \`git diff\` afterward.`);
+    console.log(`  Verification: ${checkCommand}\n`);
+    const r = await runAutonomousBuild(root, spec, model.project, checkCommand);
     if (!r.ran) {
       console.log(`⚠ Autonomous build skipped: ${r.reason}`);
       return 0;
     }
     console.log(`\n✓ Autonomous build — ${r.filesChanged.length} file(s) changed in ${r.turns} turn(s)`);
     for (const f of r.filesChanged) console.log(`  • ${f}`);
+    if (r.checkPassed === true) console.log(`  ✓ verification passed`);
+    else if (r.checkPassed === false) console.log(`  ⚠ verification still failing — review the diff and output`);
     console.log(`  LLM: ${r.inputTokens} in / ${r.outputTokens} out tokens · ~$${r.estCostUsd.toFixed(4)}`);
     if (r.summary) console.log(`\n${r.summary}`);
     console.log(`\n  Review with \`git diff\` before committing.`);
@@ -620,7 +640,7 @@ Commands:
   view           Capability map + diagrams + trust report (writes view.html)
   spec           Emit an agent-ready build spec (build-spec.md + .json)
   apply [--from f]  Merge a human BPMN canvas edit back into the model (edit-then-build)
-  handoff [--apply]  Build spec → implementation plan; --apply lets an agent edit the repo (BYOK)
+  handoff [--apply] [--check "<cmd>"]  Build spec → plan; --apply: agent edits repo + self-verifies (BYOK)
   drift [--check]  Compare the committed model vs the code (--check exits 1 on drift)
   diff [<ref>]   Architecture diff: a git ref → working tree (writes pr-diff.md)
   log [-n N]     Architecture history: how the architecture changed per commit

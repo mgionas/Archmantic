@@ -12,7 +12,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/agent.ts:147",
+          "ref": "src/agent.ts:177",
           "source": "code"
         }
       ]
@@ -28,7 +28,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/agent.ts:31",
+          "ref": "src/agent.ts:32",
           "source": "code"
         }
       ]
@@ -1821,7 +1821,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-13T20:16:40.234Z",
+  "generatedAt": "2026-06-13T20:22:58.565Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -1982,7 +1982,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/agent.ts:12",
+          "ref": "src/agent.ts:13",
           "source": "code"
         }
       ],
@@ -2002,6 +2002,21 @@
         }
       ],
       "to": "sys:ext:@anthropic-ai/sdk"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/agent.ts",
+      "id": "rel:comp:src/agent.ts=>sys:ext:node:child_process",
+      "kind": "depends_on",
+      "name": "comp:src/agent.ts → sys:ext:node:child_process",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/agent.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:child_process"
     },
     {
       "confidence": 0.95,
@@ -2027,7 +2042,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/agent.ts:11",
+          "ref": "src/agent.ts:12",
           "source": "code"
         }
       ],

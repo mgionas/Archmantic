@@ -8,6 +8,7 @@
  */
 import Anthropic from "@anthropic-ai/sdk";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { execSync } from "node:child_process";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 
@@ -64,13 +65,27 @@ export async function runHandoff(specMarkdown: string, project: string): Promise
 
 // ── Autonomous build: a tool-use agent loop that edits the repo ───────────────
 
-const MAX_TURNS = 30;
+const MAX_TURNS = 40;
+const MAX_VERIFY_ROUNDS = 3;
 const IGNORE_DIRS = new Set(["node_modules", ".git", "dist", ".next", ".archmantic", "out-tsc", ".vercel"]);
 
 export interface BuildResult extends HandoffResult {
   filesChanged: string[];
   turns: number;
   summary?: string;
+  checkPassed?: boolean;
+  checkOutput?: string;
+}
+
+/** Run the project's verification command (build/tests) and capture its output. */
+function runCheck(root: string, cmd: string): { ok: boolean; output: string } {
+  try {
+    const out = execSync(`${cmd} 2>&1`, { cwd: root, encoding: "utf8", timeout: 300_000, maxBuffer: 10 * 1024 * 1024 });
+    return { ok: true, output: out.slice(-4000) };
+  } catch (err) {
+    const e = err as { stdout?: string; stderr?: string; message?: string };
+    return { ok: false, output: `${e.stdout ?? ""}${e.stderr ?? ""}${e.message ?? ""}`.slice(-4000) };
+  }
 }
 
 /** Resolve a model-provided path inside the repo; reject escapes and heavy dirs. */
@@ -114,13 +129,27 @@ const TOOLS = [
   { name: "list_files", description: "List repository files (relative paths).", input_schema: { type: "object", properties: { dir: { type: "string", description: "optional subdirectory" } } } },
   { name: "read_file", description: "Read a file's contents.", input_schema: { type: "object", properties: { path: { type: "string" } }, required: ["path"] } },
   { name: "write_file", description: "Create or overwrite a file with the given content.", input_schema: { type: "object", properties: { path: { type: "string" }, content: { type: "string" } }, required: ["path", "content"] } },
+  { name: "run_check", description: "Run the project's verification (build + tests) and return the output. Use this after changes and fix any failures.", input_schema: { type: "object", properties: {} } },
 ];
 
-const BUILD_SYSTEM = `You are a careful coding agent operating inside a repository. You are given an Archmantic build plan/spec. Use the tools to read existing files and make the MINIMAL, correct changes needed to realize the plan. Prefer editing existing files over adding new ones. Do not touch generated/vendor files. When the work is complete (or there is nothing to change), stop calling tools and reply with a short summary of what you changed and why.`;
+const BUILD_SYSTEM = `You are a careful coding agent operating inside a repository. You are given an Archmantic build plan/spec. Use the tools to read existing files and make the MINIMAL, correct changes needed to realize the plan. Prefer editing existing files over adding new ones. Do not touch generated/vendor files.
 
-function runTool(root: string, name: string, input: Record<string, unknown>, changed: Set<string>): { text: string; isError?: boolean } {
+After making changes, call run_check to build and test the project. If it fails, read the output, fix the problem, and run_check again — repeat until it passes. When the work is complete and run_check passes (or there is nothing to change), stop calling tools and reply with a short summary of what you changed and why.`;
+
+function runTool(
+  root: string,
+  name: string,
+  input: Record<string, unknown>,
+  changed: Set<string>,
+  checkCommand: string,
+): { text: string; isError?: boolean } {
   try {
     if (name === "list_files") return { text: listFiles(root, String(input.dir ?? "")) };
+    if (name === "run_check") {
+      process.stderr.write(`  ⚙ run_check: ${checkCommand}\n`);
+      const { ok, output } = runCheck(root, checkCommand);
+      return { text: `exit ${ok ? 0 : 1}\n${output}` };
+    }
     if (name === "read_file") {
       const abs = safePath(root, String(input.path));
       if (!abs) return { text: "error: path outside repo", isError: true };
@@ -143,8 +172,14 @@ function runTool(root: string, name: string, input: Record<string, unknown>, cha
   }
 }
 
-/** Autonomous build: agent reads/writes files in `root` to execute the plan. */
-export async function runAutonomousBuild(root: string, plan: string, project: string): Promise<BuildResult> {
+/** Autonomous build: agent reads/writes files in `root` to execute the plan, then
+ *  self-verifies via the check command, fixing failures until green (or a cap). */
+export async function runAutonomousBuild(
+  root: string,
+  plan: string,
+  project: string,
+  checkCommand: string,
+): Promise<BuildResult> {
   const base: BuildResult = { ran: false, filesChanged: [], turns: 0, inputTokens: 0, outputTokens: 0, estCostUsd: 0 };
   if (!hasAnthropicCredentials()) {
     return { ...base, reason: `${NO_CREDENTIAL_HINT} (autonomous build skipped)` };
@@ -152,11 +187,15 @@ export async function runAutonomousBuild(root: string, plan: string, project: st
   const client = new Anthropic();
   const changed = new Set<string>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const messages: any[] = [{ role: "user", content: `Implement this build plan in the repo "${project}":\n\n${plan}` }];
+  const messages: any[] = [
+    { role: "user", content: `Implement this build plan in the repo "${project}". The verification command is: ${checkCommand}\n\n${plan}` },
+  ];
   let summary = "";
   let inTok = 0;
   let outTok = 0;
   let turns = 0;
+  let verifyRounds = 0;
+  let check: { ok: boolean; output: string } = { ok: false, output: "" };
 
   try {
     for (; turns < MAX_TURNS; turns++) {
@@ -175,16 +214,29 @@ export async function runAutonomousBuild(root: string, plan: string, project: st
       const toolUses = (resp.content as Anthropic.ContentBlock[]).filter(
         (b): b is Anthropic.ToolUseBlock => b.type === "tool_use",
       );
+
       if (resp.stop_reason !== "tool_use" || toolUses.length === 0) {
         summary = (resp.content as Anthropic.ContentBlock[])
           .filter((b): b is Anthropic.TextBlock => b.type === "text")
           .map((b) => b.text)
           .join("\n")
           .trim();
-        break;
+        // Guarantee: verify on stop. If it changed files and the check fails,
+        // hand the failure back and let it fix — up to MAX_VERIFY_ROUNDS.
+        if (changed.size === 0) break;
+        check = runCheck(root, checkCommand);
+        process.stderr.write(`  ⚙ verify (${checkCommand}): ${check.ok ? "passed" : "FAILED"}\n`);
+        if (check.ok || verifyRounds >= MAX_VERIFY_ROUNDS) break;
+        verifyRounds++;
+        messages.push({
+          role: "user",
+          content: `The verification command \`${checkCommand}\` failed. Fix the issues and run_check again until it passes.\n\n${check.output}`,
+        });
+        continue;
       }
+
       const results = toolUses.map((tu) => {
-        const r = runTool(root, tu.name, tu.input as Record<string, unknown>, changed);
+        const r = runTool(root, tu.name, tu.input as Record<string, unknown>, changed, checkCommand);
         return { type: "tool_result" as const, tool_use_id: tu.id, content: r.text, is_error: r.isError };
       });
       messages.push({ role: "user", content: results });
@@ -201,6 +253,8 @@ export async function runAutonomousBuild(root: string, plan: string, project: st
     filesChanged: [...changed],
     turns,
     summary,
+    checkPassed: changed.size === 0 ? undefined : check.ok,
+    checkOutput: check.output ? check.output.slice(-1500) : undefined,
     inputTokens: inTok,
     outputTokens: outTok,
     estCostUsd: (inTok * PRICING[0] + outTok * PRICING[1]) / 1_000_000,
