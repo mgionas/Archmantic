@@ -21,6 +21,7 @@ import { tier2 } from "./analyze/tier2.js";
 import { incrementalUpdate } from "./analyze/incremental.js";
 import { terminalPreview, projectionArtifacts } from "./project/index.js";
 import { loadEnv } from "./env.js";
+import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 import { startMcpServer } from "./mcp/server.js";
 import { runBenchmark, renderBench, estimateCounter, type TokenCounter } from "./mcp/bench.js";
 import {
@@ -309,8 +310,8 @@ async function cmdBench(args: string[]): Promise<number> {
   let counter: TokenCounter = estimateCounter;
   let mode: "estimate" | "exact" = "estimate";
   if (args.includes("--exact")) {
-    if (!process.env.ANTHROPIC_API_KEY) {
-      console.log("⚠ --exact needs ANTHROPIC_API_KEY (in .env.local); using offline estimate instead.\n");
+    if (!hasAnthropicCredentials()) {
+      console.log(`⚠ --exact needs a credential (${NO_CREDENTIAL_HINT}); using offline estimate instead.\n`);
     } else {
       const { default: Anthropic } = await import("@anthropic-ai/sdk");
       const client = new Anthropic();

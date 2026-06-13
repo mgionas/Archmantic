@@ -67,9 +67,14 @@ Optionally link a global `archmantic` binary: `npm link`.
 
 This repo ships a project [`.mcp.json`](.mcp.json). In Claude Code / Cursor, approve the **archmantic** server, then your agent can call `get_context`, `search_capabilities`, `get_component`, `get_process`, `whats_related`, and more — querying the same model your team reads.
 
-## Tier 2 (LLM) & secrets
+## Tier 2 (LLM) & credentials
 
-The LLM pass and `bench --exact` are **BYOK** and gated: set `ANTHROPIC_API_KEY` in `.env.local` (gitignored). Without a key, those paths skip gracefully and everything else runs offline.
+The LLM pass (`analyze --tier 2`) and `bench --exact` are **BYOK** and gated. Authenticate either way:
+
+- **API key** — set `ANTHROPIC_API_KEY` in `.env.local` (gitignored), or
+- **CLI login (OAuth)** — `ant auth login` (the Anthropic CLI); Archmantic picks up the session token automatically.
+
+Without a credential, those paths skip gracefully and everything else runs fully offline.
 
 ## Roadmap
 

@@ -15,6 +15,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { type ArchitectureModel } from "../ir/types.js";
+import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "../auth.js";
 
 const HAIKU = "claude-haiku-4-5";
 const OPUS = "claude-opus-4-8";
@@ -70,10 +71,11 @@ function lineAt(root: string, ref: string, cache: Map<string, string[]>): string
 }
 
 export async function tier2(root: string, model: ArchitectureModel): Promise<Tier2Result> {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return emptyResult("ANTHROPIC_API_KEY not set — add it to .env.local to enable the Tier-2 LLM pass.");
+  if (!hasAnthropicCredentials()) {
+    return emptyResult(`${NO_CREDENTIAL_HINT} (Tier-2 LLM pass skipped)`);
   }
 
+  // SDK resolves ANTHROPIC_API_KEY, else ANTHROPIC_AUTH_TOKEN (OAuth via ant login).
   const client = new Anthropic();
   const result: Tier2Result = { ...emptyResult(""), ran: true, reason: undefined };
   const fileCache = new Map<string, string[]>();
@@ -254,7 +256,7 @@ export async function tier2(root: string, model: ArchitectureModel): Promise<Tie
     }
   } catch (err) {
     if (err instanceof Anthropic.AuthenticationError) {
-      return emptyResult("Anthropic API authentication failed — check ANTHROPIC_API_KEY in .env.local.");
+      return emptyResult(`Anthropic authentication failed — ${NO_CREDENTIAL_HINT}`);
     }
     const msg = err instanceof Error ? err.message : String(err);
     // Surface partial progress: keep ran=true, attach the error reason.

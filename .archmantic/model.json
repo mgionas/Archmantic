@@ -45,6 +45,20 @@
       "confidence": 0.95
     },
     {
+      "id": "sys:ext:node:assert/strict",
+      "name": "node:assert/strict",
+      "kind": "external",
+      "description": "Node.js runtime/builtin module",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "node:assert/strict",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "sys:ext:node:child_process",
       "name": "node:child_process",
       "kind": "external",
@@ -95,6 +109,20 @@
         {
           "source": "code",
           "ref": "node:path",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "sys:ext:node:test",
+      "name": "node:test",
+      "kind": "external",
+      "description": "Node.js runtime/builtin module",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "node:test",
           "confidence": 0.95
         }
       ],
@@ -223,6 +251,20 @@
         {
           "source": "code",
           "ref": "src/analyze/walk.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:src/auth.ts",
+      "name": "src/auth.ts",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/auth.ts:1",
           "confidence": 0.95
         }
       ],
@@ -475,6 +517,48 @@
         {
           "source": "code",
           "ref": "src/project/trust.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:test/core.test.mjs",
+      "name": "test/core.test.mjs",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "test/core.test.mjs:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:test/diff.test.mjs",
+      "name": "test/diff.test.mjs",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "test/diff.test.mjs:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:test/mcp.test.mjs",
+      "name": "test/mcp.test.mjs",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "test/mcp.test.mjs:1",
           "confidence": 0.95
         }
       ],
@@ -844,6 +928,21 @@
       "confidence": 0.95
     },
     {
+      "id": "rel:comp:src/analyze/tier2.ts=>comp:src/auth.ts",
+      "name": "comp:src/analyze/tier2.ts → comp:src/auth.ts",
+      "kind": "depends_on",
+      "from": "comp:src/analyze/tier2.ts",
+      "to": "comp:src/auth.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/analyze/tier2.ts:18",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "rel:comp:src/analyze/tier2.ts=>comp:src/ir/types.ts",
       "name": "comp:src/analyze/tier2.ts → comp:src/ir/types.ts",
       "kind": "depends_on",
@@ -934,6 +1033,21 @@
       "confidence": 0.95
     },
     {
+      "id": "rel:comp:src/auth.ts=>sys:ext:node:child_process",
+      "name": "comp:src/auth.ts → sys:ext:node:child_process",
+      "kind": "depends_on",
+      "from": "comp:src/auth.ts",
+      "to": "sys:ext:node:child_process",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/auth.ts:13",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "rel:comp:src/cli.ts=>comp:src/analyze/incremental.ts",
       "name": "comp:src/cli.ts → comp:src/analyze/incremental.ts",
       "kind": "depends_on",
@@ -979,6 +1093,21 @@
       "confidence": 0.95
     },
     {
+      "id": "rel:comp:src/cli.ts=>comp:src/auth.ts",
+      "name": "comp:src/cli.ts → comp:src/auth.ts",
+      "kind": "depends_on",
+      "from": "comp:src/cli.ts",
+      "to": "comp:src/auth.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cli.ts:24",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "rel:comp:src/cli.ts=>comp:src/diff/index.ts",
       "name": "comp:src/cli.ts → comp:src/diff/index.ts",
       "kind": "depends_on",
@@ -987,7 +1116,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:26",
+          "ref": "src/cli.ts:27",
           "confidence": 0.95
         }
       ],
@@ -1032,7 +1161,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:25",
+          "ref": "src/cli.ts:26",
           "confidence": 0.95
         }
       ],
@@ -1047,7 +1176,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:24",
+          "ref": "src/cli.ts:25",
           "confidence": 0.95
         }
       ],
@@ -1832,6 +1961,96 @@
         }
       ],
       "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:test/core.test.mjs=>sys:ext:node:assert/strict",
+      "name": "comp:test/core.test.mjs → sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "from": "comp:test/core.test.mjs",
+      "to": "sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "test/core.test.mjs:4",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:test/core.test.mjs=>sys:ext:node:test",
+      "name": "comp:test/core.test.mjs → sys:ext:node:test",
+      "kind": "depends_on",
+      "from": "comp:test/core.test.mjs",
+      "to": "sys:ext:node:test",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "test/core.test.mjs:3",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:test/diff.test.mjs=>sys:ext:node:assert/strict",
+      "name": "comp:test/diff.test.mjs → sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "from": "comp:test/diff.test.mjs",
+      "to": "sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "test/diff.test.mjs:3",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:test/diff.test.mjs=>sys:ext:node:test",
+      "name": "comp:test/diff.test.mjs → sys:ext:node:test",
+      "kind": "depends_on",
+      "from": "comp:test/diff.test.mjs",
+      "to": "sys:ext:node:test",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "test/diff.test.mjs:2",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:test/mcp.test.mjs=>sys:ext:node:assert/strict",
+      "name": "comp:test/mcp.test.mjs → sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "from": "comp:test/mcp.test.mjs",
+      "to": "sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "test/mcp.test.mjs:3",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:test/mcp.test.mjs=>sys:ext:node:test",
+      "name": "comp:test/mcp.test.mjs → sys:ext:node:test",
+      "kind": "depends_on",
+      "from": "comp:test/mcp.test.mjs",
+      "to": "sys:ext:node:test",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "test/mcp.test.mjs:2",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
     }
   ],
   "flows": [
@@ -1847,11 +2066,11 @@
         "comp:src/analyze/incremental.ts",
         "comp:src/project/index.ts",
         "comp:src/env.ts",
+        "comp:src/auth.ts",
         "comp:src/mcp/server.ts",
         "comp:src/mcp/bench.ts",
         "comp:src/diff/index.ts",
-        "comp:src/analyze/walk.ts",
-        "comp:src/analyze/tier0.ts"
+        "comp:src/analyze/walk.ts"
       ],
       "steps": [
         {
@@ -1929,11 +2148,23 @@
         {
           "participant": "comp:src/env.ts",
           "action": "uses",
-          "to": "comp:src/mcp/server.ts",
+          "to": "comp:src/auth.ts",
           "provenance": [
             {
               "source": "code",
               "ref": "src/env.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
+          "participant": "comp:src/auth.ts",
+          "action": "uses",
+          "to": "comp:src/mcp/server.ts",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/auth.ts:1",
               "confidence": 0.6
             }
           ]
@@ -1970,18 +2201,6 @@
             {
               "source": "code",
               "ref": "src/diff/index.ts:1",
-              "confidence": 0.6
-            }
-          ]
-        },
-        {
-          "participant": "comp:src/analyze/walk.ts",
-          "action": "uses",
-          "to": "comp:src/analyze/tier0.ts",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/analyze/walk.ts:1",
               "confidence": 0.6
             }
           ]
@@ -2081,6 +2300,17 @@
           ]
         },
         {
+          "id": "task:comp:src/auth.ts",
+          "name": "Auth",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/auth.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
           "id": "task:comp:src/mcp/server.ts",
           "name": "Server",
           "provenance": [
@@ -2120,17 +2350,6 @@
             {
               "source": "code",
               "ref": "src/analyze/walk.ts:1",
-              "confidence": 0.6
-            }
-          ]
-        },
-        {
-          "id": "task:comp:src/analyze/tier0.ts",
-          "name": "Tier 0",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/analyze/tier0.ts:1",
               "confidence": 0.6
             }
           ]
@@ -2317,7 +2536,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/analyze/tier2.ts:72",
+          "ref": "src/analyze/tier2.ts:73",
           "confidence": 0.6
         }
       ],
@@ -2334,6 +2553,38 @@
         {
           "source": "code",
           "ref": "src/analyze/walk.ts:19",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/auth.ts#ensureAnthropicAuth",
+      "name": "Ensure Anthropic Auth",
+      "description": "Exported function `ensureAnthropicAuth` in src/auth.ts",
+      "componentIds": [
+        "comp:src/auth.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/auth.ts:21",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/auth.ts#hasAnthropicCredentials",
+      "name": "Has Anthropic Credentials",
+      "description": "Exported function `hasAnthropicCredentials` in src/auth.ts",
+      "componentIds": [
+        "comp:src/auth.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/auth.ts:47",
           "confidence": 0.6
         }
       ],
@@ -2996,5 +3247,5 @@
       "confidence": 0.6
     }
   ],
-  "generatedAt": "2026-06-13T17:03:11.983Z"
+  "generatedAt": "2026-06-13T17:17:42.149Z"
 }
