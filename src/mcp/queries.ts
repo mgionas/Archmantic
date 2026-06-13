@@ -12,10 +12,10 @@ import { componentLabel } from "../ir/naming.js";
 
 const rel = (id: string) => id.slice(id.indexOf(":") + 1);
 
-/** Short display name: component basename, or external system name. */
+/** Short display name: folder-aware component label, or external system name. */
 const shortName = (id: string): string =>
   id.startsWith("comp:")
-    ? (rel(id).split("/").pop() ?? id)
+    ? componentLabel(id)
     : id.startsWith("sys:ext:")
       ? id.slice("sys:ext:".length)
       : id;
