@@ -4,7 +4,7 @@
 
 Point Archmantic at a repo and it reverse-engineers a single grounded **architecture model** (the IR). Every diagram is a *projection* of that one model, every element is traceable to `file:line`, and the same model answers your agent's questions over MCP. No drift between views, no ungrounded "AI diagram" guesswork.
 
-> Status: **MVP complete (M0–M6).** Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
+> Status: **v1.0.0** — published as [`@archmantic/cli`](https://www.npmjs.com/package/@archmantic/cli). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
 
 ---
 
@@ -127,7 +127,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # so the base ref can be analyzed
-      - uses: mgionas/Archmantic@main # the reusable action (action.yml)
+      - uses: mgionas/Archmantic@v1 # the reusable action (action.yml)
 ```
 
 Inputs: `base-ref` (default: the PR base branch), `working-directory` (default `.`), `version` (default `latest`), `comment` (default `true`), `github-token` (default `${{ github.token }}`). It runs `archmantic diff` under the hood, so no install step is needed.

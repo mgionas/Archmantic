@@ -233,7 +233,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: mgionas/Archmantic@main`}</Code>
+      - uses: mgionas/Archmantic@v1`}</Code>
           <p>
             Inputs: <Inline>base-ref</Inline> (default: the PR base branch), <Inline>working-directory</Inline>,{" "}
             <Inline>version</Inline>, <Inline>comment</Inline>, and <Inline>github-token</Inline>. It runs{" "}
