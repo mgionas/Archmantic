@@ -67,6 +67,18 @@ Optionally link a global `archmantic` binary: `npm link`.
 
 This repo ships a project [`.mcp.json`](.mcp.json). In Claude Code / Cursor, approve the **archmantic** server, then your agent can call `get_context`, `search_capabilities`, `get_component`, `get_process`, `whats_related`, and more — querying the same model your team reads.
 
+## Team cloud knowledge (shared model)
+
+Share the architecture model across a team via Neon Postgres — set `DATABASE_URL` in `.env.local`:
+
+```bash
+node dist/cli.js push       # upload the model to the shared store, under the current commit
+node dist/cli.js pull       # fetch the team's latest shared model into .archmantic/
+node dist/cli.js cloud-log  # list the per-commit snapshots stored in the cloud
+```
+
+The committed `.archmantic/model.json` stays the source of truth; the DB is a shared cache/index that holds a **per-commit history** — the basis for a team architecture timeline and the future web platform.
+
 ## Tier 2 (LLM) & credentials
 
 The LLM pass (`analyze --tier 2`) and `bench --exact` are **BYOK** and gated. Authenticate either way:

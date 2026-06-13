@@ -13,6 +13,7 @@
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
+import { execFileSync } from "node:child_process";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pkg = require("../package.json") as { version: string };
 import { type ArchitectureModel, createEmptyModel, sortModel } from "./ir/types.js";
@@ -22,6 +23,7 @@ import { incrementalUpdate } from "./analyze/incremental.js";
 import { terminalPreview, projectionArtifacts } from "./project/index.js";
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
+import { pushModel, pullLatest, history, NoDatabaseError } from "./cloud/index.js";
 import { startMcpServer } from "./mcp/server.js";
 import { runBenchmark, renderBench, estimateCounter, type TokenCounter } from "./mcp/bench.js";
 import {
@@ -325,6 +327,116 @@ async function cmdBench(args: string[]): Promise<number> {
   return 0;
 }
 
+// ── Cloud knowledge (shared team model over Neon) ────────────────────────────
+
+function currentCommit(root: string): string {
+  try {
+    return execFileSync("git", ["-C", root, "rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+  } catch {
+    return "working-tree";
+  }
+}
+
+function resolveProject(root: string): string {
+  const mf = join(root, MODEL_DIR, MODEL_FILE);
+  if (existsSync(mf)) {
+    try {
+      return (JSON.parse(readFileSync(mf, "utf8")) as ArchitectureModel).project;
+    } catch {
+      /* fall through */
+    }
+  }
+  const pkg = join(root, "package.json");
+  if (existsSync(pkg)) {
+    try {
+      const name = (JSON.parse(readFileSync(pkg, "utf8")) as { name?: string }).name;
+      if (name) return name;
+    } catch {
+      /* fall through */
+    }
+  }
+  return basename(root);
+}
+
+/** Push the committed model to the shared cloud store under the current commit. */
+async function cmdPush(): Promise<number> {
+  const root = process.cwd();
+  const file = join(root, MODEL_DIR, MODEL_FILE);
+  if (!existsSync(file)) {
+    console.error(`✗ No model at ${MODEL_DIR}/${MODEL_FILE}. Run \`archmantic analyze\` first.`);
+    return 1;
+  }
+  let model: ArchitectureModel;
+  try {
+    model = JSON.parse(readFileSync(file, "utf8")) as ArchitectureModel;
+  } catch {
+    console.error(`✗ ${MODEL_DIR}/${MODEL_FILE} is not valid JSON — run \`archmantic analyze\`.`);
+    return 1;
+  }
+  const commit = currentCommit(root);
+  try {
+    await pushModel(model, commit);
+  } catch (err) {
+    if (err instanceof NoDatabaseError) {
+      console.error(`✗ ${err.message}`);
+      return 1;
+    }
+    throw err;
+  }
+  console.log(`✓ Pushed "${model.project}" @ ${commit.slice(0, 7)} to the cloud knowledge store.`);
+  console.log(`  Teammates can \`archmantic pull\` to get the shared model.`);
+  return 0;
+}
+
+/** Pull the latest shared model from the cloud into .archmantic/model.json. */
+async function cmdPull(): Promise<number> {
+  const root = process.cwd();
+  const project = resolveProject(root);
+  let model: ArchitectureModel | null;
+  try {
+    model = await pullLatest(project);
+  } catch (err) {
+    if (err instanceof NoDatabaseError) {
+      console.error(`✗ ${err.message}`);
+      return 1;
+    }
+    throw err;
+  }
+  if (!model) {
+    console.log(`No shared model for "${project}" yet. Run \`archmantic push\` first.`);
+    return 0;
+  }
+  const dir = join(root, MODEL_DIR);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, MODEL_FILE), JSON.stringify(sortModel(model), null, 2) + "\n", "utf8");
+  console.log(`✓ Pulled "${project}" → ${MODEL_DIR}/${MODEL_FILE} (${model.components.length} components, ${model.capabilities.length} capabilities)`);
+  console.log(`  Run \`archmantic view\` to render it.`);
+  return 0;
+}
+
+/** List the per-commit snapshots stored in the cloud for this project. */
+async function cmdCloudLog(): Promise<number> {
+  const root = process.cwd();
+  const project = resolveProject(root);
+  let snaps;
+  try {
+    snaps = await history(project);
+  } catch (err) {
+    if (err instanceof NoDatabaseError) {
+      console.error(`✗ ${err.message}`);
+      return 1;
+    }
+    throw err;
+  }
+  if (!snaps.length) {
+    console.log(`No cloud snapshots for "${project}" yet.`);
+    return 0;
+  }
+  console.log(`Cloud knowledge history for "${project}" (${snaps.length} snapshots, newest first):`);
+  for (const s of snaps) console.log(`  ${s.commit_sha.slice(0, 7)}  pushed ${s.pushed_at}`);
+  return 0;
+}
+
 function notImplemented(name: string, milestone: string): number {
   console.log(`\`archmantic ${name}\` is not implemented yet (planned for ${milestone}).`);
   console.log("See docs/MVP_PLAN.md for the roadmap.");
@@ -346,6 +458,9 @@ Commands:
   log [-n N]     Architecture history: how the architecture changed per commit
   mcp            Start the MCP server exposing the model to AI agents (stdio)
   bench [--exact]  Token-savings benchmark: MCP queries vs raw file reads
+  push           Share the model to the team cloud store (Neon) @ this commit
+  pull           Fetch the team's latest shared model into .archmantic/
+  cloud-log      List per-commit snapshots stored in the cloud
 
 Options:
   -v, --version  Print version
@@ -377,6 +492,12 @@ async function main(argv: string[]): Promise<number> {
       return cmdMcp();
     case "bench":
       return cmdBench(rest);
+    case "push":
+      return cmdPush();
+    case "pull":
+      return cmdPull();
+    case "cloud-log":
+      return cmdCloudLog();
     case "view":
       return cmdView();
     case "drift":

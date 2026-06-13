@@ -45,6 +45,20 @@
       "confidence": 0.95
     },
     {
+      "id": "sys:ext:@neondatabase/serverless",
+      "name": "@neondatabase/serverless",
+      "kind": "external",
+      "description": "External dependency",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "@neondatabase/serverless",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
       "id": "sys:ext:node:assert/strict",
       "name": "node:assert/strict",
       "kind": "external",
@@ -279,6 +293,34 @@
         {
           "source": "code",
           "ref": "src/cli.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:src/cloud/index.ts",
+      "name": "src/cloud/index.ts",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cloud/index.ts:1",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "comp:src/cloud/store.ts",
+      "name": "src/cloud/store.ts",
+      "kind": "module",
+      "systemId": "sys:archmantic",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cloud/store.ts:1",
           "confidence": 0.95
         }
       ],
@@ -1056,7 +1098,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:21",
+          "ref": "src/cli.ts:22",
           "confidence": 0.95
         }
       ],
@@ -1071,7 +1113,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:19",
+          "ref": "src/cli.ts:20",
           "confidence": 0.95
         }
       ],
@@ -1086,7 +1128,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:20",
+          "ref": "src/cli.ts:21",
           "confidence": 0.95
         }
       ],
@@ -1101,7 +1143,22 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:24",
+          "ref": "src/cli.ts:25",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/cli.ts=>comp:src/cloud/index.ts",
+      "name": "comp:src/cli.ts → comp:src/cloud/index.ts",
+      "kind": "depends_on",
+      "from": "comp:src/cli.ts",
+      "to": "comp:src/cloud/index.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cli.ts:26",
           "confidence": 0.95
         }
       ],
@@ -1116,7 +1173,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:27",
+          "ref": "src/cli.ts:29",
           "confidence": 0.95
         }
       ],
@@ -1131,7 +1188,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:23",
+          "ref": "src/cli.ts:24",
           "confidence": 0.95
         }
       ],
@@ -1146,7 +1203,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:18",
+          "ref": "src/cli.ts:19",
           "confidence": 0.95
         }
       ],
@@ -1161,7 +1218,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:26",
+          "ref": "src/cli.ts:28",
           "confidence": 0.95
         }
       ],
@@ -1176,7 +1233,7 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:25",
+          "ref": "src/cli.ts:27",
           "confidence": 0.95
         }
       ],
@@ -1191,7 +1248,22 @@
       "provenance": [
         {
           "source": "code",
-          "ref": "src/cli.ts:22",
+          "ref": "src/cli.ts:23",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/cli.ts=>sys:ext:node:child_process",
+      "name": "comp:src/cli.ts → sys:ext:node:child_process",
+      "kind": "depends_on",
+      "from": "comp:src/cli.ts",
+      "to": "sys:ext:node:child_process",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cli.ts:16",
           "confidence": 0.95
         }
       ],
@@ -1222,6 +1294,51 @@
         {
           "source": "code",
           "ref": "src/cli.ts:15",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/cloud/index.ts=>comp:src/cloud/store.ts",
+      "name": "comp:src/cloud/index.ts → comp:src/cloud/store.ts",
+      "kind": "depends_on",
+      "from": "comp:src/cloud/index.ts",
+      "to": "comp:src/cloud/store.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cloud/index.ts:2",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/cloud/store.ts=>comp:src/ir/types.ts",
+      "name": "comp:src/cloud/store.ts → comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "from": "comp:src/cloud/store.ts",
+      "to": "comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cloud/store.ts:15",
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "rel:comp:src/cloud/store.ts=>sys:ext:@neondatabase/serverless",
+      "name": "comp:src/cloud/store.ts → sys:ext:@neondatabase/serverless",
+      "kind": "depends_on",
+      "from": "comp:src/cloud/store.ts",
+      "to": "sys:ext:@neondatabase/serverless",
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cloud/store.ts:14",
           "confidence": 0.95
         }
       ],
@@ -2067,10 +2184,10 @@
         "comp:src/project/index.ts",
         "comp:src/env.ts",
         "comp:src/auth.ts",
+        "comp:src/cloud/index.ts",
         "comp:src/mcp/server.ts",
         "comp:src/mcp/bench.ts",
-        "comp:src/diff/index.ts",
-        "comp:src/analyze/walk.ts"
+        "comp:src/diff/index.ts"
       ],
       "steps": [
         {
@@ -2160,11 +2277,23 @@
         {
           "participant": "comp:src/auth.ts",
           "action": "uses",
-          "to": "comp:src/mcp/server.ts",
+          "to": "comp:src/cloud/index.ts",
           "provenance": [
             {
               "source": "code",
               "ref": "src/auth.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
+          "participant": "comp:src/cloud/index.ts",
+          "action": "uses",
+          "to": "comp:src/mcp/server.ts",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/cloud/index.ts:1",
               "confidence": 0.6
             }
           ]
@@ -2189,18 +2318,6 @@
             {
               "source": "code",
               "ref": "src/mcp/bench.ts:1",
-              "confidence": 0.6
-            }
-          ]
-        },
-        {
-          "participant": "comp:src/diff/index.ts",
-          "action": "uses",
-          "to": "comp:src/analyze/walk.ts",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/diff/index.ts:1",
               "confidence": 0.6
             }
           ]
@@ -2311,6 +2428,17 @@
           ]
         },
         {
+          "id": "task:comp:src/cloud/index.ts",
+          "name": "Cloud",
+          "provenance": [
+            {
+              "source": "code",
+              "ref": "src/cloud/index.ts:1",
+              "confidence": 0.6
+            }
+          ]
+        },
+        {
           "id": "task:comp:src/mcp/server.ts",
           "name": "Server",
           "provenance": [
@@ -2339,17 +2467,6 @@
             {
               "source": "code",
               "ref": "src/diff/index.ts:1",
-              "confidence": 0.6
-            }
-          ]
-        },
-        {
-          "id": "task:comp:src/analyze/walk.ts",
-          "name": "Walk",
-          "provenance": [
-            {
-              "source": "code",
-              "ref": "src/analyze/walk.ts:1",
               "confidence": 0.6
             }
           ]
@@ -2585,6 +2702,86 @@
         {
           "source": "code",
           "ref": "src/auth.ts:47",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/cloud/store.ts#ensureSchema",
+      "name": "Ensure Schema",
+      "description": "Exported function `ensureSchema` in src/cloud/store.ts",
+      "componentIds": [
+        "comp:src/cloud/store.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cloud/store.ts:33",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/cloud/store.ts#history",
+      "name": "History",
+      "description": "Exported function `history` in src/cloud/store.ts",
+      "componentIds": [
+        "comp:src/cloud/store.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cloud/store.ts:80",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/cloud/store.ts#NoDatabaseError",
+      "name": "No Database Error",
+      "description": "Exported class `NoDatabaseError` in src/cloud/store.ts",
+      "componentIds": [
+        "comp:src/cloud/store.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cloud/store.ts:17",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/cloud/store.ts#pullLatest",
+      "name": "Pull Latest",
+      "description": "Exported function `pullLatest` in src/cloud/store.ts",
+      "componentIds": [
+        "comp:src/cloud/store.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cloud/store.ts:58",
+          "confidence": 0.6
+        }
+      ],
+      "confidence": 0.6
+    },
+    {
+      "id": "cap:src/cloud/store.ts#pushModel",
+      "name": "Push Model",
+      "description": "Exported function `pushModel` in src/cloud/store.ts",
+      "componentIds": [
+        "comp:src/cloud/store.ts"
+      ],
+      "provenance": [
+        {
+          "source": "code",
+          "ref": "src/cloud/store.ts:47",
           "confidence": 0.6
         }
       ],
@@ -3247,5 +3444,5 @@
       "confidence": 0.6
     }
   ],
-  "generatedAt": "2026-06-13T17:17:42.149Z"
+  "generatedAt": "2026-06-13T17:24:53.717Z"
 }
