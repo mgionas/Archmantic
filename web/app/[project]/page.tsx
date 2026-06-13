@@ -4,7 +4,7 @@ import { getProcessEdit } from "@/lib/admin";
 import { band, componentLabel, groupCapabilities, trust } from "@/lib/format";
 import { componentDiagram, contextDiagram, sequenceDiagram } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
-import { BpmnEditor, Mermaid } from "../diagrams-client";
+import { DiagramTabs } from "../diagram-tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -51,7 +51,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
   const t = trust(model);
   const groups = groupCapabilities(model);
   const externals = model.systems.filter((s) => s.kind === "external");
-  const proc = model.processes[0];
   const seq = sequenceDiagram(model);
   const generatedBpmn = bpmnXml(model);
   const savedBpmn = owner ? await getProcessEdit(owner, project) : null;
@@ -103,25 +102,18 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
         )}
       </Section>
 
-      <Section title="Context">
-        <Card className="overflow-auto p-4">
-          <Mermaid id="ctx" chart={contextDiagram(model)} />
+      <Section title="Diagrams">
+        <Card className="p-4">
+          <DiagramTabs
+            project={project}
+            context={contextDiagram(model)}
+            components={componentDiagram(model)}
+            sequence={seq}
+            processXml={processXml}
+            edited={Boolean(savedBpmn)}
+          />
         </Card>
       </Section>
-
-      <Section title="Components & dependencies">
-        <Card className="overflow-auto p-4">
-          <Mermaid id="comp" chart={componentDiagram(model)} />
-        </Card>
-      </Section>
-
-      {seq ? (
-        <Section title={`Sequence — ${model.flows[0]?.name ?? ""}`}>
-          <Card className="overflow-auto p-4">
-            <Mermaid id="seq" chart={seq} />
-          </Card>
-        </Section>
-      ) : null}
 
       <Section title="External systems">
         <Card className="flex flex-wrap gap-2 p-4">
@@ -136,21 +128,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
           )}
         </Card>
       </Section>
-
-      {proc ? (
-        <Section
-          title={`Process (BPMN) — ${proc.name}`}
-          extra={savedBpmn ? <Badge variant="secondary">edited</Badge> : undefined}
-        >
-          <Card className="p-4">
-            {processXml ? (
-              <BpmnEditor project={project} initialXml={processXml} />
-            ) : (
-              <span className="text-sm text-muted-foreground">no process</span>
-            )}
-          </Card>
-        </Section>
-      ) : null}
 
       <Section title="Component responsibilities">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
