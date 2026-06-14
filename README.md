@@ -19,7 +19,7 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 - **Drift detection** — "your committed model vs. the code" diff.
 - **PR architecture diff** — how a change reshapes the architecture (not a line diff), postable as a PR comment.
 - **Architecture history** — how the system's shape evolved, commit by commit.
-- **Data model (ERD)** — entities, fields, and relations parsed from your Prisma schema, Drizzle tables, SQL `CREATE TABLE` migrations, or **Laravel migrations** (`Schema::create`, foreign keys, `resource`-style relations), grounded to `file:line` and projected as a Mermaid ERD. Laravel framework scaffolding tables (cache/jobs/sessions…) are filtered out.
+- **Data model (ERD)** — entities, fields, and relations parsed from your Prisma schema, Drizzle tables, SQL `CREATE TABLE` migrations, or **Laravel migrations** (`Schema::create`, foreign keys, `resource`-style relations), grounded to `file:line` and projected as an interactive ERD (xyflow in the web; Mermaid in CLI exports). Laravel framework scaffolding tables (cache/jobs/sessions…) are filtered out.
 - **API surface** — REST routes (Next.js App Router/Pages, Express/Fastify/Koa/Hono, **NestJS** `@Controller`/`@Get` decorators, **Laravel** `routes/*.php` incl. prefix groups + `resource`/`apiResource`), tRPC procedures, and GraphQL operations, grounded to `file:line` — the contract layer for humans and agents.
 - **Polyglot, multi-framework** — TypeScript/JavaScript **and** PHP/Laravel; frontends in **React, Vue/Inertia** (`.vue` SFCs), plus **Blade** templates and **Livewire** components. Components are role-classified (page/route/ui/layout/view/model/…) and the tech stack is detected from `package.json` **and** `composer.json`.
 - **Monorepo aware** — analyzes npm/yarn/pnpm **workspaces** (and `apps/*`/`packages/*` by convention) as one model, tagging every component, endpoint, and entity with its owning package; the web groups Components & API by package.
@@ -92,7 +92,7 @@ node dist/cli.js analyze
 |---|---|---|
 | 0 | Repo structure & manifests → systems, components | free |
 | 1 | TS/JS static analysis (TypeScript compiler API) → import/dependency graph | cheap, deterministic |
-| 1.5 | Structural derivation → capabilities (exports), one process/flow (entry-point chain) | deterministic |
+| 1.5 | Structural derivation → capabilities (exports), per-feature behavior flows (entry-point chain for CLIs) | deterministic |
 | 2 | LLM semantic pass — Haiku for summaries, Opus for flow synthesis | metered tokens, opt-in (BYOK) |
 
 **Provenance invariant:** every derived element carries `provenance` (`file:line`) and `confidence`. The LLM pass only *refines prose and raises confidence* on already-grounded elements — it never invents structure. Nothing ungrounded gets in.
@@ -112,7 +112,7 @@ Once connected your agent can:
 
 - **Read** the model: `get_project` (the goal/owner/agent-team brain), `list_features`/`get_feature` (user-perspective features), `get_context`, `search_capabilities`, `get_component`, `get_process`, `get_sequence`, `get_data_model`, `get_api_surface`, `whats_related`, `list_components`.
 - **Cross-repo**: `suggest_links` compares this repo against your org's other repos and proposes links to declare (inferred) or fix (dangling) in `.archmantic/config.json`.
-- **Keep it live:** `refresh` (re-analyze from disk after a change) and `sync` (re-analyze **and push to the team cloud**, org-scoped). So when you ask the agent to change something, it can update the shared architecture model in the same flow — no manual `push`.
+- **Write/keep it live:** `refresh` (re-analyze from disk), `sync` (re-analyze **and push to the team cloud**, org-scoped), and `sync_features` (run the BYOK intent compiler over the authored features). So when you ask the agent to change something, it can update the shared architecture model in the same flow — no manual `push`. The server also auto-pulls hosted feature edits on startup.
 
 The MCP server reads credentials from `.env.local` (so `sync` uses your `ARCHMANTIC_TOKEN`). Every tool call is recorded with the tokens it saved — see `archmantic usage` or the web `/usage` dashboard. This repo also ships a project [`.mcp.json`](.mcp.json) for working on Archmantic itself.
 
@@ -167,7 +167,7 @@ Without a credential, those paths skip gracefully and everything else runs fully
 
 ## Web platform (`web/`)
 
-A read-only architecture viewer over the shared Neon store — Next.js (App Router), deployable to Vercel.
+An interactive architecture viewer over the shared Neon store — Next.js (App Router), deployable to Vercel. Graphs render with `@xyflow/react` (pan/zoom, click-through); features are **editable in-app** (saved to the cloud, pulled to the repo with `archmantic feature pull`). The hosted app can't reach your disk, so repo files stay the source of truth.
 
 ```bash
 cd web
@@ -180,9 +180,9 @@ Deploy: import `web/` as the Vercel project root and set `DATABASE_URL` as an en
 
 ## Roadmap
 
-The team **cloud knowledge** layer is taking shape: shared model across a team (`push`/`pull`), the CI architecture-diff bot ([already included](.github/workflows/architecture-diff.yml)), and the web platform above. Next: diagram rendering (Mermaid/BPMN) in the web viewer, an editable `bpmn-js` canvas, auth/multi-tenant, and the edit-then-build loop.
+Shipped and dogfooded: the tiered analyzer, **team cloud knowledge** (`push`/`pull`, per-commit history), the CI architecture-diff bot ([included](.github/workflows/architecture-diff.yml)), the web platform with **fully interactive `@xyflow/react` diagrams** (context, components, ERD, per-feature sequence & process decks), the **spec layer** (project brain → feature layer → intent compiler → feature-scoped flows), and **feature editing** both locally (`archmantic edit`) and in the hosted app (cloud → `feature pull` / MCP auto-pull). Polyglot detection covers TS/JS and PHP/Laravel (incl. NestJS, Vue/Inertia, Blade/Livewire) and monorepos.
 
-See [`docs/MVP_PLAN.md`](docs/MVP_PLAN.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), and [`docs/CONCEPT.md`](docs/CONCEPT.md).
+Next candidates: a hybrid cloud store (content-hash dedup / delta history) once model sizes warrant it, OpenAPI-spec ingestion, richer conflict handling for hosted edits, and deeper multi-tenant/RBAC for Enterprise. See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the running log, and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/CONCEPT.md`](docs/CONCEPT.md) for design.
 
 ## License & model
 
