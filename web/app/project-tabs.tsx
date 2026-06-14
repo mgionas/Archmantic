@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { CollapsibleSection } from "@/components/ui/collapsible-section";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useUrlState } from "@/lib/use-url-state";
 import type {
@@ -205,6 +206,7 @@ export function ProjectTabs({
   const [apiQuery, setApiQuery] = useState("");
   const [compQuery, setCompQuery] = useState("");
   const [compGroupBy, setCompGroupBy] = useState<"role" | "folder" | "package">(isMono ? "package" : "role");
+  const [compView, setCompView] = useState<"grid" | "list">("grid");
   const [apiGroupBy, setApiGroupBy] = useState<"resource" | "package">(isMono ? "package" : "resource");
 
   const capCount = groups.reduce((n, g) => n + g.caps.length, 0);
@@ -447,12 +449,14 @@ export function ProjectTabs({
                 placeholder="Filter components…"
                 className="max-w-sm"
               />
-              <SegmentedControl
-                className="ml-auto"
-                options={(isMono ? ["package", "role", "folder"] : ["role", "folder"]) as Array<typeof compGroupBy>}
-                value={compGroupBy}
-                onChange={setCompGroupBy}
-              />
+              <div className="ml-auto flex flex-wrap items-center gap-2">
+                <SegmentedControl options={["grid", "list"] as const} value={compView} onChange={setCompView} />
+                <SegmentedControl
+                  options={(isMono ? ["package", "role", "folder"] : ["role", "folder"]) as Array<typeof compGroupBy>}
+                  value={compGroupBy}
+                  onChange={setCompGroupBy}
+                />
+              </div>
             </div>
             <RoleLegend roles={[...new Set(components.map((c) => c.role))].sort()} />
             {compGroups.length === 0 ? (
@@ -466,21 +470,36 @@ export function ProjectTabs({
                   accent={compGroupBy === "role" ? roleColor(key) : undefined}
                   count={items.length}
                 >
-                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {items.map((c) => (
-                      <Card key={c.id} className="p-3">
-                        <div className="flex items-center gap-2">
+                  {compView === "grid" ? (
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                      {items.map((c) => (
+                        <Card key={c.id} className="p-3">
+                          <div className="flex items-center gap-2">
+                            <span className="size-2 shrink-0 rounded-full" style={{ background: roleColor(c.role) }} />
+                            <span className="truncate font-medium" title={c.path}>
+                              {c.label}
+                            </span>
+                          </div>
+                          <div className="mt-1 truncate text-xs text-muted-foreground" title={c.responsibility}>
+                            {c.responsibility}
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <ul className="divide-y divide-border/40 overflow-hidden rounded-lg border border-border/40">
+                      {items.map((c) => (
+                        <li key={c.id} className="flex items-center gap-2.5 px-3 py-1.5 hover:bg-muted/40">
                           <span className="size-2 shrink-0 rounded-full" style={{ background: roleColor(c.role) }} />
-                          <span className="truncate font-medium" title={c.path}>
-                            {c.label}
+                          <span className="shrink-0 font-medium">{c.label}</span>
+                          <span className="min-w-0 flex-1 truncate font-mono text-xs text-muted-foreground" title={c.responsibility}>
+                            {c.path}
                           </span>
-                        </div>
-                        <div className="mt-1 truncate text-xs text-muted-foreground" title={c.responsibility}>
-                          {c.responsibility}
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
+                          <span className="shrink-0 text-xs capitalize text-muted-foreground">{c.role}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </CollapsibleSection>
               ))
             )}
@@ -539,25 +558,30 @@ export function ProjectTabs({
                     count={eps.length}
                   >
                     <Card className="overflow-hidden p-0">
-                      <ul>
-                        {eps.map((e) => (
-                          <li
-                            key={e.id}
-                            className="flex items-baseline gap-3 border-b border-border/30 px-3 py-1.5 last:border-0 hover:bg-muted/40"
-                          >
-                            <span className={`w-16 shrink-0 font-mono text-xs font-semibold ${METHOD_CLASS[e.method] ?? ""}`}>
-                              {e.method}
-                            </span>
-                            <span className="min-w-0 flex-1 truncate font-mono text-xs">{e.path}</span>
-                            <Provenance
-                              refText={e.ref}
-                              href={sourceHref(source.base, source.sha, e.ref)}
-                              className="hidden shrink-0 sm:inline"
-                            />
-                            <span className="shrink-0 text-xs text-muted-foreground">{e.protocol}</span>
-                          </li>
-                        ))}
-                      </ul>
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="hover:bg-transparent">
+                            <TableHead className="w-20">Method</TableHead>
+                            <TableHead>Path</TableHead>
+                            <TableHead className="hidden md:table-cell">Source</TableHead>
+                            <TableHead className="w-20 text-right">Protocol</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {eps.map((e) => (
+                            <TableRow key={e.id}>
+                              <TableCell className={`font-mono text-xs font-semibold ${METHOD_CLASS[e.method] ?? ""}`}>
+                                {e.method}
+                              </TableCell>
+                              <TableCell className="max-w-0 truncate font-mono text-xs">{e.path}</TableCell>
+                              <TableCell className="hidden md:table-cell">
+                                <Provenance refText={e.ref} href={sourceHref(source.base, source.sha, e.ref)} />
+                              </TableCell>
+                              <TableCell className="text-right text-xs text-muted-foreground">{e.protocol}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </Card>
                   </CollapsibleSection>
                 ))}
