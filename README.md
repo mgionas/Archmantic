@@ -4,7 +4,7 @@
 
 Point Archmantic at a repo and it reverse-engineers a single grounded **architecture model** (the IR). Every diagram is a *projection* of that one model, every element is traceable to `file:line`, and the same model answers your agent's questions over MCP. No drift between views, no ungrounded "AI diagram" guesswork.
 
-> Status: **v1.0.0** — published as [`@archmantic/cli`](https://www.npmjs.com/package/@archmantic/cli). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
+> Status: **v1.0.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
 
 ---
 
@@ -30,16 +30,16 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 No install needed — run it straight from npm:
 
 ```bash
-npx @archmantic/cli analyze     # reverse-engineer the model → .archmantic/model.json
-npx @archmantic/cli view        # capability map + diagrams + trust report → .archmantic/view.html
-npx @archmantic/cli bench       # token-savings benchmark (MCP vs raw file reads)
+npx archmantic analyze     # reverse-engineer the model → .archmantic/model.json
+npx archmantic view        # capability map + diagrams + trust report → .archmantic/view.html
+npx archmantic bench       # token-savings benchmark (MCP vs raw file reads)
 ```
 
-Or install the CLI globally (the command is `archmantic`):
+Or install the CLI globally — then use the short `amt` alias:
 
 ```bash
-npm install -g @archmantic/cli
-archmantic analyze
+npm install -g archmantic
+amt analyze          # `amt` and `archmantic` are equivalent
 ```
 
 **From source** (for contributors):

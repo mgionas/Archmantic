@@ -15,7 +15,7 @@ inputs:
     required: false
     default: "."
   version:
-    description: "Version of @archmantic/cli to run (npm dist-tag or semver)."
+    description: "Version of archmantic to run (npm dist-tag or semver)."
     required: false
     default: "latest"
   comment:
@@ -50,11 +50,11 @@ runs:
 
         if [ -z "${BASE_REF:-}" ]; then
           echo "No base ref (not a pull_request event?). Falling back to the CLI default."
-          npx -y "@archmantic/cli@${CLI_VERSION}" diff || true
+          npx -y "archmantic@${CLI_VERSION}" diff || true
         else
           # Fetch just the base tip so `git archive` can read its tree (works on shallow clones).
           git fetch --no-tags --depth=1 --quiet origin "+refs/heads/${BASE_REF}:refs/remotes/origin/${BASE_REF}" || true
-          npx -y "@archmantic/cli@${CLI_VERSION}" diff "origin/${BASE_REF}"
+          npx -y "archmantic@${CLI_VERSION}" diff "origin/${BASE_REF}"
         fi
 
         BODY=".archmantic/pr-diff.md"

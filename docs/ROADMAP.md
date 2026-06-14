@@ -18,7 +18,7 @@ code-graph commodity territory?
 
 | Tier | Item | Why now | Impact · Effort |
 |---|---|---|---|
-| ✅ done | npm publish (core) | Published `@archmantic/cli@0.1.0` (public) | High · Low |
+| ✅ done | npm publish (core) | Published `archmantic@0.1.0` (public) | High · Low |
 | ✅ done | In-app `/docs` | Shipped, public, linked from header + landing | High · Low |
 | ✅ done | Data model → ERD | Prisma + Drizzle + SQL → `DataEntity` IR + Mermaid ERD; CLI + web Data tab + MCP `get_data_model` | High · Med |
 | ✅ done | GitHub Action / PR diff | Reusable `action.yml` + sticky PR comment via `archmantic diff`; self CI dogfoods it | High · Med |

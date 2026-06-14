@@ -16,7 +16,7 @@ test("naming helpers humanize symbols and folder-aware index files", () => {
 
 test("MCP queries return grounded, non-empty answers", () => {
   const m = analyzeRepo(root);
-  assert.match(getContext(m), /Project: @archmantic\/cli/);
+  assert.match(getContext(m), /Project: archmantic/);
   assert.ok(searchCapabilities(m, "").split("\n").length > 1);
 });
 

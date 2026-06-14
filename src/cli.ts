@@ -759,7 +759,7 @@ async function cmdUsage(args: string[]): Promise<number> {
 function printHelp(): void {
   console.log(`Archmantic v${pkg.version} — living architecture model for humans + agents
 
-Usage: archmantic <command> [options]
+Usage: archmantic <command> [options]   (short alias: amt)
 
 Commands:
   init [name]    Create an empty .archmantic/model.json (defaults name to the folder)

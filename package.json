@@ -1,5 +1,5 @@
 {
-  "name": "@archmantic/cli",
+  "name": "archmantic",
   "version": "1.0.0",
   "description": "Archmantic — an always-on Solution Architect: living architecture model + diagrams for humans and AI agents (via MCP).",
   "license": "Apache-2.0",
@@ -26,7 +26,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "archmantic": "dist/cli.js"
+    "archmantic": "dist/cli.js",
+    "amt": "dist/cli.js"
   },
   "files": [
     "dist"
