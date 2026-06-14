@@ -1,8 +1,9 @@
 /**
  * API surface detection — the contract layer ("what can callers invoke?").
  *
- * Detects REST routes (Next.js App Router `route.ts`, Pages `pages/api`, and
- * Express/Fastify/Koa/Hono method calls like app.get(path)), tRPC procedures, and GraphQL
+ * Detects REST routes (Next.js App Router `route.ts`, Pages `pages/api`,
+ * Express/Fastify/Koa/Hono method calls like app.get(path), and NestJS
+ * `@Controller`/`@Get`/`@Post` decorators), tRPC procedures, and GraphQL
  * `Query`/`Mutation`/`Subscription` fields (SDL files + inline `gql\`…\``).
  * Grounded to `file:line`. Regex/structure-based, dependency-light. Pairs with the
  * data-model ERD as the two halves of the contract. See docs/ROADMAP.md.
@@ -100,6 +101,7 @@ export function detectEndpoints(root: string): Endpoint[] {
   };
 
   const restCall = /\b[\w$]+\.(get|post|put|patch|delete|options|head|all)\s*\(\s*[`'"]([^`'"]+)[`'"]/gi;
+  const nestRe = /@(Get|Post|Put|Patch|Delete|Options|Head|All)\s*\(\s*(?:[`'"]([^`'"]*)[`'"])?/g;
   const trpcRe = /(\w+)\s*:\s*[\w.]*[Pp]rocedure[\s\S]{0,400}?\.(query|mutation|subscription)\s*\(/g;
   const gqlRe = /(?:gql|graphql)\s*`([\s\S]*?)`/g;
 
@@ -136,6 +138,21 @@ export function detectEndpoints(root: string): Endpoint[] {
       if (!path.startsWith("/")) continue;
       const verb = rm[1]!.toUpperCase();
       push("rest", verb === "ALL" ? "ANY" : verb, path, `${rel}:${lineAt(text, rm.index)}`);
+    }
+
+    // NestJS controllers: a `@Controller('base')` prefix plus method decorators
+    // (`@Get(':id')`, `@Post()`, …). Path params already use the `:id` form.
+    const ctrl = /@Controller\s*\(\s*(?:[`'"]([^`'"]*)[`'"]|\{[^}]*?\bpath\s*:\s*[`'"]([^`'"]*)[`'"])?/.exec(text);
+    if (ctrl) {
+      const base = (ctrl[1] ?? ctrl[2] ?? "").replace(/^\/+|\/+$/g, "");
+      nestRe.lastIndex = 0;
+      let nm: RegExpExecArray | null;
+      while ((nm = nestRe.exec(text))) {
+        const verb = nm[1]!.toUpperCase();
+        const sub = (nm[2] ?? "").replace(/^\/+|\/+$/g, "");
+        const path = "/" + [base, sub].filter(Boolean).join("/");
+        push("rest", verb === "ALL" ? "ANY" : verb, path, `${rel}:${lineAt(text, nm.index)}`);
+      }
     }
 
     // tRPC procedures (best-effort).

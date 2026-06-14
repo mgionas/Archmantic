@@ -124,7 +124,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/endpoints.ts:84",
+          "ref": "src/analyze/endpoints.ts:85",
           "source": "code"
         }
       ]
@@ -2445,7 +2445,7 @@
           "source": "code"
         }
       ],
-      "role": "route",
+      "role": "module",
       "systemId": "sys:archmantic"
     },
     {
@@ -2550,12 +2550,43 @@
           "source": "code"
         }
       ],
-      "role": "module",
+      "role": "route",
       "systemId": "sys:archmantic"
     }
   ],
   "dataEntities": [],
-  "endpoints": [],
+  "endpoints": [
+    {
+      "confidence": 0.95,
+      "id": "endpoint:rest:GET:/base/:id",
+      "method": "GET",
+      "name": "GET /base/:id",
+      "path": "/base/:id",
+      "protocol": "rest",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/endpoints.ts:144",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.95,
+      "id": "endpoint:rest:POST:/base",
+      "method": "POST",
+      "name": "POST /base",
+      "path": "/base",
+      "protocol": "rest",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/endpoints.ts:144",
+          "source": "code"
+        }
+      ]
+    }
+  ],
   "flows": [
     {
       "confidence": 0.6,
@@ -2719,7 +2750,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T11:35:45.081Z",
+  "generatedAt": "2026-06-14T11:48:59.575Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -3180,7 +3211,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/endpoints.ts:15",
+          "ref": "src/analyze/endpoints.ts:16",
           "source": "code"
         }
       ],
@@ -3195,7 +3226,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/endpoints.ts:16",
+          "ref": "src/analyze/endpoints.ts:17",
           "source": "code"
         }
       ],
@@ -3210,7 +3241,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/endpoints.ts:13",
+          "ref": "src/analyze/endpoints.ts:14",
           "source": "code"
         }
       ],
@@ -3225,7 +3256,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/endpoints.ts:14",
+          "ref": "src/analyze/endpoints.ts:15",
           "source": "code"
         }
       ],
@@ -3240,7 +3271,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/endpoints.ts:12",
+          "ref": "src/analyze/endpoints.ts:13",
           "source": "code"
         }
       ],
@@ -3255,7 +3286,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/endpoints.ts:10",
+          "ref": "src/analyze/endpoints.ts:11",
           "source": "code"
         }
       ],
@@ -3270,7 +3301,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/endpoints.ts:11",
+          "ref": "src/analyze/endpoints.ts:12",
           "source": "code"
         }
       ],

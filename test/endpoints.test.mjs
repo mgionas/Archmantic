@@ -58,6 +58,37 @@ test("Express-style calls detected; Map/Headers .get() ignored", () => {
   );
 });
 
+test("NestJS controller + method decorators → REST endpoints with joined paths", () => {
+  withRepo(
+    {
+      "src/insights/insights.controller.ts": [
+        "import { Controller, Get, Post, Patch } from '@nestjs/common';",
+        "@Controller('insights')",
+        "export class InsightsController {",
+        "  @Post() create() {}",
+        "  @Get(':id') one() {}",
+        "  @Patch(':id/status') status() {}",
+        "  @Get('vehicle/:vehicleId') byVehicle() {}",
+        "}",
+      ].join("\n"),
+      "src/app.controller.ts": [
+        "import { Controller, Get } from '@nestjs/common';",
+        "@Controller()", // no prefix
+        "export class AppController { @Get('health') health() {} }",
+      ].join("\n"),
+    },
+    (dir) => {
+      const eps = detectEndpoints(dir);
+      assert.ok(find(eps, "POST", "/insights"), "@Post() → base path");
+      assert.ok(find(eps, "GET", "/insights/:id"), "prefix + sub joined");
+      assert.ok(find(eps, "PATCH", "/insights/:id/status"));
+      assert.ok(find(eps, "GET", "/insights/vehicle/:vehicleId"));
+      assert.ok(find(eps, "GET", "/health"), "empty @Controller() prefix");
+      assert.ok(eps.every((e) => e.provenance[0].ref.includes(":")), "grounded to file:line");
+    },
+  );
+});
+
 test("tRPC procedures and GraphQL SDL fields", () => {
   withRepo(
     {

@@ -138,6 +138,16 @@ facets and an Overview "Monorepo · N packages" card, package-grouped MCP
 AGENTS.md. Tech-stack detection now aggregates deps across members. The chosen
 approach was Option A (one grouped model) over Option B (system of sub-projects).
 
+### ✅ done · NestJS API detection (1.5.0)
+`apps/api` NestJS services reported an empty API surface because the detector only
+understood Next.js / Express / Fastify / Koa / Hono / tRPC / GraphQL — not NestJS
+decorators. Added `@Controller('base')` + method decorators (`@Get`/`@Post`/`@Put`/
+`@Patch`/`@Delete`/`@Options`/`@Head`/`@All`), joining the controller prefix with
+each method path (`@Controller('insights')` + `@Get(':id')` → `GET /insights/:id`;
+empty `@Controller()` → root). Verified on DrivePulse-Core: 0 → 31 endpoints across
+12 controllers, package-tagged to `apps/api`. (`packages/contracts/openapi.json`
+was empty, so OpenAPI ingestion stays deferred until a populated spec appears.)
+
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
 appears that architecture-level elements can't serve.
