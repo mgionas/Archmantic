@@ -100,6 +100,38 @@ export function erDiagram(model: Model): string | null {
   return lines.join("\n");
 }
 
+/** Node/edge graph for the component view (React Flow). Externals included as leaf nodes. */
+export interface GraphNode {
+  id: string;
+  label: string;
+  kind: "component" | "external";
+}
+export interface GraphEdge {
+  id: string;
+  source: string;
+  target: string;
+}
+export function componentGraph(model: Model): { nodes: GraphNode[]; edges: GraphEdge[] } {
+  const compIds = new Set(model.components.map((c) => c.id));
+  const externalIds = new Set(model.systems.filter((s) => s.kind === "external").map((s) => s.id));
+  const nodes: GraphNode[] = model.components.map((c) => ({ id: c.id, label: componentLabel(c.id), kind: "component" }));
+  const edges: GraphEdge[] = [];
+  const usedExternals = new Set<string>();
+  for (const r of model.relations) {
+    if (compIds.has(r.from) && compIds.has(r.to)) {
+      edges.push({ id: r.id, source: r.from, target: r.to });
+    } else if (compIds.has(r.from) && externalIds.has(r.to)) {
+      usedExternals.add(r.to);
+      edges.push({ id: r.id, source: r.from, target: r.to });
+    }
+  }
+  for (const id of usedExternals) {
+    const ext = model.systems.find((s) => s.id === id);
+    if (ext) nodes.push({ id, label: ext.name, kind: "external" });
+  }
+  return { nodes, edges };
+}
+
 export function sequenceDiagram(model: Model): string | null {
   const flow = model.flows[0];
   if (!flow) return null;

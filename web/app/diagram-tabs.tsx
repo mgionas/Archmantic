@@ -1,21 +1,29 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { BpmnEditor, Mermaid } from "./diagrams-client";
+import type { GraphNode, GraphEdge } from "@/lib/diagrams";
+
+// React Flow + dagre (~70kB) only load when the Components view is opened.
+const ComponentGraph = dynamic(() => import("@/components/component-graph").then((m) => m.ComponentGraph), {
+  ssr: false,
+  loading: () => <div className="grid h-full place-items-center text-sm text-muted-foreground">Loading graph…</div>,
+});
 
 export function DiagramTabs({
   project,
   context,
-  components,
+  componentGraph,
   sequence,
   processXml,
   edited,
 }: {
   project: string;
   context: string;
-  components: string;
+  componentGraph: { nodes: GraphNode[]; edges: GraphEdge[] };
   sequence: string | null;
   processXml: string | null;
   edited: boolean;
@@ -38,7 +46,7 @@ export function DiagramTabs({
       {/* One tall, interactive canvas; render only the active diagram so it mounts at full size. */}
       <div className="h-[72vh] pt-3">
         {tab === "context" ? <Mermaid id="ctx" chart={context} /> : null}
-        {tab === "components" ? <Mermaid id="comp" chart={components} /> : null}
+        {tab === "components" ? <ComponentGraph graph={componentGraph} /> : null}
         {tab === "sequence" && sequence ? <Mermaid id="seq" chart={sequence} /> : null}
         {tab === "process" && processXml ? <BpmnEditor project={project} initialXml={processXml} /> : null}
       </div>
