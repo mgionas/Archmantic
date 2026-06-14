@@ -1635,38 +1635,6 @@
     },
     {
       "componentIds": [
-        "comp:src/project/erd.ts"
-      ],
-      "confidence": 0.6,
-      "description": "Exported function `erDiagram` in src/project/erd.ts",
-      "id": "cap:src/project/erd.ts#erDiagram",
-      "name": "Er Diagram",
-      "provenance": [
-        {
-          "confidence": 0.6,
-          "ref": "src/project/erd.ts:57",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "componentIds": [
-        "comp:src/project/erd.ts"
-      ],
-      "confidence": 0.6,
-      "description": "Exported function `relationshipEdges` in src/project/erd.ts",
-      "id": "cap:src/project/erd.ts#relationshipEdges",
-      "name": "Relationship Edges",
-      "provenance": [
-        {
-          "confidence": 0.6,
-          "ref": "src/project/erd.ts:21",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "componentIds": [
         "comp:src/project/feature-sync.ts"
       ],
       "confidence": 0.6,
@@ -1820,7 +1788,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/html.ts:88",
+          "ref": "src/project/html.ts:150",
           "source": "code"
         }
       ]
@@ -1836,7 +1804,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:110",
+          "ref": "src/project/index.ts:113",
           "source": "code"
         }
       ]
@@ -1852,7 +1820,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:48",
+          "ref": "src/project/index.ts:45",
           "source": "code"
         }
       ]
@@ -1965,54 +1933,6 @@
         {
           "confidence": 0.6,
           "ref": "src/project/manifest.ts:78",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "componentIds": [
-        "comp:src/project/mermaid.ts"
-      ],
-      "confidence": 0.6,
-      "description": "Exported function `componentDiagram` in src/project/mermaid.ts",
-      "id": "cap:src/project/mermaid.ts#componentDiagram",
-      "name": "Component Diagram",
-      "provenance": [
-        {
-          "confidence": 0.6,
-          "ref": "src/project/mermaid.ts:55",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "componentIds": [
-        "comp:src/project/mermaid.ts"
-      ],
-      "confidence": 0.6,
-      "description": "Exported function `contextDiagram` in src/project/mermaid.ts",
-      "id": "cap:src/project/mermaid.ts#contextDiagram",
-      "name": "Context Diagram",
-      "provenance": [
-        {
-          "confidence": 0.6,
-          "ref": "src/project/mermaid.ts:27",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "componentIds": [
-        "comp:src/project/mermaid.ts"
-      ],
-      "confidence": 0.6,
-      "description": "Exported function `sequenceDiagram` in src/project/mermaid.ts",
-      "id": "cap:src/project/mermaid.ts#sequenceDiagram",
-      "name": "Sequence Diagram",
-      "provenance": [
-        {
-          "confidence": 0.6,
-          "ref": "src/project/mermaid.ts:83",
           "source": "code"
         }
       ]
@@ -2156,7 +2076,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/system.ts:126",
+          "ref": "src/system.ts:103",
           "source": "code"
         }
       ]
@@ -2172,7 +2092,23 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/system.ts:73",
+          "ref": "src/system.ts:51",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/system.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `sharedExternals` in src/system.ts",
+      "id": "cap:src/system.ts#sharedExternals",
+      "name": "Shared Externals",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/system.ts:35",
           "source": "code"
         }
       ]
@@ -2198,29 +2134,13 @@
         "comp:src/system.ts"
       ],
       "confidence": 0.6,
-      "description": "Exported function `systemContextDiagram` in src/system.ts",
-      "id": "cap:src/system.ts#systemContextDiagram",
-      "name": "System Context Diagram",
-      "provenance": [
-        {
-          "confidence": 0.6,
-          "ref": "src/system.ts:38",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "componentIds": [
-        "comp:src/system.ts"
-      ],
-      "confidence": 0.6,
       "description": "Exported function `systemHtml` in src/system.ts",
       "id": "cap:src/system.ts#systemHtml",
       "name": "System Html",
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/system.ts:184",
+          "ref": "src/system.ts:163",
           "source": "code"
         }
       ]
@@ -2934,21 +2854,6 @@
     },
     {
       "confidence": 0.95,
-      "id": "comp:src/project/erd.ts",
-      "kind": "module",
-      "name": "src/project/erd.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/erd.ts:1",
-          "source": "code"
-        }
-      ],
-      "role": "module",
-      "systemId": "sys:archmantic"
-    },
-    {
-      "confidence": 0.95,
       "id": "comp:src/project/feature-sync.ts",
       "kind": "module",
       "name": "src/project/feature-sync.ts",
@@ -3031,21 +2936,6 @@
         {
           "confidence": 0.95,
           "ref": "src/project/manifest.ts:1",
-          "source": "code"
-        }
-      ],
-      "role": "module",
-      "systemId": "sys:archmantic"
-    },
-    {
-      "confidence": 0.95,
-      "id": "comp:src/project/mermaid.ts",
-      "kind": "module",
-      "name": "src/project/mermaid.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/mermaid.ts:1",
           "source": "code"
         }
       ],
@@ -3594,7 +3484,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T20:57:16.680Z",
+  "generatedAt": "2026-06-14T21:41:16.325Z",
   "manifest": {
     "agents": [
       {
@@ -6858,21 +6748,6 @@
     },
     {
       "confidence": 0.95,
-      "from": "comp:src/project/erd.ts",
-      "id": "rel:comp:src/project/erd.ts=>comp:src/ir/types.ts",
-      "kind": "depends_on",
-      "name": "comp:src/project/erd.ts → comp:src/ir/types.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/erd.ts:6",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/ir/types.ts"
-    },
-    {
-      "confidence": 0.95,
       "from": "comp:src/project/feature-sync.ts",
       "id": "rel:comp:src/project/feature-sync.ts=>comp:src/auth.ts",
       "kind": "depends_on",
@@ -7039,13 +6914,28 @@
     {
       "confidence": 0.95,
       "from": "comp:src/project/html.ts",
+      "id": "rel:comp:src/project/html.ts=>comp:src/ir/naming.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/html.ts → comp:src/ir/naming.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/html.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/naming.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/html.ts",
       "id": "rel:comp:src/project/html.ts=>comp:src/ir/types.ts",
       "kind": "depends_on",
       "name": "comp:src/project/html.ts → comp:src/ir/types.ts",
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/html.ts:10",
+          "ref": "src/project/html.ts:8",
           "source": "code"
         }
       ],
@@ -7060,7 +6950,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/html.ts:13",
+          "ref": "src/project/html.ts:10",
           "source": "code"
         }
       ],
@@ -7075,41 +6965,11 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/html.ts:14",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/project/capability.ts"
-    },
-    {
-      "confidence": 0.95,
-      "from": "comp:src/project/html.ts",
-      "id": "rel:comp:src/project/html.ts=>comp:src/project/erd.ts",
-      "kind": "depends_on",
-      "name": "comp:src/project/html.ts → comp:src/project/erd.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/html.ts:12",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/project/erd.ts"
-    },
-    {
-      "confidence": 0.95,
-      "from": "comp:src/project/html.ts",
-      "id": "rel:comp:src/project/html.ts=>comp:src/project/mermaid.ts",
-      "kind": "depends_on",
-      "name": "comp:src/project/html.ts → comp:src/project/mermaid.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
           "ref": "src/project/html.ts:11",
           "source": "code"
         }
       ],
-      "to": "comp:src/project/mermaid.ts"
+      "to": "comp:src/project/capability.ts"
     },
     {
       "confidence": 0.95,
@@ -7120,7 +6980,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/html.ts:15",
+          "ref": "src/project/html.ts:12",
           "source": "code"
         }
       ],
@@ -7135,7 +6995,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:6",
+          "ref": "src/project/index.ts:7",
           "source": "code"
         }
       ],
@@ -7150,7 +7010,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:40",
+          "ref": "src/project/index.ts:37",
           "source": "code"
         }
       ],
@@ -7165,12 +7025,12 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:9",
+          "ref": "src/project/index.ts:8",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:16",
+          "ref": "src/project/index.ts:13",
           "source": "code"
         }
       ],
@@ -7185,36 +7045,16 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:10",
+          "ref": "src/project/index.ts:9",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:17",
+          "ref": "src/project/index.ts:14",
           "source": "code"
         }
       ],
       "to": "comp:src/project/capability.ts"
-    },
-    {
-      "confidence": 0.95,
-      "from": "comp:src/project/index.ts",
-      "id": "rel:comp:src/project/index.ts=>comp:src/project/erd.ts",
-      "kind": "depends_on",
-      "name": "comp:src/project/index.ts → comp:src/project/erd.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/index.ts:8",
-          "source": "code"
-        },
-        {
-          "confidence": 0.95,
-          "ref": "src/project/index.ts:15",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/project/erd.ts"
     },
     {
       "confidence": 0.95,
@@ -7225,7 +7065,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:29",
+          "ref": "src/project/index.ts:26",
           "source": "code"
         }
       ],
@@ -7240,12 +7080,12 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:11",
+          "ref": "src/project/index.ts:10",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:18",
+          "ref": "src/project/index.ts:15",
           "source": "code"
         }
       ],
@@ -7260,7 +7100,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:20",
+          "ref": "src/project/index.ts:17",
           "source": "code"
         }
       ],
@@ -7275,31 +7115,11 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:21",
+          "ref": "src/project/index.ts:18",
           "source": "code"
         }
       ],
       "to": "comp:src/project/manifest.ts"
-    },
-    {
-      "confidence": 0.95,
-      "from": "comp:src/project/index.ts",
-      "id": "rel:comp:src/project/index.ts=>comp:src/project/mermaid.ts",
-      "kind": "depends_on",
-      "name": "comp:src/project/index.ts → comp:src/project/mermaid.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/index.ts:7",
-          "source": "code"
-        },
-        {
-          "confidence": 0.95,
-          "ref": "src/project/index.ts:14",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/project/mermaid.ts"
     },
     {
       "confidence": 0.95,
@@ -7310,7 +7130,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:19",
+          "ref": "src/project/index.ts:16",
           "source": "code"
         }
       ],
@@ -7325,12 +7145,12 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:12",
+          "ref": "src/project/index.ts:11",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:41",
+          "ref": "src/project/index.ts:38",
           "source": "code"
         }
       ],
@@ -7410,36 +7230,6 @@
         }
       ],
       "to": "sys:ext:node:path"
-    },
-    {
-      "confidence": 0.95,
-      "from": "comp:src/project/mermaid.ts",
-      "id": "rel:comp:src/project/mermaid.ts=>comp:src/ir/naming.ts",
-      "kind": "depends_on",
-      "name": "comp:src/project/mermaid.ts → comp:src/ir/naming.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/mermaid.ts:11",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/ir/naming.ts"
-    },
-    {
-      "confidence": 0.95,
-      "from": "comp:src/project/mermaid.ts",
-      "id": "rel:comp:src/project/mermaid.ts=>comp:src/ir/types.ts",
-      "kind": "depends_on",
-      "name": "comp:src/project/mermaid.ts → comp:src/ir/types.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/mermaid.ts:10",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/ir/types.ts"
     },
     {
       "confidence": 0.95,

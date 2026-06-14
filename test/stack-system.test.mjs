@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { analyzeRepo } from "../dist/analyze/index.js";
-import { buildSystemView, analyzeLinks } from "../dist/system.js";
+import { buildSystemView, analyzeLinks, sharedExternals } from "../dist/system.js";
 import { getLinkSuggestions } from "../dist/mcp/queries.js";
 
 test("stack detection classifies known dependencies", () => {
@@ -31,9 +31,12 @@ test("unified system view links services by declared consumes", () => {
   });
   const view = buildSystemView([svc("web", "shop", ["api"], ["stripe"]), svc("api", "shop", [], [])], "shop");
   assert.equal(view.totals.services, 2);
-  assert.deepEqual(view.crossServiceEdges, [{ from: "web", to: "api" }]);
-  assert.match(view.mermaid, /calls/); // service→service edge rendered
-  assert.match(view.mermaid, /stripe/); // shared external rendered
+  assert.deepEqual(view.crossServiceEdges, [{ from: "web", to: "api" }]); // service→service edge
+  assert.ok(
+    view.services.find((s) => s.project === "web").externals.includes("stripe"),
+    "external system captured on the service",
+  );
+  assert.deepEqual(sharedExternals(view.services), []); // stripe used by only one service → not shared
 });
 
 test("analyzeLinks classifies connected / inferred / dangling", () => {

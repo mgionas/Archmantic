@@ -8,13 +8,14 @@ import { cn } from "@/lib/utils";
 import { useUrlState } from "@/lib/use-url-state";
 import { DiagramPicker } from "@/components/diagram-picker";
 import { BpmnEditor } from "./diagrams-client";
-import type { GraphNode, GraphEdge, FlowEdge, CompDetail, ContextNode, ContextEdge, ContextDetail, EntityNode, EntityEdge } from "@/lib/diagrams";
+import type { GraphNode, GraphEdge, FlowEdge, CompDetail, ContextNode, ContextEdge, ContextDetail, EntityNode, EntityEdge, SequenceModel } from "@/lib/diagrams";
 
 // React Flow + dagre (~70kB) only load when an interactive graph view is opened.
 const loading = () => <div className="grid h-full place-items-center text-sm text-muted-foreground">Loading graph…</div>;
 const ComponentGraph = dynamic(() => import("@/components/component-graph").then((m) => m.ComponentGraph), { ssr: false, loading });
 const ContextGraph = dynamic(() => import("@/components/context-graph").then((m) => m.ContextGraph), { ssr: false, loading });
 const SequenceGraph = dynamic(() => import("@/components/sequence-graph").then((m) => m.SequenceGraph), { ssr: false, loading });
+const SequenceDiagram = dynamic(() => import("@/components/sequence-diagram").then((m) => m.SequenceDiagram), { ssr: false, loading });
 const EntityGraph = dynamic(() => import("@/components/entity-graph").then((m) => m.EntityGraph), { ssr: false, loading });
 
 /**
@@ -63,7 +64,7 @@ export function DiagramTabs({
   contextDetails: Record<string, ContextDetail>;
   componentGraph: { nodes: GraphNode[]; edges: GraphEdge[] };
   componentDetails: Record<string, CompDetail>;
-  sequences: { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] } }[];
+  sequences: { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] }; diagram: SequenceModel }[];
   processXml: string | null;
   erd: { nodes: EntityNode[]; edges: EntityEdge[] } | null;
   edited: boolean;
@@ -120,7 +121,7 @@ export function DiagramTabs({
         {tab === "components" ? (
           <ComponentGraph graph={componentGraph} details={componentDetails} onNavigate={onNavigate} focusId={focusNode} />
         ) : null}
-        {tab === "sequence" && activeSeq ? <SequenceGraph key={activeSeq.id} graph={activeSeq.graph} /> : null}
+        {tab === "sequence" && activeSeq ? <SequenceDiagram key={activeSeq.id} diagram={activeSeq.diagram} /> : null}
         {tab === "process" ? (
           activeProcId === "__main" && processXml ? (
             <BpmnEditor project={project} initialXml={processXml} />

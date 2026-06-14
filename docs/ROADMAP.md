@@ -20,7 +20,7 @@ code-graph commodity territory?
 |---|---|---|---|
 | ✅ done | npm publish (core) | Published `archmantic@0.1.0` (public) | High · Low |
 | ✅ done | In-app `/docs` | Shipped, public, linked from header + landing | High · Low |
-| ✅ done | Data model → ERD | Prisma + Drizzle + SQL → `DataEntity` IR + Mermaid ERD; CLI + web Data tab + MCP `get_data_model` | High · Med |
+| ✅ done | Data model → ERD | Prisma + Drizzle + SQL → `DataEntity` IR + React Flow ERD; CLI + web Data tab + MCP `get_data_model` | High · Med |
 | ✅ done | GitHub Action / PR diff | Reusable `action.yml` + sticky PR comment via `archmantic diff`; self CI dogfoods it | High · Med |
 | ✅ done | MCP usage stats | Per-tool-call recording + token savings; CLI `usage` + web `/usage` dashboard; metering substrate | High · Med |
 | ✅ done | API surface (routes) | REST/tRPC/GraphQL → `Endpoint` IR; CLI/HTML/spec + web API tab + MCP `get_api_surface` | Med · Med |
@@ -28,6 +28,8 @@ code-graph commodity territory?
 | ✅ done | Agent knowledge file | `AGENTS.md` projection in a managed block; auto on analyze/update + MCP refresh/sync; reaches non-MCP agents | High · Low |
 | ✅ done | Internal-pages redesign | full-bleed shell + icon rail + facet column + interactive diagram canvas (P0–P3); see docs/design/REDESIGN.md | High · High |
 | ✅ done | Interactive graphs | React Flow for Context/Components/ERD: grouping, role colors, click-through cross-facet panels | High · High |
+| ✅ done | Real sequence diagrams | Dedicated React Flow sequence view: participant lifelines, activation bars, ordered labeled messages, self-message loops (web Sequence tab) | High · Med |
+| ✅ done | Mermaid removed | Dropped Mermaid everywhere (web + CLI `.mmd` exports + HTML viewer); React Flow in the web, native HTML tables/lists in the CLI viewer, BPMN via `bpmn-js` | Med · Med |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
 
 ## Next — v1.2: interactivity & accuracy
@@ -84,7 +86,7 @@ MDX in the Next.js app; linked from the landing nav.
 - IR: `DataEntity { fields, relations }` with provenance to schema file lines.
 - Detect: `schema.prisma` ✅, Drizzle table defs ✅, SQL `CREATE TABLE` migrations ✅.
   TypeORM entities — still TODO.
-- Project: Mermaid `erDiagram` ✅. "Data" tab in the project view ✅ + MCP `get_data_model` ✅.
+- Project: React Flow ERD ✅. "Data" tab in the project view ✅ + MCP `get_data_model` ✅.
 - Cardinality inferred from FK direction so FK-only sources (Drizzle/SQL) render correctly.
 
 ### ✅ done · GitHub Action / PR diff

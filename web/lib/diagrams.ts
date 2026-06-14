@@ -1,104 +1,8 @@
 import type { Model } from "./store";
 import { componentLabel } from "./format";
 
-/** Mermaid projections, ported from the CLI projection layer (one model → many views). */
-
-function nodeId(id: string): string {
-  return "n_" + id.replace(/[^A-Za-z0-9]/g, "_");
-}
-function label(text: string): string {
-  return text.replace(/"/g, "'").replace(/\n/g, " ");
-}
-
-export function contextDiagram(model: Model): string {
-  const internal = model.systems.find((s) => s.kind === "internal");
-  const lines: string[] = ["flowchart LR"];
-  const sysNode = internal ? nodeId(internal.id) : "n_system";
-  lines.push(`  ${sysNode}["${label(internal?.name ?? model.project)}<br/><i>internal system</i>"]`);
-
-  const externalIds = new Set(model.systems.filter((s) => s.kind === "external").map((s) => s.id));
-  const seen = new Set<string>();
-  for (const r of model.relations) {
-    if (!externalIds.has(r.to) || seen.has(r.to)) continue;
-    const ext = model.systems.find((s) => s.id === r.to)!;
-    lines.push(`  ${nodeId(r.to)}["${label(ext.name)}<br/><i>external</i>"]`);
-    seen.add(r.to);
-  }
-  for (const id of seen) lines.push(`  ${sysNode} -->|depends on| ${nodeId(id)}`);
-  return lines.join("\n");
-}
-
-export function componentDiagram(model: Model): string {
-  const internal = model.systems.find((s) => s.kind === "internal");
-  const lines: string[] = ["flowchart TD"];
-  lines.push(`  subgraph ${nodeId(internal?.id ?? "sys")}["${label(internal?.name ?? model.project)}"]`);
-  for (const c of model.components) lines.push(`    ${nodeId(c.id)}["${label(componentLabel(c.id))}"]`);
-  lines.push("  end");
-
-  const compIds = new Set(model.components.map((c) => c.id));
-  const externalIds = new Set(model.systems.filter((s) => s.kind === "external").map((s) => s.id));
-  const drawnExt = new Set<string>();
-  for (const r of model.relations) {
-    if (compIds.has(r.from) && compIds.has(r.to)) {
-      lines.push(`  ${nodeId(r.from)} --> ${nodeId(r.to)}`);
-    } else if (compIds.has(r.from) && externalIds.has(r.to)) {
-      if (!drawnExt.has(r.to)) {
-        const ext = model.systems.find((s) => s.id === r.to)!;
-        lines.push(`  ${nodeId(r.to)}[/"${label(ext.name)}"/]`);
-        drawnExt.add(r.to);
-      }
-      lines.push(`  ${nodeId(r.from)} -.-> ${nodeId(r.to)}`);
-    }
-  }
-  return lines.join("\n");
-}
-
-/** ERD projection — the data model as a Mermaid erDiagram (ported from src/project/erd.ts). */
-export function erDiagram(model: Model): string | null {
-  const entities = model.dataEntities ?? [];
-  if (!entities.length) return null;
-  const token = (s: string) => s.replace(/[^A-Za-z0-9_]/g, "_");
-  const byId = new Map(entities.map((e) => [e.id, e]));
-  const lines: string[] = ["erDiagram"];
-
-  // Cardinality: list field → that side is parent ("one"); single/FK field → that
-  // side is child ("many"). Reads Prisma (inverse list) and Drizzle/SQL (FK-only).
-  const pairs = new Map<string, { x: string; y: string; listX: boolean; listY: boolean; singleX: boolean; singleY: boolean }>();
-  for (const e of entities) {
-    for (const f of e.fields) {
-      const target = f.relationTo ? byId.get(f.relationTo) : undefined;
-      if (!target) continue;
-      const [x, y] = [e.name, target.name].sort() as [string, string];
-      const p = pairs.get(`${x} ${y}`) ?? { x, y, listX: false, listY: false, singleX: false, singleY: false };
-      const eIsX = e.name === x;
-      if (f.list) eIsX ? (p.listX = true) : (p.listY = true);
-      else eIsX ? (p.singleX = true) : (p.singleY = true);
-      pairs.set(`${x} ${y}`, p);
-    }
-  }
-  for (const p of pairs.values()) {
-    const X = token(p.x);
-    const Y = token(p.y);
-    if (p.listX && p.listY) lines.push(`  ${X} }o--o{ ${Y} : ""`);
-    else if (p.listX) lines.push(`  ${X} ||--o{ ${Y} : ""`);
-    else if (p.listY) lines.push(`  ${Y} ||--o{ ${X} : ""`);
-    else if (p.singleX && p.singleY) lines.push(`  ${X} ||--|| ${Y} : ""`);
-    else if (p.singleX) lines.push(`  ${Y} ||--o{ ${X} : ""`);
-    else lines.push(`  ${X} ||--o{ ${Y} : ""`);
-  }
-  for (const e of entities) {
-    lines.push(`  ${token(e.name)} {`);
-    for (const f of e.fields) {
-      if (f.relationTo && !f.isForeignKey) continue;
-      const type = token(f.type) + (f.list ? "_list" : "");
-      const key = f.isId ? "PK" : f.isForeignKey ? "FK" : f.isUnique ? "UK" : "";
-      const note = f.optional ? ' "nullable"' : "";
-      lines.push(`    ${type} ${f.name}${key ? " " + key : ""}${note}`);
-    }
-    lines.push("  }");
-  }
-  return lines.join("\n");
-}
+/** Projections from the one grounded model to the many interactive React Flow
+ *  views (context, components, sequence, ERD). One model → many views. */
 
 /** Node/edge graph for the component view (React Flow). Externals included as leaf nodes. */
 export interface GraphNode {
@@ -307,8 +211,9 @@ export interface FlowEdge {
 const seqNameFor = (id: string) =>
   id.startsWith("comp:") ? componentLabel(id) : id.replace(/^sys:ext:/, "");
 
-/** A flow as an interactive graph (xyflow): participants → role-colored nodes,
- *  ordered steps → labeled edges ("1. renders", "2. calls"). Replaces Mermaid. */
+/** A flow as a generic interactive graph (xyflow): participants → role-colored
+ *  nodes, ordered steps → labeled edges. Used for the Process (LR) and System
+ *  views; the Sequence view uses `flowSequence` for true lifelines. */
 export function flowGraph(model: Model, flow: Model["flows"][number]): { nodes: GraphNode[]; edges: FlowEdge[] } {
   const roleById = new Map(model.components.map((c) => [c.id, c.role ?? "module"]));
   const nodes: GraphNode[] = flow.participants.map((id) => ({
@@ -329,9 +234,60 @@ export function flowGraph(model: Model, flow: Model["flows"][number]): { nodes: 
   return { nodes, edges };
 }
 
-/** One graph per flow — a deck the UI pages through (feature flows, richest first). */
-export function sequenceDeck(model: Model): { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] } }[] {
+/** A true sequence-diagram projection: lifelines + ordered messages (NOT collapsed —
+ *  every step is a message at its own row, so repeated calls stay distinct in time). */
+export interface SeqParticipant {
+  id: string;
+  label: string;
+  role: string;
+  kind: "component" | "external";
+}
+export interface SeqMessage {
+  id: string;
+  index: number;
+  from: string;
+  to: string;
+  label: string;
+  self: boolean;
+}
+export interface SequenceModel {
+  participants: SeqParticipant[];
+  messages: SeqMessage[];
+}
+
+export function flowSequence(model: Model, flow: Model["flows"][number]): SequenceModel {
+  const roleById = new Map(model.components.map((c) => [c.id, c.role ?? "module"]));
+  const order: string[] = [...flow.participants];
+  const ensure = (id: string) => {
+    if (id && !order.includes(id)) order.push(id);
+  };
+  const messages: SeqMessage[] = flow.steps.map((s, i) => {
+    const to = s.to ?? s.participant;
+    ensure(s.participant);
+    ensure(to);
+    return { id: `m${i}`, index: i, from: s.participant, to, label: s.action, self: s.participant === to };
+  });
+  const participants: SeqParticipant[] = order.map((id) => ({
+    id,
+    label: seqNameFor(id),
+    kind: id.startsWith("comp:") ? "component" : "external",
+    role: id.startsWith("comp:") ? roleById.get(id) ?? "module" : "external",
+  }));
+  return { participants, messages };
+}
+
+/** One graph per flow — a deck the UI pages through (feature flows, richest first).
+ *  `graph` feeds the generic node-graph (Process LR, System); `diagram` feeds the
+ *  true sequence view (lifelines + activation bars). */
+export function sequenceDeck(
+  model: Model,
+): { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] }; diagram: SequenceModel }[] {
   return (model.flows ?? [])
     .filter((f) => f.steps.length)
-    .map((f) => ({ id: f.id, name: f.name.replace(/ flow$/, ""), graph: flowGraph(model, f) }));
+    .map((f) => ({
+      id: f.id,
+      name: f.name.replace(/ flow$/, ""),
+      graph: flowGraph(model, f),
+      diagram: flowSequence(model, f),
+    }));
 }

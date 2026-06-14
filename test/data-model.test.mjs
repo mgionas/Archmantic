@@ -1,11 +1,10 @@
-// Prisma data-model detection → ERD projection. Runs against dist/.
+// Data-model detection (Prisma / Drizzle / SQL DDL). Runs against dist/.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { detectDataModel } from "../dist/analyze/datamodel.js";
-import { erDiagram } from "../dist/project/index.js";
 
 const SCHEMA = `
 datasource db { provider = "postgresql" url = env("DATABASE_URL") }
@@ -65,20 +64,6 @@ test("prisma parser extracts entities, fields, keys, and relations", () => {
   });
 });
 
-test("erDiagram renders cardinality edges and attribute blocks", () => {
-  withSchema((dir) => {
-    const entities = detectDataModel(dir);
-    const mmd = erDiagram({ dataEntities: entities });
-    assert.match(mmd, /^erDiagram/);
-    // User has many Post (the array side is the "one").
-    assert.match(mmd, /User \|\|--o\{ Post/);
-    // PK / FK markers present; relation fields are edges, not attributes.
-    assert.match(mmd, /String id PK/);
-    assert.match(mmd, /String authorId FK/);
-    assert.ok(!/ posts /.test(mmd), "relation field not rendered as an attribute");
-  });
-});
-
 const DRIZZLE = `
 import { pgTable, serial, text, integer } from "drizzle-orm/pg-core";
 export const users = pgTable("users", {
@@ -126,10 +111,6 @@ test("drizzle parser: FK-only relations infer one-to-many", () => {
     const authorId = posts.fields.find((f) => f.name === "authorId");
     assert.ok(authorId.isForeignKey && authorId.relationTo === "data:users", "authorId FK → users");
     assert.ok(!authorId.optional, "notNull column is not optional");
-    const mmd = erDiagram({ dataEntities: entities });
-    assert.match(mmd, /users \|\|--o\{ posts/); // users has many posts (FK direction)
-    assert.match(mmd, /serial id PK/);
-    assert.match(mmd, /integer authorId FK/); // FK column still rendered as an attribute
   });
 });
 
@@ -143,7 +124,5 @@ test("sql DDL parser: columns, keys, and REFERENCES", () => {
     assert.ok(users.fields.find((f) => f.name === "name").optional, "nullable column");
     const posts = entities.find((e) => e.name === "posts");
     assert.ok(posts.fields.find((f) => f.name === "author_id").relationTo === "data:users", "FK → users");
-    const mmd = erDiagram({ dataEntities: entities });
-    assert.match(mmd, /users \|\|--o\{ posts/);
   });
 });

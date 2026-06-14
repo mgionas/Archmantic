@@ -1,15 +1,12 @@
 /**
  * Static HTML viewer — a single self-contained file that renders every
- * projection (context + component + sequence via Mermaid, the process via
- * bpmn-js, the capability map, and the trust layer). Dependency-light: pulls
- * Mermaid + bpmn-js from a CDN at view time, so the CLI ships no renderer.
- *
- * Per docs/ARCHITECTURE.md the CLI degrades to "open in browser"; this is that
- * artifact, written to .archmantic/view.html.
+ * projection (context, components, sequence, the data model, the capability map,
+ * the trust layer) as native HTML, plus the process via bpmn-js from a CDN. The
+ * interactive graph views (pan/zoom React Flow) live in the web app; this is the
+ * dependency-light local fallback the CLI writes to .archmantic/view.html.
  */
 import { type ArchitectureModel } from "../ir/types.js";
-import { contextDiagram, componentDiagram, sequenceDiagram } from "./mermaid.js";
-import { erDiagram } from "./erd.js";
+import { componentLabel } from "../ir/naming.js";
 import { bpmnXml } from "./bpmn.js";
 import { groupCapabilities } from "./capability.js";
 import { badge, band, isLowConfidence, summarize, type Grounded } from "./trust.js";
@@ -29,6 +26,13 @@ function allGrounded(model: ArchitectureModel): Grounded[] {
     ...(model.dataEntities ?? []),
     ...(model.endpoints ?? []),
   ];
+}
+
+/** Resolve an element id (component or system) to a human label. */
+function nameOf(model: ArchitectureModel, id: string): string {
+  if (model.components.some((c) => c.id === id)) return componentLabel(id);
+  const sys = model.systems.find((s) => s.id === id);
+  return sys ? sys.name : id;
 }
 
 function apiSection(model: ArchitectureModel): string {
@@ -81,18 +85,72 @@ function capabilitySection(model: ArchitectureModel): string {
   return blocks.join("\n");
 }
 
-function mermaidBlock(src: string): string {
-  return `<pre class="mermaid">${esc(src)}</pre>`;
+/** Context — the internal system and the external systems it depends on. */
+function contextSection(model: ArchitectureModel): string {
+  const internal = model.systems.find((s) => s.kind === "internal");
+  const intName = esc(internal?.name ?? model.project);
+  const externals = model.systems.filter((s) => s.kind === "external");
+  if (!externals.length) return `<p><b>${intName}</b> <span class="muted">— no external dependencies detected</span></p>`;
+  const items = externals
+    .map((e) => `<li><span class="cap">${esc(e.name)}</span><span class="badge">external</span></li>`)
+    .join("\n");
+  return `<p class="muted"><b>${intName}</b> depends on:</p><ul class="plain">${items}</ul>`;
+}
+
+/** Components and their outgoing dependencies (the internal module graph as a table). */
+function componentSection(model: ArchitectureModel): string {
+  if (!model.components.length) return "<p class='empty'>No components derived.</p>";
+  const rows = model.components
+    .map((c) => {
+      const deps = [...new Set(model.relations.filter((r) => r.from === c.id).map((r) => nameOf(model, r.to)))];
+      const role = (c as { role?: string }).role ?? "";
+      return `<tr><td>${esc(componentLabel(c.id))}</td><td class="proto">${esc(role)}</td><td>${esc(deps.join(", ") || "—")}</td></tr>`;
+    })
+    .join("\n");
+  return `<table class="api"><thead><tr><th>Component</th><th>Role</th><th>Depends on</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+/** Sequence — the first derived flow as an ordered list of messages. */
+function sequenceSection(model: ArchitectureModel): string {
+  const flow = model.flows[0];
+  if (!flow?.steps?.length) return "<p class='empty'>No flow derived.</p>";
+  const items = flow.steps
+    .map((s, i) => {
+      const to = s.to ?? s.participant;
+      const self = s.participant === to;
+      const target = self ? "" : ` <b>${esc(nameOf(model, to))}</b>`;
+      return `<li><span class="n">${i + 1}.</span> <b>${esc(nameOf(model, s.participant))}</b> ${self ? "↺" : "→"}${target} <span class="muted">${esc(s.action)}</span></li>`;
+    })
+    .join("\n");
+  return `<ol class="seq">${items}</ol>`;
+}
+
+/** Data model — one field table per entity (PK/FK/UK/nullable markers). */
+function dataSection(model: ArchitectureModel): string {
+  const entities = model.dataEntities ?? [];
+  if (!entities.length) return "";
+  const blocks = entities
+    .map((e) => {
+      const rows = e.fields
+        .filter((f) => !(f.relationTo && !f.isForeignKey)) // pure nav fields are edges, not columns
+        .map((f) => {
+          const key = f.isId ? "PK" : f.isForeignKey ? "FK" : f.isUnique ? "UK" : "";
+          const type = esc(f.type) + (f.list ? "[]" : "") + (f.optional ? "?" : "");
+          return `<tr><td class="path">${esc(f.name)}</td><td class="proto">${type}</td><td class="badge">${key}</td></tr>`;
+        })
+        .join("\n");
+      return `<div class="entity"><h3>${esc(e.name)}</h3><table class="api"><tbody>${rows}</tbody></table></div>`;
+    })
+    .join("\n");
+  return `
+  <h2>Data model — ${entities.length} entities</h2>
+  <div class="entgrid">${blocks}</div>`;
 }
 
 export function renderHtml(model: ArchitectureModel): string {
-  const ctx = mermaidBlock(contextDiagram(model));
-  const comp = mermaidBlock(componentDiagram(model));
-  const flow = model.flows[0];
-  const seq = flow ? mermaidBlock(sequenceDiagram(flow, model)) : "<p class='empty'>No flow derived.</p>";
   const proc = model.processes[0];
   const bpmn = proc ? bpmnXml(proc) : "";
-  const erd = model.dataEntities?.length ? mermaidBlock(erDiagram(model)) : "";
+  const flow = model.flows[0];
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -115,18 +173,27 @@ export function renderHtml(model: ArchitectureModel): string {
   .b.high { background: #14331f; color: #4ade80; } .b.medium { background: #33300f; color: #facc15; } .b.low { background: #331616; color: #f87171; }
   h2 { font-size: 16px; margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #232734; }
   .card { background: #171a21; border: 1px solid #232734; border-radius: 12px; padding: 18px; overflow: auto; }
+  .muted { color: #8b93a7; }
   .capgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
   .area h3 { margin: 0 0 8px; font-size: 13px; color: #8b93a7; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
   .area ul { list-style: none; margin: 0; padding: 0; }
   .area li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 6px 0; border-bottom: 1px solid #1f232e; }
   .area li.lowconf .cap::after { content: " ⚠"; }
   .cap { font-weight: 500; }
+  ul.plain { list-style: none; margin: 8px 0 0; padding: 0; }
+  ul.plain li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid #1f232e; }
+  ol.seq { margin: 0; padding-left: 4px; list-style: none; }
+  ol.seq li { padding: 6px 0; border-bottom: 1px solid #1f232e; }
+  ol.seq .n { color: #5a6172; font-variant-numeric: tabular-nums; margin-right: 6px; }
+  .entgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .entity { background: #171a21; border: 1px solid #232734; border-radius: 12px; padding: 14px 16px; }
+  .entity h3 { margin: 0 0 8px; font-size: 14px; }
   .badge { font-size: 11px; color: #8b93a7; white-space: nowrap; }
   .badge.low { color: #f87171; } .badge.medium { color: #facc15; } .badge.high { color: #4ade80; }
   .empty { color: #8b93a7; font-style: italic; }
   table.api { width: 100%; border-collapse: collapse; font-size: 13px; }
   table.api th { text-align: left; color: #8b93a7; font-weight: 600; padding: 6px 10px; border-bottom: 1px solid #232734; }
-  table.api td { padding: 6px 10px; border-bottom: 1px solid #1f232e; }
+  table.api td { padding: 6px 10px; border-bottom: 1px solid #1f232e; vertical-align: top; }
   table.api td.path { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
   table.api td.proto { color: #8b93a7; }
   td.method { font-family: ui-monospace, monospace; font-weight: 600; white-space: nowrap; }
@@ -149,27 +216,23 @@ export function renderHtml(model: ArchitectureModel): string {
   <div class="capgrid">${capabilitySection(model)}</div>
 
   <h2>Context</h2>
-  <div class="card">${ctx}</div>
+  <div class="card">${contextSection(model)}</div>
 
   <h2>Components &amp; dependencies</h2>
-  <div class="card">${comp}</div>
+  <div class="card">${componentSection(model)}</div>
 
-  ${erd ? `<h2>Data model — ${model.dataEntities.length} entities</h2>\n  <div class="card">${erd}</div>` : ""}
+  ${dataSection(model)}
 
   ${apiSection(model)}
 
   <h2>Sequence — ${esc(flow?.name ?? "")}</h2>
-  <div class="card">${seq}</div>
+  <div class="card">${sequenceSection(model)}</div>
 
   <h2>Process (BPMN) — ${esc(proc?.name ?? "")}</h2>
   <div class="card"><div id="bpmn"></div></div>
 </main>
 <footer>Archmantic · diagrams are projections of one grounded model · ⚠ = low confidence, flagged for review</footer>
 
-<script type="module">
-  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-  mermaid.initialize({ startOnLoad: true, theme: "dark", securityLevel: "loose" });
-</script>
 <script src="https://unpkg.com/bpmn-js@17/dist/bpmn-navigated-viewer.development.js"></script>
 <script>
   const BPMN_XML = ${JSON.stringify(bpmn)};

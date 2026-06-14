@@ -18,6 +18,7 @@ import type {
   ContextDetail,
   EntityNode,
   EntityEdge,
+  SequenceModel,
 } from "@/lib/diagrams";
 import { DiagramTabs } from "./diagram-tabs";
 import { KnowledgeView } from "@/components/knowledge-view";
@@ -55,7 +56,7 @@ export interface Diagrams {
   contextDetails: Record<string, ContextDetail>;
   componentGraph: { nodes: GraphNode[]; edges: GraphEdge[] };
   componentDetails: Record<string, CompDetail>;
-  sequences: { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] } }[];
+  sequences: { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] }; diagram: SequenceModel }[];
   processXml: string | null;
   erd: { nodes: EntityNode[]; edges: EntityEdge[] } | null;
   edited: boolean;

@@ -1,18 +1,15 @@
 /**
- * Projection layer — turns the one grounded IR into the many views (Mermaid
- * context/component/sequence, BPMN process, the capability map, the trust
- * surface) and a self-contained HTML viewer. See docs/ARCHITECTURE.md §1.
+ * Projection layer — turns the one grounded IR into the many views (context,
+ * components, sequence, the BPMN process, the capability map, the trust surface)
+ * and a self-contained HTML viewer. The web app renders graphs interactively
+ * with React Flow; the CLI emits this HTML + BPMN. See docs/ARCHITECTURE.md §1.
  */
 import { type ArchitectureModel } from "../ir/types.js";
-import { contextDiagram, componentDiagram, sequenceDiagram } from "./mermaid.js";
-import { erDiagram } from "./erd.js";
 import { bpmnXml } from "./bpmn.js";
 import { capabilityMapText } from "./capability.js";
 import { renderHtml } from "./html.js";
 import { summarize, type Grounded } from "./trust.js";
 
-export { contextDiagram, componentDiagram, sequenceDiagram } from "./mermaid.js";
-export { erDiagram } from "./erd.js";
 export { bpmnXml } from "./bpmn.js";
 export { capabilityMapText, groupCapabilities } from "./capability.js";
 export { renderHtml } from "./html.js";
@@ -78,8 +75,12 @@ export function terminalPreview(model: ArchitectureModel): string {
   out.push(`\n${BOLD}Capability map${RESET} ${DIM}— what can this system do?${RESET}`);
   out.push(capabilityMapText(model));
 
-  out.push(`\n${BOLD}Context diagram${RESET} ${DIM}(Mermaid source)${RESET}`);
-  out.push(contextDiagram(model));
+  const externals = model.systems.filter((s) => s.kind === "external");
+  if (externals.length) {
+    const internal = model.systems.find((s) => s.kind === "internal");
+    out.push(`\n${BOLD}Context${RESET} ${DIM}— ${internal?.name ?? model.project} depends on${RESET}`);
+    out.push("  " + externals.map((e) => e.name).join("  ·  "));
+  }
 
   if (model.dataEntities?.length) {
     out.push(`\n${BOLD}Data model${RESET} ${DIM}— ${model.dataEntities.length} entities${RESET}`);
@@ -106,15 +107,13 @@ export function terminalPreview(model: ArchitectureModel): string {
   return out.join("\n");
 }
 
-/** Everything the `view` command emits to disk, keyed by relative filename. */
+/** Everything the `view` command emits to disk, keyed by relative filename.
+ *  Interactive graphs live in the web app (React Flow); the CLI ships the
+ *  self-contained HTML viewer plus the BPMN process as a portable artifact. */
 export function projectionArtifacts(model: ArchitectureModel): Record<string, string> {
   const artifacts: Record<string, string> = {
     "view.html": renderHtml(model),
-    "context.mmd": contextDiagram(model),
-    "components.mmd": componentDiagram(model),
   };
-  if (model.flows[0]) artifacts["sequence.mmd"] = sequenceDiagram(model.flows[0], model);
   if (model.processes[0]) artifacts["process.bpmn"] = bpmnXml(model.processes[0]);
-  if (model.dataEntities?.length) artifacts["data.mmd"] = erDiagram(model);
   return artifacts;
 }

@@ -598,7 +598,6 @@ function cmdSystem(args: string[]): number {
 
   const dir = join(root, MODEL_DIR);
   mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, "system-context.mmd"), view.mermaid + "\n", "utf8");
   writeFileSync(join(dir, "system.html"), systemHtml(view), "utf8");
 
   console.log(`✓ Unified system view: "${name}"`);
@@ -627,7 +626,7 @@ function cmdSystem(args: string[]): number {
       console.log(`    ${RED}⚠ ${l.from} → ${l.to}${RESET} ${DIM}${l.reason}${RESET}`);
     }
   }
-  console.log(`  → ${MODEL_DIR}/system.html (open in a browser) + system-context.mmd`);
+  console.log(`  → ${MODEL_DIR}/system.html (open in a browser)`);
   return 0;
 }
 

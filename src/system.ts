@@ -31,41 +31,19 @@ export function summarizeService(m: ArchitectureModel): ServiceSummary {
   };
 }
 
-const nodeId = (s: string) => "n_" + s.replace(/[^A-Za-z0-9]/g, "_");
-const label = (s: string) => s.replace(/"/g, "'");
-
-/** A cross-service context diagram (Mermaid) from the services in a system. */
-export function systemContextDiagram(services: ServiceSummary[], systemName: string): string {
+/** Shared third-party externals used by 2+ services (excluding sibling services). */
+export function sharedExternals(services: ServiceSummary[]): string[] {
   const names = new Set(services.map((s) => s.project));
-  const lines: string[] = ["flowchart LR", `  subgraph sys["${label(systemName)}"]`];
-  for (const s of services) lines.push(`    ${nodeId(s.project)}["${label(s.project)}<br/><i>service</i>"]`);
-  lines.push("  end");
-
-  // service → service edges (declared consumes that match a sibling service)
-  for (const s of services) {
-    for (const dep of s.consumes) {
-      if (names.has(dep)) lines.push(`  ${nodeId(s.project)} -->|calls| ${nodeId(dep)}`);
-    }
+  const counts = new Map<string, number>();
+  for (const s of services) for (const ext of new Set(s.externals)) {
+    if (!names.has(ext)) counts.set(ext, (counts.get(ext) ?? 0) + 1);
   }
-  // shared third-party externals (exclude anything that is itself a service)
-  const drawn = new Set<string>();
-  for (const s of services) {
-    for (const ext of s.externals) {
-      if (names.has(ext)) continue;
-      if (!drawn.has(ext)) {
-        lines.push(`  ${nodeId("ext_" + ext)}[/"${label(ext)}"/]`);
-        drawn.add(ext);
-      }
-      lines.push(`  ${nodeId(s.project)} -.-> ${nodeId("ext_" + ext)}`);
-    }
-  }
-  return lines.join("\n");
+  return [...counts.entries()].filter(([, n]) => n >= 2).map(([name]) => name).sort();
 }
 
 export interface SystemView {
   name: string;
   services: ServiceSummary[];
-  mermaid: string;
   crossServiceEdges: { from: string; to: string }[];
   totals: { services: number; components: number; capabilities: number };
 }
@@ -79,7 +57,6 @@ export function buildSystemView(models: ArchitectureModel[], name: string): Syst
   return {
     name,
     services,
-    mermaid: systemContextDiagram(services, name),
     crossServiceEdges,
     totals: {
       services: services.length,
@@ -180,7 +157,9 @@ export function analyzeLinks(models: ArchitectureModel[]): LinkAnalysis {
   return { repos, links, counts };
 }
 
-/** Self-contained HTML for the unified system view (Mermaid via CDN). */
+/** Self-contained HTML for the unified system view. Dependency-free: the
+ *  interactive cross-service graph lives in the web app; this is the local
+ *  text fallback (cross-service calls + shared externals + a services table). */
 export function systemHtml(view: SystemView): string {
   const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const rows = view.services
@@ -190,17 +169,24 @@ export function systemHtml(view: SystemView): string {
         `<td>${esc(s.consumes.join(", ") || "—")}</td><td>${esc(s.technologies.join(", ") || "—")}</td></tr>`,
     )
     .join("\n");
+  const calls = view.crossServiceEdges.length
+    ? `<ul class="plain">${view.crossServiceEdges.map((e) => `<li>${esc(e.from)} <span class="muted">→</span> ${esc(e.to)}</li>`).join("")}</ul>`
+    : `<p class="muted">No cross-service calls detected.</p>`;
+  const shared = sharedExternals(view.services);
+  const sharedHtml = shared.length
+    ? `<p class="muted" style="margin-top:12px">Shared externals: ${shared.map((x) => esc(x)).join(", ")}</p>`
+    : "";
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><title>Archmantic system — ${esc(view.name)}</title>
 <style>body{font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;background:#0f1115;color:#e6e9ef}
 .wrap{max-width:1100px;margin:0 auto;padding:28px 32px}h1{font-size:22px}h2{font-size:16px;margin-top:28px;border-bottom:1px solid #232734;padding-bottom:8px}
 .card{background:#171a21;border:1px solid #232734;border-radius:12px;padding:16px}table{width:100%;border-collapse:collapse;font-size:13px}
-td,th{text-align:left;padding:8px;border-bottom:1px solid #1f232e}th{color:#8b93a7}</style></head>
+td,th{text-align:left;padding:8px;border-bottom:1px solid #1f232e}th{color:#8b93a7}.muted{color:#8b93a7}
+ul.plain{list-style:none;margin:0;padding:0}ul.plain li{padding:6px 0;border-bottom:1px solid #1f232e}</style></head>
 <body><div class="wrap"><h1>${esc(view.name)} <span style="color:#8b93a7;font-size:13px">· unified system view</span></h1>
 <div style="color:#8b93a7;font-size:13px">${view.totals.services} services · ${view.totals.components} components · ${view.totals.capabilities} capabilities</div>
-<h2>Cross-service context</h2><div class="card"><pre class="mermaid">${esc(view.mermaid)}</pre></div>
+<h2>Cross-service calls</h2><div class="card">${calls}${sharedHtml}</div>
 <h2>Services</h2><div class="card"><table><thead><tr><th>Service</th><th>Components</th><th>Capabilities</th><th>Consumes</th><th>Stack</th></tr></thead><tbody>${rows}</tbody></table></div>
 </div>
-<script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";mermaid.initialize({startOnLoad:true,theme:"dark",securityLevel:"loose"});</script>
 </body></html>
 `;
 }

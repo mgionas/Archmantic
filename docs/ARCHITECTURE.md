@@ -79,11 +79,10 @@ Requirement: human-visual + agent-readable + diffable + renderable + standards-a
 
 | Diagram | Format | Rationale |
 |---|---|---|
-| Context | **Mermaid** (`flowchart`/`C4Context`) | text, diffable, renders everywhere, agent-parseable |
-| Sequence | **Mermaid** `sequenceDiagram` | same |
-| BPMN / process | **BPMN 2.0 XML** (rendered via `bpmn-js`) | the actual industry standard for business processes; editable canvas |
+| Context / components / sequence / ERD | **React Flow** (`@xyflow/react`) graphs in the web; native HTML tables/lists in the CLI viewer | interactive (pan/zoom, click-through, role colour), full layout control, no opaque renderer; the IR drives node/edge builders directly |
+| BPMN / process | **BPMN 2.0 XML** (rendered/edited via `bpmn-js`) | the actual industry standard for business processes; editable canvas |
 
-**(confirm)** Mermaid for the two "architecture" diagrams, true BPMN 2.0 for processes. Mermaid-everything is simpler but BPMN is the recognized standard you explicitly asked to align to — so we pay the cost of a second renderer for processes only. We render Mermaid → SVG server-side (mermaid CLI / headless) for the platform and for CLI preview.
+**Decision:** the architecture diagrams are projected to **React Flow** graphs (the web is the interactive viewer); processes use true **BPMN 2.0**. Mermaid was removed — its layout/handling was too limiting and a text-source renderer can't give the interactive sequence diagram (lifelines + activation bars) we want. The CLI ships a dependency-light self-contained HTML viewer (tables/lists) plus the BPMN as a portable artifact.
 
 These rendered artifacts are **derived** — the IR is the source. We can regenerate them anytime.
 
@@ -145,7 +144,7 @@ We use **Claude** via the Anthropic TypeScript SDK (`@anthropic-ai/sdk`), tiered
 | Surface | Role | Stack |
 |---|---|---|
 | **CLI** (`archmantic`) | primary for devs/advanced; powers init, analyze, serve-MCP, preview | Node/TS, single binary-ish via npm |
-| **Web platform** | manage projects, view & **edit** diagrams, subscriptions | Next.js (React) on **Vercel** + `bpmn-js` (BPMN editor) + Mermaid render; **Neon** Postgres; the editable canvas |
+| **Web platform** | manage projects, view & **edit** diagrams, subscriptions | Next.js (React) on **Vercel** + **React Flow** (`@xyflow/react`) graphs + `bpmn-js` (BPMN editor); **Neon** Postgres; the editable canvas |
 | **MCP server** | agent integration | MCP TS SDK (shipped by the CLI: `archmantic mcp`) |
 
 CLI commands (MVP-ish): `archmantic init`, `archmantic analyze [--tier N]`, `archmantic mcp` (start server), `archmantic view <diagram>` (terminal preview — render to image + iTerm2/Kitty inline protocol, ASCII fallback). **(confirm)** in-terminal image preview is feasible on modern terminals; we degrade to "open in browser" elsewhere.
@@ -185,7 +184,7 @@ This keeps v1 honest: we prove the model→spec loop without owning code generat
 | **Deployment topology** | **Local-first hybrid.** CLI + MCP + in-repo `.archmantic/` model run locally and free (privacy parity with code-graph rivals); cloud platform adds editing, collaboration, dashboards (paid). |
 | **LLM / privacy (Tier 2)** | **BYOK first** — user supplies their own Anthropic API key; analysis runs on their machine/CI and code never leaves their environment on the free/local path. **Managed + configurable (BYOK *or* managed) is the long-term goal** for the cloud tier. |
 | **v1 languages (Tier 1)** | **TypeScript/JS only** for v1 — fastest to the differentiated demo, and we dogfood on our own codebase. More grammars (Python, Go, …) post-MVP. |
-| **Diagram formats** | **Mermaid** (context/sequence) **+ BPMN 2.0** (process, via `bpmn-js`). BPMN is the white-space USP and the standard to align to. |
+| **Diagram formats** | **React Flow** graphs (context/components/sequence/ERD) **+ BPMN 2.0** (process, via `bpmn-js`). BPMN is the white-space USP and the standard to align to. (Mermaid removed — see §"Diagram formats".) |
 | **Edit-then-build** | External agent in v1 (platform = context/brain layer); platform-orchestrated build later. |
 | **Platform stack** | Web app = **Next.js on Vercel**; database = **Neon** (serverless Postgres) + **pgvector** for capability search. Local CLI/MCP stays dependency-light and DB-free (in-repo `.archmantic/`). |
 | **Data store (graph vs doc vs relational)** | **Neon Postgres**, used as document + vector + relational: **JSONB** for the evolving IR (MongoDB-style flexibility), **pgvector** for capability semantic search, all in one store. **No MongoDB, no graph DB.** The per-project graph is small → loaded into memory and traversed in app code (TS); the DB persists/indexes, it doesn't do graph compute. Revisit a graph layer (Apache AGE or a dedicated graph DB) only if deep, cross-repo, many-hop traversal becomes a measured bottleneck. |
