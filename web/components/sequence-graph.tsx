@@ -17,9 +17,11 @@ import {
   type NodeProps,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
+import { Maximize2 } from "lucide-react";
 import "@xyflow/react/dist/style.css";
 import type { GraphNode, FlowEdge } from "@/lib/diagrams";
 import { roleColor } from "@/lib/format";
+import { EDGE_LABEL, useFullscreen } from "@/components/flow-graph";
 import { RoleLegend } from "@/components/ui/role-legend";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 
@@ -66,8 +68,7 @@ function Graph({ graph, rankdir }: { graph: { nodes: GraphNode[]; edges: FlowEdg
         source: e.source,
         target: e.target,
         label: e.label,
-        labelBgPadding: [4, 2],
-        labelBgStyle: { fill: "var(--background)", fillOpacity: 0.85 },
+        ...EDGE_LABEL,
         markerEnd: { type: MarkerType.ArrowClosed },
       })),
     [graph],
@@ -125,10 +126,20 @@ export function SequenceGraph({
   rankdir?: "TB" | "LR";
 }) {
   const [view, setView] = useState<"graph" | "list">("graph");
+  const { ref: fsRef, toggle: toggleFs } = useFullscreen<HTMLDivElement>();
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden rounded-lg border border-border/60 bg-canvas">
-      <div className="flex shrink-0 items-center justify-end border-b border-border/60 px-2 py-1.5">
+    <div ref={fsRef} className="flex h-full w-full flex-col overflow-hidden rounded-lg border border-border/60 bg-canvas">
+      <div className="flex shrink-0 items-center justify-end gap-1.5 border-b border-border/60 px-2 py-1.5">
         <SegmentedControl options={["graph", "list"] as const} value={view} onChange={setView} />
+        <button
+          type="button"
+          onClick={toggleFs}
+          title="Fullscreen"
+          aria-label="Toggle fullscreen"
+          className="grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <Maximize2 className="size-4" />
+        </button>
       </div>
       <div className="min-h-0 flex-1">
         {view === "graph" ? (

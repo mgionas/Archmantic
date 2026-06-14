@@ -8,6 +8,7 @@ import {
   useReactFlow,
   Background,
   Controls,
+  ControlButton,
   MiniMap,
   MarkerType,
   Panel,
@@ -18,12 +19,12 @@ import {
   type NodeProps,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
-import { X } from "lucide-react";
+import { X, Maximize2 } from "lucide-react";
 import "@xyflow/react/dist/style.css";
 import type { GraphNode, GraphEdge, CompDetail } from "@/lib/diagrams";
 import { cn } from "@/lib/utils";
 import { roleColor } from "@/lib/format";
-import { focusDuration } from "@/components/flow-graph";
+import { focusDuration, useFullscreen } from "@/components/flow-graph";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 
 const NW = 188;
@@ -288,10 +289,12 @@ function Graph({
     const dim = roleFilter !== null && roleById.get(n.id) !== roleFilter;
     return { ...n, selected: n.id === selected, style: { ...(n.style ?? {}), opacity: dim ? 0.25 : 1 } };
   });
+  const { ref: fsRef, toggle: toggleFs } = useFullscreen<HTMLDivElement>();
 
   return (
     <div
-      className="relative h-full w-full"
+      ref={fsRef}
+      className="relative h-full w-full bg-canvas"
       role="group"
       aria-label={`Component dependency graph — ${graph.nodes.length} components. Open the Components facet for a keyboard-accessible list.`}
     >
@@ -346,7 +349,11 @@ function Graph({
         </Panel>
         <Background gap={18} />
         <MiniMap pannable zoomable />
-        <Controls showInteractive={false} />
+        <Controls showInteractive={false}>
+          <ControlButton onClick={toggleFs} title="Fullscreen" aria-label="Toggle fullscreen">
+            <Maximize2 />
+          </ControlButton>
+        </Controls>
       </ReactFlow>
 
       {selected && details[selected] ? (

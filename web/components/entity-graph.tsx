@@ -7,6 +7,7 @@ import {
   useReactFlow,
   Background,
   Controls,
+  ControlButton,
   MiniMap,
   MarkerType,
   Handle,
@@ -16,7 +17,8 @@ import {
   type NodeProps,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
-import { useFlowProps, GraphDrawer, DrawerSection, focusDuration } from "./flow-graph";
+import { Maximize2 } from "lucide-react";
+import { useFlowProps, GraphDrawer, DrawerSection, focusDuration, EDGE_LABEL, useFullscreen } from "./flow-graph";
 import { cn } from "@/lib/utils";
 import type { EntityNode as EntityNodeData, EntityEdge, EntityField } from "@/lib/diagrams";
 
@@ -97,9 +99,12 @@ function Graph({ graph }: { graph: { nodes: EntityNodeData[]; edges: EntityEdge[
         target: e.target,
         label: e.label,
         markerEnd: { type: MarkerType.ArrowClosed },
+        ...EDGE_LABEL,
+        labelStyle: { ...EDGE_LABEL.labelStyle, fontFamily: "var(--font-mono, monospace)" },
       })),
     [graph],
   );
+  const { ref: fsRef, toggle: toggleFs } = useFullscreen<HTMLDivElement>();
   const labelById = useMemo(() => new Map(graph.nodes.map((n) => [n.id, n.label])), [graph]);
   const node = selected ? graph.nodes.find((n) => n.id === selected) : null;
   const relations = useMemo(() => {
@@ -118,7 +123,7 @@ function Graph({ graph }: { graph: { nodes: EntityNodeData[]; edges: EntityEdge[
   };
 
   return (
-    <div className="relative h-full w-full" role="group" aria-label={`Entity-relationship graph — ${nodes.length} entities. The entity list below is a keyboard-accessible equivalent.`}>
+    <div ref={fsRef} className="relative h-full w-full bg-canvas" role="group" aria-label={`Entity-relationship graph — ${nodes.length} entities. The entity list below is a keyboard-accessible equivalent.`}>
       <ReactFlow
         {...flow}
         nodes={nodes.map((n) => (n.id === selected ? { ...n, selected: true } : n))}
@@ -130,7 +135,11 @@ function Graph({ graph }: { graph: { nodes: EntityNodeData[]; edges: EntityEdge[
       >
         <Background gap={18} />
         <MiniMap pannable zoomable />
-        <Controls showInteractive={false} />
+        <Controls showInteractive={false}>
+          <ControlButton onClick={toggleFs} title="Fullscreen" aria-label="Toggle fullscreen">
+            <Maximize2 />
+          </ControlButton>
+        </Controls>
       </ReactFlow>
 
       {node ? (

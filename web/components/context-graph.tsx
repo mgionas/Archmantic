@@ -6,6 +6,7 @@ import {
   ReactFlowProvider,
   Background,
   Controls,
+  ControlButton,
   MiniMap,
   MarkerType,
   Handle,
@@ -15,7 +16,8 @@ import {
   type NodeProps,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
-import { useFlowProps, GraphDrawer, DrawerSection } from "./flow-graph";
+import { Maximize2 } from "lucide-react";
+import { useFlowProps, GraphDrawer, DrawerSection, EDGE_LABEL, useFullscreen } from "./flow-graph";
 import { cn } from "@/lib/utils";
 import type { ContextNode, ContextEdge, ContextDetail } from "@/lib/diagrams";
 
@@ -85,13 +87,15 @@ function Graph({
         target: e.target,
         label: "depends on",
         markerEnd: { type: MarkerType.ArrowClosed },
+        ...EDGE_LABEL,
       })),
     [graph],
   );
   const d = selected ? details[selected] : null;
+  const { ref: fsRef, toggle: toggleFs } = useFullscreen<HTMLDivElement>();
 
   return (
-    <div className="relative h-full w-full" role="group" aria-label={`System context graph — ${nodes.length} systems. Click a node for details (Esc closes).`}>
+    <div ref={fsRef} className="relative h-full w-full bg-canvas" role="group" aria-label={`System context graph — ${nodes.length} systems. Click a node for details (Esc closes).`}>
       <ReactFlow
         {...flow}
         nodes={nodes.map((n) => (n.id === selected ? { ...n, selected: true } : n))}
@@ -103,7 +107,11 @@ function Graph({
       >
         <Background gap={18} />
         <MiniMap pannable zoomable />
-        <Controls showInteractive={false} />
+        <Controls showInteractive={false}>
+          <ControlButton onClick={toggleFs} title="Fullscreen" aria-label="Toggle fullscreen">
+            <Maximize2 />
+          </ControlButton>
+        </Controls>
       </ReactFlow>
 
       {d ? (

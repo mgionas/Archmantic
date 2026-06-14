@@ -10,6 +10,26 @@ export function focusDuration(ms = 400): number {
   return typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 0 : ms;
 }
 
+/** Shared edge-label styling: a background plate so labels read over busy edges. */
+export const EDGE_LABEL = {
+  labelBgPadding: [4, 2] as [number, number],
+  labelBgBorderRadius: 3,
+  labelBgStyle: { fill: "var(--background)", fillOpacity: 0.85 },
+  labelStyle: { fontSize: 11, fill: "var(--muted-foreground)" },
+};
+
+/** Fullscreen toggle for a canvas wrapper: put `ref` on the element, call `toggle`. */
+export function useFullscreen<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  const toggle = () => {
+    const el = ref.current;
+    if (!el) return;
+    if (document.fullscreenElement) void document.exitFullscreen?.();
+    else void el.requestFullscreen?.();
+  };
+  return { ref, toggle };
+}
+
 /** Common ReactFlow props: theme color mode + Google-Maps gestures. */
 export function useFlowProps() {
   const { resolvedTheme } = useTheme();
