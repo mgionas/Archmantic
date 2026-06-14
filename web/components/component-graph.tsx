@@ -261,10 +261,12 @@ function Graph({
   graph,
   details,
   onNavigate,
+  focusId,
 }: {
   graph: { nodes: GraphNode[]; edges: GraphEdge[] };
   details: Record<string, CompDetail>;
   onNavigate?: (facet: string) => void;
+  focusId?: string | null;
 }) {
   const { resolvedTheme } = useTheme();
   const rf = useReactFlow();
@@ -283,6 +285,12 @@ function Graph({
     setSelected(id);
     rf.fitView({ nodes: [{ id }], duration: focusDuration(), maxZoom: 1.4 });
   };
+
+  // Cross-link: a list item asked to focus this node — select + center it.
+  useEffect(() => {
+    if (focusId) focus(focusId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusId]);
 
   const decorated = nodes.map((n) => {
     if (n.type !== "comp") return n;
@@ -367,6 +375,7 @@ export function ComponentGraph(props: {
   graph: { nodes: GraphNode[]; edges: GraphEdge[] };
   details: Record<string, CompDetail>;
   onNavigate?: (facet: string) => void;
+  focusId?: string | null;
 }) {
   return (
     <div className="h-full w-full overflow-hidden rounded-lg border border-border/60 bg-canvas">

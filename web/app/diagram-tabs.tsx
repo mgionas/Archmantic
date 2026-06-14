@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -54,6 +55,7 @@ export function DiagramTabs({
   processXml,
   erd,
   edited,
+  focusNode,
   onNavigate,
 }: {
   project: string;
@@ -65,9 +67,15 @@ export function DiagramTabs({
   processXml: string | null;
   erd: { nodes: EntityNode[]; edges: EntityEdge[] } | null;
   edited: boolean;
+  focusNode?: string | null;
   onNavigate?: (facet: string) => void;
 }) {
   const [tab, setTab] = useUrlState("d", "context");
+  // When a list item asks to "open in graph", jump to the Components tab.
+  useEffect(() => {
+    if (focusNode) setTab("components");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusNode]);
   const [seqId, setSeqId] = useUrlState("seq", sequences[0]?.id ?? "");
   const activeSeq = sequences.find((s) => s.id === seqId) ?? sequences[0];
   const hasSeq = sequences.length > 0;
@@ -110,7 +118,7 @@ export function DiagramTabs({
           <ContextGraph graph={contextGraph} details={contextDetails} onNavigate={onNavigate} />
         ) : null}
         {tab === "components" ? (
-          <ComponentGraph graph={componentGraph} details={componentDetails} onNavigate={onNavigate} />
+          <ComponentGraph graph={componentGraph} details={componentDetails} onNavigate={onNavigate} focusId={focusNode} />
         ) : null}
         {tab === "sequence" && activeSeq ? <SequenceGraph key={activeSeq.id} graph={activeSeq.graph} /> : null}
         {tab === "process" ? (

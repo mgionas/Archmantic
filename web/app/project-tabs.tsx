@@ -202,6 +202,11 @@ export function ProjectTabs({
   const [compQuery, setCompQuery] = useState("");
   const [compGroupBy, setCompGroupBy] = useState<"role" | "folder" | "package">(isMono ? "package" : "role");
   const [compView, setCompView] = useState<"grid" | "list">("grid");
+  const [focusNode, setFocusNode] = useState<string | null>(null);
+  const openInGraph = (id: string) => {
+    setFocusNode(id);
+    setFacet("diagrams");
+  };
   const [apiGroupBy, setApiGroupBy] = useState<"resource" | "package">(isMono ? "package" : "resource");
 
   const capCount = groups.reduce((n, g) => n + g.caps.length, 0);
@@ -382,6 +387,7 @@ export function ProjectTabs({
             sequences={diagrams.sequences}
             processXml={diagrams.processXml}
             erd={diagrams.erd}
+            focusNode={focusNode}
             edited={diagrams.edited}
             onNavigate={setFacet}
           />
@@ -469,29 +475,37 @@ export function ProjectTabs({
                   {compView === "grid" ? (
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                       {items.map((c) => (
-                        <Card key={c.id} className="p-3">
+                        <Card
+                          key={c.id}
+                          onClick={() => openInGraph(c.id)}
+                          className="cursor-pointer p-3 transition-colors hover:border-primary/40"
+                          title={`${c.path} — open in graph`}
+                        >
                           <div className="flex items-center gap-2">
                             <span className="size-2 shrink-0 rounded-full" style={{ background: roleColor(c.role) }} />
-                            <span className="truncate font-medium" title={c.path}>
-                              {c.label}
-                            </span>
+                            <span className="truncate font-medium">{c.label}</span>
                           </div>
-                          <div className="mt-1 truncate text-xs text-muted-foreground" title={c.responsibility}>
-                            {c.responsibility}
-                          </div>
+                          <div className="mt-1 truncate text-xs text-muted-foreground">{c.responsibility}</div>
                         </Card>
                       ))}
                     </div>
                   ) : (
                     <ul className="divide-y divide-border/40 overflow-hidden rounded-lg border border-border/40">
                       {items.map((c) => (
-                        <li key={c.id} className="flex items-center gap-2.5 px-3 py-1.5 hover:bg-muted/40">
-                          <span className="size-2 shrink-0 rounded-full" style={{ background: roleColor(c.role) }} />
-                          <span className="shrink-0 font-medium">{c.label}</span>
-                          <span className="min-w-0 flex-1 truncate font-mono text-xs text-muted-foreground" title={c.responsibility}>
-                            {c.path}
-                          </span>
-                          <span className="shrink-0 text-xs capitalize text-muted-foreground">{c.role}</span>
+                        <li key={c.id}>
+                          <button
+                            type="button"
+                            onClick={() => openInGraph(c.id)}
+                            title="Open in graph"
+                            className="flex w-full items-center gap-2.5 px-3 py-1.5 text-left hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:outline-none"
+                          >
+                            <span className="size-2 shrink-0 rounded-full" style={{ background: roleColor(c.role) }} />
+                            <span className="shrink-0 font-medium">{c.label}</span>
+                            <span className="min-w-0 flex-1 truncate font-mono text-xs text-muted-foreground" title={c.responsibility}>
+                              {c.path}
+                            </span>
+                            <span className="shrink-0 text-xs capitalize text-muted-foreground">{c.role}</span>
+                          </button>
                         </li>
                       ))}
                     </ul>
