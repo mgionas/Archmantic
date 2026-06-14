@@ -22,6 +22,8 @@ import type {
 import { DiagramTabs } from "./diagram-tabs";
 import { KnowledgeView } from "@/components/knowledge-view";
 import { FeatureEditor } from "@/components/feature-editor";
+import { RoleLegend } from "@/components/ui/role-legend";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { band, roleColor } from "@/lib/format";
 
 const EntityGraph = dynamic(() => import("@/components/entity-graph").then((m) => m.EntityGraph), {
@@ -430,22 +432,14 @@ export function ProjectTabs({
                 placeholder="Filter components…"
                 className="max-w-sm"
               />
-              <div className="ml-auto flex items-center gap-0.5 rounded-lg border border-border/60 p-0.5">
-                {((isMono ? ["package", "role", "folder"] : ["role", "folder"]) as Array<typeof compGroupBy>).map((g) => (
-                  <button
-                    key={g}
-                    type="button"
-                    onClick={() => setCompGroupBy(g)}
-                    className={cn(
-                      "rounded-md px-2.5 py-1 text-xs capitalize transition-colors",
-                      compGroupBy === g ? "bg-muted font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
-                    )}
-                  >
-                    {g}
-                  </button>
-                ))}
-              </div>
+              <SegmentedControl
+                className="ml-auto"
+                options={(isMono ? ["package", "role", "folder"] : ["role", "folder"]) as Array<typeof compGroupBy>}
+                value={compGroupBy}
+                onChange={setCompGroupBy}
+              />
             </div>
+            <RoleLegend roles={[...new Set(components.map((c) => c.role))].sort()} />
             {compGroups.length === 0 ? (
               <p className="text-sm text-muted-foreground">No components match “{compQuery}”.</p>
             ) : (
@@ -507,21 +501,12 @@ export function ProjectTabs({
                 className="max-w-sm"
               />
               {isMono ? (
-                <div className="ml-auto flex items-center gap-0.5 rounded-lg border border-border/60 p-0.5">
-                  {(["package", "resource"] as const).map((g) => (
-                    <button
-                      key={g}
-                      type="button"
-                      onClick={() => setApiGroupBy(g)}
-                      className={cn(
-                        "rounded-md px-2.5 py-1 text-xs capitalize transition-colors",
-                        apiGroupBy === g ? "bg-muted font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
-                      )}
-                    >
-                      {g}
-                    </button>
-                  ))}
-                </div>
+                <SegmentedControl
+                  className="ml-auto"
+                  options={["package", "resource"] as const}
+                  value={apiGroupBy}
+                  onChange={setApiGroupBy}
+                />
               ) : null}
             </div>
             {apiGroups.length === 0 ? (

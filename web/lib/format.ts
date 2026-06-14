@@ -18,7 +18,11 @@ export const ROLE_COLOR: Record<string, string> = {
   module: "#94a3b8",
   external: "#64748b",
 };
-export const roleColor = (r: string) => ROLE_COLOR[r] ?? ROLE_COLOR.module;
+/** Display order for the role legend (and the source of known role keys). */
+export const ROLES = Object.keys(ROLE_COLOR).filter((r) => r !== "external");
+
+/** Theme-aware role color (CSS var defined in globals.css, light + dark). */
+export const roleColor = (r: string) => `var(--role-${r}, var(--role-module))`;
 
 export function humanize(raw: string): string {
   const stem = (raw.replace(/\.(blade\.php|vue|tsx|ts|jsx|js|mjs|cjs)$/, "").split("/").pop() ?? raw)

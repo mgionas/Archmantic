@@ -9,6 +9,7 @@ import {
   Controls,
   MiniMap,
   MarkerType,
+  Panel,
   Handle,
   Position,
   type Node,
@@ -19,6 +20,7 @@ import dagre from "@dagrejs/dagre";
 import "@xyflow/react/dist/style.css";
 import type { GraphNode, FlowEdge } from "@/lib/diagrams";
 import { roleColor } from "@/lib/format";
+import { RoleLegend } from "@/components/ui/role-legend";
 
 const NW = 200;
 const NH = 40;
@@ -55,6 +57,7 @@ function layout(graph: { nodes: GraphNode[]; edges: FlowEdge[] }, rankdir: "TB" 
 function Graph({ graph, rankdir }: { graph: { nodes: GraphNode[]; edges: FlowEdge[] }; rankdir: "TB" | "LR" }) {
   const { resolvedTheme } = useTheme();
   const nodes = useMemo(() => layout(graph, rankdir), [graph, rankdir]);
+  const rolesPresent = useMemo(() => [...new Set(graph.nodes.map((n) => n.role))].sort(), [graph]);
   const edges = useMemo<Edge[]>(
     () =>
       graph.edges.map((e) => ({
@@ -84,6 +87,9 @@ function Graph({ graph, rankdir }: { graph: { nodes: GraphNode[]; edges: FlowEdg
       nodesConnectable={false}
       defaultEdgeOptions={{ style: { stroke: "var(--border)" } }}
     >
+      <Panel position="top-right" className="rounded-lg border border-border/60 bg-background/80 px-2 py-1.5 backdrop-blur">
+        <RoleLegend roles={rolesPresent} className="max-w-[40vw] justify-end" />
+      </Panel>
       <Background gap={18} />
       <MiniMap pannable zoomable />
       <Controls showInteractive={false} />

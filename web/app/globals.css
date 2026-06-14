@@ -104,6 +104,22 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+    /* Component-role colors — darker, saturated for the light canvas. */
+    --role-route: #dc2626;
+    --role-page: #7c3aed;
+    --role-view: #9333ea;
+    --role-ui: #2563eb;
+    --role-modal: #db2777;
+    --role-hook: #0d9488;
+    --role-store: #b45309;
+    --role-model: #15803d;
+    --role-service: #0e7490;
+    --role-middleware: #c2410c;
+    --role-layout: #4f46e5;
+    --role-config: #475569;
+    --role-util: #64748b;
+    --role-module: #475569;
+    --role-external: #334155;
 }
 
 .dark {
@@ -149,6 +165,22 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+    /* Component-role colors — bright for the dark canvas. */
+    --role-route: #f87171;
+    --role-page: #a78bfa;
+    --role-view: #c084fc;
+    --role-ui: #60a5fa;
+    --role-modal: #f472b6;
+    --role-hook: #2dd4bf;
+    --role-store: #fbbf24;
+    --role-model: #4ade80;
+    --role-service: #22d3ee;
+    --role-middleware: #fb923c;
+    --role-layout: #818cf8;
+    --role-config: #94a3b8;
+    --role-util: #cbd5e1;
+    --role-module: #94a3b8;
+    --role-external: #64748b;
 }
 
 @layer base {

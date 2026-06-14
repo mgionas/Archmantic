@@ -24,6 +24,7 @@ import type { GraphNode, GraphEdge, CompDetail } from "@/lib/diagrams";
 import { cn } from "@/lib/utils";
 import { roleColor } from "@/lib/format";
 import { focusDuration } from "@/components/flow-graph";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 
 const NW = 188;
 const NH = 38;
@@ -296,20 +297,8 @@ function Graph({
         onPaneClick={() => setSelected(null)}
         defaultEdgeOptions={{ style: { stroke: "var(--border)" } }}
       >
-        <Panel position="top-left" className="flex items-center gap-1 rounded-lg border border-border/60 bg-background/80 p-0.5 backdrop-blur">
-          {(["folder", "role"] as const).map((g) => (
-            <button
-              key={g}
-              type="button"
-              onClick={() => setBy(g)}
-              className={cn(
-                "rounded-md px-2.5 py-1 text-xs capitalize transition-colors",
-                by === g ? "bg-muted font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {g}
-            </button>
-          ))}
+        <Panel position="top-left" className="rounded-lg bg-background/80 backdrop-blur">
+          <SegmentedControl options={["folder", "role"] as const} value={by} onChange={setBy} />
         </Panel>
         <Panel position="top-right" className="flex max-w-[40%] flex-wrap justify-end gap-x-2 gap-y-1 rounded-lg border border-border/60 bg-background/80 px-2 py-1.5 backdrop-blur">
           {rolesPresent.map((r) => (
