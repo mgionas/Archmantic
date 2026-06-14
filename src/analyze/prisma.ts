@@ -10,7 +10,7 @@ import { readFileSync } from "node:fs";
 import { relative } from "node:path";
 import { type DataEntity, type DataField } from "../ir/types.js";
 import { STRUCTURAL_CONFIDENCE } from "./tier0.js";
-import { findFiles } from "./fs-util.js";
+import { findFiles, isTestFile } from "./fs-util.js";
 
 interface PartialEntity {
   name: string;
@@ -32,7 +32,9 @@ function finalize(cur: PartialEntity, rel: string): DataEntity {
 
 /** Parse the repo's Prisma schema(s) into data-model entities. Empty if none. */
 export function detectPrismaModel(root: string): DataEntity[] {
-  const files = findFiles(root, (n) => n.endsWith(".prisma"));
+  const files = findFiles(root, (n) => n.endsWith(".prisma")).filter(
+    (f) => !isTestFile(f.split("\\").join("/")),
+  );
   if (!files.length) return [];
   const sources = files.map((f) => ({
     rel: relative(root, f).split("\\").join("/"),

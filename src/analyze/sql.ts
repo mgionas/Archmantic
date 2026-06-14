@@ -10,7 +10,7 @@ import { readFileSync } from "node:fs";
 import { relative } from "node:path";
 import { type DataEntity, type DataField } from "../ir/types.js";
 import { STRUCTURAL_CONFIDENCE } from "./tier0.js";
-import { findFiles } from "./fs-util.js";
+import { findFiles, isTestFile } from "./fs-util.js";
 import { balancedBlock, splitTopLevel } from "./parse-util.js";
 
 const unquote = (s: string) => s.trim().replace(/^["'`\[]+|["'`\]]+$/g, "");
@@ -69,10 +69,9 @@ function parseColumns(body: string): DataField[] {
 }
 
 export function detectSqlModel(root: string): DataEntity[] {
-  const sources = findFiles(root, (n) => n.endsWith(".sql")).map((f) => ({
-    rel: relative(root, f).split("\\").join("/"),
-    text: readFileSync(f, "utf8"),
-  }));
+  const sources = findFiles(root, (n) => n.endsWith(".sql"))
+    .map((f) => ({ rel: relative(root, f).split("\\").join("/"), text: readFileSync(f, "utf8") }))
+    .filter((s) => !isTestFile(s.rel));
   const createRe = /create\s+table\s+(?:if\s+not\s+exists\s+)?["'`\[]?([A-Za-z_]\w*)["'`\]]?\s*\(/gi;
 
   const entities: DataEntity[] = [];

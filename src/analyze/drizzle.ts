@@ -11,7 +11,7 @@ import { readFileSync } from "node:fs";
 import { relative } from "node:path";
 import { type DataEntity, type DataField } from "../ir/types.js";
 import { STRUCTURAL_CONFIDENCE } from "./tier0.js";
-import { findFiles } from "./fs-util.js";
+import { findFiles, isTestFile } from "./fs-util.js";
 import { balancedBlock, splitTopLevel } from "./parse-util.js";
 
 /** Drizzle column-builder names that aren't real columns (table-level helpers). */
@@ -47,7 +47,7 @@ function parseFields(body: string, varToTable: Map<string, string>): DataField[]
 export function detectDrizzleModel(root: string): DataEntity[] {
   const sources = findFiles(root, (n) => /\.(ts|tsx|mts|cts)$/.test(n) && !n.endsWith(".d.ts"))
     .map((f) => ({ rel: relative(root, f).split("\\").join("/"), text: readFileSync(f, "utf8") }))
-    .filter((s) => /\b(?:pg|mysql|sqlite)Table\s*\(/.test(s.text));
+    .filter((s) => !isTestFile(s.rel) && /\b(?:pg|mysql|sqlite)Table\s*\(/.test(s.text));
   if (!sources.length) return [];
 
   const tableRe = /export\s+const\s+(\w+)\s*=\s*(?:pg|mysql|sqlite)Table\s*\(\s*["'`]([^"'`]+)["'`]\s*,\s*\{/g;

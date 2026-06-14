@@ -2,7 +2,7 @@
  * API surface detection — the contract layer ("what can callers invoke?").
  *
  * Detects REST routes (Next.js App Router `route.ts`, Pages `pages/api`, and
- * Express/Fastify/Koa/Hono `app.get("/…")` calls), tRPC procedures, and GraphQL
+ * Express/Fastify/Koa/Hono method calls like app.get(path)), tRPC procedures, and GraphQL
  * `Query`/`Mutation`/`Subscription` fields (SDL files + inline `gql\`…\``).
  * Grounded to `file:line`. Regex/structure-based, dependency-light. Pairs with the
  * data-model ERD as the two halves of the contract. See docs/ROADMAP.md.
@@ -12,7 +12,7 @@ import { join, relative } from "node:path";
 import { type Endpoint } from "../ir/types.js";
 import { STRUCTURAL_CONFIDENCE } from "./tier0.js";
 import { walkSourceFiles } from "./walk.js";
-import { findFiles } from "./fs-util.js";
+import { findFiles, isTestFile } from "./fs-util.js";
 import { balancedBlock } from "./parse-util.js";
 
 const HTTP_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"] as const;
@@ -104,6 +104,7 @@ export function detectEndpoints(root: string): Endpoint[] {
   const gqlRe = /(?:gql|graphql)\s*`([\s\S]*?)`/g;
 
   for (const rel of walkSourceFiles(root)) {
+    if (isTestFile(rel)) continue; // tests/fixtures aren't part of the API surface
     let text: string;
     try {
       text = readFileSync(join(root, rel), "utf8");
@@ -155,13 +156,14 @@ export function detectEndpoints(root: string): Endpoint[] {
 
   // GraphQL SDL files.
   for (const abs of findFiles(root, (n) => n.endsWith(".graphql") || n.endsWith(".gql"))) {
+    const rel = relative(root, abs).split("\\").join("/");
+    if (isTestFile(rel)) continue;
     let text: string;
     try {
       text = readFileSync(abs, "utf8");
     } catch {
       continue;
     }
-    const rel = relative(root, abs).split("\\").join("/");
     for (const f of parseSdl(text)) push("graphql", f.method, f.path, `${rel}:${f.line}`);
   }
 

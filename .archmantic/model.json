@@ -140,6 +140,22 @@
       "provenance": [
         {
           "confidence": 0.6,
+          "ref": "src/analyze/fs-util.ts:25",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/fs-util.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `isTestFile` in src/analyze/fs-util.ts",
+      "id": "cap:src/analyze/fs-util.ts#isTestFile",
+      "name": "Is Test File",
+      "provenance": [
+        {
+          "confidence": 0.6,
           "ref": "src/analyze/fs-util.ts:17",
           "source": "code"
         }
@@ -2297,83 +2313,7 @@
     }
   ],
   "dataEntities": [],
-  "endpoints": [
-    {
-      "confidence": 0.95,
-      "id": "endpoint:rest:GET:/…",
-      "method": "GET",
-      "name": "GET /…",
-      "path": "/…",
-      "protocol": "rest",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/analyze/endpoints.ts:5",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "confidence": 0.95,
-      "id": "endpoint:rest:GET:/widgets",
-      "method": "GET",
-      "name": "GET /widgets",
-      "path": "/widgets",
-      "protocol": "rest",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "test/endpoints.test.mjs:46",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "confidence": 0.95,
-      "id": "endpoint:rest:POST:/widgets",
-      "method": "POST",
-      "name": "POST /widgets",
-      "path": "/widgets",
-      "protocol": "rest",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "test/endpoints.test.mjs:47",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "confidence": 0.8,
-      "id": "endpoint:trpc:MUTATION:addUser",
-      "method": "MUTATION",
-      "name": "MUTATION addUser",
-      "path": "addUser",
-      "protocol": "trpc",
-      "provenance": [
-        {
-          "confidence": 0.8,
-          "ref": "test/endpoints.test.mjs:64",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "confidence": 0.8,
-      "id": "endpoint:trpc:QUERY:getUser",
-      "method": "QUERY",
-      "name": "QUERY getUser",
-      "path": "getUser",
-      "protocol": "trpc",
-      "provenance": [
-        {
-          "confidence": 0.8,
-          "ref": "test/endpoints.test.mjs:64",
-          "source": "code"
-        }
-      ]
-    }
-  ],
+  "endpoints": [],
   "flows": [
     {
       "confidence": 0.6,
@@ -2537,7 +2477,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T00:56:20.775Z",
+  "generatedAt": "2026-06-14T01:02:30.806Z",
   "processes": [
     {
       "confidence": 0.6,
