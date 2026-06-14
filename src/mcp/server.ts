@@ -23,9 +23,7 @@ import {
   pushModelApi,
   listLatestModels,
   listModelsApi,
-  recordUsage,
-  recordUsageApi,
-  type UsageEvent,
+  flushUsageEvents,
 } from "../cloud/index.js";
 import { UsageRecorder } from "./usage.js";
 import {
@@ -80,16 +78,11 @@ const text = (s: string) => ({ content: [{ type: "text" as const, text: s }] });
 export async function startMcpServer(root: string): Promise<void> {
   // Mutable so `refresh`/`sync` update what the read tools serve.
   let model = loadModel(root);
-  const server = new McpServer({ name: "archmantic", version: "1.10.0" });
+  const server = new McpServer({ name: "archmantic", version: "1.11.0" });
 
-  // Usage stats: record each read tool, best-effort flush to the cloud (API if a
-  // token is set, else direct DB, else local-log only). Never breaks the agent.
-  const flushUsage = async (events: UsageEvent[]): Promise<void> => {
-    if (hasApiToken()) await recordUsageApi(events);
-    else if (process.env.DATABASE_URL) await recordUsage(events);
-    // no creds → local log only (still queryable via `archmantic usage`)
-  };
-  const usage = new UsageRecorder(root, () => model.project, flushUsage);
+  // Usage stats: record each read tool + model pushes, best-effort flush to the
+  // cloud (API if a token is set, else direct DB, else local-log only). Never breaks the agent.
+  const usage = new UsageRecorder(root, () => model.project, flushUsageEvents);
   usage.start();
   // Catch up any events a previous session recorded locally but never flushed to
   // the cloud (the local log is a durable outbox). Idempotent; best-effort.
@@ -291,6 +284,7 @@ export async function startMcpServer(root: string): Promise<void> {
       try {
         if (viaApi) await pushModelApi(model, commit);
         else await pushModel(model, commit);
+        usage.recordPush("sync", new Date().toISOString()); // count the push in usage stats
       } catch (err) {
         return text(
           `Model refreshed locally, but cloud push failed: ${err instanceof Error ? err.message : String(err)}`,

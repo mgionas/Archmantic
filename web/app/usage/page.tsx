@@ -27,7 +27,7 @@ export default async function Usage() {
   const owner = orgId ?? userId;
   const s = owner
     ? await usageSummary(owner)
-    : { calls: 0, tokensOut: 0, tokensSaved: 0, savedPct: 0, byTool: [], byProject: [], daily: [] };
+    : { calls: 0, pushes: 0, tokensOut: 0, tokensSaved: 0, savedPct: 0, byTool: [], byProject: [], daily: [] };
 
   const maxTool = Math.max(1, ...s.byTool.map((t) => t.calls));
   const maxDay = Math.max(1, ...s.daily.map((d) => d.calls));
@@ -46,7 +46,7 @@ export default async function Usage() {
         </Link>
       </div>
 
-      {s.calls === 0 ? (
+      {s.calls === 0 && s.pushes === 0 ? (
         <Card className="p-6 text-sm text-muted-foreground">
           No MCP usage recorded yet. Point an agent at the server (<code className="rounded bg-muted px-1.5 py-0.5">archmantic mcp</code>)
           with your token set, and tool calls show up here. You can also push a local log with{" "}
@@ -54,10 +54,11 @@ export default async function Usage() {
         </Card>
       ) : (
         <div className="space-y-8">
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Stat value={compact(s.calls)} label="MCP tool calls" />
             <Stat value={`~${compact(s.tokensSaved)}`} label="tokens saved" accent />
             <Stat value={`${s.savedPct}%`} label="fewer tokens vs reading files" accent />
+            <Stat value={compact(s.pushes)} label="model pushes" />
           </div>
 
           {s.daily.length > 0 ? (

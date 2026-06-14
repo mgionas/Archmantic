@@ -659,6 +659,22 @@
     },
     {
       "componentIds": [
+        "comp:src/cloud/index.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `flushUsageEvents` in src/cloud/index.ts",
+      "id": "cap:src/cloud/index.ts#flushUsageEvents",
+      "name": "Flush Usage Events",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/cloud/index.ts:32",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
         "comp:src/cloud/store.ts"
       ],
       "confidence": 0.6,
@@ -684,7 +700,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/store.ts:106",
+          "ref": "src/cloud/store.ts:108",
           "source": "code"
         }
       ]
@@ -700,7 +716,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/store.ts:154",
+          "ref": "src/cloud/store.ts:158",
           "source": "code"
         }
       ]
@@ -716,7 +732,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/store.ts:134",
+          "ref": "src/cloud/store.ts:138",
           "source": "code"
         }
       ]
@@ -780,7 +796,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/store.ts:122",
+          "ref": "src/cloud/store.ts:125",
           "source": "code"
         }
       ]
@@ -1308,7 +1324,39 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/server.ts:80",
+          "ref": "src/mcp/server.ts:78",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/mcp/usage.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `appendUsageEvent` in src/mcp/usage.ts",
+      "id": "cap:src/mcp/usage.ts#appendUsageEvent",
+      "name": "Append Usage Event",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/mcp/usage.ts:35",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/mcp/usage.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `pushEvent` in src/mcp/usage.ts",
+      "id": "cap:src/mcp/usage.ts#pushEvent",
+      "name": "Push Event",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/mcp/usage.ts:45",
           "source": "code"
         }
       ]
@@ -1324,7 +1372,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:136",
+          "ref": "src/mcp/usage.ts:156",
           "source": "code"
         }
       ]
@@ -1340,7 +1388,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:40",
+          "ref": "src/mcp/usage.ts:55",
           "source": "code"
         }
       ]
@@ -1468,7 +1516,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/features.ts:173",
+          "ref": "src/project/features.ts:182",
           "source": "code"
         }
       ]
@@ -1484,7 +1532,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/features.ts:178",
+          "ref": "src/project/features.ts:187",
           "source": "code"
         }
       ]
@@ -1500,7 +1548,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/features.ts:165",
+          "ref": "src/project/features.ts:174",
           "source": "code"
         }
       ]
@@ -1516,7 +1564,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/features.ts:51",
+          "ref": "src/project/features.ts:60",
           "source": "code"
         }
       ]
@@ -1532,7 +1580,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/features.ts:114",
+          "ref": "src/project/features.ts:123",
           "source": "code"
         }
       ]
@@ -1548,7 +1596,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/features.ts:196",
+          "ref": "src/project/features.ts:205",
           "source": "code"
         }
       ]
@@ -1564,7 +1612,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/features.ts:137",
+          "ref": "src/project/features.ts:146",
           "source": "code"
         }
       ]
@@ -3235,7 +3283,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T15:29:52.549Z",
+  "generatedAt": "2026-06-14T15:48:22.886Z",
   "manifest": {
     "agents": [
       {
@@ -5201,7 +5249,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:46",
+          "ref": "src/cli.ts:47",
           "source": "code"
         }
       ],
@@ -5246,7 +5294,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:45",
+          "ref": "src/cli.ts:46",
           "source": "code"
         }
       ],
@@ -5276,7 +5324,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:43",
+          "ref": "src/cli.ts:44",
           "source": "code"
         }
       ],
@@ -5291,7 +5339,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:44",
+          "ref": "src/cli.ts:45",
           "source": "code"
         }
       ],
@@ -5428,6 +5476,11 @@
           "confidence": 0.95,
           "ref": "src/cloud/index.ts:14",
           "source": "code"
+        },
+        {
+          "confidence": 0.95,
+          "ref": "src/cloud/index.ts:25",
+          "source": "code"
         }
       ],
       "to": "comp:src/cloud/api.ts"
@@ -5442,6 +5495,11 @@
         {
           "confidence": 0.95,
           "ref": "src/cloud/index.ts:2",
+          "source": "code"
+        },
+        {
+          "confidence": 0.95,
+          "ref": "src/cloud/index.ts:24",
           "source": "code"
         }
       ],
@@ -5921,7 +5979,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:31",
+          "ref": "src/mcp/server.ts:29",
           "source": "code"
         }
       ],
@@ -5936,7 +5994,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:30",
+          "ref": "src/mcp/server.ts:28",
           "source": "code"
         }
       ],

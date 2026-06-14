@@ -38,10 +38,11 @@ import {
   pullProcessEditApi,
   recordUsage,
   recordUsageApi,
+  flushUsageEvents,
   ApiError,
 } from "./cloud/index.js";
 import { startMcpServer } from "./mcp/server.js";
-import { readUsageLog } from "./mcp/usage.js";
+import { readUsageLog, appendUsageEvent, pushEvent } from "./mcp/usage.js";
 import { runBenchmark, renderBench, estimateCounter, type TokenCounter } from "./mcp/bench.js";
 import {
   diffModels,
@@ -767,6 +768,14 @@ async function cmdPush(): Promise<number> {
     }
     throw err;
   }
+  // Record the push as a usage stat (kind "push") — durable locally + best-effort cloud.
+  const ev = pushEvent(model.project, "push", new Date().toISOString());
+  appendUsageEvent(root, ev);
+  try {
+    await flushUsageEvents([ev]);
+  } catch {
+    /* offline — the next MCP startup catch-up will sync it */
+  }
   console.log(
     `✓ Pushed "${model.project}" @ ${commit.slice(0, 7)} ${viaApi ? "via the Archmantic API (org-scoped)" : "to the cloud store (direct)"}.`,
   );
@@ -839,13 +848,15 @@ async function cmdUsage(args: string[]): Promise<number> {
     return 0;
   }
 
-  const calls = events.length;
-  const tokensOut = events.reduce((n, e) => n + e.tokensOut, 0);
-  const tokensSaved = events.reduce((n, e) => n + e.tokensSaved, 0);
+  const reads = events.filter((e) => e.kind !== "push");
+  const pushes = events.filter((e) => e.kind === "push");
+  const calls = reads.length;
+  const tokensOut = reads.reduce((n, e) => n + e.tokensOut, 0);
+  const tokensSaved = reads.reduce((n, e) => n + e.tokensSaved, 0);
   const savedPct = tokensOut + tokensSaved === 0 ? 0 : Math.round((tokensSaved / (tokensOut + tokensSaved)) * 1000) / 10;
 
   const byTool = new Map<string, { calls: number; saved: number }>();
-  for (const e of events) {
+  for (const e of reads) {
     const t = byTool.get(e.tool) ?? { calls: 0, saved: 0 };
     t.calls++;
     t.saved += e.tokensSaved;
@@ -859,7 +870,8 @@ async function cmdUsage(args: string[]): Promise<number> {
   console.log(`${BOLD}MCP usage${RESET} ${DIM}— proof your agents read the model, not the files${RESET}`);
   console.log(
     `  ${BOLD}${calls}${RESET} tool calls · ${tokensOut.toLocaleString()} tokens served · ` +
-      `${GREEN}${BOLD}~${tokensSaved.toLocaleString()} tokens saved${RESET} ${DIM}(${savedPct}% fewer vs reading files)${RESET}`,
+      `${GREEN}${BOLD}~${tokensSaved.toLocaleString()} tokens saved${RESET} ${DIM}(${savedPct}% fewer vs reading files)${RESET}` +
+      (pushes.length ? ` · ${BOLD}${pushes.length}${RESET} model push${pushes.length === 1 ? "" : "es"}` : ""),
   );
   console.log(`\n  ${BOLD}By tool${RESET}`);
   for (const [tool, t] of [...byTool.entries()].sort((a, b) => b[1].calls - a[1].calls)) {

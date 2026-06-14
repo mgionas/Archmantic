@@ -217,6 +217,21 @@ to save). Agents can run it over MCP (`sync_features`). Gated/graceful without a
 Anthropic credential. Also shipped: Vercel Analytics + Speed Insights in the web
 app. Next: Phase 3 — feature-scoped behavior flows.
 
+### ✅ done · Usage push-stats + feature seed polish (1.11.0)
+Usage now also records **model pushes** (kind "push"): the CLI `push` and MCP
+`sync` emit a push event to the durable usage outbox (idempotent, flushed via the
+shared `flushUsageEvents`); `archmantic usage` and the web `/usage` dashboard
+separate reads (token savings) from pushes ("N model pushes"). `archmantic_usage`
+gains a `kind` column (default 'read'). Feature seeding hardened: App Router-aware
+names (`app/.../page.tsx`, route groups `(x)`, dynamic `[id]`) and cleaner
+descriptions ("The X screen.") instead of "X page page.".
+
+### KNOWN GAP · Processes/flows empty for web apps (next: Phase 3)
+The entry-point-chain process derivation produces 0 processes/flows for Next.js/
+Laravel/Vue apps. Phase 3 (feature-scoped behavior flows) will derive a flow per
+feature from its components' imports + API calls. Also planned: feature edit/update
+in the web (write authored .archmantic/features/*.md back from the UI).
+
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
 appears that architecture-level elements can't serve.

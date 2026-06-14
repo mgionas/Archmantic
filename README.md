@@ -4,7 +4,7 @@
 
 Point Archmantic at a repo and it reverse-engineers a single grounded **architecture model** (the IR). Every diagram is a *projection* of that one model, every element is traceable to `file:line`, and the same model answers your agent's questions over MCP. No drift between views, no ungrounded "AI diagram" guesswork.
 
-> Status: **v1.10.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
+> Status: **v1.11.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
 
 ---
 
@@ -29,7 +29,7 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 - **Agent knowledge file** — auto-generates & keeps `AGENTS.md` in sync from the model (managed block), so even agents that don't speak MCP get accurate, drift-free project context.
 - **One model → many audiences** — C4-style context, components, sequence (Mermaid), BPMN, an ERD, capability list, and an MCP surface for agents.
 - **Token savings** — agents query the model over MCP instead of reading whole files (~98% fewer tokens on this repo, by the built-in benchmark).
-- **Usage stats** — every MCP tool call is recorded with the tokens it saved; `archmantic usage` and the web `/usage` dashboard prove the model is earning its keep (and meter agent activity).
+- **Usage stats** — every MCP tool call is recorded with the tokens it saved, plus **model pushes** (each `push`/`sync` is tracked too); `archmantic usage` and the web `/usage` dashboard prove the model is earning its keep (and meter agent + push activity).
 
 ## Quickstart
 

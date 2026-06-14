@@ -25,18 +25,27 @@ export const slugify = (s: string): string =>
 const featureId = (nameOrSlug: string): string => `feature:${slugify(nameOrSlug)}`;
 
 /**
- * A readable, collision-resistant feature name for a page/route component. Uses
- * the path *after* a `pages/` segment so sibling `add.vue`/`show.vue` don't all
- * collapse to "Add"/"Show"; keeps the last two segments (dropping `index`).
+ * A readable, collision-resistant feature name for a page/route/view component.
+ * Understands Next.js App Router (`app/.../page.tsx`), Pages/Inertia (`pages/`),
+ * and Laravel views: takes the route path after the routing root, drops file
+ * markers (`page`/`route`/`layout`/`index`) and route groups `(x)`, and unwraps
+ * dynamic segments `[id]`/`[...slug]`. Keeps the last two meaningful segments so
+ * sibling `add.vue`/`show.vue` don't collapse. Empty path → "Home".
  */
 function featureNameFor(rel: string): string {
-  let parts = rel.replace(/\.(blade\.php|vue|tsx|ts|jsx|js|mjs|cjs)$/, "").split("/");
-  const pi = parts.findIndex((p) => /^pages$/i.test(p));
-  if (pi >= 0) parts = parts.slice(pi + 1);
-  if (parts[parts.length - 1]?.toLowerCase() === "index") parts.pop();
-  const tail = parts.slice(-2).join(" ");
-  return humanize(tail) || componentLabel(`comp:${rel}`);
+  let parts = rel.replace(/\.(blade\.php|vue|tsx|ts|jsx|js|mjs|cjs)$/, "").split("/").filter(Boolean);
+  const root = parts.findIndex((p) => /^(pages|app|views)$/i.test(p));
+  if (root >= 0) parts = parts.slice(root + 1);
+  parts = parts
+    .filter((p) => !/^\(.*\)$/.test(p)) // Next route groups (auth), (marketing)
+    .filter((p) => !/^(page|route|layout|index)$/i.test(p)) // file markers
+    .map((p) => p.replace(/^\[+\.{0,3}(.+?)\]+$/, "$1")); // [id] / [[...slug]] → id / slug
+  if (!parts.length) return "Home";
+  return humanize(parts.slice(-2).join(" ")) || componentLabel(`comp:${rel}`);
 }
+
+/** Plain-language noun for a seeded feature's role. */
+const ROLE_NOUN: Record<string, string> = { page: "screen", route: "endpoint", view: "view" };
 
 /** Parse a comma/inline-array list from a frontmatter value: `[a, b]` or `a, b`. */
 function parseList(raw: string): string[] {
@@ -151,7 +160,7 @@ export function seedFeatures(model: ArchitectureModel): Feature[] {
     bySlug.set(slug, {
       id: featureId(slug),
       name,
-      description: c.responsibility ?? `${name} ${role}.`,
+      description: c.responsibility ?? `The ${name} ${ROLE_NOUN[role] ?? role}.`,
       components: [c.id],
       status: "draft",
       provenance: [{ source: "code", ref: c.id.replace(/^comp:/, ""), confidence: SEED_CONFIDENCE }],

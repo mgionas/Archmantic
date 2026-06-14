@@ -101,6 +101,8 @@ export interface UsageEvent {
   tokensOut: number;
   tokensSaved: number;
   at: string; // ISO timestamp
+  /** "read" = an MCP read tool (default); "push" = a model push/sync to the cloud. */
+  kind?: "read" | "push";
 }
 
 export async function ensureUsageSchema(): Promise<void> {
@@ -115,6 +117,7 @@ export async function ensureUsageSchema(): Promise<void> {
       tokens_saved integer     not null default 0,
       at           timestamptz not null
     )`;
+  await q`alter table archmantic_usage add column if not exists kind text not null default 'read'`;
   await q`create index if not exists archmantic_usage_owner_at on archmantic_usage (owner, at desc)`;
 }
 
@@ -123,9 +126,10 @@ export async function recordUsage(events: UsageEvent[]): Promise<void> {
   if (!events.length) return;
   await ensureUsageSchema();
   await sql()`
-    insert into archmantic_usage (id, owner, project, tool, tokens_out, tokens_saved, at)
+    insert into archmantic_usage (id, owner, project, tool, tokens_out, tokens_saved, at, kind)
     select (e->>'id')::uuid, ${OWNER}, e->>'project', e->>'tool',
-           (e->>'tokensOut')::int, (e->>'tokensSaved')::int, (e->>'at')::timestamptz
+           (e->>'tokensOut')::int, (e->>'tokensSaved')::int, (e->>'at')::timestamptz,
+           coalesce(e->>'kind', 'read')
     from jsonb_array_elements(${JSON.stringify(events)}::jsonb) e
     on conflict (id) do nothing`;
 }

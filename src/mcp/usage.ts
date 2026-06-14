@@ -31,6 +31,21 @@ const BROAD_TOOLS = new Set([
 
 const estTokens = (s: string) => Math.ceil(s.length / 4);
 
+/** Append one event to the durable local log (the outbox). Never throws. */
+export function appendUsageEvent(root: string, event: UsageEvent): void {
+  try {
+    mkdirSync(join(root, ".archmantic"), { recursive: true });
+    appendFileSync(join(root, USAGE_LOG), JSON.stringify(event) + "\n", "utf8");
+  } catch {
+    /* a read-only FS shouldn't break anything */
+  }
+}
+
+/** A push/sync stat event (model uploaded to the cloud) — no token savings. */
+export function pushEvent(project: string, tool: string, now: string): UsageEvent {
+  return { id: randomUUID(), project, tool, kind: "push", tokensOut: 0, tokensSaved: 0, at: now };
+}
+
 export const USAGE_LOG = join(".archmantic", "usage.jsonl");
 const FLUSH_EVERY = 2;
 const FLUSH_MS = 20_000;
@@ -74,6 +89,7 @@ export class UsageRecorder {
       tokensOut,
       tokensSaved: Math.max(0, baseline - tokensOut),
       at: now,
+      kind: "read",
     };
     this.appendLocal(event);
     this.buffer.push(event);
@@ -81,13 +97,17 @@ export class UsageRecorder {
     return event;
   }
 
+  /** Record a model push/sync as a usage stat (kind "push"); returns the event. */
+  recordPush(tool: string, now: string): UsageEvent {
+    const event = pushEvent(this.getProject(), tool, now);
+    this.appendLocal(event);
+    this.buffer.push(event);
+    void this.drain();
+    return event;
+  }
+
   private appendLocal(event: UsageEvent): void {
-    try {
-      mkdirSync(join(this.root, ".archmantic"), { recursive: true });
-      appendFileSync(join(this.root, USAGE_LOG), JSON.stringify(event) + "\n", "utf8");
-    } catch {
-      /* a read-only FS shouldn't break the server */
-    }
+    appendUsageEvent(this.root, event);
   }
 
   /** Flush the buffer to the cloud; on failure, retry next time (id makes it idempotent). */
