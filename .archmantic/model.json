@@ -1308,7 +1308,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/server.ts:79",
+          "ref": "src/mcp/server.ts:80",
           "source": "code"
         }
       ]
@@ -1437,6 +1437,22 @@
         {
           "confidence": 0.6,
           "ref": "src/project/erd.ts:21",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/feature-sync.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `syncFeatures` in src/project/feature-sync.ts",
+      "id": "cap:src/project/feature-sync.ts#syncFeatures",
+      "name": "Sync Features",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/feature-sync.ts:96",
           "source": "code"
         }
       ]
@@ -2634,6 +2650,21 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:src/project/feature-sync.ts",
+      "kind": "module",
+      "name": "src/project/feature-sync.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/feature-sync.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/project/features.ts",
       "kind": "module",
       "name": "src/project/features.ts",
@@ -2844,6 +2875,21 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:test/feature-sync.test.mjs",
+      "kind": "module",
+      "name": "test/feature-sync.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/feature-sync.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:test/features.test.mjs",
       "kind": "module",
       "name": "test/features.test.mjs",
@@ -3040,11 +3086,11 @@
         "comp:src/analyze/incremental.ts",
         "comp:src/project/index.ts",
         "comp:src/mcp/queries.ts",
+        "comp:src/project/feature-sync.ts",
         "comp:src/env.ts",
         "comp:src/auth.ts",
         "comp:src/agent.ts",
-        "comp:src/system.ts",
-        "comp:src/cloud/index.ts"
+        "comp:src/system.ts"
       ],
       "provenance": [
         {
@@ -3136,6 +3182,18 @@
               "source": "code"
             }
           ],
+          "to": "comp:src/project/feature-sync.ts"
+        },
+        {
+          "action": "uses",
+          "participant": "comp:src/project/feature-sync.ts",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/project/feature-sync.ts:1",
+              "source": "code"
+            }
+          ],
           "to": "comp:src/env.ts"
         },
         {
@@ -3173,23 +3231,11 @@
             }
           ],
           "to": "comp:src/system.ts"
-        },
-        {
-          "action": "uses",
-          "participant": "comp:src/system.ts",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/system.ts:1",
-              "source": "code"
-            }
-          ],
-          "to": "comp:src/cloud/index.ts"
         }
       ]
     }
   ],
-  "generatedAt": "2026-06-14T15:01:42.681Z",
+  "generatedAt": "2026-06-14T15:29:52.549Z",
   "manifest": {
     "agents": [
       {
@@ -3347,6 +3393,17 @@
           ]
         },
         {
+          "id": "task:comp:src/project/feature-sync.ts",
+          "name": "Feature sync",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/project/feature-sync.ts:1",
+              "source": "code"
+            }
+          ]
+        },
+        {
           "id": "task:comp:src/env.ts",
           "name": "Env",
           "provenance": [
@@ -3386,17 +3443,6 @@
             {
               "confidence": 0.6,
               "ref": "src/system.ts:1",
-              "source": "code"
-            }
-          ]
-        },
-        {
-          "id": "task:comp:src/cloud/index.ts",
-          "name": "Cloud",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/cloud/index.ts:1",
               "source": "code"
             }
           ]
@@ -5065,7 +5111,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:27",
+          "ref": "src/cli.ts:28",
           "source": "code"
         }
       ],
@@ -5125,7 +5171,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:26",
+          "ref": "src/cli.ts:27",
           "source": "code"
         }
       ],
@@ -5140,7 +5186,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:29",
+          "ref": "src/cli.ts:30",
           "source": "code"
         }
       ],
@@ -5155,7 +5201,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:45",
+          "ref": "src/cli.ts:46",
           "source": "code"
         }
       ],
@@ -5170,7 +5216,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:25",
+          "ref": "src/cli.ts:26",
           "source": "code"
         }
       ],
@@ -5200,7 +5246,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:44",
+          "ref": "src/cli.ts:45",
           "source": "code"
         }
       ],
@@ -5230,7 +5276,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:42",
+          "ref": "src/cli.ts:43",
           "source": "code"
         }
       ],
@@ -5245,11 +5291,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:43",
+          "ref": "src/cli.ts:44",
           "source": "code"
         }
       ],
       "to": "comp:src/mcp/usage.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/project/feature-sync.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/project/feature-sync.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:25",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/feature-sync.ts"
     },
     {
       "confidence": 0.95,
@@ -5275,7 +5336,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:28",
+          "ref": "src/cli.ts:29",
           "source": "code"
         }
       ],
@@ -5815,7 +5876,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:19",
+          "ref": "src/mcp/server.ts:20",
           "source": "code"
         }
       ],
@@ -5830,7 +5891,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:18",
+          "ref": "src/mcp/server.ts:19",
           "source": "code"
         }
       ],
@@ -5860,7 +5921,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:30",
+          "ref": "src/mcp/server.ts:31",
           "source": "code"
         }
       ],
@@ -5875,11 +5936,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:29",
+          "ref": "src/mcp/server.ts:30",
           "source": "code"
         }
       ],
       "to": "comp:src/mcp/usage.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/server.ts",
+      "id": "rel:comp:src/mcp/server.ts=>comp:src/project/feature-sync.ts",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/server.ts → comp:src/project/feature-sync.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/server.ts:18",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/feature-sync.ts"
     },
     {
       "confidence": 0.95,
@@ -6110,6 +6186,96 @@
         }
       ],
       "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/feature-sync.ts",
+      "id": "rel:comp:src/project/feature-sync.ts=>comp:src/auth.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/feature-sync.ts → comp:src/auth.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/feature-sync.ts:16",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/auth.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/feature-sync.ts",
+      "id": "rel:comp:src/project/feature-sync.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/feature-sync.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/feature-sync.ts:15",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/feature-sync.ts",
+      "id": "rel:comp:src/project/feature-sync.ts=>comp:src/project/features.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/feature-sync.ts → comp:src/project/features.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/feature-sync.ts:17",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/features.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/feature-sync.ts",
+      "id": "rel:comp:src/project/feature-sync.ts=>sys:ext:@anthropic-ai/sdk",
+      "kind": "depends_on",
+      "name": "comp:src/project/feature-sync.ts → sys:ext:@anthropic-ai/sdk",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/feature-sync.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:@anthropic-ai/sdk"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/feature-sync.ts",
+      "id": "rel:comp:src/project/feature-sync.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/project/feature-sync.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/feature-sync.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/feature-sync.ts",
+      "id": "rel:comp:src/project/feature-sync.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/project/feature-sync.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/feature-sync.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
     },
     {
       "confidence": 0.95,
@@ -6901,6 +7067,36 @@
         {
           "confidence": 0.95,
           "ref": "test/endpoints.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/feature-sync.test.mjs",
+      "id": "rel:comp:test/feature-sync.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/feature-sync.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/feature-sync.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/feature-sync.test.mjs",
+      "id": "rel:comp:test/feature-sync.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/feature-sync.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/feature-sync.test.mjs:2",
           "source": "code"
         }
       ],

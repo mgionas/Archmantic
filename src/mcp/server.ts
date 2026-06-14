@@ -15,6 +15,7 @@ import { z } from "zod";
 import { type ArchitectureModel, serializeModel } from "../ir/types.js";
 import { analyzeRepo } from "../analyze/index.js";
 import { knowledgeMarkdown, applyKnowledgeBlock } from "../project/index.js";
+import { syncFeatures } from "../project/feature-sync.js";
 import { diffModels, summarizeChange } from "../diff/index.js";
 import {
   hasApiToken,
@@ -79,7 +80,7 @@ const text = (s: string) => ({ content: [{ type: "text" as const, text: s }] });
 export async function startMcpServer(root: string): Promise<void> {
   // Mutable so `refresh`/`sync` update what the read tools serve.
   let model = loadModel(root);
-  const server = new McpServer({ name: "archmantic", version: "1.9.0" });
+  const server = new McpServer({ name: "archmantic", version: "1.10.0" });
 
   // Usage stats: record each read tool, best-effort flush to the cloud (API if a
   // token is set, else direct DB, else local-log only). Never breaks the agent.
@@ -253,6 +254,24 @@ export async function startMcpServer(root: string): Promise<void> {
     async () => {
       model = reanalyze(root);
       return text(`Refreshed — ${model.components.length} components, ${model.capabilities.length} capabilities.`);
+    },
+  );
+
+  server.registerTool(
+    "sync_features",
+    {
+      title: "Compile feature intent",
+      description:
+        "Run the feature intent compiler (BYOK): read the authored .archmantic/features/*.md, fill each feature's shows/actions/dependsOn from its description, create features implied by descriptions (e.g. 'a vendors section' → a Vendors feature), and write the results back. After this, list_features/get_feature reflect them. Needs an Anthropic credential.",
+      inputSchema: { only: z.string().optional().describe("limit to a single feature by name") },
+    },
+    async ({ only }) => {
+      const res = await syncFeatures(root, model, { write: true, only });
+      if (!res.ran) return text(res.reason ?? "feature sync did not run");
+      model = reanalyze(root); // re-read so the served features reflect the new files
+      return text(
+        `Compiled ${res.proposals.length} feature(s), wrote ${res.applied.length} file(s): ${res.proposals.map((f) => f.name).join(", ")}`,
+      );
     },
   );
 

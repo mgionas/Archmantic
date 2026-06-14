@@ -22,6 +22,7 @@ import { tier2 } from "./analyze/tier2.js";
 import { incrementalUpdate } from "./analyze/incremental.js";
 import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess, knowledgeMarkdown, applyKnowledgeBlock, readManifest, detectAgents, scaffoldManifest, MANIFEST_PATH, seedFeatureFiles, FEATURES_DIR } from "./project/index.js";
 import { getFeature, listFeatures } from "./mcp/queries.js";
+import { syncFeatures } from "./project/feature-sync.js";
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 import { runHandoff, runAutonomousBuild } from "./agent.js";
@@ -123,11 +124,36 @@ function loadModelOrNull(): ArchitectureModel | null {
   }
 }
 
-/** `feature [list | show <name> | seed]` — the user-perspective feature layer. */
-function cmdFeature(args: string[]): number {
+/** `feature [list | show <name> | seed | sync [name] [--write]]` — the feature layer. */
+async function cmdFeature(args: string[]): Promise<number> {
   const model = loadModelOrNull();
   if (!model) return 1;
   const sub = args[0] ?? "list";
+  if (sub === "sync") {
+    const only = args[1] && !args[1].startsWith("--") ? args[1] : undefined;
+    const write = args.includes("--write");
+    const res = await syncFeatures(process.cwd(), model, { write, only });
+    if (!res.ran) {
+      console.error(`✗ ${res.reason}`);
+      return 1;
+    }
+    console.log(`Compiled ${res.proposals.length} feature${res.proposals.length === 1 ? "" : "s"}` +
+      ` (${res.inputTokens}+${res.outputTokens} tokens):`);
+    for (const f of res.proposals) {
+      const bits = [
+        f.shows?.length ? `${f.shows.length} shows` : "",
+        f.actions?.length ? `${f.actions.length} actions` : "",
+        f.dependsOn?.length ? `→ ${f.dependsOn.map((d) => d.replace(/^feature:/, "")).join(", ")}` : "",
+      ].filter(Boolean);
+      console.log(`  • ${f.name}${bits.length ? `  [${bits.join(" · ")}]` : ""}`);
+    }
+    if (write) {
+      console.log(`\n✓ Wrote ${res.applied.length} file${res.applied.length === 1 ? "" : "s"} to ${FEATURES_DIR}/ — review with \`git diff\`, then \`archmantic analyze\`.`);
+    } else {
+      console.log(`\nDry run — re-run with \`--write\` to save these to ${FEATURES_DIR}/.`);
+    }
+    return 0;
+  }
   if (sub === "seed") {
     const written = seedFeatureFiles(process.cwd(), model);
     console.log(
@@ -869,7 +895,7 @@ Usage: archmantic <command> [options]   (short alias: amt)
 Commands:
   init [name]    Create an empty .archmantic/model.json (+ project.json brain)
   project [--init]  Scaffold/show the project brain (.archmantic/project.json: goal, author, agents)
-  feature [list|show <name>|seed]  User-perspective features (seed writes .archmantic/features/*.md to refine)
+  feature [list|show <name>|seed|sync [name] [--write]]  Features; sync = intent compiler (BYOK): edit a description → create/update related features
   analyze [--tier N]  Reverse-engineer the model (--tier 2 adds the LLM pass, BYOK)
   update [--hook]  Incrementally re-analyze only what changed (git-diff driven)
   view           Capability map + diagrams + trust report (writes view.html)

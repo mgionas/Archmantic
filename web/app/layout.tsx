@@ -7,6 +7,8 @@ import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import { Geist } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AppShell } from "@/components/app-shell";
@@ -29,6 +31,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             {userId ? <AppShell>{children}</AppShell> : <MarketingShell>{children}</MarketingShell>}
             <Toaster richColors position="top-center" />
           </ThemeProvider>
+          <Analytics />
+          <SpeedInsights />
         </body>
       </html>
     </ClerkProvider>

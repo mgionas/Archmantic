@@ -205,6 +205,18 @@ collapse; tests excluded). Authored files win over seeds. Surfaced via MCP
 facet. Next (Phase 2b): the intent compiler (`feature sync`, BYOK) — edit a
 description → create/update related features. Then Phase 3: feature-scoped flows.
 
+### ✅ done · Spec layer Phase 2b — feature intent compiler (1.10.0)
+The edit→analyze→update loop for the spec (docs/design/SPEC-LAYER.md). Edit a
+feature's description, then `archmantic feature sync` (BYOK, Opus 4.8 via the
+Tier-2 plumbing) reads the authored `.archmantic/features/*.md` + the repo's
+building blocks (pages/routes/components) and compiles: fills shows/actions/
+dependsOn, CREATES features implied by a description (e.g. "a vendors section" →
+a Vendors feature) and wires the parent's dependsOn, grounding `components` only
+to real file paths. Written back as feature files (dry-run by default; `--write`
+to save). Agents can run it over MCP (`sync_features`). Gated/graceful without an
+Anthropic credential. Also shipped: Vercel Analytics + Speed Insights in the web
+app. Next: Phase 3 — feature-scoped behavior flows.
+
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
 appears that architecture-level elements can't serve.
