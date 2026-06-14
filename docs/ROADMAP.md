@@ -35,13 +35,11 @@ code-graph commodity territory?
 Builds on the React Flow graphs + semantic roles. Web-only items deploy via Vercel;
 core items ship in a new npm release.
 
-| # | Item | Scope | Why |
+| # | Item | Scope | Status |
 |---|---|---|---|
-| **1** | Deep-linkable view state | web | `?view=<facet>&d=<diagram>` in the URL → shareable/refresh-safe "look at this view" links |
-| **2** | Content-signal role refinement | core (→ npm 1.2.0) | use Tier-1 export/import signals (default-exports JSX → ui, `NextResponse`/`res.json` → route, …) to sharpen roles beyond path heuristics |
-| **3** | Graph polish | web | click a role in the legend to highlight/filter those nodes; dim non-neighbor edges on select |
-
-Order: 1 → 3 (web, ship together) → 2 (core, publish 1.2.0).
+| **1** | Deep-linkable view state | web | ✅ `?view=<facet>&d=<diagram>` via `useUrlState` |
+| **2** | Content-signal role refinement | core | ✅ `refineRole` content signals (route/hook/store/ui); **pending npm 1.2.0 publish** |
+| **3** | Graph polish | web | ✅ clickable role legend (highlight/dim) |
 
 Recommended sequence: **npm + docs** (coupled, cheap) → **ERD** → **GitHub
 Action** → **MCP usage stats** → API surface → multi-repo auto-link.

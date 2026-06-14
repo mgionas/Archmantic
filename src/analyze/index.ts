@@ -13,6 +13,20 @@ import { deriveSemantics } from "./derive.js";
 import { detectStack } from "./stack.js";
 import { detectDataModel } from "./datamodel.js";
 import { detectEndpoints } from "./endpoints.js";
+import { refineRole, needsRefine } from "./roles.js";
+
+/** Upgrade weak path-derived component roles using file content signals. */
+function refineRoles(root: string, model: ArchitectureModel): void {
+  for (const c of model.components) {
+    if (!needsRefine(c.role ?? "module")) continue;
+    const rel = c.id.replace(/^comp:/, "");
+    try {
+      c.role = refineRole(rel, readFileSync(join(root, rel), "utf8"), c.role ?? "module");
+    } catch {
+      /* unreadable — keep path role */
+    }
+  }
+}
 
 /** Read optional `.archmantic/config.json` → multi-repo system + project overrides. */
 function applyConfig(root: string, model: ArchitectureModel): void {
@@ -36,6 +50,7 @@ export function analyzeRepo(root: string): ArchitectureModel {
   model.technologies = detectStack(root);
   model.dataEntities = detectDataModel(root);
   model.endpoints = detectEndpoints(root);
+  refineRoles(root, model);
   applyConfig(root, model);
   return model;
 }

@@ -188,7 +188,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/index.ts:31",
+          "ref": "src/analyze/index.ts:45",
           "source": "code"
         }
       ]
@@ -252,7 +252,39 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/roles.ts:9",
+          "ref": "src/analyze/roles.ts:38",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/roles.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `needsRefine` in src/analyze/roles.ts",
+      "id": "cap:src/analyze/roles.ts#needsRefine",
+      "name": "Needs Refine",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/roles.ts:12",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/roles.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `refineRole` in src/analyze/roles.ts",
+      "id": "cap:src/analyze/roles.ts#refineRole",
+      "name": "Refine Role",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/roles.ts:21",
           "source": "code"
         }
       ]
@@ -2318,7 +2350,7 @@
           "source": "code"
         }
       ],
-      "role": "module",
+      "role": "route",
       "systemId": "sys:archmantic"
     },
     {
@@ -2577,7 +2609,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T10:19:06.698Z",
+  "generatedAt": "2026-06-14T10:23:01.488Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -3313,6 +3345,21 @@
         }
       ],
       "to": "comp:src/analyze/endpoints.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/index.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/roles.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/index.ts → comp:src/analyze/roles.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/index.ts:16",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/roles.ts"
     },
     {
       "confidence": 0.95,

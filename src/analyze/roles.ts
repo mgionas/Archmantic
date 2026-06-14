@@ -5,6 +5,35 @@
  * and tells agents (MCP/AGENTS.md) what each component actually is.
  */
 
+/** Roles a path already determines confidently — content can't override these. */
+const STRONG_ROLES = new Set(["route", "page", "layout", "middleware", "config", "model", "store", "modal", "hook"]);
+
+/** Whether a path-derived role is weak enough to refine with file content. */
+export function needsRefine(role: string): boolean {
+  return !STRONG_ROLES.has(role);
+}
+
+/**
+ * Refine a weak path role using content signals (route handlers, hooks, JSX
+ * components, stores). Conservative: only upgrades module/ui/service/util; never
+ * overrides a confident path role.
+ */
+export function refineRole(rel: string, content: string, pathRole: string): string {
+  if (STRONG_ROLES.has(pathRole)) return pathRole;
+  const head = content.slice(0, 4000);
+  if (
+    /\bNextResponse\b|\bNextApiRequest\b|export\s+(?:async\s+)?function\s+(?:GET|POST|PUT|PATCH|DELETE)\b|\bpublicProcedure\b|\.(?:get|post|put|patch|delete)\s*\(\s*[`'"]\//.test(
+      head,
+    )
+  )
+    return "route";
+  if (/export\s+(?:async\s+)?function\s+use[A-Z]|export\s+const\s+use[A-Z]/.test(head)) return "hook";
+  if (/createContext\s*\(|createSlice\s*\(|configureStore\s*\(|\bzustand\b/.test(head)) return "store";
+  if (/\.tsx$/.test(rel) && /(return\s*\(?\s*<[A-Za-z>]|=>\s*\(?\s*<[A-Za-z>]|React\.FC|:\s?JSX\.Element)/.test(head))
+    return "ui";
+  return pathRole;
+}
+
 /** Classify a repo-relative source path into a semantic role. */
 export function classifyRole(rel: string): string {
   const p = rel.toLowerCase();
