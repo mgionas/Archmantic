@@ -42,6 +42,7 @@ import {
   ApiError,
 } from "./cloud/index.js";
 import { startMcpServer } from "./mcp/server.js";
+import { startEditor } from "./editor.js";
 import { readUsageLog, appendUsageEvent, pushEvent } from "./mcp/usage.js";
 import { runBenchmark, renderBench, estimateCounter, type TokenCounter } from "./mcp/bench.js";
 import {
@@ -173,6 +174,15 @@ async function cmdFeature(args: string[]): Promise<number> {
     return 0;
   }
   console.log(listFeatures(model));
+  return 0;
+}
+
+/** `edit [--port N]` — local web feature editor; saves write .archmantic/features/*.md. */
+async function cmdEdit(args: string[]): Promise<number> {
+  if (!loadModelOrNull()) return 1; // needs an analyzed model
+  const i = args.indexOf("--port");
+  const port = i !== -1 && args[i + 1] ? Number(args[i + 1]) || 4517 : 4517;
+  await startEditor(process.cwd(), port); // resolves only on shutdown
   return 0;
 }
 
@@ -908,6 +918,7 @@ Commands:
   init [name]    Create an empty .archmantic/model.json (+ project.json brain)
   project [--init]  Scaffold/show the project brain (.archmantic/project.json: goal, author, agents)
   feature [list|show <name>|seed|sync [name] [--write]]  Features; sync = intent compiler (BYOK): edit a description → create/update related features
+  edit [--port N]  Local web feature editor (writes .archmantic/features/*.md; repo files = source)
   analyze [--tier N]  Reverse-engineer the model (--tier 2 adds the LLM pass, BYOK)
   update [--hook]  Incrementally re-analyze only what changed (git-diff driven)
   view           Capability map + diagrams + trust report (writes view.html)
@@ -952,6 +963,8 @@ async function main(argv: string[]): Promise<number> {
       return cmdProject(rest);
     case "feature":
       return cmdFeature(rest);
+    case "edit":
+      return cmdEdit(rest);
     case "analyze":
       return cmdAnalyze(rest);
     case "update":

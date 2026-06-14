@@ -979,6 +979,54 @@
     },
     {
       "componentIds": [
+        "comp:src/editor.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `editorFeatures` in src/editor.ts",
+      "id": "cap:src/editor.ts#editorFeatures",
+      "name": "Editor Features",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/editor.ts:76",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/editor.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `startEditor` in src/editor.ts",
+      "id": "cap:src/editor.ts#startEditor",
+      "name": "Start Editor",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/editor.ts:95",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/editor.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `writeFeatureEdit` in src/editor.ts",
+      "id": "cap:src/editor.ts#writeFeatureEdit",
+      "name": "Write Feature Edit",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/editor.ts:51",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
         "comp:src/env.ts"
       ],
       "confidence": 0.6,
@@ -2565,6 +2613,21 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:src/editor.ts",
+      "kind": "module",
+      "name": "src/editor.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/editor.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/env.ts",
       "kind": "module",
       "name": "src/env.ts",
@@ -2947,6 +3010,21 @@
         {
           "confidence": 0.95,
           "ref": "test/diff.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:test/editor.test.mjs",
+      "kind": "module",
+      "name": "test/editor.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/editor.test.mjs:1",
           "source": "code"
         }
       ],
@@ -3345,7 +3423,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T16:02:56.386Z",
+  "generatedAt": "2026-06-14T16:17:52.844Z",
   "manifest": {
     "agents": [
       {
@@ -5356,11 +5434,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:47",
+          "ref": "src/cli.ts:48",
           "source": "code"
         }
       ],
       "to": "comp:src/diff/index.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/editor.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/editor.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:45",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/editor.ts"
     },
     {
       "confidence": 0.95,
@@ -5401,7 +5494,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:46",
+          "ref": "src/cli.ts:47",
           "source": "code"
         }
       ],
@@ -5446,7 +5539,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:45",
+          "ref": "src/cli.ts:46",
           "source": "code"
         }
       ],
@@ -5847,6 +5940,96 @@
         {
           "confidence": 0.95,
           "ref": "src/diff/snapshot.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/editor.ts",
+      "id": "rel:comp:src/editor.ts=>comp:src/analyze/index.ts",
+      "kind": "depends_on",
+      "name": "comp:src/editor.ts → comp:src/analyze/index.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/editor.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/index.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/editor.ts",
+      "id": "rel:comp:src/editor.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/editor.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/editor.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/editor.ts",
+      "id": "rel:comp:src/editor.ts=>comp:src/project/features.ts",
+      "kind": "depends_on",
+      "name": "comp:src/editor.ts → comp:src/project/features.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/editor.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/features.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/editor.ts",
+      "id": "rel:comp:src/editor.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/editor.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/editor.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/editor.ts",
+      "id": "rel:comp:src/editor.ts=>sys:ext:node:http",
+      "kind": "depends_on",
+      "name": "comp:src/editor.ts → sys:ext:node:http",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/editor.ts:8",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:http"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/editor.ts",
+      "id": "rel:comp:src/editor.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/editor.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/editor.ts:10",
           "source": "code"
         }
       ],
@@ -7164,6 +7347,81 @@
     },
     {
       "confidence": 0.95,
+      "from": "comp:test/editor.test.mjs",
+      "id": "rel:comp:test/editor.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/editor.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/editor.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/editor.test.mjs",
+      "id": "rel:comp:test/editor.test.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:test/editor.test.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/editor.test.mjs:4",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/editor.test.mjs",
+      "id": "rel:comp:test/editor.test.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:test/editor.test.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/editor.test.mjs:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/editor.test.mjs",
+      "id": "rel:comp:test/editor.test.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:test/editor.test.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/editor.test.mjs:5",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/editor.test.mjs",
+      "id": "rel:comp:test/editor.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/editor.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/editor.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
       "from": "comp:test/endpoints.test.mjs",
       "id": "rel:comp:test/endpoints.test.mjs=>sys:ext:node:assert/strict",
       "kind": "depends_on",
@@ -8083,6 +8341,20 @@
         {
           "confidence": 0.95,
           "ref": "node:fs",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.95,
+      "description": "Node.js runtime/builtin module",
+      "id": "sys:ext:node:http",
+      "kind": "external",
+      "name": "node:http",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "node:http",
           "source": "code"
         }
       ]

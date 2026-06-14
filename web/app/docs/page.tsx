@@ -52,6 +52,7 @@ const COMMANDS: [string, string][] = [
   ["init [name]", "Create an empty .archmantic/model.json (+ a project.json brain)"],
   ["project [--init]", "Scaffold/show the project brain (goal, author, links; agents auto-detect from .claude/agents/)"],
   ["feature [list|show|seed|sync]", "Features; seed writes draft .md files; sync = BYOK intent compiler (description → create/update features)"],
+  ["edit [--port N]", "Local web feature editor; saves write .archmantic/features/*.md (repo files = source)"],
   ["analyze [--tier N]", "Reverse-engineer the model. --tier 2 adds the LLM semantic pass (BYOK)"],
   ["update [--hook]", "Incrementally re-analyze only what changed (git-diff driven). --hook prints a pre-commit hook"],
   ["view", "Capability map, diagrams, and trust report → a self-contained view.html"],

@@ -381,7 +381,9 @@ export function ProjectTabs({
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">
                 What the product does, from the user&apos;s perspective. Draft features are seeded from pages/routes —
-                refine them in <code className="rounded bg-muted px-1 py-0.5 text-xs">.archmantic/features/*.md</code>.
+                refine them in <code className="rounded bg-muted px-1 py-0.5 text-xs">.archmantic/features/*.md</code>, with{" "}
+                <code className="rounded bg-muted px-1 py-0.5 text-xs">archmantic edit</code> (local editor), or{" "}
+                <code className="rounded bg-muted px-1 py-0.5 text-xs">archmantic feature sync</code> (AI).
               </p>
               <div className="grid gap-3 lg:grid-cols-2">
                 {features.map((f) => (

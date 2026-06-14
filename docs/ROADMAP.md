@@ -238,6 +238,15 @@ Verified: fantasy 0 → 70 flows, SocialSeed 0 → 40, DrivePulse 0 → 11. Also
 1.12.0: the `amt` bin alias was removed (collided with macOS `/usr/sbin/amt`).
 Still planned: feature edit/update in the web (write authored feature files back).
 
+### ✅ done · Web feature editor — repo files as source (1.13.0)
+`archmantic edit` serves a dependency-light localhost UI (node:http + embedded
+HTML, `src/editor.ts`) to edit feature description/shows/actions/dependsOn; saves
+POST to a local endpoint that writes `.archmantic/features/<slug>.md` directly via
+`writeFeatureEdit` → `featureFileMarkdown`. Repo files stay the source of truth
+(git-diff + `analyze`); the hosted Vercel app stays read-only since it can't reach
+the user's disk. The web Features facet points to the three edit paths (files /
+`edit` / `feature sync`). Completes the feature edit/update ask.
+
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
 appears that architecture-level elements can't serve.
