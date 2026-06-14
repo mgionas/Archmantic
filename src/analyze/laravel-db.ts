@@ -38,7 +38,7 @@ const idType = new Set(["id", "bigincrements", "increments"]);
 const singular = (t: string) => t.replace(/ies$/, "y").replace(/s$/, "");
 
 /** Laravel/framework scaffolding tables — infrastructure, not the app's domain model. */
-const DEFAULT_TABLES = new Set([
+export const DEFAULT_TABLES = new Set([
   "migrations",
   "password_reset_tokens",
   "password_resets",

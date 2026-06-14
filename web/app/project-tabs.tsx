@@ -364,17 +364,37 @@ export function ProjectTabs({
                   <span className="text-sm text-muted-foreground">none</span>
                 )}
               </Card>
-              <Card className="flex flex-wrap content-start gap-2 p-5">
-                <span className="w-full text-xs font-medium text-muted-foreground">Tech stack</span>
-                {overview.technologies.length ? (
-                  overview.technologies.map((tech) => (
-                    <Badge key={tech.name} variant="outline" title={tech.category}>
-                      {tech.name}
-                    </Badge>
-                  ))
-                ) : (
-                  <span className="text-sm text-muted-foreground">none detected</span>
-                )}
+              <Card className="content-start space-y-3 p-5">
+                <div className="flex flex-wrap content-start gap-2">
+                  <span className="w-full text-xs font-medium text-muted-foreground">Tech stack</span>
+                  {overview.technologies.some((t) => t.category !== "library") ? (
+                    overview.technologies
+                      .filter((t) => t.category !== "library")
+                      .map((tech) => (
+                        <Badge key={tech.name} variant="outline" title={tech.category}>
+                          {tech.name}
+                        </Badge>
+                      ))
+                  ) : (
+                    <span className="text-sm text-muted-foreground">none detected</span>
+                  )}
+                </div>
+                {overview.technologies.some((t) => t.category === "library") ? (
+                  <CollapsibleSection
+                    storageKey={`arch:libs:${project}`}
+                    header="Libraries"
+                    count={overview.technologies.filter((t) => t.category === "library").length}
+                    defaultOpen={false}
+                  >
+                    <div className="flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground">
+                      {overview.technologies
+                        .filter((t) => t.category === "library")
+                        .map((t) => (
+                          <span key={t.name}>{t.name}</span>
+                        ))}
+                    </div>
+                  </CollapsibleSection>
+                ) : null}
               </Card>
             </div>
             {overview.analyzedAt ? (

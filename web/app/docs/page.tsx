@@ -54,6 +54,7 @@ const COMMANDS: [string, string][] = [
   ["feature [list|show|seed|sync]", "Features; seed writes draft .md files; sync = BYOK intent compiler (description → create/update features)"],
   ["edit [--port N]", "Local web feature editor; saves write .archmantic/features/*.md (repo files = source)"],
   ["feature pull", "Fetch hosted-editor feature edits from the cloud → .archmantic/features/*.md"],
+  ["db-check [--check]", "Compare Laravel migrations vs the live DB (.env DB_*; MySQL/Postgres/SQLite); --check exits 1 on drift"],
   ["analyze [--tier N]", "Reverse-engineer the model. --tier 2 adds the LLM semantic pass (BYOK)"],
   ["update [--hook]", "Incrementally re-analyze only what changed (git-diff driven). --hook prints a pre-commit hook"],
   ["view", "Capability map, diagrams, and trust report → a self-contained view.html"],

@@ -102,9 +102,14 @@ export function knowledgeMarkdown(model: Model): string {
   }
   if (model.technologies?.length) {
     const byCat = new Map<string, string[]>();
-    for (const t of model.technologies) (byCat.get(t.category) ?? byCat.set(t.category, []).get(t.category)!).push(t.name);
-    out.push("");
-    out.push("**Stack:** " + [...byCat.entries()].sort().map(([c, n]) => `${c}: ${n.join("/")}`).join(" · "));
+    for (const t of model.technologies)
+      if (t.category !== "library") (byCat.get(t.category) ?? byCat.set(t.category, []).get(t.category)!).push(t.name);
+    if (byCat.size) {
+      out.push("");
+      out.push("**Stack:** " + [...byCat.entries()].sort().map(([c, n]) => `${c}: ${n.join("/")}`).join(" · "));
+    }
+    const libs = model.technologies.filter((t) => t.category === "library").length;
+    if (libs) out.push(`_+ ${libs} other libraries._`);
   }
 
   return out.join("\n");

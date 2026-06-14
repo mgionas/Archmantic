@@ -4,7 +4,7 @@
 
 Point Archmantic at a repo and it reverse-engineers a single grounded **architecture model** (the IR). Every diagram is a *projection* of that one model, every element is traceable to `file:line`, and the same model answers your agent's questions over MCP. No drift between views, no ungrounded "AI diagram" guesswork.
 
-> Status: **v1.14.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
+> Status: **v1.15.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
 > _Note: the `amt` short alias was removed in 1.12.0 (it collided with a system binary on macOS) — use `archmantic` / `npx archmantic`._
 
 ---
@@ -20,8 +20,9 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 - **PR architecture diff** — how a change reshapes the architecture (not a line diff), postable as a PR comment.
 - **Architecture history** — how the system's shape evolved, commit by commit.
 - **Data model (ERD)** — entities, fields, and relations parsed from your Prisma schema, Drizzle tables, SQL `CREATE TABLE` migrations, or **Laravel migrations** (`Schema::create`, foreign keys, `resource`-style relations), grounded to `file:line` and projected as an interactive ERD (xyflow in the web; Mermaid in CLI exports). Laravel framework scaffolding tables (cache/jobs/sessions…) are filtered out.
+- **Schema-drift check** — `archmantic db-check` compares your Laravel migrations against the **live database** (MySQL/PostgreSQL/SQLite, from `.env` `DB_*`) and reports tables/columns that exist in one but not the other. Opt-in only — it's the one command that connects to a DB and reads credentials; nothing it reads is persisted. `--check` exits 1 on drift (CI gate). DB drivers are optional deps (SQLite uses Node's built-in).
 - **API surface** — REST routes (Next.js App Router/Pages, Express/Fastify/Koa/Hono, **NestJS** `@Controller`/`@Get` decorators, **Laravel** `routes/*.php` incl. prefix groups + `resource`/`apiResource`), tRPC procedures, and GraphQL operations, grounded to `file:line` — the contract layer for humans and agents.
-- **Polyglot, multi-framework** — TypeScript/JavaScript **and** PHP/Laravel; frontends in **React, Vue/Inertia** (`.vue` SFCs), plus **Blade** templates and **Livewire** components. Components are role-classified (page/route/ui/layout/view/model/…) and the tech stack is detected from `package.json` **and** `composer.json`.
+- **Polyglot, multi-framework** — TypeScript/JavaScript **and** PHP/Laravel; frontends in **React, Vue/Inertia** (`.vue` SFCs), plus **Blade** templates and **Livewire** components. Components are role-classified (page/route/ui/layout/view/model/…) and the tech stack is detected from `package.json` **and** `composer.json` — the **curated stack** (framework/UI/DB/ORM/auth/…) plus the **full runtime library list** (every `dependencies`/`require` entry, shown under a collapsible "Libraries" in the web Overview).
 - **Monorepo aware** — analyzes npm/yarn/pnpm **workspaces** (and `apps/*`/`packages/*` by convention) as one model, tagging every component, endpoint, and entity with its owning package; the web groups Components & API by package.
 - **Multi-repo auto-linking** — across an org's repos, classifies cross-service links as connected, **inferred** (detected coupling not yet declared), or **dangling** (declared dependency on a repo that isn't there — a real gap).
 - **Project brain** — a human-authored manifest (`.archmantic/project.json`: goal, status, author, links, and the **agent team** auto-detected from `.claude/agents/`) merged into the model. Agents read the *why*, not just the structure, via MCP `get_project`; it leads the knowledge file and the web project page (with author attribution).
@@ -67,6 +68,7 @@ node dist/cli.js analyze
 | `feature [list\|show <name>\|seed\|sync [name] [--write]]` | User-perspective features; `seed` writes draft files; `sync` is the BYOK intent compiler (edit a description → create/update related features) |
 | `edit [--port N]` | Local web feature editor — saves write `.archmantic/features/*.md` (repo files = source) |
 | `feature pull` | Fetch hosted-editor feature edits from the cloud → `.archmantic/features/*.md` (org-token scoped) |
+| `db-check [--check]` | Compare Laravel migrations vs the live DB (`.env` `DB_*`; MySQL/Postgres/SQLite); `--check` exits 1 on drift |
 | `analyze [--tier N]` | Reverse-engineer the model. `--tier 2` adds the LLM semantic pass (BYOK) |
 | `update [--hook]` | Incrementally re-analyze only what changed (git-diff driven). `--hook` prints a pre-commit hook |
 | `view` | Capability map, diagrams, and trust report; writes a self-contained `view.html` |

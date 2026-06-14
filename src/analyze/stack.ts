@@ -112,6 +112,25 @@ function readComposer(file: string): Record<string, string> {
   }
 }
 
+/** Runtime dependency names from package.json (`dependencies` only — not dev tooling). */
+function readRuntimeDeps(file: string): string[] {
+  try {
+    return Object.keys((JSON.parse(readFileSync(file, "utf8")) as PkgJson).dependencies ?? {});
+  } catch {
+    return [];
+  }
+}
+
+/** Runtime PHP package names from composer.json `require` (excluding php/ext-* platform reqs). */
+function readComposerRequire(file: string): string[] {
+  try {
+    const c = JSON.parse(readFileSync(file, "utf8")) as { require?: Record<string, string> };
+    return Object.keys(c.require ?? {}).filter((d) => d !== "php" && !d.startsWith("ext-"));
+  } catch {
+    return [];
+  }
+}
+
 /** Detect classified technologies from package.json (+ workspace members) and composer.json. */
 export function detectStack(root: string): Technology[] {
   const techs: Technology[] = [];
@@ -144,6 +163,30 @@ export function detectStack(root: string): Technology[] {
   if (existsSync(composerPath)) {
     for (const dep of Object.keys(readComposer(composerPath))) add(dep, KNOWN_PHP[dep], "composer.json");
   }
+
+  // Used libraries: every *runtime* dependency that isn't a curated tech, as
+  // category "library" — so the model reflects the full dependency surface, not
+  // just the highlighted stack. (devDependencies/build tooling are excluded.)
+  const lib = (dep: string, ref: string) => {
+    if (KNOWN[dep] || KNOWN_PHP[dep]) return; // already shown as a categorized tech
+    const id = `tech:${dep}`;
+    if (seen.has(id)) return;
+    seen.add(id);
+    techs.push({
+      id,
+      name: dep,
+      category: "library",
+      description: `library (${dep})`,
+      provenance: [{ source: "repo", ref, confidence: STRUCTURAL_CONFIDENCE }],
+      confidence: STRUCTURAL_CONFIDENCE,
+    });
+  };
+  if (existsSync(pkgPath)) {
+    const names = new Set(readRuntimeDeps(pkgPath));
+    for (const m of detectWorkspaces(root)) for (const d of readRuntimeDeps(join(root, m, "package.json"))) names.add(d);
+    for (const dep of names) lib(dep, "package.json");
+  }
+  if (existsSync(composerPath)) for (const dep of readComposerRequire(composerPath)) lib(dep, "composer.json");
 
   return techs;
 }

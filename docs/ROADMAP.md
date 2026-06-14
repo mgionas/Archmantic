@@ -258,6 +258,25 @@ polling, since webhooks can't reach a dev machine. Web: editable feature cards
 `/api/feature-edits`. Both edit paths now exist (local `edit` + hosted), and the
 interactive diagrams are fully on xyflow (Sequence + Process per-feature decks).
 
+### ✅ done · Schema-drift check (1.15.0)
+`archmantic db-check` — the originally-scoped "1.8.0" feature (deferred while the
+spec layer was built). Compares Laravel migrations (the committed model, via
+`detectLaravelMigrations`) against the **live database**: reads `.env` `DB_*`,
+introspects MySQL (`mysql2`), PostgreSQL (`pg`), or SQLite (built-in `node:sqlite`)
+and reports tables/columns present in one side but not the other (`src/drift/
+schema-drift.ts` pure compare; `src/analyze/db-introspect.ts` connects). Presence-
+only (type/nullability deferred — Laravel-vs-DB type naming is too fuzzy to avoid
+false positives). Opt-in, never part of `analyze`; credentials/results never
+persisted; `--check` is a CI gate. DB drivers are optionalDependencies so the core
+install stays lean. 71 tests (live SQLite round-trip skips on Node <22.5).
+
+Also in 1.15.0: **used-libraries detection** — `detectStack` now adds every *runtime*
+dependency that isn't a curated tech as `category: "library"` (package.json
+`dependencies` + composer `require`; devDeps/`require-dev`/`php`/`ext-*` excluded).
+The full library list shows under a collapsible "Libraries" in the web Overview;
+the curated stack still leads the knowledge file / terminal (a "+N libraries" note
+keeps those concise).
+
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
 appears that architecture-level elements can't serve.

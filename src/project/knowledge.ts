@@ -117,9 +117,15 @@ export function knowledgeMarkdown(model: ArchitectureModel): string {
   }
   if (model.technologies?.length) {
     const byCat = new Map<string, string[]>();
-    for (const t of model.technologies) (byCat.get(t.category) ?? byCat.set(t.category, []).get(t.category)!).push(t.name);
-    out.push("");
-    out.push("**Stack:** " + [...byCat.entries()].sort().map(([c, n]) => `${c}: ${n.join("/")}`).join(" · "));
+    // Curated stack only — the full library list is too noisy for the agent context file.
+    for (const t of model.technologies)
+      if (t.category !== "library") (byCat.get(t.category) ?? byCat.set(t.category, []).get(t.category)!).push(t.name);
+    if (byCat.size) {
+      out.push("");
+      out.push("**Stack:** " + [...byCat.entries()].sort().map(([c, n]) => `${c}: ${n.join("/")}`).join(" · "));
+    }
+    const libs = model.technologies.filter((t) => t.category === "library").length;
+    if (libs) out.push(`_+ ${libs} other libraries (see the web Overview)._`);
   }
 
   out.push("");

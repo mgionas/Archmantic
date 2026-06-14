@@ -24,6 +24,9 @@ import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson,
 import { getFeature, listFeatures } from "./mcp/queries.js";
 import { syncFeatures } from "./project/feature-sync.js";
 import { pullFeatureEdits } from "./feature-pull.js";
+import { detectLaravelMigrations } from "./analyze/laravel-db.js";
+import { readDbConfig, introspectSchema } from "./analyze/db-introspect.js";
+import { compareSchema, renderDrift } from "./drift/schema-drift.js";
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 import { runHandoff, runAutonomousBuild } from "./agent.js";
@@ -189,6 +192,28 @@ async function cmdFeature(args: string[]): Promise<number> {
   }
   console.log(listFeatures(model));
   return 0;
+}
+
+/** `db-check [--check]` — compare Laravel migrations vs the live database (opt-in). */
+async function cmdDbCheck(args: string[]): Promise<number> {
+  const root = process.cwd();
+  const config = readDbConfig(process.env, root);
+  if (!config) {
+    console.error("✗ No database config in .env/.env.local — need DB_CONNECTION (mysql|pgsql|sqlite) + DB_DATABASE.");
+    return 1;
+  }
+  const entities = detectLaravelMigrations(root);
+  if (!entities.length) console.log("⚠ No Laravel migrations found — every live table will show as drift.\n");
+  let live;
+  try {
+    live = await introspectSchema(config);
+  } catch (err) {
+    console.error(`✗ db-check failed: ${err instanceof Error ? err.message : String(err)}`);
+    return 1;
+  }
+  const report = compareSchema(live, entities);
+  console.log(renderDrift(report, live, entities.length));
+  return args.includes("--check") && !report.inSync ? 1 : 0;
 }
 
 /** `edit [--port N]` — local web feature editor; saves write .archmantic/features/*.md. */
@@ -933,6 +958,7 @@ Commands:
   project [--init]  Scaffold/show the project brain (.archmantic/project.json: goal, author, agents)
   feature [list|show <name>|seed|sync [name] [--write]|pull]  Features; sync = intent compiler (BYOK); pull = fetch hosted-editor edits → .archmantic/features/*.md
   edit [--port N]  Local web feature editor (writes .archmantic/features/*.md; repo files = source)
+  db-check [--check]  Compare Laravel migrations vs the live DB (.env DB_*); --check exits 1 on drift
   analyze [--tier N]  Reverse-engineer the model (--tier 2 adds the LLM pass, BYOK)
   update [--hook]  Incrementally re-analyze only what changed (git-diff driven)
   view           Capability map + diagrams + trust report (writes view.html)
@@ -979,6 +1005,8 @@ async function main(argv: string[]): Promise<number> {
       return cmdFeature(rest);
     case "edit":
       return cmdEdit(rest);
+    case "db-check":
+      return cmdDbCheck(rest);
     case "analyze":
       return cmdAnalyze(rest);
     case "update":

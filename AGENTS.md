@@ -17,17 +17,17 @@ status: active · author: Giorgi (mgionas) (https://github.com/mgionas)
 
 **Links:** [npm](https://www.npmjs.com/package/archmantic) · [GitHub](https://github.com/mgionas/Archmantic) · [App](https://archmantic.vercel.app)
 
-76 components · 135 capabilities · 0 endpoints · 0 data entities.
+80 components · 139 capabilities · 0 endpoints · 0 data entities.
 
-**Component roles:** 71 module · 3 route · 2 util
+**Component roles:** 75 module · 3 route · 2 util
 
 ### What it does (capabilities)
 - **src/** — Run Autonomous Build, Run Handoff, Ensure Anthropic Auth, Has Anthropic Credentials, Editor Features, Start Editor, Write Feature Edit, Load Env, Pull Feature Edits, Analyze Links, Build System View, Summarize Service, System Context Diagram, System Html
-- **src/analyze/** — Detect Data Model, Derive Process And Flow, Derive Semantics, Extract File Capabilities, Detect Drizzle Model, Detect Endpoints, Derive Feature Flows, Process From Flow, Find Files, Is Test File, Incremental Update, Analyze Repo, Detect Laravel Migrations, Detect Laravel Views, Detect Laravel Routes, Balanced Block, Split Top Level, Detect Prisma Model, Classify Role, Needs Refine, Refine Role, Detect Sql Model, Detect Stack, Component For, Tier 0, Build External System
-- …and 95 more
+- **src/analyze/** — Detect Data Model, Derive Process And Flow, Derive Semantics, Extract File Capabilities, Detect Drizzle Model, Detect Endpoints, Derive Feature Flows, Process From Flow, Find Files, Is Test File, Incremental Update, Analyze Repo, Detect Laravel Views, Detect Laravel Routes, Balanced Block, Split Top Level, Detect Prisma Model, Classify Role, Needs Refine, Refine Role, Detect Sql Model, Component For, Tier 0, Build External System, Extract File Edges, Tier 1
+- …and 99 more
 
 ### Primary process: Cli flow
-Cli → Types → Analyze → Tier 2 → Incremental → Project → Queries → Feature sync → Feature pull → Env → Auth → Agent
+Cli → Types → Analyze → Tier 2 → Incremental → Project → Queries → Feature sync → Feature pull → Laravel db → Db introspect → Schema drift
 
 **External systems:** @anthropic-ai/sdk, @modelcontextprotocol/sdk, @neondatabase/serverless, node:assert/strict, node:child_process, node:crypto, node:fs, node:http, node:os, node:path, node:test, typescript, zod
 

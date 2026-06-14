@@ -51,6 +51,38 @@
     },
     {
       "componentIds": [
+        "comp:src/analyze/db-introspect.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `introspectSchema` in src/analyze/db-introspect.ts",
+      "id": "cap:src/analyze/db-introspect.ts#introspectSchema",
+      "name": "Introspect Schema",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/db-introspect.ts:60",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/db-introspect.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `readDbConfig` in src/analyze/db-introspect.ts",
+      "id": "cap:src/analyze/db-introspect.ts#readDbConfig",
+      "name": "Read Db Config",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/db-introspect.ts:22",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
         "comp:src/analyze/derive.ts"
       ],
       "confidence": 0.6,
@@ -396,7 +428,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/stack.ts:116",
+          "ref": "src/analyze/stack.ts:135",
           "source": "code"
         }
       ]
@@ -989,6 +1021,38 @@
         {
           "confidence": 0.6,
           "ref": "src/diff/snapshot.ts:22",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/drift/schema-drift.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `compareSchema` in src/drift/schema-drift.ts",
+      "id": "cap:src/drift/schema-drift.ts#compareSchema",
+      "name": "Compare Schema",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/drift/schema-drift.ts:37",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/drift/schema-drift.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `renderDrift` in src/drift/schema-drift.ts",
+      "id": "cap:src/drift/schema-drift.ts#renderDrift",
+      "name": "Render Drift",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/drift/schema-drift.ts:69",
           "source": "code"
         }
       ]
@@ -1772,7 +1836,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:108",
+          "ref": "src/project/index.ts:110",
           "source": "code"
         }
       ]
@@ -1804,7 +1868,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/knowledge.ts:131",
+          "ref": "src/project/knowledge.ts:137",
           "source": "code"
         }
       ]
@@ -2187,6 +2251,21 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/datamodel.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/analyze/db-introspect.ts",
+      "kind": "module",
+      "name": "src/analyze/db-introspect.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/db-introspect.ts:1",
           "source": "code"
         }
       ],
@@ -2637,6 +2716,21 @@
         {
           "confidence": 0.95,
           "ref": "src/diff/snapshot.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/drift/schema-drift.ts",
+      "kind": "module",
+      "name": "src/drift/schema-drift.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/drift/schema-drift.ts:1",
           "source": "code"
         }
       ],
@@ -3245,6 +3339,21 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:test/schema-drift.test.mjs",
+      "kind": "module",
+      "name": "test/schema-drift.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/schema-drift.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:test/spec.test.mjs",
       "kind": "module",
       "name": "test/spec.test.mjs",
@@ -3267,6 +3376,21 @@
         {
           "confidence": 0.95,
           "ref": "test/stack-system.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:test/stack.test.mjs",
+      "kind": "module",
+      "name": "test/stack.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/stack.test.mjs:1",
           "source": "code"
         }
       ],
@@ -3323,9 +3447,9 @@
         "comp:src/mcp/queries.ts",
         "comp:src/project/feature-sync.ts",
         "comp:src/feature-pull.ts",
-        "comp:src/env.ts",
-        "comp:src/auth.ts",
-        "comp:src/agent.ts"
+        "comp:src/analyze/laravel-db.ts",
+        "comp:src/analyze/db-introspect.ts",
+        "comp:src/drift/schema-drift.ts"
       ],
       "provenance": [
         {
@@ -3441,36 +3565,36 @@
               "source": "code"
             }
           ],
-          "to": "comp:src/env.ts"
+          "to": "comp:src/analyze/laravel-db.ts"
         },
         {
           "action": "uses",
-          "participant": "comp:src/env.ts",
+          "participant": "comp:src/analyze/laravel-db.ts",
           "provenance": [
             {
               "confidence": 0.6,
-              "ref": "src/env.ts:1",
+              "ref": "src/analyze/laravel-db.ts:1",
               "source": "code"
             }
           ],
-          "to": "comp:src/auth.ts"
+          "to": "comp:src/analyze/db-introspect.ts"
         },
         {
           "action": "uses",
-          "participant": "comp:src/auth.ts",
+          "participant": "comp:src/analyze/db-introspect.ts",
           "provenance": [
             {
               "confidence": 0.6,
-              "ref": "src/auth.ts:1",
+              "ref": "src/analyze/db-introspect.ts:1",
               "source": "code"
             }
           ],
-          "to": "comp:src/agent.ts"
+          "to": "comp:src/drift/schema-drift.ts"
         }
       ]
     }
   ],
-  "generatedAt": "2026-06-14T20:29:40.812Z",
+  "generatedAt": "2026-06-14T20:57:16.680Z",
   "manifest": {
     "agents": [
       {
@@ -3650,34 +3774,34 @@
           ]
         },
         {
-          "id": "task:comp:src/env.ts",
-          "name": "Env",
+          "id": "task:comp:src/analyze/laravel-db.ts",
+          "name": "Laravel db",
           "provenance": [
             {
               "confidence": 0.6,
-              "ref": "src/env.ts:1",
+              "ref": "src/analyze/laravel-db.ts:1",
               "source": "code"
             }
           ]
         },
         {
-          "id": "task:comp:src/auth.ts",
-          "name": "Auth",
+          "id": "task:comp:src/analyze/db-introspect.ts",
+          "name": "Db introspect",
           "provenance": [
             {
               "confidence": 0.6,
-              "ref": "src/auth.ts:1",
+              "ref": "src/analyze/db-introspect.ts:1",
               "source": "code"
             }
           ]
         },
         {
-          "id": "task:comp:src/agent.ts",
-          "name": "Agent",
+          "id": "task:comp:src/drift/schema-drift.ts",
+          "name": "Schema drift",
           "provenance": [
             {
               "confidence": 0.6,
-              "ref": "src/agent.ts:1",
+              "ref": "src/drift/schema-drift.ts:1",
               "source": "code"
             }
           ]
@@ -3836,6 +3960,36 @@
         }
       ],
       "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/db-introspect.ts",
+      "id": "rel:comp:src/analyze/db-introspect.ts=>comp:src/drift/schema-drift.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/db-introspect.ts → comp:src/drift/schema-drift.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/db-introspect.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/drift/schema-drift.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/db-introspect.ts",
+      "id": "rel:comp:src/analyze/db-introspect.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/db-introspect.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/db-introspect.ts:8",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
     },
     {
       "confidence": 0.95,
@@ -5391,11 +5545,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:29",
+          "ref": "src/cli.ts:32",
           "source": "code"
         }
       ],
       "to": "comp:src/agent.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/analyze/db-introspect.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/analyze/db-introspect.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:28",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/db-introspect.ts"
     },
     {
       "confidence": 0.95,
@@ -5430,6 +5599,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/analyze/laravel-db.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/analyze/laravel-db.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:27",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/laravel-db.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
       "id": "rel:comp:src/cli.ts=>comp:src/analyze/tier2.ts",
       "kind": "depends_on",
       "name": "comp:src/cli.ts → comp:src/analyze/tier2.ts",
@@ -5451,7 +5635,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:28",
+          "ref": "src/cli.ts:31",
           "source": "code"
         }
       ],
@@ -5466,7 +5650,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:31",
+          "ref": "src/cli.ts:34",
           "source": "code"
         }
       ],
@@ -5481,11 +5665,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:49",
+          "ref": "src/cli.ts:52",
           "source": "code"
         }
       ],
       "to": "comp:src/diff/index.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/drift/schema-drift.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/drift/schema-drift.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:29",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/drift/schema-drift.ts"
     },
     {
       "confidence": 0.95,
@@ -5496,7 +5695,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:46",
+          "ref": "src/cli.ts:49",
           "source": "code"
         }
       ],
@@ -5511,7 +5710,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:27",
+          "ref": "src/cli.ts:30",
           "source": "code"
         }
       ],
@@ -5556,7 +5755,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:48",
+          "ref": "src/cli.ts:51",
           "source": "code"
         }
       ],
@@ -5586,7 +5785,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:45",
+          "ref": "src/cli.ts:48",
           "source": "code"
         }
       ],
@@ -5601,7 +5800,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:47",
+          "ref": "src/cli.ts:50",
           "source": "code"
         }
       ],
@@ -5646,7 +5845,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:30",
+          "ref": "src/cli.ts:33",
           "source": "code"
         }
       ],
@@ -6006,6 +6205,36 @@
         }
       ],
       "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/drift/schema-drift.ts",
+      "id": "rel:comp:src/drift/schema-drift.ts=>comp:src/analyze/laravel-db.ts",
+      "kind": "depends_on",
+      "name": "comp:src/drift/schema-drift.ts → comp:src/analyze/laravel-db.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/drift/schema-drift.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/laravel-db.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/drift/schema-drift.ts",
+      "id": "rel:comp:src/drift/schema-drift.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/drift/schema-drift.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/drift/schema-drift.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
     },
     {
       "confidence": 0.95,
@@ -8129,6 +8358,81 @@
     },
     {
       "confidence": 0.95,
+      "from": "comp:test/schema-drift.test.mjs",
+      "id": "rel:comp:test/schema-drift.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/schema-drift.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/schema-drift.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/schema-drift.test.mjs",
+      "id": "rel:comp:test/schema-drift.test.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:test/schema-drift.test.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/schema-drift.test.mjs:4",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/schema-drift.test.mjs",
+      "id": "rel:comp:test/schema-drift.test.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:test/schema-drift.test.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/schema-drift.test.mjs:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/schema-drift.test.mjs",
+      "id": "rel:comp:test/schema-drift.test.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:test/schema-drift.test.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/schema-drift.test.mjs:5",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/schema-drift.test.mjs",
+      "id": "rel:comp:test/schema-drift.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/schema-drift.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/schema-drift.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
       "from": "comp:test/spec.test.mjs",
       "id": "rel:comp:test/spec.test.mjs=>sys:ext:node:assert/strict",
       "kind": "depends_on",
@@ -8182,6 +8486,81 @@
         {
           "confidence": 0.95,
           "ref": "test/stack-system.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/stack.test.mjs",
+      "id": "rel:comp:test/stack.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/stack.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/stack.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/stack.test.mjs",
+      "id": "rel:comp:test/stack.test.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:test/stack.test.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/stack.test.mjs:4",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/stack.test.mjs",
+      "id": "rel:comp:test/stack.test.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:test/stack.test.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/stack.test.mjs:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/stack.test.mjs",
+      "id": "rel:comp:test/stack.test.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:test/stack.test.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/stack.test.mjs:5",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/stack.test.mjs",
+      "id": "rel:comp:test/stack.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/stack.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/stack.test.mjs:2",
           "source": "code"
         }
       ],

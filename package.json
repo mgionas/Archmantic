@@ -1,6 +1,6 @@
 {
   "name": "archmantic",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "description": "Archmantic — an always-on Solution Architect: a living, grounded architecture model + diagrams for humans and AI agents (via MCP). Detects TS/JS and PHP/Laravel stacks, monorepos, API surface, and data models.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/mgionas/Archmantic#readme",
@@ -60,5 +60,9 @@
   },
   "devDependencies": {
     "@types/node": "^24.13.2"
+  },
+  "optionalDependencies": {
+    "mysql2": "^3.11.0",
+    "pg": "^8.13.0"
   }
 }

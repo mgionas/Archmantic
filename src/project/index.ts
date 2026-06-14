@@ -68,9 +68,11 @@ export function terminalPreview(model: ArchitectureModel): string {
 
   if (model.technologies?.length) {
     const byCat = new Map<string, string[]>();
-    for (const t of model.technologies) (byCat.get(t.category) ?? byCat.set(t.category, []).get(t.category)!).push(t.name);
+    for (const t of model.technologies)
+      if (t.category !== "library") (byCat.get(t.category) ?? byCat.set(t.category, []).get(t.category)!).push(t.name);
     const stack = [...byCat.entries()].sort().map(([c, n]) => `${c}: ${n.join(", ")}`).join(" · ");
-    out.push(`\n${BOLD}Stack${RESET} ${DIM}${stack}${RESET}`);
+    const libs = model.technologies.filter((t) => t.category === "library").length;
+    if (stack) out.push(`\n${BOLD}Stack${RESET} ${DIM}${stack}${libs ? ` · +${libs} libraries` : ""}${RESET}`);
   }
 
   out.push(`\n${BOLD}Capability map${RESET} ${DIM}— what can this system do?${RESET}`);
