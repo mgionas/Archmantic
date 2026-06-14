@@ -1,4 +1,5 @@
 import type { Model } from "./store";
+import type { GraphNode, FlowEdge } from "./diagrams";
 
 /** Multi-repo system aggregation (ported from the CLI's src/system.ts). */
 
@@ -24,35 +25,36 @@ export function summarizeService(m: Model): ServiceSummary {
   };
 }
 
-const nodeId = (s: string) => "n_" + s.replace(/[^A-Za-z0-9]/g, "_");
-const label = (s: string) => s.replace(/"/g, "'");
+const sid = (s: string) => "svc:" + s;
+const eid = (s: string) => "ext:" + s;
 
-export function systemContextDiagram(services: ServiceSummary[], systemName: string): string {
+/** The cross-service system as an interactive graph (xyflow): services + externals. */
+export function systemGraph(services: ServiceSummary[]): { nodes: GraphNode[]; edges: FlowEdge[] } {
   const names = new Set(services.map((s) => s.project));
-  const lines: string[] = ["flowchart LR", `  subgraph sys["${label(systemName)}"]`];
-  for (const s of services) lines.push(`    ${nodeId(s.project)}["${label(s.project)}<br/><i>service</i>"]`);
-  lines.push("  end");
+  const nodes: GraphNode[] = services.map((s) => ({ id: sid(s.project), label: s.project, kind: "component", role: "service" }));
+  const edges: FlowEdge[] = [];
+  let i = 0;
   for (const s of services) {
-    for (const dep of s.consumes) if (names.has(dep)) lines.push(`  ${nodeId(s.project)} -->|calls| ${nodeId(dep)}`);
+    for (const dep of s.consumes) if (names.has(dep)) edges.push({ id: `c${i++}`, source: sid(s.project), target: sid(dep), label: "calls" });
   }
   const drawn = new Set<string>();
   for (const s of services) {
     for (const ext of s.externals) {
       if (names.has(ext)) continue;
       if (!drawn.has(ext)) {
-        lines.push(`  ${nodeId("ext_" + ext)}[/"${label(ext)}"/]`);
+        nodes.push({ id: eid(ext), label: ext, kind: "external", role: "external" });
         drawn.add(ext);
       }
-      lines.push(`  ${nodeId(s.project)} -.-> ${nodeId("ext_" + ext)}`);
+      edges.push({ id: `x${i++}`, source: sid(s.project), target: eid(ext), label: "uses" });
     }
   }
-  return lines.join("\n");
+  return { nodes, edges };
 }
 
 export interface SystemView {
   name: string;
   services: ServiceSummary[];
-  mermaid: string;
+  graph: { nodes: GraphNode[]; edges: FlowEdge[] };
   totals: { services: number; components: number; capabilities: number };
 }
 
@@ -61,7 +63,7 @@ export function buildSystemView(models: Model[], name: string): SystemView {
   return {
     name,
     services,
-    mermaid: systemContextDiagram(services, name),
+    graph: systemGraph(services),
     totals: {
       services: services.length,
       components: services.reduce((n, s) => n + s.components, 0),

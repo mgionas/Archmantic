@@ -11,6 +11,7 @@ import { useUrlState } from "@/lib/use-url-state";
 import type {
   GraphNode,
   GraphEdge,
+  FlowEdge,
   CompDetail,
   ContextNode,
   ContextEdge,
@@ -50,7 +51,7 @@ export interface Diagrams {
   contextDetails: Record<string, ContextDetail>;
   componentGraph: { nodes: GraphNode[]; edges: GraphEdge[] };
   componentDetails: Record<string, CompDetail>;
-  sequences: { id: string; name: string; chart: string }[];
+  sequences: { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] } }[];
   processXml: string | null;
   edited: boolean;
 }

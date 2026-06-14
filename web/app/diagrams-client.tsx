@@ -1,75 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTheme } from "next-themes";
 import { Maximize2, Plus, Minus, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { DiagramCanvas } from "@/components/diagram-canvas";
-
-/** Render Mermaid source to an interactive, theme-aware SVG canvas. */
-export function Mermaid({ id, chart, source }: { id: string; chart: string; source?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { resolvedTheme } = useTheme();
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const theme = resolvedTheme === "light" ? "neutral" : "dark";
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    (async () => {
-      try {
-        const mermaid = (await import("mermaid")).default;
-        mermaid.initialize({ startOnLoad: false, theme, securityLevel: "loose" });
-        const { svg } = await mermaid.render(`mmd-${id}-${theme}`, chart);
-        if (cancelled || !ref.current) return;
-        ref.current.innerHTML = svg;
-        // Fit-to-viewport: let the SVG fill the canvas (viewBox + preserveAspectRatio
-        // keep it sharp and centered), so it's readable by default — not tiny.
-        const el = ref.current.querySelector("svg");
-        if (el) {
-          el.removeAttribute("width");
-          el.removeAttribute("height");
-          el.style.width = "100%";
-          el.style.height = "100%";
-          el.style.maxWidth = "none";
-        }
-        setLoading(false);
-      } catch (e) {
-        if (!cancelled) {
-          setError(e instanceof Error ? e.message : "render error");
-          setLoading(false);
-        }
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [id, chart, theme]);
-
-  if (error) {
-    return (
-      <div className="flex h-full items-center justify-center rounded-lg border border-danger/30 bg-danger/5 p-6 text-sm text-danger">
-        Diagram failed to render: {error}
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative h-full w-full">
-      <DiagramCanvas source={source ?? chart} ariaLabel="Architecture diagram">
-        <div ref={ref} className="h-full w-full p-3" />
-      </DiagramCanvas>
-      {loading ? (
-        <div className="absolute inset-0 grid place-items-center rounded-lg bg-canvas">
-          <Skeleton className="h-2/3 w-2/3" />
-        </div>
-      ) : null}
-    </div>
-  );
-}
 
 /** Minimal toolbar driving a bpmn-js canvas service (fit / zoom / fullscreen). */
 function BpmnToolbar({ onFit, onIn, onOut, onFull }: { onFit: () => void; onIn: () => void; onOut: () => void; onFull: () => void }) {

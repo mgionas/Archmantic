@@ -6,13 +6,14 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useUrlState } from "@/lib/use-url-state";
-import { BpmnEditor, Mermaid } from "./diagrams-client";
-import type { GraphNode, GraphEdge, CompDetail, ContextNode, ContextEdge, ContextDetail } from "@/lib/diagrams";
+import { BpmnEditor } from "./diagrams-client";
+import type { GraphNode, GraphEdge, FlowEdge, CompDetail, ContextNode, ContextEdge, ContextDetail } from "@/lib/diagrams";
 
 // React Flow + dagre (~70kB) only load when an interactive graph view is opened.
 const loading = () => <div className="grid h-full place-items-center text-sm text-muted-foreground">Loading graph…</div>;
 const ComponentGraph = dynamic(() => import("@/components/component-graph").then((m) => m.ComponentGraph), { ssr: false, loading });
 const ContextGraph = dynamic(() => import("@/components/context-graph").then((m) => m.ContextGraph), { ssr: false, loading });
+const SequenceGraph = dynamic(() => import("@/components/sequence-graph").then((m) => m.SequenceGraph), { ssr: false, loading });
 
 export function DiagramTabs({
   project,
@@ -30,7 +31,7 @@ export function DiagramTabs({
   contextDetails: Record<string, ContextDetail>;
   componentGraph: { nodes: GraphNode[]; edges: GraphEdge[] };
   componentDetails: Record<string, CompDetail>;
-  sequences: { id: string; name: string; chart: string }[];
+  sequences: { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] } }[];
   processXml: string | null;
   edited: boolean;
   onNavigate?: (facet: string) => void;
@@ -86,7 +87,7 @@ export function DiagramTabs({
         {tab === "components" ? (
           <ComponentGraph graph={componentGraph} details={componentDetails} onNavigate={onNavigate} />
         ) : null}
-        {tab === "sequence" && activeSeq ? <Mermaid key={activeSeq.id} id="seq" chart={activeSeq.chart} /> : null}
+        {tab === "sequence" && activeSeq ? <SequenceGraph key={activeSeq.id} graph={activeSeq.graph} /> : null}
         {tab === "process" && processXml ? <BpmnEditor project={project} initialXml={processXml} /> : null}
       </div>
     </Tabs>

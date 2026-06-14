@@ -6,7 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { latestModelsForOwner } from "@/lib/store";
 import { buildSystemView } from "@/lib/system";
-import { Mermaid } from "../../diagrams-client";
+import { SystemGraph } from "@/components/system-graph";
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +44,7 @@ export default async function SystemPage({ params }: { params: Promise<{ name: s
 
       <h2 className="mb-3 mt-8 text-lg font-semibold">Cross-service context</h2>
       <div className="h-[60vh]">
-        <Mermaid id="sys" chart={view.mermaid} />
+        <SystemGraph graph={view.graph} />
       </div>
 
       <h2 className="mb-3 mt-8 text-lg font-semibold">Services</h2>

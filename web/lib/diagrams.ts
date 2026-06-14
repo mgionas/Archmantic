@@ -298,27 +298,40 @@ export function entityGraph(model: Model): { nodes: EntityNode[]; edges: EntityE
   return { nodes, edges };
 }
 
+export interface FlowEdge {
+  id: string;
+  source: string;
+  target: string;
+  label: string;
+}
 const seqNameFor = (id: string) =>
   id.startsWith("comp:") ? componentLabel(id) : id.replace(/^sys:ext:/, "");
 
-/** Mermaid sequence for one flow. */
-export function sequenceForFlow(flow: Model["flows"][number]): string {
-  const lines: string[] = ["sequenceDiagram"];
-  for (const p of flow.participants) lines.push(`  participant ${nodeId(p)} as ${label(seqNameFor(p))}`);
-  for (const step of flow.steps) {
-    const target = step.to ?? step.participant;
-    lines.push(`  ${nodeId(step.participant)}->>${nodeId(target)}: ${label(step.action)}`);
-  }
-  return lines.join("\n");
+/** A flow as an interactive graph (xyflow): participants → role-colored nodes,
+ *  ordered steps → labeled edges ("1. renders", "2. calls"). Replaces Mermaid. */
+export function flowGraph(model: Model, flow: Model["flows"][number]): { nodes: GraphNode[]; edges: FlowEdge[] } {
+  const roleById = new Map(model.components.map((c) => [c.id, c.role ?? "module"]));
+  const nodes: GraphNode[] = flow.participants.map((id) => ({
+    id,
+    label: seqNameFor(id),
+    kind: id.startsWith("comp:") ? "component" : "external",
+    role: id.startsWith("comp:") ? roleById.get(id) ?? "module" : "external",
+  }));
+  const seen = new Set<string>();
+  const edges: FlowEdge[] = [];
+  flow.steps.forEach((s, i) => {
+    const target = s.to ?? s.participant;
+    const key = `${s.participant}->${target}`;
+    if (seen.has(key)) return; // collapse repeated edges; first occurrence keeps the order label
+    seen.add(key);
+    edges.push({ id: `e${i}`, source: s.participant, target, label: `${i + 1}. ${s.action}` });
+  });
+  return { nodes, edges };
 }
 
-/** One sequence per flow — a deck the UI can page through (feature flows first). */
-export function sequenceDeck(model: Model): { id: string; name: string; chart: string }[] {
+/** One graph per flow — a deck the UI pages through (feature flows, richest first). */
+export function sequenceDeck(model: Model): { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] } }[] {
   return (model.flows ?? [])
     .filter((f) => f.steps.length)
-    .map((f) => ({ id: f.id, name: f.name.replace(/ flow$/, ""), chart: sequenceForFlow(f) }));
-}
-
-export function sequenceDiagram(model: Model): string | null {
-  return model.flows[0] ? sequenceForFlow(model.flows[0]) : null;
+    .map((f) => ({ id: f.id, name: f.name.replace(/ flow$/, ""), graph: flowGraph(model, f) }));
 }

@@ -100,7 +100,7 @@ export default function Docs() {
         <Section id="about" title="What is Archmantic">
           <p>
             Point Archmantic at a repo and it reverse-engineers a single <strong>architecture model</strong> (the IR).
-            Every diagram — C4-style context, components, sequence (Mermaid), an auto-detected BPMN business process, and
+            Every diagram — C4-style context, components, sequence (interactive graphs), an auto-detected BPMN business process, and
             an ERD of your data model (from Prisma, Drizzle, SQL, or <strong>Laravel migrations</strong>), plus a detected
             API surface (REST/tRPC/GraphQL, incl. <strong>NestJS</strong> and <strong>Laravel</strong> routes) — is a{" "}
             <strong>projection</strong> of that one model. Every element is traceable to <Inline>file:line</Inline> with a
