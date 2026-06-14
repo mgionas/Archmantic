@@ -42,6 +42,22 @@ export function componentLabel(id: string): string {
   return humanize(stem);
 }
 
+/** A GitHub repo base URL from the project manifest's links, if any (for source links). */
+export function repoBase(links?: { label: string; url: string }[]): string | null {
+  const l = (links ?? []).find((x) => /github\.com\//.test(x.url));
+  return l ? l.url.replace(/\.git$/, "").replace(/\/+$/, "") : null;
+}
+
+/** Build a source href for a `file:line` provenance ref, when the repo base is known. */
+export function sourceHref(base: string | null, sha: string | null, ref: string | null | undefined): string | null {
+  if (!base || !ref) return null;
+  const m = /^(.*?):(\d+)(?::\d+)?$/.exec(ref);
+  const path = m ? m[1]! : ref;
+  if (/^(llm:|https?:)/.test(path) || !path.includes("/")) return null; // skip non-file refs (e.g. llm:model)
+  const line = m ? `#L${m[2]}` : "";
+  return `${base}/blob/${sha || "HEAD"}/${path}${line}`;
+}
+
 export type Band = "high" | "medium" | "low";
 export function band(c: number): Band {
   return c >= 0.85 ? "high" : c >= 0.6 ? "medium" : "low";

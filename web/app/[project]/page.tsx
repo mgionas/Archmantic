@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { listSnapshots, modelAtCommit, latestModel } from "@/lib/store";
 import { getProcessEdit, listFeatureEdits } from "@/lib/admin";
 import { modelDelta } from "@/lib/diff";
-import { componentLabel, groupCapabilities, trust } from "@/lib/format";
+import { componentLabel, groupCapabilities, trust, repoBase } from "@/lib/format";
 import {
   componentGraph,
   componentDetails,
@@ -83,6 +83,7 @@ export default async function ProjectPage({
       name: c.name,
       refs: c.provenance?.length ?? 0,
       confidence: c.confidence,
+      ref: c.provenance?.[0]?.ref ?? null,
     })),
   }));
   const components = model.components.map((c) => ({
@@ -101,6 +102,7 @@ export default async function ProjectPage({
     path: e.path,
     protocol: e.protocol,
     package: e.package,
+    ref: e.provenance?.[0]?.ref ?? null,
   }));
 
   // A feature is "pending pull" if a hosted-editor cloud edit is newer than the
@@ -146,6 +148,7 @@ export default async function ProjectPage({
           name: e.name,
           fields: e.fields.filter((f) => !f.relationTo).length,
           relations: e.fields.filter((f) => f.relationTo).length,
+          ref: e.provenance?.[0]?.ref ?? null,
         })),
       }
     : null;
@@ -205,6 +208,7 @@ export default async function ProjectPage({
         endpoints={endpoints}
         features={features}
         workspaces={model.workspaces ?? []}
+        source={{ base: repoBase(model.manifest?.links), sha: selectedSha || null }}
         knowledge={knowledgeMarkdown(model)}
         diagrams={{
           contextGraph: contextGraph(model),

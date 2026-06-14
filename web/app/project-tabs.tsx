@@ -24,7 +24,8 @@ import { KnowledgeView } from "@/components/knowledge-view";
 import { FeatureEditor } from "@/components/feature-editor";
 import { RoleLegend } from "@/components/ui/role-legend";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { band, roleColor } from "@/lib/format";
+import { band, roleColor, sourceHref } from "@/lib/format";
+import { Provenance } from "@/components/ui/provenance";
 
 const EntityGraph = dynamic(() => import("@/components/entity-graph").then((m) => m.EntityGraph), {
   ssr: false,
@@ -36,6 +37,11 @@ export interface Cap {
   name: string;
   refs: number;
   confidence: number;
+  ref?: string | null;
+}
+export interface SourceInfo {
+  base: string | null;
+  sha: string | null;
 }
 export interface Group {
   area: string;
@@ -67,7 +73,7 @@ export interface Changes {
 }
 export interface DataModel {
   graph: { nodes: EntityNode[]; edges: EntityEdge[] };
-  entities: { name: string; fields: number; relations: number }[];
+  entities: { name: string; fields: number; relations: number; ref?: string | null }[];
 }
 export interface Endpoint {
   id: string;
@@ -75,6 +81,7 @@ export interface Endpoint {
   path: string;
   protocol: string;
   package?: string;
+  ref?: string | null;
 }
 export interface FeatureView {
   id: string;
@@ -178,6 +185,7 @@ export function ProjectTabs({
   features = [],
   knowledge,
   workspaces = [],
+  source = { base: null, sha: null },
 }: {
   project: string;
   overview: Overview;
@@ -190,6 +198,7 @@ export function ProjectTabs({
   features?: FeatureView[];
   knowledge: string;
   workspaces?: string[];
+  source?: SourceInfo;
 }) {
   const isMono = workspaces.length > 0;
   const [facetParam, setFacet] = useUrlState("view", "overview");
@@ -408,10 +417,15 @@ export function ProjectTabs({
               {groups.map((g) => (
                 <Card key={g.area} className="p-4">
                   <div className="mb-2 font-mono text-xs text-muted-foreground">{g.area}/</div>
-                  <ul className="space-y-1.5">
+                  <ul className="space-y-2">
                     {g.caps.map((c) => (
                       <li key={c.id} className="flex items-baseline justify-between gap-2">
-                        <span className="text-sm">{c.name}</span>
+                        <div className="min-w-0">
+                          <span className="text-sm">{c.name}</span>
+                          <div className="truncate">
+                            <Provenance refText={c.ref} href={sourceHref(source.base, source.sha, c.ref)} />
+                          </div>
+                        </div>
                         <Badge variant="outline" className={`shrink-0 ${BAND_CLASS[band(c.confidence)]}`}>
                           {c.refs} ref{c.refs === 1 ? "" : "s"}
                         </Badge>
@@ -486,6 +500,9 @@ export function ProjectTabs({
                     {e.fields} field{e.fields === 1 ? "" : "s"}
                     {e.relations ? ` · ${e.relations} relation${e.relations === 1 ? "" : "s"}` : ""}
                   </div>
+                  <div className="mt-1 truncate">
+                    <Provenance refText={e.ref} href={sourceHref(source.base, source.sha, e.ref)} />
+                  </div>
                 </Card>
               ))}
             </div>
@@ -532,7 +549,12 @@ export function ProjectTabs({
                               {e.method}
                             </span>
                             <span className="min-w-0 flex-1 truncate font-mono text-xs">{e.path}</span>
-                            <span className="shrink-0 text-[11px] text-muted-foreground">{e.protocol}</span>
+                            <Provenance
+                              refText={e.ref}
+                              href={sourceHref(source.base, source.sha, e.ref)}
+                              className="hidden shrink-0 sm:inline"
+                            />
+                            <span className="shrink-0 text-xs text-muted-foreground">{e.protocol}</span>
                           </li>
                         ))}
                       </ul>
