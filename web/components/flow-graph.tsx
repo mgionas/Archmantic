@@ -5,6 +5,11 @@ import { useTheme } from "next-themes";
 import { X } from "lucide-react";
 import "@xyflow/react/dist/style.css";
 
+/** fitView animation duration, honoring prefers-reduced-motion (0 = no pan animation). */
+export function focusDuration(ms = 400): number {
+  return typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 0 : ms;
+}
+
 /** Common ReactFlow props: theme color mode + Google-Maps gestures. */
 export function useFlowProps() {
   const { resolvedTheme } = useTheme();

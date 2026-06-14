@@ -23,6 +23,7 @@ import "@xyflow/react/dist/style.css";
 import type { GraphNode, GraphEdge, CompDetail } from "@/lib/diagrams";
 import { cn } from "@/lib/utils";
 import { roleColor } from "@/lib/format";
+import { focusDuration } from "@/components/flow-graph";
 
 const NW = 188;
 const NH = 38;
@@ -265,7 +266,7 @@ function Graph({
 
   const focus = (id: string) => {
     setSelected(id);
-    rf.fitView({ nodes: [{ id }], duration: 400, maxZoom: 1.4 });
+    rf.fitView({ nodes: [{ id }], duration: focusDuration(), maxZoom: 1.4 });
   };
 
   const decorated = nodes.map((n) => {

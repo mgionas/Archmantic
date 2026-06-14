@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useUrlState } from "@/lib/use-url-state";
+import { DiagramPicker } from "@/components/diagram-picker";
 import { BpmnEditor } from "./diagrams-client";
 import type { GraphNode, GraphEdge, FlowEdge, CompDetail, ContextNode, ContextEdge, ContextDetail } from "@/lib/diagrams";
 
@@ -15,9 +15,13 @@ const ComponentGraph = dynamic(() => import("@/components/component-graph").then
 const ContextGraph = dynamic(() => import("@/components/context-graph").then((m) => m.ContextGraph), { ssr: false, loading });
 const SequenceGraph = dynamic(() => import("@/components/sequence-graph").then((m) => m.SequenceGraph), { ssr: false, loading });
 
-/** Feature/diagram picker shown above the canvas when a deck has more than one entry. */
-function DeckPicker({ items, active, onPick }: { items: { id: string; name: string }[]; active: string; onPick: (id: string) => void }) {
+/**
+ * Deck picker: a wrapped row of chips for small decks (≤6), a searchable selector
+ * for large ones (70+ features would be an unscannable wall of buttons).
+ */
+function DeckPicker({ items, active, onPick, label }: { items: { id: string; name: string }[]; active: string; onPick: (id: string) => void; label: string }) {
   if (items.length < 2) return null;
+  if (items.length > 6) return <DiagramPicker items={items} active={active} onPick={onPick} label={label} />;
   return (
     <div className="mt-3 flex max-w-full flex-wrap gap-1.5">
       {items.map((it) => (
@@ -26,7 +30,7 @@ function DeckPicker({ items, active, onPick }: { items: { id: string; name: stri
           type="button"
           onClick={() => onPick(it.id)}
           className={cn(
-            "rounded-md border px-2.5 py-1 text-xs transition-colors",
+            "rounded-md border px-2.5 py-1 text-xs transition-colors focus-visible:ring-2 focus-visible:ring-ring",
             active === it.id
               ? "border-primary/40 bg-primary/10 text-foreground"
               : "border-border/60 text-muted-foreground hover:text-foreground",
@@ -61,7 +65,7 @@ export function DiagramTabs({
   onNavigate?: (facet: string) => void;
 }) {
   const [tab, setTab] = useUrlState("d", "context");
-  const [seqId, setSeqId] = useState(sequences[0]?.id ?? "");
+  const [seqId, setSeqId] = useUrlState("seq", sequences[0]?.id ?? "");
   const activeSeq = sequences.find((s) => s.id === seqId) ?? sequences[0];
   const hasSeq = sequences.length > 0;
 
@@ -70,7 +74,7 @@ export function DiagramTabs({
     ...(processXml ? [{ id: "__main", name: edited ? "Main · edited" : "Main process" }] : []),
     ...sequences.map((s) => ({ id: s.id, name: s.name })),
   ];
-  const [procId, setProcId] = useState(processXml ? "__main" : sequences[0]?.id ?? "");
+  const [procId, setProcId] = useUrlState("proc", processXml ? "__main" : sequences[0]?.id ?? "");
   const activeProcId = procItems.find((p) => p.id === procId)?.id ?? procItems[0]?.id ?? "";
   const procFlow = sequences.find((s) => s.id === activeProcId);
   const hasProcess = procItems.length > 0;
@@ -93,8 +97,8 @@ export function DiagramTabs({
       </TabsList>
 
       {/* Per-feature decks: pick a feature to swap the canvas. */}
-      {tab === "sequence" ? <DeckPicker items={sequences} active={activeSeq?.id ?? ""} onPick={setSeqId} /> : null}
-      {tab === "process" ? <DeckPicker items={procItems} active={activeProcId} onPick={setProcId} /> : null}
+      {tab === "sequence" ? <DeckPicker items={sequences} active={activeSeq?.id ?? ""} onPick={setSeqId} label="sequence" /> : null}
+      {tab === "process" ? <DeckPicker items={procItems} active={activeProcId} onPick={setProcId} label="process" /> : null}
 
       {/* One tall, interactive canvas; render only the active diagram so it mounts at full size. */}
       <div className="h-[72vh] pt-3">

@@ -16,7 +16,7 @@ import {
   type NodeProps,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
-import { useFlowProps, GraphDrawer, DrawerSection } from "./flow-graph";
+import { useFlowProps, GraphDrawer, DrawerSection, focusDuration } from "./flow-graph";
 import { cn } from "@/lib/utils";
 import type { EntityNode as EntityNodeData, EntityEdge, EntityField } from "@/lib/diagrams";
 
@@ -114,7 +114,7 @@ function Graph({ graph }: { graph: { nodes: EntityNodeData[]; edges: EntityEdge[
 
   const focus = (id: string) => {
     setSelected(id);
-    rf.fitView({ nodes: [{ id }], duration: 400, maxZoom: 1.2 });
+    rf.fitView({ nodes: [{ id }], duration: focusDuration(), maxZoom: 1.2 });
   };
 
   return (

@@ -17,6 +17,7 @@ import { knowledgeMarkdown } from "@/lib/knowledge";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { ProjectTabs, type Group } from "../project-tabs";
 import { SnapshotPicker } from "../snapshot-picker";
 
@@ -63,7 +64,10 @@ export default async function ProjectPage({
           ← projects
         </a>
         <h1 className="text-2xl font-bold">{project}</h1>
-        <Card className="p-6 text-sm text-muted-foreground">No model pushed for this project yet.</Card>
+        <EmptyState title="No model pushed for this project yet">
+          From the repo root, run <code className="rounded bg-muted px-1.5 py-0.5">archmantic analyze</code> then{" "}
+          <code className="rounded bg-muted px-1.5 py-0.5">archmantic push</code> (with your token set) to publish it here.
+        </EmptyState>
       </div>
     );
   }
