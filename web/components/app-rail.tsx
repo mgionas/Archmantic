@@ -25,10 +25,11 @@ export function AppRail() {
   return (
     <nav
       aria-label="Primary"
-      className="flex w-[var(--rail-w)] shrink-0 flex-col items-center gap-1 border-r border-border/60 bg-sidebar py-3"
+      className="flex w-[var(--rail-w)] shrink-0 flex-col gap-0.5 border-r border-border/60 bg-sidebar p-2"
     >
-      <Link href="/" aria-label="Archmantic home" className="mb-2 grid size-9 place-items-center">
-        <span className="size-3 rounded-sm bg-primary" />
+      <Link href="/" aria-label="Archmantic home" className="mb-2 flex items-center gap-2 px-2 py-1.5 font-bold tracking-tight">
+        <span className="size-3 shrink-0 rounded-sm bg-primary" />
+        Archmantic
       </Link>
       {NAV.map(({ href, label, icon: Icon, match }) => {
         const active = match(pathname);
@@ -36,16 +37,14 @@ export function AppRail() {
           <Link
             key={href}
             href={href}
-            title={label}
-            aria-label={label}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "relative grid size-9 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
-              active && "bg-primary/10 text-primary",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+              active ? "bg-primary/10 font-medium text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground",
             )}
           >
-            {active && <span className="absolute left-[-12px] h-5 w-0.5 rounded-full bg-primary" />}
-            <Icon className="size-[18px]" />
+            <Icon className="size-[18px] shrink-0" />
+            {label}
           </Link>
         );
       })}

@@ -7,13 +7,14 @@ import { cn } from "@/lib/utils";
 import { useUrlState } from "@/lib/use-url-state";
 import { DiagramPicker } from "@/components/diagram-picker";
 import { BpmnEditor } from "./diagrams-client";
-import type { GraphNode, GraphEdge, FlowEdge, CompDetail, ContextNode, ContextEdge, ContextDetail } from "@/lib/diagrams";
+import type { GraphNode, GraphEdge, FlowEdge, CompDetail, ContextNode, ContextEdge, ContextDetail, EntityNode, EntityEdge } from "@/lib/diagrams";
 
 // React Flow + dagre (~70kB) only load when an interactive graph view is opened.
 const loading = () => <div className="grid h-full place-items-center text-sm text-muted-foreground">Loading graph…</div>;
 const ComponentGraph = dynamic(() => import("@/components/component-graph").then((m) => m.ComponentGraph), { ssr: false, loading });
 const ContextGraph = dynamic(() => import("@/components/context-graph").then((m) => m.ContextGraph), { ssr: false, loading });
 const SequenceGraph = dynamic(() => import("@/components/sequence-graph").then((m) => m.SequenceGraph), { ssr: false, loading });
+const EntityGraph = dynamic(() => import("@/components/entity-graph").then((m) => m.EntityGraph), { ssr: false, loading });
 
 /**
  * Deck picker: a wrapped row of chips for small decks (≤6), a searchable selector
@@ -51,6 +52,7 @@ export function DiagramTabs({
   componentDetails,
   sequences,
   processXml,
+  erd,
   edited,
   onNavigate,
 }: {
@@ -61,6 +63,7 @@ export function DiagramTabs({
   componentDetails: Record<string, CompDetail>;
   sequences: { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] } }[];
   processXml: string | null;
+  erd: { nodes: EntityNode[]; edges: EntityEdge[] } | null;
   edited: boolean;
   onNavigate?: (facet: string) => void;
 }) {
@@ -94,6 +97,7 @@ export function DiagramTabs({
             Process {procItems.length > 1 ? <Badge variant="secondary" className="ml-1.5">{procItems.length}</Badge> : null}
           </TabsTrigger>
         ) : null}
+        {erd ? <TabsTrigger value="erd">ERD</TabsTrigger> : null}
       </TabsList>
 
       {/* Per-feature decks: pick a feature to swap the canvas. */}
@@ -116,6 +120,7 @@ export function DiagramTabs({
             <SequenceGraph key={procFlow.id} graph={procFlow.graph} rankdir="LR" />
           ) : null
         ) : null}
+        {tab === "erd" && erd ? <EntityGraph graph={erd} /> : null}
       </div>
     </Tabs>
   );

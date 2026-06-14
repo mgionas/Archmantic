@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AppRail } from "@/components/app-rail";
+import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 
 /**
  * Authenticated app shell: persistent icon rail + a slim utility bar + full-bleed
@@ -14,6 +15,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <AppRail />
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-[var(--header-h)] shrink-0 items-center gap-3 border-b border-border/60 px-4">
+          <BreadcrumbNav />
           <div className="flex-1" />
           <ThemeToggle />
           <OrganizationSwitcher hidePersonal={false} appearance={{ elements: { rootBox: "flex items-center" } }} />

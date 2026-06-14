@@ -83,7 +83,7 @@
     --canvas-foreground: oklch(0.145 0 0);
     --canvas-grid: oklch(0.92 0 0);
     /* Layout constants for the app shell (used via w-[var(--…)]) */
-    --rail-w: 3.5rem;
+    --rail-w: 13rem;
     --facet-w: 12rem;
     --facet-w-collapsed: 3.5rem;
     --header-h: 3rem;

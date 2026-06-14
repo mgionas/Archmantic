@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import dynamic from "next/dynamic";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -27,11 +26,6 @@ import { RoleLegend } from "@/components/ui/role-legend";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { band, roleColor, sourceHref } from "@/lib/format";
 import { Provenance } from "@/components/ui/provenance";
-
-const EntityGraph = dynamic(() => import("@/components/entity-graph").then((m) => m.EntityGraph), {
-  ssr: false,
-  loading: () => <div className="grid h-full place-items-center text-sm text-muted-foreground">Loading graph…</div>,
-});
 
 export interface Cap {
   id: string;
@@ -63,6 +57,7 @@ export interface Diagrams {
   componentDetails: Record<string, CompDetail>;
   sequences: { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] } }[];
   processXml: string | null;
+  erd: { nodes: EntityNode[]; edges: EntityEdge[] } | null;
   edited: boolean;
 }
 export interface Changes {
@@ -386,6 +381,7 @@ export function ProjectTabs({
             componentDetails={diagrams.componentDetails}
             sequences={diagrams.sequences}
             processXml={diagrams.processXml}
+            erd={diagrams.erd}
             edited={diagrams.edited}
             onNavigate={setFacet}
           />
@@ -508,9 +504,12 @@ export function ProjectTabs({
 
         {facet === "data" && data ? (
           <div className="space-y-4">
-            <div className="h-[60vh]">
-              <EntityGraph graph={data.graph} />
-            </div>
+            <p className="text-sm text-muted-foreground">
+              {data.entities.length} entities.{" "}
+              <button type="button" onClick={() => setFacet("diagrams")} className="text-primary hover:underline">
+                View the ERD diagram →
+              </button>
+            </p>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {data.entities.map((e) => (
                 <Card key={e.name} className="p-4">

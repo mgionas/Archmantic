@@ -217,6 +217,7 @@ export default async function ProjectPage({
           componentDetails: componentDetails(model),
           sequences: sequenceDeck(model),
           processXml: savedBpmn ?? bpmnXml(model),
+          erd: data?.graph ?? null,
           edited: Boolean(savedBpmn),
         }}
       />
