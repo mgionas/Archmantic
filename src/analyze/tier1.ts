@@ -26,7 +26,17 @@ function scriptKindFor(rel: string): ts.ScriptKind {
   if (rel.endsWith(".tsx")) return ts.ScriptKind.TSX;
   if (rel.endsWith(".ts")) return ts.ScriptKind.TS;
   if (rel.endsWith(".jsx")) return ts.ScriptKind.JSX;
+  if (rel.endsWith(".vue")) return ts.ScriptKind.TS; // parse the SFC <script> block as TS
   return ts.ScriptKind.JS;
+}
+
+/** A Vue SFC's import graph lives in its `<script>` block(s); extract just those. */
+function vueScript(text: string): string {
+  const blocks: string[] = [];
+  const re = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) blocks.push(m[1]!);
+  return blocks.join("\n");
 }
 
 const compId = (rel: string) => `comp:${rel}`;
@@ -78,6 +88,7 @@ export function extractFileEdges(root: string, rel: string, fileSet: Set<string>
   } catch {
     return { edges: [], externals: [] };
   }
+  if (rel.endsWith(".vue")) text = vueScript(text);
   const sf = ts.createSourceFile(rel, text, ts.ScriptTarget.Latest, true, scriptKindFor(rel));
 
   const addRelation = (toId: string, prov: Provenance): void => {

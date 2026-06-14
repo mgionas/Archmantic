@@ -44,7 +44,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/datamodel.ts:12",
+          "ref": "src/analyze/datamodel.ts:13",
           "source": "code"
         }
       ]
@@ -188,7 +188,39 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/index.ts:79",
+          "ref": "src/analyze/index.ts:80",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/laravel-db.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `detectLaravelMigrations` in src/analyze/laravel-db.ts",
+      "id": "cap:src/analyze/laravel-db.ts#detectLaravelMigrations",
+      "name": "Detect Laravel Migrations",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/laravel-db.ts:57",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/laravel-views.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `detectLaravelViews` in src/analyze/laravel-views.ts",
+      "id": "cap:src/analyze/laravel-views.ts#detectLaravelViews",
+      "name": "Detect Laravel Views",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/laravel-views.ts:19",
           "source": "code"
         }
       ]
@@ -380,7 +412,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/tier1.ts:36",
+          "ref": "src/analyze/tier1.ts:46",
           "source": "code"
         }
       ]
@@ -396,7 +428,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/tier1.ts:70",
+          "ref": "src/analyze/tier1.ts:80",
           "source": "code"
         }
       ]
@@ -412,7 +444,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/tier1.ts:132",
+          "ref": "src/analyze/tier1.ts:143",
           "source": "code"
         }
       ]
@@ -1836,6 +1868,36 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:src/analyze/laravel-db.ts",
+      "kind": "module",
+      "name": "src/analyze/laravel-db.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-db.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/analyze/laravel-views.ts",
+      "kind": "module",
+      "name": "src/analyze/laravel-views.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-views.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/analyze/laravel.ts",
       "kind": "module",
       "name": "src/analyze/laravel.ts",
@@ -2511,6 +2573,36 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:test/laravel-db.test.mjs",
+      "kind": "module",
+      "name": "test/laravel-db.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-db.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:test/laravel-frontend.test.mjs",
+      "kind": "module",
+      "name": "test/laravel-frontend.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-frontend.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:test/laravel.test.mjs",
       "kind": "module",
       "name": "test/laravel.test.mjs",
@@ -2780,7 +2872,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T12:03:39.362Z",
+  "generatedAt": "2026-06-14T12:36:20.400Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -3021,6 +3113,21 @@
         }
       ],
       "to": "comp:src/analyze/drizzle.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/datamodel.ts",
+      "id": "rel:comp:src/analyze/datamodel.ts=>comp:src/analyze/laravel-db.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/datamodel.ts → comp:src/analyze/laravel-db.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/datamodel.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/laravel-db.ts"
     },
     {
       "confidence": 0.95,
@@ -3550,6 +3657,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/index.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/laravel-views.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/index.ts → comp:src/analyze/laravel-views.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/index.ts:17",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/laravel-views.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/index.ts",
       "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/laravel.ts",
       "kind": "depends_on",
       "name": "comp:src/analyze/index.ts → comp:src/analyze/laravel.ts",
@@ -3571,7 +3693,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/index.ts:17",
+          "ref": "src/analyze/index.ts:18",
           "source": "code"
         }
       ],
@@ -3646,7 +3768,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/index.ts:18",
+          "ref": "src/analyze/index.ts:19",
           "source": "code"
         }
       ],
@@ -3692,6 +3814,171 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/index.ts:7",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel-db.ts",
+      "id": "rel:comp:src/analyze/laravel-db.ts=>comp:src/analyze/fs-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel-db.ts → comp:src/analyze/fs-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-db.ts:16",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/fs-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel-db.ts",
+      "id": "rel:comp:src/analyze/laravel-db.ts=>comp:src/analyze/parse-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel-db.ts → comp:src/analyze/parse-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-db.ts:17",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/parse-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel-db.ts",
+      "id": "rel:comp:src/analyze/laravel-db.ts=>comp:src/analyze/tier0.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel-db.ts → comp:src/analyze/tier0.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-db.ts:15",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/tier0.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel-db.ts",
+      "id": "rel:comp:src/analyze/laravel-db.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel-db.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-db.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel-db.ts",
+      "id": "rel:comp:src/analyze/laravel-db.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel-db.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-db.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel-db.ts",
+      "id": "rel:comp:src/analyze/laravel-db.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel-db.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-db.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel-views.ts",
+      "id": "rel:comp:src/analyze/laravel-views.ts=>comp:src/analyze/fs-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel-views.ts → comp:src/analyze/fs-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-views.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/fs-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel-views.ts",
+      "id": "rel:comp:src/analyze/laravel-views.ts=>comp:src/analyze/roles.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel-views.ts → comp:src/analyze/roles.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-views.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/roles.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel-views.ts",
+      "id": "rel:comp:src/analyze/laravel-views.ts=>comp:src/analyze/tier0.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel-views.ts → comp:src/analyze/tier0.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-views.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/tier0.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel-views.ts",
+      "id": "rel:comp:src/analyze/laravel-views.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel-views.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-views.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel-views.ts",
+      "id": "rel:comp:src/analyze/laravel-views.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel-views.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel-views.ts:10",
           "source": "code"
         }
       ],
@@ -6074,6 +6361,156 @@
     },
     {
       "confidence": 0.95,
+      "from": "comp:test/laravel-db.test.mjs",
+      "id": "rel:comp:test/laravel-db.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/laravel-db.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-db.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel-db.test.mjs",
+      "id": "rel:comp:test/laravel-db.test.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:test/laravel-db.test.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-db.test.mjs:4",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel-db.test.mjs",
+      "id": "rel:comp:test/laravel-db.test.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:test/laravel-db.test.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-db.test.mjs:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel-db.test.mjs",
+      "id": "rel:comp:test/laravel-db.test.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:test/laravel-db.test.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-db.test.mjs:5",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel-db.test.mjs",
+      "id": "rel:comp:test/laravel-db.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/laravel-db.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-db.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel-frontend.test.mjs",
+      "id": "rel:comp:test/laravel-frontend.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/laravel-frontend.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-frontend.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel-frontend.test.mjs",
+      "id": "rel:comp:test/laravel-frontend.test.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:test/laravel-frontend.test.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-frontend.test.mjs:4",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel-frontend.test.mjs",
+      "id": "rel:comp:test/laravel-frontend.test.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:test/laravel-frontend.test.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-frontend.test.mjs:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel-frontend.test.mjs",
+      "id": "rel:comp:test/laravel-frontend.test.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:test/laravel-frontend.test.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-frontend.test.mjs:5",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel-frontend.test.mjs",
+      "id": "rel:comp:test/laravel-frontend.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/laravel-frontend.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel-frontend.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
       "from": "comp:test/laravel.test.mjs",
       "id": "rel:comp:test/laravel.test.mjs=>sys:ext:node:assert/strict",
       "kind": "depends_on",
@@ -6422,7 +6859,7 @@
   "systems": [
     {
       "confidence": 0.95,
-      "description": "Archmantic — an always-on Solution Architect: living architecture model + diagrams for humans and AI agents (via MCP).",
+      "description": "Archmantic — an always-on Solution Architect: a living, grounded architecture model + diagrams for humans and AI agents (via MCP). Detects TS/JS and PHP/Laravel stacks, monorepos, API surface, and data models.",
       "id": "sys:archmantic",
       "kind": "internal",
       "name": "archmantic",

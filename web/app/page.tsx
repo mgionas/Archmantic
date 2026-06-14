@@ -25,6 +25,55 @@ const STEPS = [
   ["Share & build", "Your team and agents read the same model; edit the canvas, emit a build spec."],
 ];
 
+// Languages/frameworks Archmantic detects today. Logos via simpleicons CDN.
+const STACKS: { name: string; slug: string }[] = [
+  { name: "TypeScript", slug: "typescript" },
+  { name: "JavaScript", slug: "javascript" },
+  { name: "PHP", slug: "php" },
+  { name: "Next.js", slug: "nextdotjs" },
+  { name: "React", slug: "react" },
+  { name: "Vue", slug: "vuedotjs" },
+  { name: "NestJS", slug: "nestjs" },
+  { name: "Express", slug: "express" },
+  { name: "Laravel", slug: "laravel" },
+  { name: "Inertia", slug: "inertia" },
+  { name: "Livewire", slug: "livewire" },
+  { name: "Prisma", slug: "prisma" },
+  { name: "Drizzle", slug: "drizzle" },
+  { name: "GraphQL", slug: "graphql" },
+  { name: "PostgreSQL", slug: "postgresql" },
+  { name: "MySQL", slug: "mysql" },
+  { name: "SQLite", slug: "sqlite" },
+];
+
+function StackStrip() {
+  return (
+    <section className="mt-24 text-center">
+      <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+        Detects your stack — TS/JS &amp; PHP, monorepos, APIs &amp; data models
+      </h2>
+      <div className="mx-auto mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-x-8 gap-y-6">
+        {STACKS.map(({ name, slug }) => (
+          <span key={slug} className="group inline-flex flex-col items-center gap-2" title={name}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`https://cdn.simpleicons.org/${slug}`}
+              alt={name}
+              width={28}
+              height={28}
+              loading="lazy"
+              className="size-7 opacity-50 grayscale transition-all duration-200 group-hover:opacity-100 group-hover:grayscale-0"
+            />
+            <span className="text-[11px] text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
+              {name}
+            </span>
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function HeroPreview() {
   const caps: [string, "high" | "medium"][] = [
     ["Charge a card", "high"],
@@ -122,8 +171,9 @@ function Landing() {
           actually trust.
         </h1>
         <p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
-          Point Archmantic at a repo → an accurate capability map, context &amp; sequence diagrams, and an auto-detected
-          BPMN process. Every element grounded in code. Your agents query the same model over MCP.
+          Point Archmantic at a repo → an accurate capability map, context &amp; sequence diagrams, an ERD, the API
+          surface, and an auto-detected BPMN process. Works across TS/JS &amp; PHP/Laravel and monorepos. Every element
+          grounded in code. Your agents query the same model over MCP.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <SignInButton>
@@ -154,6 +204,8 @@ function Landing() {
           ))}
         </div>
       </section>
+
+      <StackStrip />
 
       <section className="mt-24">
         <h2 className="text-center text-2xl font-bold tracking-tight">From repo to shared model in three steps</h2>

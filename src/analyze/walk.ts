@@ -4,7 +4,7 @@ import { join, relative } from "node:path";
 import { detectWorkspaces } from "./workspaces.js";
 import { IGNORE_DIRS } from "./ignore.js";
 
-const SOURCE_RE = /\.(ts|tsx|js|jsx|mjs|cjs)$/;
+const SOURCE_RE = /\.(ts|tsx|js|jsx|mjs|cjs|vue)$/;
 
 /** Returns repo-relative, forward-slashed source file paths, sorted. */
 export function walkSourceFiles(root: string): string[] {

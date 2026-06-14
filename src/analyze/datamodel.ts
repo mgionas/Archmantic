@@ -8,9 +8,15 @@ import { type DataEntity } from "../ir/types.js";
 import { detectPrismaModel } from "./prisma.js";
 import { detectDrizzleModel } from "./drizzle.js";
 import { detectSqlModel } from "./sql.js";
+import { detectLaravelMigrations } from "./laravel-db.js";
 
 export function detectDataModel(root: string): DataEntity[] {
-  const all = [...detectPrismaModel(root), ...detectDrizzleModel(root), ...detectSqlModel(root)];
+  const all = [
+    ...detectPrismaModel(root),
+    ...detectDrizzleModel(root),
+    ...detectSqlModel(root),
+    ...detectLaravelMigrations(root),
+  ];
   const seen = new Set<string>();
   const out: DataEntity[] = [];
   for (const e of all) {

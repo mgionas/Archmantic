@@ -5,7 +5,7 @@
 
 /** `analyzeRepo` → "Analyze repo", `tier1` → "Tier 1". */
 export function humanize(raw: string): string {
-  const stem = raw.replace(/\.(ts|tsx|js|jsx|mjs|cjs)$/, "").split("/").pop() ?? raw;
+  const stem = raw.replace(/\.(blade\.php|vue|tsx|ts|jsx|js|mjs|cjs)$/, "").split("/").pop() ?? raw;
   const words = stem
     .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
     .replace(/([A-Za-z])([0-9])/g, "$1 $2")
@@ -21,7 +21,7 @@ export function humanize(raw: string): string {
 export function componentLabel(idOrRel: string): string {
   const rel = idOrRel.startsWith("comp:") ? idOrRel.slice("comp:".length) : idOrRel;
   const parts = rel.split("/");
-  const stem = (parts[parts.length - 1] ?? rel).replace(/\.(ts|tsx|js|jsx|mjs|cjs)$/, "");
+  const stem = (parts[parts.length - 1] ?? rel).replace(/\.(blade\.php|vue|tsx|ts|jsx|js|mjs|cjs)$/, "");
   if (stem === "index" && parts.length >= 2) return humanize(parts[parts.length - 2]!);
   return humanize(stem);
 }

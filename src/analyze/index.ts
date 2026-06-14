@@ -14,6 +14,7 @@ import { detectStack } from "./stack.js";
 import { detectDataModel } from "./datamodel.js";
 import { detectEndpoints } from "./endpoints.js";
 import { detectLaravelRoutes } from "./laravel.js";
+import { detectLaravelViews } from "./laravel-views.js";
 import { refineRole, needsRefine } from "./roles.js";
 import { detectWorkspaces, packageOf } from "./workspaces.js";
 
@@ -81,6 +82,10 @@ export function analyzeRepo(root: string): ArchitectureModel {
   const model = tier0(root, files);
   tier1(root, files, model);
   deriveSemantics(root, files, model);
+  // Blade/Livewire UI lives in .php (outside the JS walk) — add as components.
+  for (const c of detectLaravelViews(root)) {
+    if (!model.components.some((existing) => existing.id === c.id)) model.components.push(c);
+  }
   model.technologies = detectStack(root);
   model.dataEntities = detectDataModel(root);
   model.endpoints = mergeEndpoints(detectEndpoints(root), detectLaravelRoutes(root));

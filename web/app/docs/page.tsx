@@ -3,16 +3,18 @@ import type { ReactNode } from "react";
 
 export const metadata = {
   title: "Docs — Archmantic",
-  description: "Install, quickstart, CLI reference, MCP setup, multi-repo, and the edit-then-build loop.",
+  description: "Install, quickstart, CLI reference, MCP setup, supported frameworks (TS/JS & PHP/Laravel), monorepos, multi-repo systems, and the edit-then-build loop.",
 };
 
 const NAV: { id: string; label: string }[] = [
   { id: "about", label: "What is Archmantic" },
+  { id: "frameworks", label: "Frameworks & languages" },
   { id: "install", label: "Install" },
   { id: "quickstart", label: "Quickstart" },
   { id: "cloud", label: "Connect a team" },
   { id: "cli", label: "CLI reference" },
   { id: "mcp", label: "MCP for agents" },
+  { id: "monorepo", label: "Monorepos" },
   { id: "multirepo", label: "Multi-repo systems" },
   { id: "ci", label: "CI / PR diffs" },
   { id: "edit-build", label: "Edit-then-build" },
@@ -68,8 +70,8 @@ const COMMANDS: [string, string][] = [
 export default function Docs() {
   return (
     <div className="grid gap-10 lg:grid-cols-[200px_1fr]">
-      <aside className="hidden lg:block">
-        <nav className="sticky top-24 space-y-1 text-sm">
+      <aside className="hidden lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto">
+        <nav className="space-y-1 text-sm">
           <div className="mb-2 font-semibold text-foreground">On this page</div>
           {NAV.map((n) => (
             <a
@@ -96,14 +98,43 @@ export default function Docs() {
           <p>
             Point Archmantic at a repo and it reverse-engineers a single <strong>architecture model</strong> (the IR).
             Every diagram — C4-style context, components, sequence (Mermaid), an auto-detected BPMN business process, and
-            an ERD of your data model (from Prisma, Drizzle, or SQL migrations), plus a detected API surface (REST/tRPC/
-            GraphQL) — is a <strong>projection</strong> of that one model. Every element is traceable to <Inline>file:line</Inline>{" "}
-            with a confidence band, so it&apos;s verifiable, not plausible AI guesswork.
+            an ERD of your data model (from Prisma, Drizzle, SQL, or <strong>Laravel migrations</strong>), plus a detected
+            API surface (REST/tRPC/GraphQL, incl. <strong>NestJS</strong> and <strong>Laravel</strong> routes) — is a{" "}
+            <strong>projection</strong> of that one model. Every element is traceable to <Inline>file:line</Inline> with a
+            confidence band, so it&apos;s verifiable, not plausible AI guesswork.
           </p>
           <p>
             The same model answers your AI agent&apos;s questions over <strong>MCP</strong>, so the agent reads the model
             instead of whole files (~98% fewer tokens on this repo, by the built-in benchmark).
           </p>
+        </Section>
+
+        <Section id="frameworks" title="Frameworks & languages">
+          <p>Archmantic is polyglot — it detects, per layer:</p>
+          <ul className="list-disc space-y-1.5 pl-5">
+            <li>
+              <strong>Languages</strong> — TypeScript / JavaScript and <strong>PHP</strong>.
+            </li>
+            <li>
+              <strong>Frontend / components</strong> — React &amp; <strong>Vue</strong> (<Inline>.vue</Inline> SFCs),
+              including Inertia <Inline>resources/js/Pages</Inline>, plus <strong>Blade</strong> templates and{" "}
+              <strong>Livewire</strong> components. Each is role-classified (page, route, ui, layout, view, model, hook,
+              store, …).
+            </li>
+            <li>
+              <strong>API surface</strong> — Next.js (App Router &amp; Pages), Express / Fastify / Koa / Hono,{" "}
+              <strong>NestJS</strong> decorators, <strong>Laravel</strong> <Inline>routes/*.php</Inline> (prefix groups +{" "}
+              <Inline>resource</Inline>/<Inline>apiResource</Inline>), tRPC, and GraphQL.
+            </li>
+            <li>
+              <strong>Data model (ERD)</strong> — Prisma, Drizzle, SQL <Inline>CREATE TABLE</Inline>, and Laravel
+              migrations (<Inline>Schema::create</Inline> + foreign keys). Framework scaffolding tables are filtered out.
+            </li>
+            <li>
+              <strong>Tech stack</strong> — detected from <Inline>package.json</Inline> and <Inline>composer.json</Inline>{" "}
+              (Laravel, Inertia, Livewire, Sanctum, …).
+            </li>
+          </ul>
         </Section>
 
         <Section id="install" title="Install">
@@ -212,6 +243,20 @@ npx archmantic pull      # fetch the latest team model`}</Code>
             Every tool call is recorded with the tokens it saved. See it in the terminal with{" "}
             <Inline>archmantic usage</Inline>, or on the team <Link href="/usage">Usage dashboard</Link> (the MCP server
             flushes events to the cloud when a token is set).
+          </p>
+        </Section>
+
+        <Section id="monorepo" title="Monorepos">
+          <p>
+            One repo, many packages? Archmantic analyzes a monorepo as a <strong>single model</strong>. It reads your
+            declared workspaces (npm/yarn <Inline>workspaces</Inline>, <Inline>pnpm-workspace.yaml</Inline>) and falls
+            back to convention (<Inline>apps/*</Inline>, <Inline>packages/*</Inline>, <Inline>services/*</Inline>, …), so
+            an undeclared Turborepo/Nx layout works too.
+          </p>
+          <p>
+            Every component, endpoint, and data entity is tagged with its owning <strong>package</strong>, and the
+            project view lets you group Components and the API by package (with a “Monorepo · N packages” overview). An
+            independent nested app that isn&apos;t a workspace member stays out of the model.
           </p>
         </Section>
 

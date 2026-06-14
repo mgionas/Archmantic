@@ -4,6 +4,7 @@ import type { Element, Model } from "./store";
 export const ROLE_COLOR: Record<string, string> = {
   route: "#f87171",
   page: "#a78bfa",
+  view: "#c084fc",
   ui: "#60a5fa",
   modal: "#f472b6",
   hook: "#2dd4bf",
@@ -20,7 +21,7 @@ export const ROLE_COLOR: Record<string, string> = {
 export const roleColor = (r: string) => ROLE_COLOR[r] ?? ROLE_COLOR.module;
 
 export function humanize(raw: string): string {
-  const stem = (raw.replace(/\.(ts|tsx|js|jsx|mjs|cjs)$/, "").split("/").pop() ?? raw)
+  const stem = (raw.replace(/\.(blade\.php|vue|tsx|ts|jsx|js|mjs|cjs)$/, "").split("/").pop() ?? raw)
     .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
     .replace(/([A-Za-z])([0-9])/g, "$1 $2")
     .replace(/[_-]+/g, " ")
@@ -32,7 +33,7 @@ export function humanize(raw: string): string {
 export function componentLabel(id: string): string {
   const rel = id.startsWith("comp:") ? id.slice("comp:".length) : id;
   const parts = rel.split("/");
-  const stem = (parts[parts.length - 1] ?? rel).replace(/\.(ts|tsx|js|jsx|mjs|cjs)$/, "");
+  const stem = (parts[parts.length - 1] ?? rel).replace(/\.(blade\.php|vue|tsx|ts|jsx|js|mjs|cjs)$/, "");
   if (stem === "index" && parts.length >= 2) return humanize(parts[parts.length - 2]!);
   return humanize(stem);
 }

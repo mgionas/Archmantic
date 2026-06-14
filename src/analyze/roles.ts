@@ -6,7 +6,7 @@
  */
 
 /** Roles a path already determines confidently — content can't override these. */
-const STRONG_ROLES = new Set(["route", "page", "layout", "middleware", "config", "model", "store", "modal", "hook"]);
+const STRONG_ROLES = new Set(["route", "page", "layout", "middleware", "config", "model", "store", "modal", "hook", "view"]);
 
 /** Whether a path-derived role is weak enough to refine with file content. */
 export function needsRefine(role: string): boolean {
@@ -39,6 +39,16 @@ export function classifyRole(rel: string): string {
   const p = rel.toLowerCase();
   const base = p.split("/").pop() ?? p;
 
+  // Laravel/Inertia frontend (resources/js|ts/{Pages,Layouts,Components}, .vue/.tsx).
+  // Checked before the Next.js rules so `resources/js/Pages/Foo.vue` is a page.
+  if (/(^|\/)resources\/(js|ts)\/pages\//.test(p)) return "page";
+  if (/(^|\/)resources\/(js|ts)\/layouts\//.test(p)) return "layout";
+  // Blade templates & Livewire views (server-rendered views).
+  if (/\.blade\.php$/.test(p)) {
+    if (/(^|\/)(layouts)\//.test(p)) return "layout";
+    if (/(^|\/)(components|partials|livewire)\//.test(p)) return "ui";
+    return "view";
+  }
   // Routing / endpoints
   if (/(^|\/)route\.[tj]sx?$/.test(p) || /(^|\/)pages\/api\//.test(p)) return "route";
   // Next.js pages
@@ -60,7 +70,7 @@ export function classifyRole(rel: string): string {
   if (/(modal|dialog|drawer|popover)/.test(base)) return "modal";
   // UI components
   if (/(^|\/)components\//.test(p)) return "ui";
-  if (/\.tsx$/.test(p)) return "ui";
+  if (/\.(tsx|vue)$/.test(p)) return "ui";
   // Services / libs / utils
   if (/(^|\/)(services|service|server|api|lib|libs)\//.test(p)) return "service";
   if (/(^|\/)(utils|util|helpers)\//.test(p) || /util/.test(base)) return "util";

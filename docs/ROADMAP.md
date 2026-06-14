@@ -165,6 +165,24 @@ the API surface. Also fixed: a `pnpm-workspace.yaml` listing `.` (root) no longe
 mislabels a single-package repo as a monorepo. OpenAPI ingestion + PHP-as-
 components remain deferred.
 
+### ✅ done · Laravel pages + data model (1.7.0)
+Laravel repos showed no DB and (for Vue/Inertia) no pages. Added three things:
+- **Vue SFC support** — `.vue` is now walked; tier1 extracts the `<script>` block so
+  Inertia page/component import edges resolve. (fantasy: 0 → 111 .vue components.)
+- **Migrations → data model** (`src/analyze/laravel-db.ts`) — parses
+  `database/migrations/*.php` `Schema::create/table` blocks into entities/fields
+  (PK/unique/optional, timestamps/softDeletes/morphs) with FK relations
+  (`foreignId('x')->constrained()`, `foreign('x')->references->on`). Framework
+  scaffolding tables (cache/jobs/sessions/…) are excluded. (fantasy: 0 → 47 domain
+  entities, 59 relations.)
+- **Blade + Livewire components** (`src/analyze/laravel-views.ts`) — `resources/views/
+  **/*.blade.php` and `app/(Http/)Livewire/**` become components with view/layout/ui
+  roles, so non-Inertia (blade/livewire) apps are covered too.
+- Role classifier learns Laravel/Inertia paths (`resources/js/{Pages,Layouts,
+  Components}`, `.blade.php`); new `view` role + color; labels strip `.vue`/`.blade.php`.
+DB-from-`.env` connector deferred (needs a live DB = runtime tier). Custom
+route-file prefixes still deferred.
+
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
 appears that architecture-level elements can't serve.
