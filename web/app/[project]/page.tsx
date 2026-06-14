@@ -99,6 +99,22 @@ export default async function ProjectPage({
     package: e.package,
   }));
 
+  const featureName = new Map<string, string>();
+  for (const f of model.features ?? []) featureName.set(f.id, f.name);
+  const features = (model.features ?? [])
+    .map((f) => ({
+      id: f.id,
+      name: f.name,
+      description: f.description ?? "",
+      status: f.status ?? null,
+      shows: f.shows ?? [],
+      actions: f.actions ?? [],
+      dependsOn: (f.dependsOn ?? []).map((id) => featureName.get(id) ?? id.replace(/^feature:/, "")),
+      components: (f.components ?? []).map((c) => componentLabel(c)),
+      human: f.provenance?.[0]?.source === "human",
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
   const eg = entityGraph(model);
   const data = eg.nodes.length
     ? {
@@ -164,6 +180,7 @@ export default async function ProjectPage({
         changes={changes}
         data={data}
         endpoints={endpoints}
+        features={features}
         workspaces={model.workspaces ?? []}
         knowledge={knowledgeMarkdown(model)}
         diagrams={{

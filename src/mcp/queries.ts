@@ -234,6 +234,51 @@ export function getLinkSuggestions(local: ArchitectureModel, org: ArchitectureMo
   return out.join("\n");
 }
 
+/** Resolve a loose name (id, slug, or display name) to a feature. */
+function findFeature(model: ArchitectureModel, name: string) {
+  const n = name.trim().toLowerCase();
+  const slug = n.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return (model.features ?? []).find(
+    (f) => f.id === name || f.id === `feature:${slug}` || f.name.toLowerCase() === n,
+  );
+}
+
+export function listFeatures(model: ArchitectureModel): string {
+  const features = model.features ?? [];
+  if (!features.length) return "No features yet. Seed them with `archmantic feature seed`, then refine .archmantic/features/*.md.";
+  const out = [`Features (${features.length}):`];
+  for (const f of [...features].sort((a, b) => a.name.localeCompare(b.name))) {
+    const bits = [
+      f.shows?.length ? `${f.shows.length} shows` : "",
+      f.actions?.length ? `${f.actions.length} actions` : "",
+      f.dependsOn?.length ? `→ ${f.dependsOn.length} deps` : "",
+    ].filter(Boolean);
+    const draft = f.status === "draft" ? " (draft)" : "";
+    out.push(`- ${f.name}${draft}${bits.length ? ` [${bits.join(", ")}]` : ""}${f.description ? ` — ${f.description.split("\n")[0]}` : ""}`);
+  }
+  return out.join("\n");
+}
+
+export function getFeature(model: ArchitectureModel, name: string): string {
+  const f = findFeature(model, name);
+  if (!f) return `No feature matches "${name}". Try \`list_features\`.`;
+  const nameOf = (id: string) => (model.features ?? []).find((x) => x.id === id)?.name ?? id.replace(/^feature:/, "");
+  const out = [`Feature: ${f.name}${f.status ? `  [${f.status}]` : ""}`];
+  if (f.description) out.push(f.description);
+  if (f.shows?.length) {
+    out.push(`\nShows:`);
+    for (const s of f.shows) out.push(`  - ${s.text}${s.source ? ` (from ${s.source})` : ""}`);
+  }
+  if (f.actions?.length) {
+    out.push(`\nActions:`);
+    for (const a of f.actions) out.push(`  - ${a.name}${a.description ? ` — ${a.description}` : ""}`);
+  }
+  if (f.dependsOn?.length) out.push(`\nDepends on: ${f.dependsOn.map(nameOf).join(", ")}`);
+  if (f.components?.length) out.push(`Components: ${f.components.map((c) => componentLabel(c)).join(", ")}`);
+  out.push(`\nGrounding: ${refOf(f)} (${f.provenance[0]?.source ?? "?"})`);
+  return out.join("\n");
+}
+
 export function whatsRelated(model: ArchitectureModel, name: string): string {
   const c = findComponent(model, name);
   if (!c) return `No component matches "${name}".`;

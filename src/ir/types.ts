@@ -106,6 +106,37 @@ export interface Technology extends ElementBase {
   category: string;
 }
 
+/** Something a feature shows to the user (e.g. "hero slider", source "admin"). */
+export interface FeatureShow {
+  text: string;
+  /** where it comes from, if notable (e.g. "admin", "API"). */
+  source?: string;
+}
+
+/** A user action a feature exposes. */
+export interface FeatureAction {
+  name: string;
+  description?: string;
+}
+
+/**
+ * A feature — the user-perspective definition layer (Spec layer Phase 2). Richer
+ * than a Capability: what it shows, what the user can do, what it depends on, and
+ * which components implement it. Authored as `.archmantic/features/<slug>.md`
+ * (provenance human) or seeded bottom-up from pages/routes (provenance code).
+ * See docs/design/SPEC-LAYER.md.
+ */
+export interface Feature extends ElementBase {
+  shows?: FeatureShow[];
+  actions?: FeatureAction[];
+  /** feature ids this one depends on (e.g. Home → Login, Vendors). */
+  dependsOn?: string[];
+  /** component ids that implement this feature. */
+  components?: string[];
+  /** draft | active | … (free-form, optional). */
+  status?: string;
+}
+
 /** One column/field on a DataEntity. */
 export interface DataField {
   name: string;
@@ -197,6 +228,7 @@ export interface ArchitectureModel {
   technologies: Technology[];
   dataEntities: DataEntity[];
   endpoints: Endpoint[];
+  features: Feature[];
 }
 
 /**
@@ -217,6 +249,7 @@ export function sortModel(m: ArchitectureModel): ArchitectureModel {
     technologies: [...m.technologies].sort(byId),
     dataEntities: [...m.dataEntities].sort(byId),
     endpoints: [...m.endpoints].sort(byId),
+    features: [...m.features].sort(byId),
   };
 }
 
@@ -253,5 +286,6 @@ export function createEmptyModel(project: string): ArchitectureModel {
     technologies: [],
     dataEntities: [],
     endpoints: [],
+    features: [],
   };
 }

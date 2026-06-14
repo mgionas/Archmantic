@@ -20,7 +20,8 @@ import { type ArchitectureModel, createEmptyModel, serializeModel } from "./ir/t
 import { analyzeRepo } from "./analyze/index.js";
 import { tier2 } from "./analyze/tier2.js";
 import { incrementalUpdate } from "./analyze/incremental.js";
-import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess, knowledgeMarkdown, applyKnowledgeBlock, readManifest, detectAgents, scaffoldManifest, MANIFEST_PATH } from "./project/index.js";
+import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess, knowledgeMarkdown, applyKnowledgeBlock, readManifest, detectAgents, scaffoldManifest, MANIFEST_PATH, seedFeatureFiles, FEATURES_DIR } from "./project/index.js";
+import { getFeature, listFeatures } from "./mcp/queries.js";
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 import { runHandoff, runAutonomousBuild } from "./agent.js";
@@ -104,6 +105,47 @@ function cmdProject(args: string[]): number {
   const team = manifest?.agents?.length ? manifest.agents : agents;
   if (team.length) console.log(`  agents: ${team.map((a) => a.name).join(", ")}`);
   if (manifest?.links?.length) console.log(`  links:  ${manifest.links.map((l) => l.label).join(", ")}`);
+  return 0;
+}
+
+/** Load the committed model, or print an error and return null. */
+function loadModelOrNull(): ArchitectureModel | null {
+  const file = join(process.cwd(), MODEL_DIR, MODEL_FILE);
+  if (!existsSync(file)) {
+    console.error(`✗ No model at ${MODEL_DIR}/${MODEL_FILE}. Run \`archmantic analyze\` first.`);
+    return null;
+  }
+  try {
+    return JSON.parse(readFileSync(file, "utf8")) as ArchitectureModel;
+  } catch {
+    console.error(`✗ ${MODEL_DIR}/${MODEL_FILE} is not valid JSON — re-run \`archmantic analyze\`.`);
+    return null;
+  }
+}
+
+/** `feature [list | show <name> | seed]` — the user-perspective feature layer. */
+function cmdFeature(args: string[]): number {
+  const model = loadModelOrNull();
+  if (!model) return 1;
+  const sub = args[0] ?? "list";
+  if (sub === "seed") {
+    const written = seedFeatureFiles(process.cwd(), model);
+    console.log(
+      written.length
+        ? `✓ Wrote ${written.length} feature file${written.length === 1 ? "" : "s"} to ${FEATURES_DIR}/ — refine them, then re-run \`archmantic analyze\`.`
+        : `• All features already have files in ${FEATURES_DIR}/ — nothing to seed.`,
+    );
+    return 0;
+  }
+  if (sub === "show") {
+    if (!args[1]) {
+      console.error("Usage: archmantic feature show <name>");
+      return 1;
+    }
+    console.log(getFeature(model, args[1]));
+    return 0;
+  }
+  console.log(listFeatures(model));
   return 0;
 }
 
@@ -827,6 +869,7 @@ Usage: archmantic <command> [options]   (short alias: amt)
 Commands:
   init [name]    Create an empty .archmantic/model.json (+ project.json brain)
   project [--init]  Scaffold/show the project brain (.archmantic/project.json: goal, author, agents)
+  feature [list|show <name>|seed]  User-perspective features (seed writes .archmantic/features/*.md to refine)
   analyze [--tier N]  Reverse-engineer the model (--tier 2 adds the LLM pass, BYOK)
   update [--hook]  Incrementally re-analyze only what changed (git-diff driven)
   view           Capability map + diagrams + trust report (writes view.html)
@@ -869,6 +912,8 @@ async function main(argv: string[]): Promise<number> {
       return cmdInit(rest);
     case "project":
       return cmdProject(rest);
+    case "feature":
+      return cmdFeature(rest);
     case "analyze":
       return cmdAnalyze(rest);
     case "update":

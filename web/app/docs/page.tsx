@@ -51,6 +51,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
 const COMMANDS: [string, string][] = [
   ["init [name]", "Create an empty .archmantic/model.json (+ a project.json brain)"],
   ["project [--init]", "Scaffold/show the project brain (goal, author, links; agents auto-detect from .claude/agents/)"],
+  ["feature [list|show|seed]", "User-perspective features; seed writes .archmantic/features/*.md to refine"],
   ["analyze [--tier N]", "Reverse-engineer the model. --tier 2 adds the LLM semantic pass (BYOK)"],
   ["update [--hook]", "Incrementally re-analyze only what changed (git-diff driven). --hook prints a pre-commit hook"],
   ["view", "Capability map, diagrams, and trust report → a self-contained view.html"],
@@ -230,8 +231,10 @@ npx archmantic pull      # fetch the latest team model`}</Code>
           </p>
           <p>
             Once connected, the agent reads the <strong>project brain</strong> (<Inline>get_project</Inline> — goal,
-            owner, agent team, links, history) and queries components, capabilities, context, sequences, processes, the
-            data model, and the API surface; gets cross-repo link suggestions (<Inline>suggest_links</Inline>); and can{" "}
+            owner, agent team, links, history), the <strong>features</strong> (<Inline>list_features</Inline>/
+            <Inline>get_feature</Inline> — what the product does), and queries components, capabilities, context,
+            sequences, processes, the data model, and the API surface; gets cross-repo link suggestions (
+            <Inline>suggest_links</Inline>); and can{" "}
             <Inline>refresh</Inline> or <Inline>sync</Inline> the model — instead of reading source files. After code changes, the agent calls <Inline>refresh</Inline> (or you re-run{" "}
             <Inline>amt analyze</Inline>) so answers reflect reality.
           </p>

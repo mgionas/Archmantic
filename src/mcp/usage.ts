@@ -26,6 +26,7 @@ const BROAD_TOOLS = new Set([
   "get_sequence",
   "suggest_links",
   "whats_related",
+  "list_features",
 ]);
 
 const estTokens = (s: string) => Math.ceil(s.length / 4);

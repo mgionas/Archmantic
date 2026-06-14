@@ -17,17 +17,17 @@ status: active · author: Giorgi (mgionas) (https://github.com/mgionas)
 
 **Links:** [npm](https://www.npmjs.com/package/archmantic) · [GitHub](https://github.com/mgionas/Archmantic) · [App](https://archmantic.vercel.app)
 
-67 components · 114 capabilities · 0 endpoints · 0 data entities.
+69 components · 124 capabilities · 0 endpoints · 0 data entities.
 
-**Component roles:** 62 module · 3 route · 2 util
+**Component roles:** 64 module · 3 route · 2 util
 
 ### What it does (capabilities)
 - **src/** — Run Autonomous Build, Run Handoff, Ensure Anthropic Auth, Has Anthropic Credentials, Load Env, Analyze Links, Build System View, Summarize Service, System Context Diagram, System Html
 - **src/analyze/** — Detect Data Model, Derive Process And Flow, Derive Semantics, Extract File Capabilities, Detect Drizzle Model, Detect Endpoints, Find Files, Is Test File, Incremental Update, Detect Laravel Migrations, Detect Laravel Views, Detect Laravel Routes, Balanced Block, Split Top Level, Detect Prisma Model, Classify Role, Needs Refine, Refine Role, Detect Sql Model, Detect Stack, Component For, Tier 0, Build External System, Extract File Edges, Tier 1, Tier 2, Walk Source Files, Detect Workspaces, Package Of, Analyze Repo
-- …and 74 more
+- …and 84 more
 
 ### Primary process: Cli flow
-Cli → Types → Analyze → Tier 2 → Incremental → Project → Env → Auth → Agent → System → Cloud → Server
+Cli → Types → Analyze → Tier 2 → Incremental → Project → Queries → Env → Auth → Agent → System → Cloud
 
 **External systems:** @anthropic-ai/sdk, @modelcontextprotocol/sdk, @neondatabase/serverless, node:assert/strict, node:child_process, node:crypto, node:fs, node:os, node:path, node:test, typescript, zod
 

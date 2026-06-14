@@ -72,6 +72,17 @@ export interface Endpoint {
   protocol: string;
   package?: string;
 }
+export interface FeatureView {
+  id: string;
+  name: string;
+  description: string;
+  status: string | null;
+  shows: { text: string; source?: string }[];
+  actions: { name: string; description?: string }[];
+  dependsOn: string[];
+  components: string[];
+  human: boolean;
+}
 export interface ProjectManifest {
   goal?: string;
   status?: string;
@@ -157,6 +168,7 @@ export function ProjectTabs({
   changes,
   data,
   endpoints,
+  features = [],
   knowledge,
   workspaces = [],
 }: {
@@ -168,6 +180,7 @@ export function ProjectTabs({
   changes: Changes;
   data: DataModel | null;
   endpoints: Endpoint[];
+  features?: FeatureView[];
   knowledge: string;
   workspaces?: string[];
 }) {
@@ -182,6 +195,7 @@ export function ProjectTabs({
   const facets: { id: string; label: string; count?: number }[] = [
     { id: "overview", label: "Overview" },
     { id: "diagrams", label: "Diagrams" },
+    ...(features.length ? [{ id: "features", label: "Features", count: features.length }] : []),
     { id: "capabilities", label: "Capabilities", count: capCount },
     { id: "components", label: "Components", count: components.length },
     ...(data ? [{ id: "data", label: "Data", count: data.entities.length }] : []),
@@ -357,6 +371,81 @@ export function ProjectTabs({
             edited={diagrams.edited}
             onNavigate={setFacet}
           />
+        ) : null}
+
+        {facet === "features" ? (
+          features.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No features yet.</p>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                What the product does, from the user&apos;s perspective. Draft features are seeded from pages/routes —
+                refine them in <code className="rounded bg-muted px-1 py-0.5 text-xs">.archmantic/features/*.md</code>.
+              </p>
+              <div className="grid gap-3 lg:grid-cols-2">
+                {features.map((f) => (
+                  <Card key={f.id} className="space-y-2.5 p-4">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{f.name}</span>
+                      {f.status ? (
+                        <Badge variant="outline" className="font-normal capitalize">
+                          {f.status}
+                        </Badge>
+                      ) : null}
+                      {f.human ? (
+                        <Badge variant="secondary" className="font-normal">
+                          authored
+                        </Badge>
+                      ) : null}
+                    </div>
+                    {f.description ? <p className="text-sm text-muted-foreground">{f.description}</p> : null}
+                    {f.shows.length ? (
+                      <div className="text-sm">
+                        <span className="text-xs font-medium text-muted-foreground">Shows</span>
+                        <ul className="mt-1 space-y-0.5">
+                          {f.shows.map((s, i) => (
+                            <li key={i} className="text-muted-foreground">
+                              • {s.text}
+                              {s.source ? <span className="text-xs"> (from {s.source})</span> : null}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null}
+                    {f.actions.length ? (
+                      <div className="text-sm">
+                        <span className="text-xs font-medium text-muted-foreground">Actions</span>
+                        <ul className="mt-1 space-y-0.5">
+                          {f.actions.map((a, i) => (
+                            <li key={i} className="text-muted-foreground">
+                              • <span className="text-foreground">{a.name}</span>
+                              {a.description ? ` — ${a.description}` : ""}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null}
+                    {f.dependsOn.length ? (
+                      <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                        <span className="text-muted-foreground">Depends on:</span>
+                        {f.dependsOn.map((d) => (
+                          <Badge key={d} variant="outline" className="font-normal">
+                            {d}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : null}
+                    {f.components.length ? (
+                      <div className="text-xs text-muted-foreground">
+                        {f.components.length} component{f.components.length === 1 ? "" : "s"}: {f.components.slice(0, 4).join(", ")}
+                        {f.components.length > 4 ? ` +${f.components.length - 4}` : ""}
+                      </div>
+                    ) : null}
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )
         ) : null}
 
         {facet === "capabilities" ? (

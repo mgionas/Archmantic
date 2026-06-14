@@ -194,6 +194,17 @@ web project Overview shows a "Project brain" card with author attribution. CLI
 read tool (incl. local/no-cred mode) is recorded to the usage log. Phases 2
 (feature layer) and 3 (feature-scoped flows) next.
 
+### ✅ done · Spec layer Phase 2 — feature layer (1.9.0)
+User-perspective features on top of the structure (docs/design/SPEC-LAYER.md). New
+`Feature` IR type (`description`, `shows[]`, `actions[]`, `dependsOn[]`,
+`components[]`) authored as git-versioned `.archmantic/features/<slug>.md`
+(frontmatter + `## Shows`/`## Actions`); seeded bottom-up from page/route/view
+components (status "draft", path-aware names so sibling `add.vue`/`show.vue` don't
+collapse; tests excluded). Authored files win over seeds. Surfaced via MCP
+`list_features`/`get_feature`, CLI `feature [list|show|seed]`, and a web Features
+facet. Next (Phase 2b): the intent compiler (`feature sync`, BYOK) — edit a
+description → create/update related features. Then Phase 3: feature-scoped flows.
+
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
 appears that architecture-level elements can't serve.

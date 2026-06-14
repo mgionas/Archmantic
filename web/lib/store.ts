@@ -46,6 +46,13 @@ export interface ProjectManifest {
   agents?: { name: string; role?: string; file?: string }[];
   history?: { date?: string; note: string }[];
 }
+export interface Feature extends Element {
+  shows?: { text: string; source?: string }[];
+  actions?: { name: string; description?: string }[];
+  dependsOn?: string[];
+  components?: string[];
+  status?: string;
+}
 export interface Model {
   project: string;
   generatedAt?: string;
@@ -53,6 +60,7 @@ export interface Model {
   consumes?: string[];
   workspaces?: string[];
   manifest?: ProjectManifest;
+  features?: Feature[];
   systems: Element[];
   components: Element[];
   relations: (Element & { from: string; to: string })[];

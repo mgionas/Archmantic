@@ -26,6 +26,17 @@ export {
   starterManifest,
   MANIFEST_PATH,
 } from "./manifest.js";
+export {
+  readFeatures,
+  seedFeatures,
+  detectFeatures,
+  mergeFeatures,
+  parseFeatureFile,
+  seedFeatureFiles,
+  featureFileMarkdown,
+  slugify,
+  FEATURES_DIR,
+} from "./features.js";
 export { parseBpmnProcess, type ParsedProcess } from "./bpmn-parse.js";
 export * from "./trust.js";
 

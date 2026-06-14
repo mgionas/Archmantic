@@ -33,10 +33,12 @@ import {
   getContext,
   getDataModel,
   getLinkSuggestions,
+  getFeature,
   getProcess,
   getProject,
   getSequence,
   listComponents,
+  listFeatures,
   searchCapabilities,
   whatsRelated,
 } from "./queries.js";
@@ -77,7 +79,7 @@ const text = (s: string) => ({ content: [{ type: "text" as const, text: s }] });
 export async function startMcpServer(root: string): Promise<void> {
   // Mutable so `refresh`/`sync` update what the read tools serve.
   let model = loadModel(root);
-  const server = new McpServer({ name: "archmantic", version: "1.8.0" });
+  const server = new McpServer({ name: "archmantic", version: "1.9.0" });
 
   // Usage stats: record each read tool, best-effort flush to the cloud (API if a
   // token is set, else direct DB, else local-log only). Never breaks the agent.
@@ -206,6 +208,27 @@ export async function startMcpServer(root: string): Promise<void> {
       }
       return served("suggest_links", getLinkSuggestions(model, org));
     },
+  );
+
+  server.registerTool(
+    "list_features",
+    {
+      title: "List features",
+      description:
+        "User-perspective features: what the product does, with what each shows / lets the user do and its dependencies. The intent layer above raw components.",
+    },
+    async () => served("list_features", listFeatures(model)),
+  );
+
+  server.registerTool(
+    "get_feature",
+    {
+      title: "Get feature detail",
+      description:
+        "One feature's full definition: description, what it shows, user actions, dependencies, and the components that implement it.",
+      inputSchema: { name: z.string().describe("feature name or slug") },
+    },
+    async ({ name }) => served("get_feature", getFeature(model, name)),
   );
 
   server.registerTool(
