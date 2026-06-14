@@ -178,6 +178,126 @@ export function componentDetails(model: Model): Record<string, CompDetail> {
   return out;
 }
 
+// ── Context graph (system ↔ externals) for React Flow ─────────────────────────
+
+export interface ContextNode {
+  id: string;
+  label: string;
+  kind: "system" | "external";
+}
+export interface ContextEdge {
+  id: string;
+  source: string;
+  target: string;
+}
+export function contextGraph(model: Model): { nodes: ContextNode[]; edges: ContextEdge[] } {
+  const internal = model.systems.find((s) => s.kind === "internal");
+  const sysId = internal?.id ?? "sys:internal";
+  const nodes: ContextNode[] = [{ id: sysId, label: internal?.name ?? model.project, kind: "system" }];
+  const externalIds = new Set(model.systems.filter((s) => s.kind === "external").map((s) => s.id));
+  const edges: ContextEdge[] = [];
+  const seen = new Set<string>();
+  for (const r of model.relations) {
+    if (!externalIds.has(r.to) || seen.has(r.to)) continue;
+    seen.add(r.to);
+    const ext = model.systems.find((s) => s.id === r.to)!;
+    nodes.push({ id: r.to, label: ext.name, kind: "external" });
+    edges.push({ id: `e:${r.to}`, source: sysId, target: r.to });
+  }
+  return { nodes, edges };
+}
+
+export interface ContextDetail {
+  label: string;
+  kind: string;
+  usedBy: string[];
+}
+export function contextDetails(model: Model): Record<string, ContextDetail> {
+  const compIds = new Set(model.components.map((c) => c.id));
+  const out: Record<string, ContextDetail> = {};
+  for (const s of model.systems) {
+    if (s.kind === "external") {
+      const usedBy = model.relations.filter((r) => r.to === s.id && compIds.has(r.from)).map((r) => componentLabel(r.from));
+      out[s.id] = { label: s.name, kind: "external", usedBy: [...new Set(usedBy)] };
+    } else if (s.kind === "internal") {
+      out[s.id] = { label: s.name, kind: "internal", usedBy: [] };
+    }
+  }
+  return out;
+}
+
+// ── Entity graph (ERD) for React Flow ─────────────────────────────────────────
+
+export interface EntityField {
+  name: string;
+  type: string;
+  key?: "PK" | "FK" | "UK";
+  optional?: boolean;
+}
+export interface EntityNode {
+  id: string;
+  label: string;
+  ref: string;
+  fields: EntityField[];
+}
+export interface EntityEdge {
+  id: string;
+  source: string;
+  target: string;
+  label: string;
+}
+export function entityGraph(model: Model): { nodes: EntityNode[]; edges: EntityEdge[] } {
+  const ents = model.dataEntities ?? [];
+  const byId = new Map(ents.map((e) => [e.id, e]));
+  const nodes: EntityNode[] = ents.map((e) => ({
+    id: e.id,
+    label: e.name,
+    ref: e.provenance?.[0]?.ref ?? "",
+    fields: e.fields
+      .filter((f) => !(f.relationTo && !f.isForeignKey))
+      .map((f) => ({
+        name: f.name,
+        type: f.type + (f.list ? "[]" : ""),
+        key: f.isId ? "PK" : f.isForeignKey ? "FK" : f.isUnique ? "UK" : undefined,
+        optional: f.optional,
+      })),
+  }));
+
+  const pairs = new Map<string, { x: string; y: string; listX: boolean; listY: boolean; singleX: boolean; singleY: boolean }>();
+  for (const e of ents) {
+    for (const f of e.fields) {
+      const t = f.relationTo ? byId.get(f.relationTo) : undefined;
+      if (!t) continue;
+      const [x, y] = [e.id, t.id].sort() as [string, string];
+      const p = pairs.get(`${x} ${y}`) ?? { x, y, listX: false, listY: false, singleX: false, singleY: false };
+      const eIsX = e.id === x;
+      if (f.list) eIsX ? (p.listX = true) : (p.listY = true);
+      else eIsX ? (p.singleX = true) : (p.singleY = true);
+      pairs.set(`${x} ${y}`, p);
+    }
+  }
+  const edges: EntityEdge[] = [];
+  for (const p of pairs.values()) {
+    let source = p.x;
+    let target = p.y;
+    let label = "1–1";
+    if (p.listX && p.listY) label = "n–n";
+    else if (p.listX) label = "1–n";
+    else if (p.listY) {
+      source = p.y;
+      target = p.x;
+      label = "1–n";
+    } else if (p.singleX && p.singleY) label = "1–1";
+    else if (p.singleX) {
+      source = p.y;
+      target = p.x;
+      label = "1–n";
+    } else label = "1–n";
+    edges.push({ id: `${p.x}|${p.y}`, source, target, label });
+  }
+  return { nodes, edges };
+}
+
 export function sequenceDiagram(model: Model): string | null {
   const flow = model.flows[0];
   if (!flow) return null;

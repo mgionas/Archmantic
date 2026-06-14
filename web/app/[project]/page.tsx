@@ -4,7 +4,14 @@ import { listSnapshots, modelAtCommit, latestModel } from "@/lib/store";
 import { getProcessEdit } from "@/lib/admin";
 import { modelDelta } from "@/lib/diff";
 import { componentLabel, groupCapabilities, trust } from "@/lib/format";
-import { componentGraph, componentDetails, contextDiagram, sequenceDiagram, erDiagram } from "@/lib/diagrams";
+import {
+  componentGraph,
+  componentDetails,
+  contextGraph,
+  contextDetails,
+  entityGraph,
+  sequenceDiagram,
+} from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -87,10 +94,10 @@ export default async function ProjectPage({
     protocol: e.protocol,
   }));
 
-  const erd = erDiagram(model);
-  const data = erd
+  const eg = entityGraph(model);
+  const data = eg.nodes.length
     ? {
-        mermaid: erd,
+        graph: eg,
         entities: (model.dataEntities ?? []).map((e) => ({
           name: e.name,
           fields: e.fields.filter((f) => !f.relationTo).length,
@@ -152,7 +159,8 @@ export default async function ProjectPage({
         data={data}
         endpoints={endpoints}
         diagrams={{
-          context: contextDiagram(model),
+          contextGraph: contextGraph(model),
+          contextDetails: contextDetails(model),
           componentGraph: componentGraph(model),
           componentDetails: componentDetails(model),
           sequence: sequenceDiagram(model),

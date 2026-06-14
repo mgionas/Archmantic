@@ -1,14 +1,28 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import type { GraphNode, GraphEdge, CompDetail } from "@/lib/diagrams";
+import type {
+  GraphNode,
+  GraphEdge,
+  CompDetail,
+  ContextNode,
+  ContextEdge,
+  ContextDetail,
+  EntityNode,
+  EntityEdge,
+} from "@/lib/diagrams";
 import { DiagramTabs } from "./diagram-tabs";
-import { Mermaid } from "./diagrams-client";
 import { band } from "@/lib/format";
+
+const EntityGraph = dynamic(() => import("@/components/entity-graph").then((m) => m.EntityGraph), {
+  ssr: false,
+  loading: () => <div className="grid h-full place-items-center text-sm text-muted-foreground">Loading graph…</div>,
+});
 
 export interface Cap {
   id: string;
@@ -26,7 +40,8 @@ export interface Comp {
   responsibility: string;
 }
 export interface Diagrams {
-  context: string;
+  contextGraph: { nodes: ContextNode[]; edges: ContextEdge[] };
+  contextDetails: Record<string, ContextDetail>;
   componentGraph: { nodes: GraphNode[]; edges: GraphEdge[] };
   componentDetails: Record<string, CompDetail>;
   sequence: string | null;
@@ -41,7 +56,7 @@ export interface Changes {
   externals: { added: string[]; removed: string[] };
 }
 export interface DataModel {
-  mermaid: string;
+  graph: { nodes: EntityNode[]; edges: EntityEdge[] };
   entities: { name: string; fields: number; relations: number }[];
 }
 export interface Endpoint {
@@ -217,7 +232,8 @@ export function ProjectTabs({
         {facet === "diagrams" ? (
           <DiagramTabs
             project={project}
-            context={diagrams.context}
+            contextGraph={diagrams.contextGraph}
+            contextDetails={diagrams.contextDetails}
             componentGraph={diagrams.componentGraph}
             componentDetails={diagrams.componentDetails}
             sequence={diagrams.sequence}
@@ -265,7 +281,7 @@ export function ProjectTabs({
         {facet === "data" && data ? (
           <div className="space-y-4">
             <div className="h-[60vh]">
-              <Mermaid id="erd" chart={data.mermaid} />
+              <EntityGraph graph={data.graph} />
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {data.entities.map((e) => (
