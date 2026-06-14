@@ -18,6 +18,7 @@ import type {
   EntityEdge,
 } from "@/lib/diagrams";
 import { DiagramTabs } from "./diagram-tabs";
+import { KnowledgeView } from "@/components/knowledge-view";
 import { band } from "@/lib/format";
 
 const EntityGraph = dynamic(() => import("@/components/entity-graph").then((m) => m.EntityGraph), {
@@ -127,6 +128,7 @@ export function ProjectTabs({
   changes,
   data,
   endpoints,
+  knowledge,
 }: {
   project: string;
   overview: Overview;
@@ -136,6 +138,7 @@ export function ProjectTabs({
   changes: Changes;
   data: DataModel | null;
   endpoints: Endpoint[];
+  knowledge: string;
 }) {
   const [facetParam, setFacet] = useUrlState("view", "overview");
   const [apiQuery, setApiQuery] = useState("");
@@ -149,6 +152,7 @@ export function ProjectTabs({
     ...(data ? [{ id: "data", label: "Data", count: data.entities.length }] : []),
     ...(endpoints.length ? [{ id: "api", label: "API", count: endpoints.length }] : []),
     { id: "changes", label: "Changes", count: changes.total || undefined },
+    { id: "knowledge", label: "Knowledge" },
   ];
   const facet = facets.some((f) => f.id === facetParam) ? facetParam : "overview";
 
@@ -351,6 +355,8 @@ export function ProjectTabs({
             </Card>
           )
         ) : null}
+
+        {facet === "knowledge" ? <KnowledgeView text={knowledge} /> : null}
       </div>
     </div>
   );

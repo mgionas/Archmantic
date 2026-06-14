@@ -13,6 +13,7 @@ import {
   sequenceDiagram,
 } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
+import { knowledgeMarkdown } from "@/lib/knowledge";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -158,6 +159,7 @@ export default async function ProjectPage({
         changes={changes}
         data={data}
         endpoints={endpoints}
+        knowledge={knowledgeMarkdown(model)}
         diagrams={{
           contextGraph: contextGraph(model),
           contextDetails: contextDetails(model),
