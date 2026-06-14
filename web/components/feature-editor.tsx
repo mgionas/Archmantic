@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { FeatureView } from "@/app/project-tabs";
 
 const ta = "w-full rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5 text-sm";
@@ -59,35 +60,40 @@ export function FeatureEditor({ project, feature }: { project: string; feature: 
     }
   }
 
-  if (editing) {
-    return (
-      <Card className="space-y-2.5 p-4">
-        <div className="flex items-center gap-2">
-          <span className="font-medium">{feature.name}</span>
-          <Input value={status} onChange={(e) => setStatus(e.target.value)} placeholder="status" className="ml-auto h-7 w-28 text-xs" />
+  const dialog = (
+    <Dialog open={editing} onOpenChange={setEditing}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Edit feature — {feature.name}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-2.5">
+          <label className="block text-xs text-muted-foreground">Status</label>
+          <Input value={status} onChange={(e) => setStatus(e.target.value)} placeholder="draft | active" className="h-8 text-sm" />
+          <label className="block text-xs text-muted-foreground">Description</label>
+          <textarea className={ta} rows={2} value={desc} onChange={(e) => setDesc(e.target.value)} />
+          <label className="block text-xs text-muted-foreground">Shows — one per line, “text (from source)”</label>
+          <textarea className={ta} rows={3} value={shows} onChange={(e) => setShows(e.target.value)} />
+          <label className="block text-xs text-muted-foreground">Actions — one per line, “name — description”</label>
+          <textarea className={ta} rows={3} value={actions} onChange={(e) => setActions(e.target.value)} />
+          <label className="block text-xs text-muted-foreground">Depends on — comma-separated feature names</label>
+          <Input value={deps} onChange={(e) => setDeps(e.target.value)} className="text-sm" />
         </div>
-        <label className="block text-xs text-muted-foreground">Description</label>
-        <textarea className={ta} rows={2} value={desc} onChange={(e) => setDesc(e.target.value)} />
-        <label className="block text-xs text-muted-foreground">Shows — one per line, “text (from source)”</label>
-        <textarea className={ta} rows={3} value={shows} onChange={(e) => setShows(e.target.value)} />
-        <label className="block text-xs text-muted-foreground">Actions — one per line, “name — description”</label>
-        <textarea className={ta} rows={3} value={actions} onChange={(e) => setActions(e.target.value)} />
-        <label className="block text-xs text-muted-foreground">Depends on — comma-separated feature names</label>
-        <Input value={deps} onChange={(e) => setDeps(e.target.value)} className="text-sm" />
-        <div className="flex items-center gap-2 pt-1">
-          <Button size="sm" onClick={save} disabled={saving}>
-            Save
-          </Button>
-          <Button size="sm" variant="ghost" onClick={() => setEditing(false)} disabled={saving}>
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => setEditing(false)} disabled={saving}>
             Cancel
           </Button>
-        </div>
-      </Card>
-    );
-  }
+          <Button onClick={save} disabled={saving}>
+            Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 
   return (
-    <Card className="space-y-2.5 p-4">
+    <>
+      {dialog}
+      <Card className="space-y-2.5 p-4">
       <div className="flex items-center gap-2">
         <span className="font-medium">{feature.name}</span>
         {feature.status ? (
@@ -169,6 +175,7 @@ export function FeatureEditor({ project, feature }: { project: string; feature: 
           {feature.components.length > 4 ? ` +${feature.components.length - 4}` : ""}
         </div>
       ) : null}
-    </Card>
+      </Card>
+    </>
   );
 }
