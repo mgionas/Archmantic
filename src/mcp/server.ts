@@ -222,8 +222,21 @@ export async function startMcpServer(root: string): Promise<void> {
   }
   process.on("beforeExit", () => void usage.stop());
 
-  process.stderr.write(
-    `archmantic MCP server: serving "${model.project}" (${model.components.length} components, ${model.capabilities.length} capabilities) over stdio — read + sync tools, usage stats on\n`,
-  );
+  const summary = `serving "${model.project}" (${model.components.length} components, ${model.capabilities.length} capabilities)`;
+  if (process.stdin.isTTY) {
+    // A human ran this in a terminal (no MCP client piping stdin). Explain that
+    // it's a long-running server, not a hung job, and how to wire it up.
+    process.stderr.write(
+      `\narchmantic MCP server — ${summary}\n\n` +
+        `This is a long-running stdio server. It is NOT stuck — it is waiting for an\n` +
+        `MCP client (your AI agent) to connect over stdin/stdout.\n\n` +
+        `You don't run it by hand. Register it once and your agent starts it for you:\n` +
+        `  • Claude Code:  claude mcp add archmantic -- npx archmantic mcp\n` +
+        `  • Others:       add { "command": "npx", "args": ["archmantic","mcp"] } to mcpServers\n\n` +
+        `Press Ctrl-C to stop.\n\n`,
+    );
+  } else {
+    process.stderr.write(`archmantic MCP server: ${summary} over stdio — read + sync tools, usage stats on\n`);
+  }
   await server.connect(new StdioServerTransport());
 }
