@@ -198,8 +198,8 @@ npx archmantic pull      # fetch the latest team model`}</Code>
           </p>
           <p>
             Once connected, the agent queries components, capabilities, context, sequences, processes, the data model, and
-            the API surface — and can <Inline>refresh</Inline> or <Inline>sync</Inline> the model — instead of reading
-            source files. After code changes, the agent calls <Inline>refresh</Inline> (or you re-run{" "}
+            the API surface; gets cross-repo link suggestions (<Inline>suggest_links</Inline>); and can{" "}
+            <Inline>refresh</Inline> or <Inline>sync</Inline> the model — instead of reading source files. After code changes, the agent calls <Inline>refresh</Inline> (or you re-run{" "}
             <Inline>amt analyze</Inline>) so answers reflect reality.
           </p>
           <p>

@@ -502,6 +502,22 @@
         "comp:src/cloud/api.ts"
       ],
       "confidence": 0.6,
+      "description": "Exported function `listModelsApi` in src/cloud/api.ts",
+      "id": "cap:src/cloud/api.ts#listModelsApi",
+      "name": "List Models Api",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/cloud/api.ts:65",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/cloud/api.ts"
+      ],
+      "confidence": 0.6,
       "description": "Exported function `pullLatestApi` in src/cloud/api.ts",
       "id": "cap:src/cloud/api.ts#pullLatestApi",
       "name": "Pull Latest Api",
@@ -524,7 +540,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/api.ts:77",
+          "ref": "src/cloud/api.ts:86",
           "source": "code"
         }
       ]
@@ -556,7 +572,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/api.ts:65",
+          "ref": "src/cloud/api.ts:74",
           "source": "code"
         }
       ]
@@ -604,7 +620,23 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/store.ts:140",
+          "ref": "src/cloud/store.ts:154",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/cloud/store.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `listLatestModels` in src/cloud/store.ts",
+      "id": "cap:src/cloud/store.ts#listLatestModels",
+      "name": "List Latest Models",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/cloud/store.ts:134",
           "source": "code"
         }
       ]
@@ -972,7 +1004,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:28",
+          "ref": "src/mcp/queries.ts:29",
           "source": "code"
         }
       ]
@@ -988,7 +1020,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:136",
+          "ref": "src/mcp/queries.ts:137",
           "source": "code"
         }
       ]
@@ -1004,7 +1036,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:67",
+          "ref": "src/mcp/queries.ts:68",
           "source": "code"
         }
       ]
@@ -1020,7 +1052,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:40",
+          "ref": "src/mcp/queries.ts:41",
           "source": "code"
         }
       ]
@@ -1036,7 +1068,23 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:113",
+          "ref": "src/mcp/queries.ts:114",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `getLinkSuggestions` in src/mcp/queries.ts",
+      "id": "cap:src/mcp/queries.ts#getLinkSuggestions",
+      "name": "Get Link Suggestions",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/mcp/queries.ts:155",
           "source": "code"
         }
       ]
@@ -1052,7 +1100,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:96",
+          "ref": "src/mcp/queries.ts:97",
           "source": "code"
         }
       ]
@@ -1068,7 +1116,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:105",
+          "ref": "src/mcp/queries.ts:106",
           "source": "code"
         }
       ]
@@ -1084,7 +1132,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:55",
+          "ref": "src/mcp/queries.ts:56",
           "source": "code"
         }
       ]
@@ -1100,7 +1148,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:85",
+          "ref": "src/mcp/queries.ts:86",
           "source": "code"
         }
       ]
@@ -1116,7 +1164,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:149",
+          "ref": "src/mcp/queries.ts:188",
           "source": "code"
         }
       ]
@@ -1132,7 +1180,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/server.ts:73",
+          "ref": "src/mcp/server.ts:76",
           "source": "code"
         }
       ]
@@ -1148,7 +1196,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:112",
+          "ref": "src/mcp/usage.ts:113",
           "source": "code"
         }
       ]
@@ -1164,7 +1212,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:36",
+          "ref": "src/mcp/usage.ts:37",
           "source": "code"
         }
       ]
@@ -2395,7 +2443,7 @@
           "source": "code"
         }
       ],
-      "role": "module",
+      "role": "route",
       "systemId": "sys:archmantic"
     },
     {
@@ -2609,7 +2657,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T10:23:01.488Z",
+  "generatedAt": "2026-06-14T10:38:26.248Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -4240,7 +4288,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cloud/index.ts:13",
+          "ref": "src/cloud/index.ts:14",
           "source": "code"
         }
       ],
@@ -4653,6 +4701,21 @@
     },
     {
       "confidence": 0.95,
+      "from": "comp:src/mcp/queries.ts",
+      "id": "rel:comp:src/mcp/queries.ts=>comp:src/system.ts",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/queries.ts → comp:src/system.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/queries.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/system.ts"
+    },
+    {
+      "confidence": 0.95,
       "from": "comp:src/mcp/server.ts",
       "id": "rel:comp:src/mcp/server.ts=>comp:src/analyze/index.ts",
       "kind": "depends_on",
@@ -4720,7 +4783,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:28",
+          "ref": "src/mcp/server.ts:30",
           "source": "code"
         }
       ],
@@ -4735,7 +4798,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:27",
+          "ref": "src/mcp/server.ts:29",
           "source": "code"
         }
       ],

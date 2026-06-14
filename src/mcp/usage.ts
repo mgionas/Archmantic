@@ -24,6 +24,7 @@ const BROAD_TOOLS = new Set([
   "get_api_surface",
   "get_process",
   "get_sequence",
+  "suggest_links",
   "whats_related",
 ]);
 

@@ -61,6 +61,15 @@ export async function pullLatestApi(project: string): Promise<ArchitectureModel 
   return data.model ?? null;
 }
 
+/** Fetch the org's latest model per project (for cross-repo link suggestions). */
+export async function listModelsApi(): Promise<ArchitectureModel[]> {
+  const res = await send("/api/models", { headers: authHeader() });
+  if (!res.ok) throw new ApiError(`list models failed (${res.status}): ${(await res.text()).slice(0, 200)}`);
+  assertJson(res, "list models");
+  const data = (await res.json()) as { models?: ArchitectureModel[] };
+  return data.models ?? [];
+}
+
 /** Record a batch of MCP usage events through the org-scoped API (idempotent). */
 export async function recordUsageApi(events: UsageEvent[]): Promise<void> {
   if (!events.length) return;

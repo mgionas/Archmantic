@@ -99,6 +99,7 @@ claude mcp add archmantic -- npx archmantic mcp   # Claude Code; or add to mcpSe
 Once connected your agent can:
 
 - **Read** the model: `get_context`, `search_capabilities`, `get_component`, `get_process`, `get_sequence`, `get_data_model`, `get_api_surface`, `whats_related`, `list_components`.
+- **Cross-repo**: `suggest_links` compares this repo against your org's other repos and proposes links to declare (inferred) or fix (dangling) in `.archmantic/config.json`.
 - **Keep it live:** `refresh` (re-analyze from disk after a change) and `sync` (re-analyze **and push to the team cloud**, org-scoped). So when you ask the agent to change something, it can update the shared architecture model in the same flow — no manual `push`.
 
 The MCP server reads credentials from `.env.local` (so `sync` uses your `ARCHMANTIC_TOKEN`). Every tool call is recorded with the tokens it saved — see `amt usage` or the web `/usage` dashboard. This repo also ships a project [`.mcp.json`](.mcp.json) for working on Archmantic itself.

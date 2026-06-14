@@ -20,6 +20,8 @@ import {
   hasApiToken,
   pushModel,
   pushModelApi,
+  listLatestModels,
+  listModelsApi,
   recordUsage,
   recordUsageApi,
   type UsageEvent,
@@ -30,6 +32,7 @@ import {
   getComponent,
   getContext,
   getDataModel,
+  getLinkSuggestions,
   getProcess,
   getSequence,
   listComponents,
@@ -73,7 +76,7 @@ const text = (s: string) => ({ content: [{ type: "text" as const, text: s }] });
 export async function startMcpServer(root: string): Promise<void> {
   // Mutable so `refresh`/`sync` update what the read tools serve.
   let model = loadModel(root);
-  const server = new McpServer({ name: "archmantic", version: "1.2.0" });
+  const server = new McpServer({ name: "archmantic", version: "1.3.0" });
 
   // Usage stats: record each read tool, best-effort flush to the cloud (API if a
   // token is set, else direct DB, else local-log only). Never breaks the agent.
@@ -165,6 +168,25 @@ export async function startMcpServer(root: string): Promise<void> {
         "The API contract: REST routes, tRPC procedures, and GraphQL operations with HTTP methods/paths, grouped by protocol. Grounded in code.",
     },
     async () => served("get_api_surface", getApiSurface(model)),
+  );
+
+  server.registerTool(
+    "suggest_links",
+    {
+      title: "Suggest cross-repo links",
+      description:
+        "Compare this repo against your org's other repos and suggest cross-repo links to declare (inferred) or fix (dangling) in .archmantic/config.json's `consumes`. Needs ARCHMANTIC_TOKEN or DATABASE_URL to see sibling repos.",
+    },
+    async () => {
+      let org: ArchitectureModel[] = [];
+      try {
+        if (hasApiToken()) org = await listModelsApi();
+        else if (process.env.DATABASE_URL) org = await listLatestModels();
+      } catch {
+        /* offline / no creds → fall back to local-only message */
+      }
+      return served("suggest_links", getLinkSuggestions(model, org));
+    },
   );
 
   server.registerTool(

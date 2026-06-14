@@ -9,6 +9,7 @@
  */
 import { type ArchitectureModel, type Component } from "../ir/types.js";
 import { componentLabel } from "../ir/naming.js";
+import { analyzeLinks } from "../system.js";
 
 const rel = (id: string) => id.slice(id.indexOf(":") + 1);
 
@@ -143,6 +144,44 @@ export function getApiSurface(model: ArchitectureModel): string {
     out.push(`\n${proto.toUpperCase()} (${list.length})`);
     for (const e of list) out.push(`  ${e.method} ${e.path}  [${refOf(e)}]`);
   }
+  return out.join("\n");
+}
+
+/**
+ * Cross-repo link suggestions for the current repo: merge its model with the org's
+ * other models and classify links (connected/inferred/dangling). Returns the
+ * actionable suggestions for THIS project to declare/fix in .archmantic/config.json.
+ */
+export function getLinkSuggestions(local: ArchitectureModel, org: ArchitectureModel[]): string {
+  const byProject = new Map<string, ArchitectureModel>();
+  for (const m of org) byProject.set(m.project, m);
+  byProject.set(local.project, local); // ensure the current (freshest) model wins
+  const models = [...byProject.values()];
+  if (models.length < 2) {
+    return (
+      "Only this repo's model is available, so there's nothing to compare against. " +
+      "Set ARCHMANTIC_TOKEN (org) or DATABASE_URL so suggest_links can see your other repos, " +
+      "and make sure they've been pushed (`archmantic push`)."
+    );
+  }
+  const mine = analyzeLinks(models).links.filter((l) => l.from === local.project);
+  const inferred = mine.filter((l) => l.status === "inferred");
+  const dangling = mine.filter((l) => l.status === "dangling");
+  const connected = mine.filter((l) => l.status === "connected");
+
+  const out = [
+    `Cross-repo links for "${local.project}" (across ${models.length} repos): ` +
+      `${connected.length} connected · ${inferred.length} inferred · ${dangling.length} dangling`,
+  ];
+  if (inferred.length) {
+    out.push(`\nInferred — add to .archmantic/config.json "consumes" to confirm:`);
+    for (const l of inferred) out.push(`  + ${l.to}   (${l.reason})`);
+  }
+  if (dangling.length) {
+    out.push(`\nDangling — declared but no matching repo (fix the name or remove):`);
+    for (const l of dangling) out.push(`  ! ${l.to}   (${l.reason})`);
+  }
+  if (!inferred.length && !dangling.length) out.push(`\nNo changes suggested — declared links all resolve. ✅`);
   return out.join("\n");
 }
 

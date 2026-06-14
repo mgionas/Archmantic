@@ -3,6 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { analyzeRepo } from "../dist/analyze/index.js";
 import { buildSystemView, analyzeLinks } from "../dist/system.js";
+import { getLinkSuggestions } from "../dist/mcp/queries.js";
 
 test("stack detection classifies known dependencies", () => {
   const m = analyzeRepo(process.cwd());
@@ -66,4 +67,33 @@ test("analyzeLinks classifies connected / inferred / dangling", () => {
   assert.equal(la.counts.dangling, 1);
   // "stripe" matches no repo → not a link at all (just a third-party external).
   assert.ok(!la.links.some((l) => l.to === "stripe"));
+});
+
+test("getLinkSuggestions reports this repo's inferred + dangling links", () => {
+  const svc = (project, consumes, ext = []) => ({
+    schemaVersion: "0.1.0",
+    project,
+    consumes,
+    systems: ext.map((name) => ({ id: `sys:ext:${name}`, name, kind: "external", provenance: [{ source: "code", ref: name }], confidence: 0.9 })),
+    components: [],
+    actors: [],
+    relations: [],
+    flows: [],
+    processes: [],
+    capabilities: [],
+    technologies: [],
+    dataEntities: [],
+    endpoints: [],
+  });
+  const web = svc("web", ["ledger-service"], ["@acme/payments"]); // dangling + inferred
+  const org = [svc("payments", [], []), svc("checkout", ["payments"], [])];
+  const text = getLinkSuggestions(web, org);
+  assert.match(text, /Cross-repo links for "web"/);
+  assert.match(text, /Inferred/);
+  assert.match(text, /\+ payments/);
+  assert.match(text, /Dangling/);
+  assert.match(text, /! ledger-service/);
+
+  // With only the local model, it asks for credentials instead of guessing.
+  assert.match(getLinkSuggestions(web, []), /Only this repo's model/);
 });

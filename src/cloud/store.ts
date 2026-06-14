@@ -130,6 +130,20 @@ export async function recordUsage(events: UsageEvent[]): Promise<void> {
     on conflict (id) do nothing`;
 }
 
+/** Latest model per project for the direct/self-host owner — for cross-repo link suggestions. */
+export async function listLatestModels(): Promise<ArchitectureModel[]> {
+  const q = sql();
+  try {
+    const rows = (await q`
+      select distinct on (project) model from archmantic_models
+      where owner = ${OWNER} order by project, pushed_at desc`) as { model: ArchitectureModel }[];
+    return rows.map((r) => r.model);
+  } catch (err) {
+    if (isMissingTable(err)) return [];
+    throw err;
+  }
+}
+
 export interface CloudSnapshot {
   commit_sha: string;
   generated_at: string | null;

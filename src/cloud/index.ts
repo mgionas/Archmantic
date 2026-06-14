@@ -3,6 +3,7 @@ export {
   pushModel,
   pullLatest,
   history,
+  listLatestModels,
   ensureSchema,
   recordUsage,
   ensureUsageSchema,
@@ -15,6 +16,7 @@ export {
   pushModelApi,
   pullLatestApi,
   pullProcessEditApi,
+  listModelsApi,
   recordUsageApi,
   ApiError,
 } from "./api.js";

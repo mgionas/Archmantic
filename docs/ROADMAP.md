@@ -117,8 +117,9 @@ external fuzzy-matches a sibling repo but isn't declared — confirm by adding t
 `consumes`), **dangling** (declared `consumes` with no matching repo → a real
 gap). Fuzzy match drops npm scopes/separators/common suffixes, guarded against
 short/ambiguous keys. Surfaced in the web `/systems` panel and CLI `system`
-output. Next step (deferred): an MCP `suggest_links` tool so an agent can apply
-inferred links.
+output. ✅ MCP `suggest_links` tool (1.3.0): pulls the org's models (token/DB),
+runs `analyzeLinks`, and returns this repo's inferred/dangling links for an agent
+to apply to `.archmantic/config.json`.
 
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
