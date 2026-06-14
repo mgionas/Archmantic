@@ -60,8 +60,8 @@ export class UsageRecorder {
     return this.srcTokensCache;
   }
 
-  /** Record one tool call. `answer` is the text returned to the agent. */
-  record(tool: string, answer: string, now: string): void {
+  /** Record one tool call; returns the event (for logging). `answer` is the text returned. */
+  record(tool: string, answer: string, now: string): UsageEvent {
     const tokensOut = estTokens(answer);
     const baseline = BROAD_TOOLS.has(tool) ? this.srcTokens() : Math.round(this.srcTokens() * 0.12);
     const event: UsageEvent = {
@@ -75,6 +75,7 @@ export class UsageRecorder {
     this.appendLocal(event);
     this.buffer.push(event);
     if (this.buffer.length >= FLUSH_EVERY) void this.drain();
+    return event;
   }
 
   private appendLocal(event: UsageEvent): void {

@@ -76,7 +76,7 @@ const text = (s: string) => ({ content: [{ type: "text" as const, text: s }] });
 export async function startMcpServer(root: string): Promise<void> {
   // Mutable so `refresh`/`sync` update what the read tools serve.
   let model = loadModel(root);
-  const server = new McpServer({ name: "archmantic", version: "1.3.0" });
+  const server = new McpServer({ name: "archmantic", version: "1.3.1" });
 
   // Usage stats: record each read tool, best-effort flush to the cloud (API if a
   // token is set, else direct DB, else local-log only). Never breaks the agent.
@@ -87,9 +87,12 @@ export async function startMcpServer(root: string): Promise<void> {
   };
   const usage = new UsageRecorder(root, () => model.project, flushUsage);
   usage.start();
-  /** Record the read, then return it as an MCP text result. */
+  /** Record the read, log it (visible in the agent's MCP logs), return as a text result. */
   const served = (tool: string, answer: string) => {
-    usage.record(tool, answer, new Date().toISOString());
+    const e = usage.record(tool, answer, new Date().toISOString());
+    process.stderr.write(
+      `archmantic ◂ agent called ${tool}  ·  ~${e.tokensOut} tok served, ~${e.tokensSaved} saved vs reading files\n`,
+    );
     return text(answer);
   };
 
