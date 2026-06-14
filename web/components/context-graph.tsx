@@ -91,7 +91,7 @@ function Graph({
   const d = selected ? details[selected] : null;
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full" role="group" aria-label={`System context graph — ${nodes.length} systems. Click a node for details (Esc closes).`}>
       <ReactFlow
         {...flow}
         nodes={nodes.map((n) => (n.id === selected ? { ...n, selected: true } : n))}

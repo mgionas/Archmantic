@@ -118,7 +118,7 @@ function Graph({ graph }: { graph: { nodes: EntityNodeData[]; edges: EntityEdge[
   };
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full" role="group" aria-label={`Entity-relationship graph — ${nodes.length} entities. The entity list below is a keyboard-accessible equivalent.`}>
       <ReactFlow
         {...flow}
         nodes={nodes.map((n) => (n.id === selected ? { ...n, selected: true } : n))}

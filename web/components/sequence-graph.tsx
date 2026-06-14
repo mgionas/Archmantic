@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTheme } from "next-themes";
 import {
   ReactFlow,
@@ -21,6 +21,7 @@ import "@xyflow/react/dist/style.css";
 import type { GraphNode, FlowEdge } from "@/lib/diagrams";
 import { roleColor } from "@/lib/format";
 import { RoleLegend } from "@/components/ui/role-legend";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 
 const NW = 200;
 const NH = 40;
@@ -79,6 +80,7 @@ function Graph({ graph, rankdir }: { graph: { nodes: GraphNode[]; edges: FlowEdg
       fitView
       minZoom={0.05}
       maxZoom={4}
+      aria-label={`Behavior flow — ${graph.nodes.length} participants, ${graph.edges.length} steps. Toggle "list" for a text view.`}
       colorMode={resolvedTheme === "light" ? "light" : "dark"}
       panOnScroll
       zoomOnScroll={false}
@@ -97,6 +99,24 @@ function Graph({ graph, rankdir }: { graph: { nodes: GraphNode[]; edges: FlowEdg
   );
 }
 
+/** Accessible text equivalent of a flow: the ordered steps as a list. */
+function StepList({ graph }: { graph: { nodes: GraphNode[]; edges: FlowEdge[] } }) {
+  const nameById = new Map(graph.nodes.map((n) => [n.id, n.label]));
+  return (
+    <ol className="h-full space-y-1.5 overflow-auto p-4 text-sm">
+      {graph.edges.map((e, i) => (
+        <li key={e.id} className="flex items-baseline gap-2">
+          <span className="w-5 shrink-0 text-right text-xs tabular-nums text-muted-foreground">{i + 1}.</span>
+          <span className="font-medium">{nameById.get(e.source) ?? e.source}</span>
+          <span className="text-muted-foreground">{e.label.replace(/^\d+\.\s*/, "")}</span>
+          <span className="text-foreground/50">→</span>
+          <span>{nameById.get(e.target) ?? e.target}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 export function SequenceGraph({
   graph,
   rankdir = "TB",
@@ -104,11 +124,21 @@ export function SequenceGraph({
   graph: { nodes: GraphNode[]; edges: FlowEdge[] };
   rankdir?: "TB" | "LR";
 }) {
+  const [view, setView] = useState<"graph" | "list">("graph");
   return (
-    <div className="h-full w-full overflow-hidden rounded-lg border border-border/60 bg-canvas">
-      <ReactFlowProvider>
-        <Graph graph={graph} rankdir={rankdir} />
-      </ReactFlowProvider>
+    <div className="flex h-full w-full flex-col overflow-hidden rounded-lg border border-border/60 bg-canvas">
+      <div className="flex shrink-0 items-center justify-end border-b border-border/60 px-2 py-1.5">
+        <SegmentedControl options={["graph", "list"] as const} value={view} onChange={setView} />
+      </div>
+      <div className="min-h-0 flex-1">
+        {view === "graph" ? (
+          <ReactFlowProvider>
+            <Graph graph={graph} rankdir={rankdir} />
+          </ReactFlowProvider>
+        ) : (
+          <StepList graph={graph} />
+        )}
+      </div>
     </div>
   );
 }

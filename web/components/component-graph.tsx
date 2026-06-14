@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import {
   ReactFlow,
@@ -167,17 +167,30 @@ function DetailPanel({
       {children}
     </div>
   );
+  const closeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
   return (
-    <div className="absolute right-0 top-0 z-20 flex h-full w-80 flex-col gap-4 overflow-auto border-l border-border/60 bg-card/95 p-4 backdrop-blur">
+    <div
+      role="dialog"
+      aria-label={`${detail.label} details`}
+      className="absolute right-0 top-0 z-20 flex h-full w-80 flex-col gap-4 overflow-auto border-l border-border/60 bg-card/95 p-4 backdrop-blur"
+    >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <span className="size-2.5 rounded-full" style={{ background: roleColor(detail.role) }} />
             <span className="truncate font-semibold">{detail.label}</span>
           </div>
-          <div className="mt-0.5 font-mono text-[11px] text-muted-foreground">{detail.ref}</div>
+          <div className="mt-0.5 font-mono text-xs text-muted-foreground">{detail.ref}</div>
         </div>
-        <button type="button" onClick={onClose} aria-label="Close" className="shrink-0 text-muted-foreground hover:text-foreground">
+        <button ref={closeRef} type="button" onClick={onClose} aria-label="Close details" className="shrink-0 rounded text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring">
           <X className="size-4" />
         </button>
       </div>
@@ -277,7 +290,11 @@ function Graph({
   });
 
   return (
-    <div className="relative h-full w-full">
+    <div
+      className="relative h-full w-full"
+      role="group"
+      aria-label={`Component dependency graph — ${graph.nodes.length} components. Open the Components facet for a keyboard-accessible list.`}
+    >
       <ReactFlow
         nodes={decorated}
         edges={edges}
@@ -297,8 +314,17 @@ function Graph({
         onPaneClick={() => setSelected(null)}
         defaultEdgeOptions={{ style: { stroke: "var(--border)" } }}
       >
-        <Panel position="top-left" className="rounded-lg bg-background/80 backdrop-blur">
+        <Panel position="top-left" className="flex items-center gap-2 rounded-lg bg-background/80 backdrop-blur">
           <SegmentedControl options={["folder", "role"] as const} value={by} onChange={setBy} />
+          {onNavigate ? (
+            <button
+              type="button"
+              onClick={() => onNavigate("components")}
+              className="rounded-md border border-border/60 px-2 py-1 text-xs text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              List view →
+            </button>
+          ) : null}
         </Panel>
         <Panel position="top-right" className="flex max-w-[40%] flex-wrap justify-end gap-x-2 gap-y-1 rounded-lg border border-border/60 bg-background/80 px-2 py-1.5 backdrop-blur">
           {rolesPresent.map((r) => (
