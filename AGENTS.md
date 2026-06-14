@@ -22,7 +22,7 @@ status: active · author: Giorgi (mgionas) (https://github.com/mgionas)
 **Component roles:** 71 module · 3 route · 2 util
 
 ### What it does (capabilities)
-- **src/** — Run Autonomous Build, Run Handoff, Ensure Anthropic Auth, Has Anthropic Credentials, Editor Features, Start Editor, Write Feature Edit, Load Env, Analyze Links, Build System View, Summarize Service, System Context Diagram, System Html, Pull Feature Edits
+- **src/** — Run Autonomous Build, Run Handoff, Ensure Anthropic Auth, Has Anthropic Credentials, Editor Features, Start Editor, Write Feature Edit, Load Env, Pull Feature Edits, Analyze Links, Build System View, Summarize Service, System Context Diagram, System Html
 - **src/analyze/** — Detect Data Model, Derive Process And Flow, Derive Semantics, Extract File Capabilities, Detect Drizzle Model, Detect Endpoints, Derive Feature Flows, Process From Flow, Find Files, Is Test File, Incremental Update, Analyze Repo, Detect Laravel Migrations, Detect Laravel Views, Detect Laravel Routes, Balanced Block, Split Top Level, Detect Prisma Model, Classify Role, Needs Refine, Refine Role, Detect Sql Model, Detect Stack, Component For, Tier 0, Build External System
 - …and 95 more
 
