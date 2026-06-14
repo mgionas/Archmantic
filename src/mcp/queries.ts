@@ -49,10 +49,39 @@ export function getContext(model: ArchitectureModel): string {
     `External systems (${externals.length}): ${externals.map((s) => s.name).join(", ") || "none"}`,
     `Capabilities: ${model.capabilities.length}  ·  processes: ${model.processes.length}  ·  flows: ${model.flows.length}`,
   ];
+  if (model.manifest?.goal) lines.splice(1, 0, `Goal: ${model.manifest.goal}`);
   if (model.processes[0]) lines.push(`Primary process: ${model.processes[0].name}`);
   const ws = model.workspaces ?? [];
   if (ws.length) lines.push(`Monorepo (${ws.length} packages): ${ws.join(", ")}`);
   return lines.filter(Boolean).join("\n");
+}
+
+/** The project brain: goal, status, ownership, the agent team, links, history. */
+export function getProject(model: ArchitectureModel): string {
+  const m = model.manifest;
+  const out = [`Project: ${model.project}`];
+  if (!m || !Object.keys(m).length) {
+    out.push("No project manifest yet. Create .archmantic/project.json (run `archmantic project --init`)");
+    out.push("to declare the goal, owner, and agent team so agents get the intent, not just the structure.");
+    return out.join("\n");
+  }
+  if (m.goal) out.push(`Goal: ${m.goal}`);
+  if (m.status) out.push(`Status: ${m.status}`);
+  if (m.author?.name) out.push(`Author: ${m.author.name}${m.author.email ? ` <${m.author.email}>` : ""}${m.author.url ? ` (${m.author.url})` : ""}`);
+  if (m.owners?.length) out.push(`Owners: ${m.owners.join(", ")}`);
+  if (m.agents?.length) {
+    out.push(`\nAgents (${m.agents.length}):`);
+    for (const a of m.agents) out.push(`  - ${a.name}${a.role ? ` — ${a.role}` : ""}${a.file ? ` [${a.file}]` : ""}`);
+  }
+  if (m.links?.length) {
+    out.push(`\nLinks:`);
+    for (const l of m.links) out.push(`  - ${l.label}: ${l.url}`);
+  }
+  if (m.history?.length) {
+    out.push(`\nHistory:`);
+    for (const h of m.history) out.push(`  - ${h.date ? `${h.date}: ` : ""}${h.note}`);
+  }
+  return out.join("\n");
 }
 
 export function listComponents(model: ArchitectureModel, filter?: string): string {

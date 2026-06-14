@@ -25,6 +25,30 @@ export function knowledgeMarkdown(model: ArchitectureModel): string {
   out.push("");
   out.push(`**${model.project}**${internal?.description ? ` — ${internal.description}` : ""}`);
   out.push("");
+
+  // Project brain (human-authored intent) — leads so agents get the *why*, not just the structure.
+  const m = model.manifest;
+  if (m?.goal) {
+    out.push(`**Goal:** ${m.goal}`);
+    out.push("");
+  }
+  const meta: string[] = [];
+  if (m?.status) meta.push(`status: ${m.status}`);
+  if (m?.author?.name) meta.push(`author: ${m.author.name}${m.author.url ? ` (${m.author.url})` : ""}`);
+  if (m?.owners?.length) meta.push(`owners: ${m.owners.join(", ")}`);
+  if (meta.length) {
+    out.push(meta.join(" · "));
+    out.push("");
+  }
+  if (m?.agents?.length) {
+    out.push(`**Agents:** ${m.agents.map((a) => (a.role ? `${a.name} (${a.role})` : a.name)).join(" · ")}`);
+    out.push("");
+  }
+  if (m?.links?.length) {
+    out.push("**Links:** " + m.links.map((l) => `[${l.label}](${l.url})`).join(" · "));
+    out.push("");
+  }
+
   out.push(
     `${model.components.length} components · ${model.capabilities.length} capabilities · ` +
       `${model.endpoints?.length ?? 0} endpoints · ${model.dataEntities?.length ?? 0} data entities.`,

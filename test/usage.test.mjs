@@ -36,6 +36,22 @@ test("records events to the local log with estimated savings", async () => {
   });
 });
 
+test("local-only mode still records every call (no cloud creds)", async () => {
+  await withRepo(async (dir) => {
+    // Simulate a local MCP server with no cloud creds: the flush is a no-op.
+    const rec = new UsageRecorder(dir, () => "proj", async () => {
+      /* no token / no DB → nothing flushed, must not throw or drop */
+    });
+    rec.record("get_context", "answer", "2026-01-01T00:00:00.000Z");
+    rec.record("get_project", "answer", "2026-01-01T00:00:01.000Z");
+    rec.record("list_components", "answer", "2026-01-01T00:00:02.000Z");
+    await rec.stop();
+    const events = readUsageLog(dir);
+    assert.equal(events.length, 3, "all local calls are recorded even without cloud creds");
+    assert.ok(events.every((e) => e.tokensSaved >= 0));
+  });
+});
+
 test("flushes a batch to the cloud once the threshold is hit", async () => {
   await withRepo(async (dir) => {
     let flushed = 0;

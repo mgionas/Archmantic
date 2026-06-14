@@ -37,12 +37,22 @@ export interface Endpoint extends Element {
   path: string;
   protocol: "rest" | "trpc" | "graphql";
 }
+export interface ProjectManifest {
+  goal?: string;
+  status?: string;
+  author?: { name: string; email?: string; url?: string };
+  owners?: string[];
+  links?: { label: string; url: string }[];
+  agents?: { name: string; role?: string; file?: string }[];
+  history?: { date?: string; note: string }[];
+}
 export interface Model {
   project: string;
   generatedAt?: string;
   system?: string;
   consumes?: string[];
   workspaces?: string[];
+  manifest?: ProjectManifest;
   systems: Element[];
   components: Element[];
   relations: (Element & { from: string; to: string })[];

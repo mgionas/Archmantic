@@ -72,11 +72,21 @@ export interface Endpoint {
   protocol: string;
   package?: string;
 }
+export interface ProjectManifest {
+  goal?: string;
+  status?: string;
+  author?: { name: string; email?: string; url?: string };
+  owners?: string[];
+  links?: { label: string; url: string }[];
+  agents?: { name: string; role?: string; file?: string }[];
+  history?: { date?: string; note: string }[];
+}
 export interface Overview {
   trust: { total: number; refs: number; meanPct: number; high: number; medium: number; low: number };
   externals: string[];
   technologies: { name: string; category: string }[];
   analyzedAt: string | null;
+  manifest?: ProjectManifest | null;
 }
 
 const BAND_CLASS: Record<string, string> = {
@@ -231,6 +241,50 @@ export function ProjectTabs({
       <div className="min-w-0 flex-1">
         {facet === "overview" ? (
           <div className="space-y-4">
+            {overview.manifest && (overview.manifest.goal || overview.manifest.author?.name || overview.manifest.agents?.length) ? (
+              <Card className="space-y-3 p-5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-medium text-muted-foreground">Project brain</span>
+                  {overview.manifest.status ? (
+                    <Badge variant="outline" className="font-normal capitalize">
+                      {overview.manifest.status}
+                    </Badge>
+                  ) : null}
+                  {overview.manifest.author?.name ? (
+                    <span className="ml-auto text-xs text-muted-foreground">
+                      by{" "}
+                      {overview.manifest.author.url ? (
+                        <a href={overview.manifest.author.url} className="text-primary hover:underline">
+                          {overview.manifest.author.name}
+                        </a>
+                      ) : (
+                        overview.manifest.author.name
+                      )}
+                    </span>
+                  ) : null}
+                </div>
+                {overview.manifest.goal ? <p className="text-sm leading-relaxed">{overview.manifest.goal}</p> : null}
+                {overview.manifest.agents?.length ? (
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-xs text-muted-foreground">Agents:</span>
+                    {overview.manifest.agents.map((a) => (
+                      <Badge key={a.name} variant="secondary" title={a.role} className="font-normal">
+                        {a.name}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : null}
+                {overview.manifest.links?.length ? (
+                  <div className="flex flex-wrap gap-3 text-sm">
+                    {overview.manifest.links.map((l) => (
+                      <a key={l.url} href={l.url} className="text-primary hover:underline">
+                        {l.label}
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
+              </Card>
+            ) : null}
             <Card className="flex flex-wrap items-center gap-x-10 gap-y-4 p-5">
               <Stat n={overview.trust.total} label="grounded elements" />
               <Stat n={overview.trust.refs} label="code references" />

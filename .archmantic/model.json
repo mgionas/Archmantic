@@ -188,7 +188,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/index.ts:80",
+          "ref": "src/analyze/index.ts:81",
           "source": "code"
         }
       ]
@@ -988,7 +988,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:206",
+          "ref": "src/ir/types.ts:242",
           "source": "code"
         }
       ]
@@ -1004,7 +1004,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:201",
+          "ref": "src/ir/types.ts:237",
           "source": "code"
         }
       ]
@@ -1020,7 +1020,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:172",
+          "ref": "src/ir/types.ts:208",
           "source": "code"
         }
       ]
@@ -1100,7 +1100,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:139",
+          "ref": "src/mcp/queries.ts:168",
           "source": "code"
         }
       ]
@@ -1116,7 +1116,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:70",
+          "ref": "src/mcp/queries.ts:99",
           "source": "code"
         }
       ]
@@ -1148,7 +1148,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:116",
+          "ref": "src/mcp/queries.ts:145",
           "source": "code"
         }
       ]
@@ -1164,7 +1164,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:175",
+          "ref": "src/mcp/queries.ts:204",
           "source": "code"
         }
       ]
@@ -1180,7 +1180,23 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:99",
+          "ref": "src/mcp/queries.ts:128",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `getProject` in src/mcp/queries.ts",
+      "id": "cap:src/mcp/queries.ts#getProject",
+      "name": "Get Project",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/mcp/queries.ts:60",
           "source": "code"
         }
       ]
@@ -1196,7 +1212,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:108",
+          "ref": "src/mcp/queries.ts:137",
           "source": "code"
         }
       ]
@@ -1212,7 +1228,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:58",
+          "ref": "src/mcp/queries.ts:87",
           "source": "code"
         }
       ]
@@ -1228,7 +1244,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:88",
+          "ref": "src/mcp/queries.ts:117",
           "source": "code"
         }
       ]
@@ -1244,7 +1260,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:208",
+          "ref": "src/mcp/queries.ts:237",
           "source": "code"
         }
       ]
@@ -1260,7 +1276,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/server.ts:76",
+          "ref": "src/mcp/server.ts:77",
           "source": "code"
         }
       ]
@@ -1420,7 +1436,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:89",
+          "ref": "src/project/index.ts:97",
           "source": "code"
         }
       ]
@@ -1436,7 +1452,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:29",
+          "ref": "src/project/index.ts:37",
           "source": "code"
         }
       ]
@@ -1452,7 +1468,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/knowledge.ts:107",
+          "ref": "src/project/knowledge.ts:131",
           "source": "code"
         }
       ]
@@ -1469,6 +1485,86 @@
         {
           "confidence": 0.6,
           "ref": "src/project/knowledge.ts:17",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/manifest.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `applyManifest` in src/project/manifest.ts",
+      "id": "cap:src/project/manifest.ts#applyManifest",
+      "name": "Apply Manifest",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/manifest.ts:67",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/manifest.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `detectAgents` in src/project/manifest.ts",
+      "id": "cap:src/project/manifest.ts#detectAgents",
+      "name": "Detect Agents",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/manifest.ts:37",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/manifest.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `readManifest` in src/project/manifest.ts",
+      "id": "cap:src/project/manifest.ts#readManifest",
+      "name": "Read Manifest",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/manifest.ts:14",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/manifest.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `scaffoldManifest` in src/project/manifest.ts",
+      "id": "cap:src/project/manifest.ts#scaffoldManifest",
+      "name": "Scaffold Manifest",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/manifest.ts:90",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/manifest.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `starterManifest` in src/project/manifest.ts",
+      "id": "cap:src/project/manifest.ts#starterManifest",
+      "name": "Starter Manifest",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/manifest.ts:78",
           "source": "code"
         }
       ]
@@ -2423,6 +2519,21 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:src/project/manifest.ts",
+      "kind": "module",
+      "name": "src/project/manifest.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/manifest.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/project/mermaid.ts",
       "kind": "module",
       "name": "src/project/mermaid.ts",
@@ -2610,6 +2721,21 @@
         {
           "confidence": 0.95,
           "ref": "test/laravel.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:test/manifest.test.mjs",
+      "kind": "module",
+      "name": "test/manifest.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/manifest.test.mjs:1",
           "source": "code"
         }
       ],
@@ -2872,7 +2998,72 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T12:53:46.286Z",
+  "generatedAt": "2026-06-14T13:23:19.101Z",
+  "manifest": {
+    "agents": [
+      {
+        "file": ".claude/agents/archmantic-architect.md",
+        "name": "archmantic-architect",
+        "role": "Solution architect for Archmantic. Use for architecture decisions, IR/model design, evaluating technical trade-offs, and keeping docs/ARCHITECTURE.md coherent. Guards the model-first design and the provenance invariant."
+      },
+      {
+        "file": ".claude/agents/code-reviewer.md",
+        "name": "code-reviewer",
+        "role": "Reviews Archmantic diffs for correctness, simplicity, and adherence to project invariants. Use after implementing a feature or before committing. Reviews only — does not edit."
+      },
+      {
+        "file": ".claude/agents/core-engineer.md",
+        "name": "core-engineer",
+        "role": "TypeScript engineer for the Archmantic core — IR types, the tiered analysis pipeline (Tier 0/1), CLI, and diagram projection. Use to implement or refactor analyzer/CLI features."
+      },
+      {
+        "file": ".claude/agents/mcp-ai-engineer.md",
+        "name": "mcp-ai-engineer",
+        "role": "MCP server + Claude API specialist for Archmantic. Use for the MCP server (tools over the IR), the Tier-2 LLM semantic pass, structured outputs, BYOK/model tiering, and the token-savings benchmark."
+      },
+      {
+        "file": ".claude/agents/product-strategist.md",
+        "name": "product-strategist",
+        "role": "Product/competitive strategist for Archmantic. Use to pressure-test scope, sharpen USPs/positioning, validate against competitors, and keep the team out of the red ocean. Guards MVP focus."
+      },
+      {
+        "file": ".claude/agents/ui-designer.md",
+        "name": "ui-designer",
+        "role": "UI/visual designer for Archmantic's web app. Use to design layout, app shell, design system (spacing/type/color/density), interactive diagram canvases, and concrete component/library choices — with ASCII mockups. Proposes and specifies; implements only when asked."
+      },
+      {
+        "file": ".claude/agents/ux-researcher.md",
+        "name": "ux-researcher",
+        "role": "UX researcher for Archmantic's web app. Use to audit flows, define personas/tasks/information-architecture, run heuristic evaluations, and ground design decisions in evidence + competitive patterns. Research and recommend — does not write product code."
+      }
+    ],
+    "author": {
+      "name": "Giorgi (mgionas)",
+      "url": "https://github.com/mgionas"
+    },
+    "goal": "Be an always-on Solution Architect: keep a single, grounded, trustworthy architecture model that humans and AI agents share — diagrams for people, an MCP surface for agents — so the model never drifts from the code and agents read it instead of whole files.",
+    "history": [
+      {
+        "date": "2026-06-14",
+        "note": "1.4–1.7: monorepo, NestJS, Laravel/PHP (routes, migrations, Vue/Inertia, Blade/Livewire), reliable usage outbox."
+      }
+    ],
+    "links": [
+      {
+        "label": "npm",
+        "url": "https://www.npmjs.com/package/archmantic"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/mgionas/Archmantic"
+      },
+      {
+        "label": "App",
+        "url": "https://archmantic.vercel.app"
+      }
+    ],
+    "status": "active"
+  },
   "processes": [
     {
       "confidence": 0.6,
@@ -3788,6 +3979,21 @@
         }
       ],
       "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/index.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/project/manifest.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/index.ts → comp:src/project/manifest.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/index.ts:20",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/manifest.ts"
     },
     {
       "confidence": 0.95,
@@ -5798,7 +6004,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:21",
+          "ref": "src/project/index.ts:29",
           "source": "code"
         }
       ],
@@ -5902,6 +6108,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/project/index.ts",
+      "id": "rel:comp:src/project/index.ts=>comp:src/project/manifest.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/index.ts → comp:src/project/manifest.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/index.ts:21",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/manifest.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/index.ts",
       "id": "rel:comp:src/project/index.ts=>comp:src/project/mermaid.ts",
       "kind": "depends_on",
       "name": "comp:src/project/index.ts → comp:src/project/mermaid.ts",
@@ -5948,7 +6169,7 @@
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:22",
+          "ref": "src/project/index.ts:30",
           "source": "code"
         }
       ],
@@ -5983,6 +6204,51 @@
         }
       ],
       "to": "comp:src/project/capability.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/manifest.ts",
+      "id": "rel:comp:src/project/manifest.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/manifest.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/manifest.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/manifest.ts",
+      "id": "rel:comp:src/project/manifest.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/project/manifest.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/manifest.ts:7",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/manifest.ts",
+      "id": "rel:comp:src/project/manifest.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/project/manifest.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/manifest.ts:8",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
     },
     {
       "confidence": 0.95,
@@ -6579,6 +6845,81 @@
         {
           "confidence": 0.95,
           "ref": "test/laravel.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/manifest.test.mjs",
+      "id": "rel:comp:test/manifest.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/manifest.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/manifest.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/manifest.test.mjs",
+      "id": "rel:comp:test/manifest.test.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:test/manifest.test.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/manifest.test.mjs:4",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/manifest.test.mjs",
+      "id": "rel:comp:test/manifest.test.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:test/manifest.test.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/manifest.test.mjs:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/manifest.test.mjs",
+      "id": "rel:comp:test/manifest.test.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:test/manifest.test.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/manifest.test.mjs:5",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/manifest.test.mjs",
+      "id": "rel:comp:test/manifest.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/manifest.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/manifest.test.mjs:2",
           "source": "code"
         }
       ],

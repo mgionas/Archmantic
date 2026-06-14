@@ -17,6 +17,7 @@ import { detectLaravelRoutes } from "./laravel.js";
 import { detectLaravelViews } from "./laravel-views.js";
 import { refineRole, needsRefine } from "./roles.js";
 import { detectWorkspaces, packageOf } from "./workspaces.js";
+import { applyManifest } from "../project/manifest.js";
 
 /** Upgrade weak path-derived component roles using file content signals. */
 function refineRoles(root: string, model: ArchitectureModel): void {
@@ -92,6 +93,7 @@ export function analyzeRepo(root: string): ArchitectureModel {
   refineRoles(root, model);
   tagPackages(model, detectWorkspaces(root));
   applyConfig(root, model);
+  applyManifest(root, model);
   return model;
 }
 

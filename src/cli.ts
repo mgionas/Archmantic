@@ -20,7 +20,7 @@ import { type ArchitectureModel, createEmptyModel, serializeModel } from "./ir/t
 import { analyzeRepo } from "./analyze/index.js";
 import { tier2 } from "./analyze/tier2.js";
 import { incrementalUpdate } from "./analyze/incremental.js";
-import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess, knowledgeMarkdown, applyKnowledgeBlock } from "./project/index.js";
+import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess, knowledgeMarkdown, applyKnowledgeBlock, readManifest, detectAgents, scaffoldManifest, MANIFEST_PATH } from "./project/index.js";
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 import { runHandoff, runAutonomousBuild } from "./agent.js";
@@ -69,10 +69,41 @@ function cmdInit(args: string[]): number {
   const model = { ...createEmptyModel(project), generatedAt: new Date().toISOString() };
   mkdirSync(dir, { recursive: true });
   writeFileSync(file, serializeModel(model), "utf8");
+  const seeded = scaffoldManifest(process.cwd(), project);
 
   console.log(`✓ Initialized Archmantic model for "${project}"`);
   console.log(`  → ${MODEL_DIR}/${MODEL_FILE}`);
-  console.log(`  Next: \`archmantic analyze\` to reverse-engineer the model (coming in M1).`);
+  if (seeded) console.log(`  → ${MANIFEST_PATH}  (project brain: goal, author, agents — edit it)`);
+  console.log(`  Next: \`archmantic analyze\` to reverse-engineer the model.`);
+  return 0;
+}
+
+/** `project [--init]` — scaffold or print the human-authored project manifest. */
+function cmdProject(args: string[]): number {
+  const root = process.cwd();
+  const project = basename(root);
+  if (args.includes("--init")) {
+    const created = scaffoldManifest(root, project);
+    console.log(
+      created
+        ? `✓ Created ${MANIFEST_PATH} — edit the goal, author, links; agents auto-detect from .claude/agents/.`
+        : `• ${MANIFEST_PATH} already exists — leaving it untouched.`,
+    );
+    return 0;
+  }
+  const manifest = readManifest(root);
+  const agents = detectAgents(root);
+  if (!manifest && !agents.length) {
+    console.log(`No project manifest. Run \`archmantic project --init\` to create ${MANIFEST_PATH}.`);
+    return 0;
+  }
+  console.log(`Project brain — ${project}`);
+  if (manifest?.goal) console.log(`  goal:   ${manifest.goal}`);
+  if (manifest?.status) console.log(`  status: ${manifest.status}`);
+  if (manifest?.author?.name) console.log(`  author: ${manifest.author.name}`);
+  const team = manifest?.agents?.length ? manifest.agents : agents;
+  if (team.length) console.log(`  agents: ${team.map((a) => a.name).join(", ")}`);
+  if (manifest?.links?.length) console.log(`  links:  ${manifest.links.map((l) => l.label).join(", ")}`);
   return 0;
 }
 
@@ -794,7 +825,8 @@ function printHelp(): void {
 Usage: archmantic <command> [options]   (short alias: amt)
 
 Commands:
-  init [name]    Create an empty .archmantic/model.json (defaults name to the folder)
+  init [name]    Create an empty .archmantic/model.json (+ project.json brain)
+  project [--init]  Scaffold/show the project brain (.archmantic/project.json: goal, author, agents)
   analyze [--tier N]  Reverse-engineer the model (--tier 2 adds the LLM pass, BYOK)
   update [--hook]  Incrementally re-analyze only what changed (git-diff driven)
   view           Capability map + diagrams + trust report (writes view.html)
@@ -835,6 +867,8 @@ async function main(argv: string[]): Promise<number> {
   switch (command) {
     case "init":
       return cmdInit(rest);
+    case "project":
+      return cmdProject(rest);
     case "analyze":
       return cmdAnalyze(rest);
     case "update":

@@ -4,7 +4,7 @@
 
 Point Archmantic at a repo and it reverse-engineers a single grounded **architecture model** (the IR). Every diagram is a *projection* of that one model, every element is traceable to `file:line`, and the same model answers your agent's questions over MCP. No drift between views, no ungrounded "AI diagram" guesswork.
 
-> Status: **v1.7.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
+> Status: **v1.8.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
 
 ---
 
@@ -23,6 +23,7 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 - **Polyglot, multi-framework** — TypeScript/JavaScript **and** PHP/Laravel; frontends in **React, Vue/Inertia** (`.vue` SFCs), plus **Blade** templates and **Livewire** components. Components are role-classified (page/route/ui/layout/view/model/…) and the tech stack is detected from `package.json` **and** `composer.json`.
 - **Monorepo aware** — analyzes npm/yarn/pnpm **workspaces** (and `apps/*`/`packages/*` by convention) as one model, tagging every component, endpoint, and entity with its owning package; the web groups Components & API by package.
 - **Multi-repo auto-linking** — across an org's repos, classifies cross-service links as connected, **inferred** (detected coupling not yet declared), or **dangling** (declared dependency on a repo that isn't there — a real gap).
+- **Project brain** — a human-authored manifest (`.archmantic/project.json`: goal, status, author, links, and the **agent team** auto-detected from `.claude/agents/`) merged into the model. Agents read the *why*, not just the structure, via MCP `get_project`; it leads the knowledge file and the web project page (with author attribution).
 - **Agent knowledge file** — auto-generates & keeps `AGENTS.md` in sync from the model (managed block), so even agents that don't speak MCP get accurate, drift-free project context.
 - **One model → many audiences** — C4-style context, components, sequence (Mermaid), BPMN, an ERD, capability list, and an MCP surface for agents.
 - **Token savings** — agents query the model over MCP instead of reading whole files (~98% fewer tokens on this repo, by the built-in benchmark).
@@ -56,7 +57,8 @@ node dist/cli.js analyze
 
 | Command | What it does |
 |---|---|
-| `init [name]` | Create an empty `.archmantic/model.json` |
+| `init [name]` | Create an empty `.archmantic/model.json` (+ a `project.json` brain) |
+| `project [--init]` | Scaffold/show the project brain (`.archmantic/project.json`: goal, author, links; agents auto-detect from `.claude/agents/`) |
 | `analyze [--tier N]` | Reverse-engineer the model. `--tier 2` adds the LLM semantic pass (BYOK) |
 | `update [--hook]` | Incrementally re-analyze only what changed (git-diff driven). `--hook` prints a pre-commit hook |
 | `view` | Capability map, diagrams, and trust report; writes a self-contained `view.html` |
@@ -100,7 +102,7 @@ claude mcp add archmantic -- npx archmantic mcp   # Claude Code; or add to mcpSe
 
 Once connected your agent can:
 
-- **Read** the model: `get_context`, `search_capabilities`, `get_component`, `get_process`, `get_sequence`, `get_data_model`, `get_api_surface`, `whats_related`, `list_components`.
+- **Read** the model: `get_project` (the goal/owner/agent-team brain), `get_context`, `search_capabilities`, `get_component`, `get_process`, `get_sequence`, `get_data_model`, `get_api_surface`, `whats_related`, `list_components`.
 - **Cross-repo**: `suggest_links` compares this repo against your org's other repos and proposes links to declare (inferred) or fix (dangling) in `.archmantic/config.json`.
 - **Keep it live:** `refresh` (re-analyze from disk after a change) and `sync` (re-analyze **and push to the team cloud**, org-scoped). So when you ask the agent to change something, it can update the shared architecture model in the same flow — no manual `push`.
 

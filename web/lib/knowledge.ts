@@ -15,6 +15,29 @@ export function knowledgeMarkdown(model: Model): string {
   out.push("");
   out.push(`**${model.project}**${internal?.description ? ` — ${internal.description}` : ""}`);
   out.push("");
+
+  const man = model.manifest;
+  if (man?.goal) {
+    out.push(`**Goal:** ${man.goal}`);
+    out.push("");
+  }
+  const meta: string[] = [];
+  if (man?.status) meta.push(`status: ${man.status}`);
+  if (man?.author?.name) meta.push(`author: ${man.author.name}${man.author.url ? ` (${man.author.url})` : ""}`);
+  if (man?.owners?.length) meta.push(`owners: ${man.owners.join(", ")}`);
+  if (meta.length) {
+    out.push(meta.join(" · "));
+    out.push("");
+  }
+  if (man?.agents?.length) {
+    out.push(`**Agents:** ${man.agents.map((a) => (a.role ? `${a.name} (${a.role})` : a.name)).join(" · ")}`);
+    out.push("");
+  }
+  if (man?.links?.length) {
+    out.push("**Links:** " + man.links.map((l) => `[${l.label}](${l.url})`).join(" · "));
+    out.push("");
+  }
+
   out.push(
     `${model.components.length} components · ${model.capabilities.length} capabilities · ` +
       `${model.endpoints?.length ?? 0} endpoints · ${model.dataEntities?.length ?? 0} data entities.`,

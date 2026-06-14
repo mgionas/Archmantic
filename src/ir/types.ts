@@ -139,10 +139,46 @@ export interface Endpoint extends ElementBase {
   protocol: "rest" | "trpc" | "graphql";
 }
 
+/** Author/owner attribution for the project brain. */
+export interface Author {
+  name: string;
+  email?: string;
+  url?: string;
+}
+
+/** An agent in the project's team (from the manifest or `.claude/agents/*`). */
+export interface AgentRef {
+  name: string;
+  /** what this agent is for (one line). */
+  role?: string;
+  /** repo-relative definition file, if any. */
+  file?: string;
+}
+
+/**
+ * Human-authored project brain — intent that can't be reverse-engineered: the
+ * goal, ownership, the agent team, links, and milestones. Lives at
+ * `.archmantic/project.json`, merged into the model during analysis. See
+ * docs/design/SPEC-LAYER.md.
+ */
+export interface ProjectManifest {
+  /** One paragraph: what this project is for. */
+  goal?: string;
+  /** active | wip | paused | archived (free-form). */
+  status?: string;
+  author?: Author;
+  owners?: string[];
+  links?: { label: string; url: string }[];
+  agents?: AgentRef[];
+  history?: { date?: string; note: string }[];
+}
+
 /** The whole model for one project. */
 export interface ArchitectureModel {
   schemaVersion: typeof SCHEMA_VERSION;
   project: string;
+  /** Human-authored project brain (goal/author/agents/…); see ProjectManifest. */
+  manifest?: ProjectManifest;
   /** ISO timestamp; stamped by the caller (kept out of pure helpers). */
   generatedAt?: string;
   /** Optional: the multi-repo system this project belongs to (from config). */

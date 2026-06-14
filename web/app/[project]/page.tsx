@@ -131,6 +131,7 @@ export default async function ProjectPage({
     externals: externals.map((s) => s.name),
     technologies: (model.technologies ?? []).map((tech) => ({ name: tech.name, category: tech.category })),
     analyzedAt: model.generatedAt ?? null,
+    manifest: model.manifest ?? null,
   };
 
   return (

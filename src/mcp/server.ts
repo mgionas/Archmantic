@@ -34,6 +34,7 @@ import {
   getDataModel,
   getLinkSuggestions,
   getProcess,
+  getProject,
   getSequence,
   listComponents,
   searchCapabilities,
@@ -76,7 +77,7 @@ const text = (s: string) => ({ content: [{ type: "text" as const, text: s }] });
 export async function startMcpServer(root: string): Promise<void> {
   // Mutable so `refresh`/`sync` update what the read tools serve.
   let model = loadModel(root);
-  const server = new McpServer({ name: "archmantic", version: "1.7.1" });
+  const server = new McpServer({ name: "archmantic", version: "1.8.0" });
 
   // Usage stats: record each read tool, best-effort flush to the cloud (API if a
   // token is set, else direct DB, else local-log only). Never breaks the agent.
@@ -108,6 +109,16 @@ export async function startMcpServer(root: string): Promise<void> {
       description: "High-level architecture context: project, systems, external dependencies, counts, primary process.",
     },
     async () => served("get_context", getContext(model)),
+  );
+
+  server.registerTool(
+    "get_project",
+    {
+      title: "Get the project brain",
+      description:
+        "The human-authored project intent: goal, status, author/owners, the agent team, links, and history. Read this first for the 'why' behind the code.",
+    },
+    async () => served("get_project", getProject(model)),
   );
 
   server.registerTool(

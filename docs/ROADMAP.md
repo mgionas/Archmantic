@@ -183,6 +183,17 @@ Laravel repos showed no DB and (for Vue/Inertia) no pages. Added three things:
 DB-from-`.env` connector deferred (needs a live DB = runtime tier). Custom
 route-file prefixes still deferred.
 
+### ✅ done · Spec layer Phase 1 — project brain (1.8.0)
+Human-authored intent on top of the reverse-engineered structure (see
+docs/design/SPEC-LAYER.md). A committed `.archmantic/project.json` manifest (goal,
+status, author/owners, links, history) merged into `model.manifest`; the **agent
+team auto-detects from `.claude/agents/*`**. Surfaced everywhere: MCP `get_project`
+(+ goal in `get_context`), it leads the knowledge file (AGENTS.md + web), and the
+web project Overview shows a "Project brain" card with author attribution. CLI
+`project [--init]` scaffolds/prints it; `init` seeds it. Also locked: every MCP
+read tool (incl. local/no-cred mode) is recorded to the usage log. Phases 2
+(feature layer) and 3 (feature-scoped flows) next.
+
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
 appears that architecture-level elements can't serve.
