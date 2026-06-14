@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import type { GraphNode, GraphEdge } from "@/lib/diagrams";
+import type { GraphNode, GraphEdge, CompDetail } from "@/lib/diagrams";
 import { DiagramTabs } from "./diagram-tabs";
 import { Mermaid } from "./diagrams-client";
 import { band } from "@/lib/format";
@@ -28,6 +28,7 @@ export interface Comp {
 export interface Diagrams {
   context: string;
   componentGraph: { nodes: GraphNode[]; edges: GraphEdge[] };
+  componentDetails: Record<string, CompDetail>;
   sequence: string | null;
   processXml: string | null;
   edited: boolean;
@@ -218,9 +219,11 @@ export function ProjectTabs({
             project={project}
             context={diagrams.context}
             componentGraph={diagrams.componentGraph}
+            componentDetails={diagrams.componentDetails}
             sequence={diagrams.sequence}
             processXml={diagrams.processXml}
             edited={diagrams.edited}
+            onNavigate={setFacet}
           />
         ) : null}
 

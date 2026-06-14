@@ -4,7 +4,7 @@ import { listSnapshots, modelAtCommit, latestModel } from "@/lib/store";
 import { getProcessEdit } from "@/lib/admin";
 import { modelDelta } from "@/lib/diff";
 import { componentLabel, groupCapabilities, trust } from "@/lib/format";
-import { componentGraph, contextDiagram, sequenceDiagram, erDiagram } from "@/lib/diagrams";
+import { componentGraph, componentDetails, contextDiagram, sequenceDiagram, erDiagram } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -154,6 +154,7 @@ export default async function ProjectPage({
         diagrams={{
           context: contextDiagram(model),
           componentGraph: componentGraph(model),
+          componentDetails: componentDetails(model),
           sequence: sequenceDiagram(model),
           processXml: savedBpmn ?? bpmnXml(model),
           edited: Boolean(savedBpmn),

@@ -138,6 +138,46 @@ export function componentGraph(model: Model): { nodes: GraphNode[]; edges: Graph
   return { nodes, edges };
 }
 
+/** Per-component detail for the click-through panel (cross-facet navigation). */
+export interface CompDetail {
+  id: string;
+  label: string;
+  path: string;
+  role: string;
+  responsibility?: string;
+  ref: string;
+  dependsOn: { id: string; label: string }[];
+  usedBy: { id: string; label: string }[];
+  capabilities: string[];
+  endpoints: { method: string; path: string }[];
+  entities: string[];
+}
+
+const fileOf = (prov?: { ref: string }[]) => prov?.[0]?.ref?.split(":")[0];
+
+export function componentDetails(model: Model): Record<string, CompDetail> {
+  const compIds = new Set(model.components.map((c) => c.id));
+  const lbl = (id: string) => componentLabel(id);
+  const out: Record<string, CompDetail> = {};
+  for (const c of model.components) {
+    const path = c.id.replace(/^comp:/, "");
+    out[c.id] = {
+      id: c.id,
+      label: lbl(c.id),
+      path,
+      role: c.role ?? "module",
+      responsibility: c.responsibility,
+      ref: c.provenance?.[0]?.ref ?? path,
+      dependsOn: model.relations.filter((r) => r.from === c.id && compIds.has(r.to)).map((r) => ({ id: r.to, label: lbl(r.to) })),
+      usedBy: model.relations.filter((r) => r.to === c.id && compIds.has(r.from)).map((r) => ({ id: r.from, label: lbl(r.from) })),
+      capabilities: model.capabilities.filter((cap) => cap.componentIds?.includes(c.id)).map((cap) => cap.name),
+      endpoints: (model.endpoints ?? []).filter((e) => fileOf(e.provenance) === path).map((e) => ({ method: e.method, path: e.path })),
+      entities: (model.dataEntities ?? []).filter((en) => fileOf(en.provenance) === path).map((en) => en.name),
+    };
+  }
+  return out;
+}
+
 export function sequenceDiagram(model: Model): string | null {
   const flow = model.flows[0];
   if (!flow) return null;

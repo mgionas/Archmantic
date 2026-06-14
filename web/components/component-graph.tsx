@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { useTheme } from "next-themes";
 import {
   ReactFlow,
+  ReactFlowProvider,
+  useReactFlow,
   Background,
   Controls,
   MiniMap,
@@ -16,8 +18,9 @@ import {
   type NodeProps,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
+import { X } from "lucide-react";
 import "@xyflow/react/dist/style.css";
-import type { GraphNode, GraphEdge } from "@/lib/diagrams";
+import type { GraphNode, GraphEdge, CompDetail } from "@/lib/diagrams";
 import { cn } from "@/lib/utils";
 
 const NW = 188;
@@ -28,7 +31,6 @@ const PAD_X = 12;
 const PAD_TOP = 30;
 const PAD_BOTTOM = 12;
 
-/** Role → accent color (visible in both themes). */
 const ROLE_COLOR: Record<string, string> = {
   route: "#f87171",
   page: "#a78bfa",
@@ -47,11 +49,13 @@ const ROLE_COLOR: Record<string, string> = {
 };
 const roleColor = (r: string) => ROLE_COLOR[r] ?? ROLE_COLOR.module;
 
-/** A component node: role dot + label, with connect handles. */
-function CompNode({ data }: NodeProps & { data: { label: string; role: string } }) {
+function CompNode({ data, selected }: NodeProps & { data: { label: string; role: string } }) {
   return (
     <div
-      className="flex items-center gap-2 rounded-lg border border-border bg-card px-2.5 py-1.5 text-xs text-card-foreground"
+      className={cn(
+        "flex items-center gap-2 rounded-lg border bg-card px-2.5 py-1.5 text-xs text-card-foreground transition-colors",
+        selected ? "border-primary ring-1 ring-primary" : "border-border",
+      )}
       style={{ width: NW }}
       title={`${data.label} · ${data.role}`}
     >
@@ -83,14 +87,12 @@ function folderOf(n: GraphNode): string {
 const keyOf = (n: GraphNode, by: GroupBy) => (by === "role" ? n.role : folderOf(n));
 const labelOf = (key: string, by: GroupBy) => (by === "folder" ? `${key}/` : key);
 
-/** Group nodes (by folder or role), grid-lay each group, arrange groups via dagre. */
 function buildLayout(graph: { nodes: GraphNode[]; edges: GraphEdge[] }, by: GroupBy): Node[] {
   const groups = new Map<string, GraphNode[]>();
   for (const n of graph.nodes) {
     const k = keyOf(n, by);
     (groups.get(k) ?? groups.set(k, []).get(k)!).push(n);
   }
-
   const dims = new Map<string, { w: number; h: number; cols: number }>();
   for (const [k, members] of groups) {
     const cols = Math.max(1, Math.ceil(Math.sqrt(members.length)));
@@ -101,7 +103,6 @@ function buildLayout(graph: { nodes: GraphNode[]; edges: GraphEdge[] }, by: Grou
       h: PAD_TOP + rows * NH + (rows - 1) * GAP_Y + PAD_BOTTOM,
     });
   }
-
   const g = new dagre.graphlib.Graph();
   g.setDefaultEdgeLabel(() => ({}));
   g.setGraph({ rankdir: "TB", nodesep: 48, ranksep: 80 });
@@ -146,9 +147,130 @@ function buildLayout(graph: { nodes: GraphNode[]; edges: GraphEdge[] }, by: Grou
   return out;
 }
 
-export function ComponentGraph({ graph }: { graph: { nodes: GraphNode[]; edges: GraphEdge[] } }) {
+function ChipList({ items, onClick }: { items: { id: string; label: string }[]; onClick: (id: string) => void }) {
+  if (!items.length) return <span className="text-xs text-muted-foreground">—</span>;
+  return (
+    <div className="flex flex-wrap gap-1">
+      {items.map((d) => (
+        <button
+          key={d.id}
+          type="button"
+          onClick={() => onClick(d.id)}
+          className="rounded-md border border-border/60 bg-muted/40 px-1.5 py-0.5 font-mono text-[11px] hover:border-primary/50 hover:text-foreground"
+        >
+          {d.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function DetailPanel({
+  detail,
+  onClose,
+  onSelect,
+  onNavigate,
+}: {
+  detail: CompDetail;
+  onClose: () => void;
+  onSelect: (id: string) => void;
+  onNavigate?: (facet: string) => void;
+}) {
+  const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+    <div>
+      <div className="mb-1 text-xs font-medium text-muted-foreground">{title}</div>
+      {children}
+    </div>
+  );
+  return (
+    <div className="absolute right-0 top-0 z-20 flex h-full w-80 flex-col gap-4 overflow-auto border-l border-border/60 bg-card/95 p-4 backdrop-blur">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="size-2.5 rounded-full" style={{ background: roleColor(detail.role) }} />
+            <span className="truncate font-semibold">{detail.label}</span>
+          </div>
+          <div className="mt-0.5 font-mono text-[11px] text-muted-foreground">{detail.ref}</div>
+        </div>
+        <button type="button" onClick={onClose} aria-label="Close" className="shrink-0 text-muted-foreground hover:text-foreground">
+          <X className="size-4" />
+        </button>
+      </div>
+
+      <span className="w-fit rounded-md bg-muted px-1.5 py-0.5 text-xs capitalize">{detail.role}</span>
+
+      {detail.responsibility ? <p className="text-sm text-muted-foreground">{detail.responsibility}</p> : null}
+
+      <Section title={`Depends on (${detail.dependsOn.length})`}>
+        <ChipList items={detail.dependsOn} onClick={onSelect} />
+      </Section>
+      <Section title={`Used by (${detail.usedBy.length})`}>
+        <ChipList items={detail.usedBy} onClick={onSelect} />
+      </Section>
+
+      {detail.capabilities.length ? (
+        <Section title="Capabilities">
+          <ul className="space-y-0.5 text-sm">
+            {detail.capabilities.map((c) => (
+              <li key={c}>{c}</li>
+            ))}
+          </ul>
+          {onNavigate ? (
+            <button type="button" onClick={() => onNavigate("capabilities")} className="mt-1 text-xs text-primary hover:underline">
+              Open Capabilities →
+            </button>
+          ) : null}
+        </Section>
+      ) : null}
+
+      {detail.endpoints.length ? (
+        <Section title="Endpoints">
+          <ul className="space-y-0.5 font-mono text-xs">
+            {detail.endpoints.map((e) => (
+              <li key={`${e.method} ${e.path}`}>
+                <span className="text-muted-foreground">{e.method}</span> {e.path}
+              </li>
+            ))}
+          </ul>
+          {onNavigate ? (
+            <button type="button" onClick={() => onNavigate("api")} className="mt-1 text-xs text-primary hover:underline">
+              Open API →
+            </button>
+          ) : null}
+        </Section>
+      ) : null}
+
+      {detail.entities.length ? (
+        <Section title="Data entities">
+          <ul className="space-y-0.5 text-sm">
+            {detail.entities.map((e) => (
+              <li key={e}>{e}</li>
+            ))}
+          </ul>
+          {onNavigate ? (
+            <button type="button" onClick={() => onNavigate("data")} className="mt-1 text-xs text-primary hover:underline">
+              Open Data →
+            </button>
+          ) : null}
+        </Section>
+      ) : null}
+    </div>
+  );
+}
+
+function Graph({
+  graph,
+  details,
+  onNavigate,
+}: {
+  graph: { nodes: GraphNode[]; edges: GraphEdge[] };
+  details: Record<string, CompDetail>;
+  onNavigate?: (facet: string) => void;
+}) {
   const { resolvedTheme } = useTheme();
+  const rf = useReactFlow();
   const [by, setBy] = useState<GroupBy>("folder");
+  const [selected, setSelected] = useState<string | null>(null);
   const nodes = useMemo(() => buildLayout(graph, by), [graph, by]);
   const edges = useMemo<Edge[]>(
     () => graph.edges.map((e) => ({ id: e.id, source: e.source, target: e.target, markerEnd: { type: MarkerType.ArrowClosed } })),
@@ -156,10 +278,15 @@ export function ComponentGraph({ graph }: { graph: { nodes: GraphNode[]; edges: 
   );
   const rolesPresent = useMemo(() => [...new Set(graph.nodes.map((n) => n.role))].sort(), [graph]);
 
+  const focus = (id: string) => {
+    setSelected(id);
+    rf.fitView({ nodes: [{ id }], duration: 400, maxZoom: 1.4 });
+  };
+
   return (
-    <div className="h-full w-full overflow-hidden rounded-lg border border-border/60 bg-canvas">
+    <div className="relative h-full w-full">
       <ReactFlow
-        nodes={nodes}
+        nodes={nodes.map((n) => (n.id === selected ? { ...n, selected: true } : n))}
         edges={edges}
         nodeTypes={nodeTypes}
         fitView
@@ -171,6 +298,10 @@ export function ComponentGraph({ graph }: { graph: { nodes: GraphNode[]; edges: 
         zoomOnPinch
         panOnDrag
         nodesConnectable={false}
+        onNodeClick={(_e, node) => {
+          if (node.type === "comp") setSelected(node.id);
+        }}
+        onPaneClick={() => setSelected(null)}
         defaultEdgeOptions={{ style: { stroke: "var(--border)" } }}
       >
         <Panel position="top-left" className="flex items-center gap-1 rounded-lg border border-border/60 bg-background/80 p-0.5 backdrop-blur">
@@ -188,7 +319,7 @@ export function ComponentGraph({ graph }: { graph: { nodes: GraphNode[]; edges: 
             </button>
           ))}
         </Panel>
-        <Panel position="top-right" className="flex max-w-[40%] flex-wrap justify-end gap-x-3 gap-y-1 rounded-lg border border-border/60 bg-background/80 px-2.5 py-1.5 backdrop-blur">
+        <Panel position="top-right" className="flex max-w-[36%] flex-wrap justify-end gap-x-3 gap-y-1 rounded-lg border border-border/60 bg-background/80 px-2.5 py-1.5 backdrop-blur">
           {rolesPresent.map((r) => (
             <span key={r} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
               <span className="size-2 rounded-full" style={{ background: roleColor(r) }} />
@@ -200,6 +331,24 @@ export function ComponentGraph({ graph }: { graph: { nodes: GraphNode[]; edges: 
         <MiniMap pannable zoomable />
         <Controls showInteractive={false} />
       </ReactFlow>
+
+      {selected && details[selected] ? (
+        <DetailPanel detail={details[selected]} onClose={() => setSelected(null)} onSelect={focus} onNavigate={onNavigate} />
+      ) : null}
+    </div>
+  );
+}
+
+export function ComponentGraph(props: {
+  graph: { nodes: GraphNode[]; edges: GraphEdge[] };
+  details: Record<string, CompDetail>;
+  onNavigate?: (facet: string) => void;
+}) {
+  return (
+    <div className="h-full w-full overflow-hidden rounded-lg border border-border/60 bg-canvas">
+      <ReactFlowProvider>
+        <Graph {...props} />
+      </ReactFlowProvider>
     </div>
   );
 }
