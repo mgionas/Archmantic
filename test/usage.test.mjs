@@ -47,3 +47,29 @@ test("flushes a batch to the cloud once the threshold is hit", async () => {
     assert.equal(flushed, 5, "all 5 events flushed");
   });
 });
+
+test("flushBacklog re-sends the persisted local log (catch-up after a missed flush)", async () => {
+  await withRepo(async (dir) => {
+    // First session: records locally but the cloud flush always fails (offline).
+    const offline = new UsageRecorder(dir, () => "proj", async () => {
+      throw new Error("offline");
+    });
+    offline.record("get_context", "answer", "2026-01-01T00:00:00.000Z");
+    offline.record("get_component", "x", "2026-01-01T00:00:01.000Z");
+    await offline.stop(); // drain fails → nothing reached the cloud
+    assert.equal(readUsageLog(dir).length, 2, "events are durably on disk");
+
+    // Next session in the same repo: startup catch-up re-sends the local log.
+    const synced = [];
+    const online = new UsageRecorder(dir, () => "proj", async (events) => {
+      synced.push(...events);
+    });
+    const n = await online.flushBacklog();
+    assert.equal(n, 2, "both pending events re-sent");
+    assert.deepEqual(
+      synced.map((e) => e.tool).sort(),
+      ["get_component", "get_context"],
+      "the missed events reach the cloud on the next start",
+    );
+  });
+});

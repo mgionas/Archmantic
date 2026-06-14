@@ -1276,7 +1276,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:114",
+          "ref": "src/mcp/usage.ts:135",
           "source": "code"
         }
       ]
@@ -1292,7 +1292,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:37",
+          "ref": "src/mcp/usage.ts:39",
           "source": "code"
         }
       ]
@@ -2872,7 +2872,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T12:41:24.676Z",
+  "generatedAt": "2026-06-14T12:53:46.286Z",
   "processes": [
     {
       "confidence": 0.6,

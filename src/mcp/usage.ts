@@ -31,8 +31,10 @@ const BROAD_TOOLS = new Set([
 const estTokens = (s: string) => Math.ceil(s.length / 4);
 
 export const USAGE_LOG = join(".archmantic", "usage.jsonl");
-const FLUSH_EVERY = 5;
-const FLUSH_MS = 60_000;
+const FLUSH_EVERY = 2;
+const FLUSH_MS = 20_000;
+/** How many trailing local events to re-send on startup (idempotent by id). */
+const BACKLOG_LIMIT = 1000;
 
 export class UsageRecorder {
   private buffer: UsageEvent[] = [];
@@ -102,6 +104,25 @@ export class UsageRecorder {
   start(): void {
     this.timer = setInterval(() => void this.drain(), FLUSH_MS);
     this.timer.unref?.(); // don't keep the process alive on our account
+  }
+
+  /**
+   * Re-send the persisted local log to the cloud on startup. The local log is the
+   * durable outbox: events that a previous session recorded but never flushed
+   * (short session, hard kill, or creds added later) get caught up here. Idempotent
+   * by event id, so re-sending is safe. Returns how many events were re-sent (0 if
+   * the log is empty or no cloud creds accepted them). Best-effort — never throws.
+   */
+  async flushBacklog(): Promise<number> {
+    const all = readUsageLog(this.root);
+    if (!all.length) return 0;
+    const batch = all.slice(-BACKLOG_LIMIT);
+    try {
+      await this.flush(batch);
+      return batch.length;
+    } catch {
+      return 0; // offline / no creds — the live drain will retry buffered events
+    }
   }
 
   async stop(): Promise<void> {
