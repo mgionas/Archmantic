@@ -11,17 +11,7 @@
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-
-const IGNORE = new Set([
-  "node_modules",
-  ".git",
-  "dist",
-  "build",
-  ".next",
-  "coverage",
-  ".vercel",
-  ".archmantic",
-]);
+import { IGNORE_DIRS as IGNORE } from "./ignore.js";
 
 /** Read declared workspace globs from npm/yarn `package.json` and pnpm-workspace.yaml. */
 function workspaceGlobs(root: string): string[] {
@@ -86,8 +76,10 @@ function expand(root: string, pattern: string): string[] {
     }
     dirs = next;
   }
-  // A member is a directory that actually carries its own package.json.
-  return dirs.filter((d) => d && existsSync(join(root, d, "package.json")));
+  // A member is a *sub*-directory that carries its own package.json. Exclude the
+  // root itself ("." — some pnpm-workspace.yaml list it), which would mislabel a
+  // single-package repo as a monorepo.
+  return dirs.filter((d) => d && d !== "." && existsSync(join(root, d, "package.json")));
 }
 
 /**

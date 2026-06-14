@@ -13,6 +13,7 @@ import { deriveSemantics } from "./derive.js";
 import { detectStack } from "./stack.js";
 import { detectDataModel } from "./datamodel.js";
 import { detectEndpoints } from "./endpoints.js";
+import { detectLaravelRoutes } from "./laravel.js";
 import { refineRole, needsRefine } from "./roles.js";
 import { detectWorkspaces, packageOf } from "./workspaces.js";
 
@@ -62,6 +63,19 @@ function applyConfig(root: string, model: ArchitectureModel): void {
   }
 }
 
+/** Merge endpoint sets from multiple detectors, de-duplicating by id (first wins). */
+function mergeEndpoints(...sets: ArchitectureModel["endpoints"][]): ArchitectureModel["endpoints"] {
+  const seen = new Set<string>();
+  const out: ArchitectureModel["endpoints"] = [];
+  for (const set of sets)
+    for (const e of set)
+      if (!seen.has(e.id)) {
+        seen.add(e.id);
+        out.push(e);
+      }
+  return out;
+}
+
 export function analyzeRepo(root: string): ArchitectureModel {
   const files = walkSourceFiles(root);
   const model = tier0(root, files);
@@ -69,7 +83,7 @@ export function analyzeRepo(root: string): ArchitectureModel {
   deriveSemantics(root, files, model);
   model.technologies = detectStack(root);
   model.dataEntities = detectDataModel(root);
-  model.endpoints = detectEndpoints(root);
+  model.endpoints = mergeEndpoints(detectEndpoints(root), detectLaravelRoutes(root));
   refineRoles(root, model);
   tagPackages(model, detectWorkspaces(root));
   applyConfig(root, model);

@@ -2,17 +2,7 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 import { detectWorkspaces } from "./workspaces.js";
-
-const IGNORE_DIRS = new Set([
-  "node_modules",
-  ".git",
-  "dist",
-  ".archmantic",
-  "coverage",
-  ".next",
-  "build",
-  ".vercel",
-]);
+import { IGNORE_DIRS } from "./ignore.js";
 
 const SOURCE_RE = /\.(ts|tsx|js|jsx|mjs|cjs)$/;
 

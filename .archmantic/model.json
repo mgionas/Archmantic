@@ -140,7 +140,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/fs-util.ts:26",
+          "ref": "src/analyze/fs-util.ts:16",
           "source": "code"
         }
       ]
@@ -156,7 +156,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/fs-util.ts:18",
+          "ref": "src/analyze/fs-util.ts:8",
           "source": "code"
         }
       ]
@@ -188,7 +188,23 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/index.ts:65",
+          "ref": "src/analyze/index.ts:79",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/laravel.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `detectLaravelRoutes` in src/analyze/laravel.ts",
+      "id": "cap:src/analyze/laravel.ts#detectLaravelRoutes",
+      "name": "Detect Laravel Routes",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/laravel.ts:78",
           "source": "code"
         }
       ]
@@ -316,7 +332,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/stack.ts:82",
+          "ref": "src/analyze/stack.ts:116",
           "source": "code"
         }
       ]
@@ -428,7 +444,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/walk.ts:20",
+          "ref": "src/analyze/walk.ts:10",
           "source": "code"
         }
       ]
@@ -444,7 +460,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/workspaces.ts:124",
+          "ref": "src/analyze/workspaces.ts:116",
           "source": "code"
         }
       ]
@@ -460,7 +476,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/workspaces.ts:134",
+          "ref": "src/analyze/workspaces.ts:126",
           "source": "code"
         }
       ]
@@ -1775,6 +1791,21 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:src/analyze/ignore.ts",
+      "kind": "module",
+      "name": "src/analyze/ignore.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/ignore.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/analyze/incremental.ts",
       "kind": "module",
       "name": "src/analyze/incremental.ts",
@@ -1797,6 +1828,21 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/index.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/analyze/laravel.ts",
+      "kind": "module",
+      "name": "src/analyze/laravel.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel.ts:1",
           "source": "code"
         }
       ],
@@ -2445,7 +2491,7 @@
           "source": "code"
         }
       ],
-      "role": "module",
+      "role": "route",
       "systemId": "sys:archmantic"
     },
     {
@@ -2457,6 +2503,21 @@
         {
           "confidence": 0.95,
           "ref": "test/knowledge.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:test/laravel.test.mjs",
+      "kind": "module",
+      "name": "test/laravel.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel.test.mjs:1",
           "source": "code"
         }
       ],
@@ -2555,38 +2616,7 @@
     }
   ],
   "dataEntities": [],
-  "endpoints": [
-    {
-      "confidence": 0.95,
-      "id": "endpoint:rest:GET:/base/:id",
-      "method": "GET",
-      "name": "GET /base/:id",
-      "path": "/base/:id",
-      "protocol": "rest",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/analyze/endpoints.ts:144",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "confidence": 0.95,
-      "id": "endpoint:rest:POST:/base",
-      "method": "POST",
-      "name": "POST /base",
-      "path": "/base",
-      "protocol": "rest",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/analyze/endpoints.ts:144",
-          "source": "code"
-        }
-      ]
-    }
-  ],
+  "endpoints": [],
   "flows": [
     {
       "confidence": 0.6,
@@ -2750,7 +2780,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T11:48:59.575Z",
+  "generatedAt": "2026-06-14T12:03:39.362Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -3310,6 +3340,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/fs-util.ts",
+      "id": "rel:comp:src/analyze/fs-util.ts=>comp:src/analyze/ignore.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/fs-util.ts → comp:src/analyze/ignore.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/fs-util.ts:5",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/ignore.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/fs-util.ts",
       "id": "rel:comp:src/analyze/fs-util.ts=>comp:src/analyze/workspaces.ts",
       "kind": "depends_on",
       "name": "comp:src/analyze/fs-util.ts → comp:src/analyze/workspaces.ts",
@@ -3505,13 +3550,28 @@
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/index.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/laravel.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/index.ts → comp:src/analyze/laravel.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/index.ts:16",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/laravel.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/index.ts",
       "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/roles.ts",
       "kind": "depends_on",
       "name": "comp:src/analyze/index.ts → comp:src/analyze/roles.ts",
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/index.ts:16",
+          "ref": "src/analyze/index.ts:17",
           "source": "code"
         }
       ],
@@ -3586,7 +3646,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/index.ts:17",
+          "ref": "src/analyze/index.ts:18",
           "source": "code"
         }
       ],
@@ -3632,6 +3692,96 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/index.ts:7",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel.ts",
+      "id": "rel:comp:src/analyze/laravel.ts=>comp:src/analyze/fs-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel.ts → comp:src/analyze/fs-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel.ts:18",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/fs-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel.ts",
+      "id": "rel:comp:src/analyze/laravel.ts=>comp:src/analyze/parse-util.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel.ts → comp:src/analyze/parse-util.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel.ts:19",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/parse-util.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel.ts",
+      "id": "rel:comp:src/analyze/laravel.ts=>comp:src/analyze/tier0.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel.ts → comp:src/analyze/tier0.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel.ts:17",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/tier0.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel.ts",
+      "id": "rel:comp:src/analyze/laravel.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel.ts:16",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel.ts",
+      "id": "rel:comp:src/analyze/laravel.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/laravel.ts",
+      "id": "rel:comp:src/analyze/laravel.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/laravel.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/laravel.ts:15",
           "source": "code"
         }
       ],
@@ -4090,6 +4240,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/walk.ts",
+      "id": "rel:comp:src/analyze/walk.ts=>comp:src/analyze/ignore.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/walk.ts → comp:src/analyze/ignore.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/walk.ts:5",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/ignore.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/walk.ts",
       "id": "rel:comp:src/analyze/walk.ts=>comp:src/analyze/workspaces.ts",
       "kind": "depends_on",
       "name": "comp:src/analyze/walk.ts → comp:src/analyze/workspaces.ts",
@@ -4131,6 +4296,21 @@
         }
       ],
       "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/workspaces.ts",
+      "id": "rel:comp:src/analyze/workspaces.ts=>comp:src/analyze/ignore.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/workspaces.ts → comp:src/analyze/ignore.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/workspaces.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/ignore.ts"
     },
     {
       "confidence": 0.95,
@@ -5887,6 +6067,81 @@
         {
           "confidence": 0.95,
           "ref": "test/knowledge.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel.test.mjs",
+      "id": "rel:comp:test/laravel.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/laravel.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel.test.mjs",
+      "id": "rel:comp:test/laravel.test.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:test/laravel.test.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel.test.mjs:4",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel.test.mjs",
+      "id": "rel:comp:test/laravel.test.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:test/laravel.test.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel.test.mjs:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel.test.mjs",
+      "id": "rel:comp:test/laravel.test.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:test/laravel.test.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel.test.mjs:5",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/laravel.test.mjs",
+      "id": "rel:comp:test/laravel.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/laravel.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/laravel.test.mjs:2",
           "source": "code"
         }
       ],

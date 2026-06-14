@@ -13,6 +13,27 @@ import { detectWorkspaces } from "./workspaces.js";
 
 type Cat = "framework" | "ui" | "database" | "orm" | "auth" | "ai" | "testing" | "build" | "language" | "infra";
 
+/** Curated Composer (PHP) package → {category, display name}. */
+const KNOWN_PHP: Record<string, { cat: Cat; name: string }> = {
+  php: { cat: "language", name: "PHP" },
+  "laravel/framework": { cat: "framework", name: "Laravel" },
+  "symfony/symfony": { cat: "framework", name: "Symfony" },
+  "laravel/lumen-framework": { cat: "framework", name: "Lumen" },
+  "inertiajs/inertia-laravel": { cat: "framework", name: "Inertia" },
+  "livewire/livewire": { cat: "framework", name: "Livewire" },
+  "filament/filament": { cat: "ui", name: "Filament" },
+  "laravel/sanctum": { cat: "auth", name: "Sanctum" },
+  "laravel/passport": { cat: "auth", name: "Passport" },
+  "laravel/fortify": { cat: "auth", name: "Fortify" },
+  "laravel/jetstream": { cat: "auth", name: "Jetstream" },
+  "laravel/breeze": { cat: "auth", name: "Breeze" },
+  "laravel/octane": { cat: "infra", name: "Octane" },
+  "laravel/horizon": { cat: "infra", name: "Horizon" },
+  "doctrine/orm": { cat: "orm", name: "Doctrine" },
+  "phpunit/phpunit": { cat: "testing", name: "PHPUnit" },
+  "pestphp/pest": { cat: "testing", name: "Pest" },
+};
+
 /** Curated package → {category, display name}. Scoped packages match on the scope/name. */
 const KNOWN: Record<string, { cat: Cat; name: string }> = {
   next: { cat: "framework", name: "Next.js" },
@@ -78,28 +99,51 @@ function readDeps(file: string): Record<string, string> {
   }
 }
 
-/** Detect classified technologies from the repo's package.json (+ workspace members). */
+/** Read & merge `require` + `require-dev` from a composer.json, ignoring missing/malformed. */
+function readComposer(file: string): Record<string, string> {
+  try {
+    const c = JSON.parse(readFileSync(file, "utf8")) as {
+      require?: Record<string, string>;
+      ["require-dev"]?: Record<string, string>;
+    };
+    return { ...c.require, ...c["require-dev"] };
+  } catch {
+    return {};
+  }
+}
+
+/** Detect classified technologies from package.json (+ workspace members) and composer.json. */
 export function detectStack(root: string): Technology[] {
-  const pkgPath = join(root, "package.json");
-  if (!existsSync(pkgPath)) return [];
-  // Aggregate deps from the root and every declared workspace member — in a
-  // monorepo the real stack lives in the member packages, not the thin root.
-  const deps: Record<string, string> = { ...readDeps(pkgPath) };
-  for (const m of detectWorkspaces(root)) Object.assign(deps, readDeps(join(root, m, "package.json")));
   const techs: Technology[] = [];
   const seen = new Set<string>();
-  for (const dep of Object.keys(deps)) {
-    const hit = KNOWN[dep];
-    if (!hit || seen.has(hit.name)) continue;
+  const add = (dep: string, hit: { cat: Cat; name: string } | undefined, ref: string) => {
+    if (!hit || seen.has(hit.name)) return;
     seen.add(hit.name);
     techs.push({
       id: `tech:${dep}`,
       name: hit.name,
       category: hit.cat,
       description: `${hit.cat} (${dep})`,
-      provenance: [{ source: "repo", ref: "package.json", confidence: STRUCTURAL_CONFIDENCE }],
+      provenance: [{ source: "repo", ref, confidence: STRUCTURAL_CONFIDENCE }],
       confidence: STRUCTURAL_CONFIDENCE,
     });
+  };
+
+  // JS/TS: aggregate deps from the root and every workspace member — in a
+  // monorepo the real stack lives in the member packages, not the thin root.
+  const pkgPath = join(root, "package.json");
+  if (existsSync(pkgPath)) {
+    const deps: Record<string, string> = { ...readDeps(pkgPath) };
+    for (const m of detectWorkspaces(root)) Object.assign(deps, readDeps(join(root, m, "package.json")));
+    for (const dep of Object.keys(deps)) add(dep, KNOWN[dep], "package.json");
   }
+
+  // PHP: Laravel/Symfony/Inertia/etc. from composer.json (only known packages;
+  // the `php` platform requirement maps to the PHP language).
+  const composerPath = join(root, "composer.json");
+  if (existsSync(composerPath)) {
+    for (const dep of Object.keys(readComposer(composerPath))) add(dep, KNOWN_PHP[dep], "composer.json");
+  }
+
   return techs;
 }

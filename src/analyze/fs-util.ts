@@ -2,17 +2,7 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 import { detectWorkspaces } from "./workspaces.js";
-
-const IGNORE = new Set([
-  "node_modules",
-  ".git",
-  "dist",
-  "build",
-  ".next",
-  "coverage",
-  ".vercel",
-  ".archmantic",
-]);
+import { IGNORE_DIRS as IGNORE } from "./ignore.js";
 
 /** Test/spec/story/mock files — verification, not part of the architecture model. */
 export function isTestFile(rel: string): boolean {

@@ -140,8 +140,10 @@ export function detectEndpoints(root: string): Endpoint[] {
       push("rest", verb === "ALL" ? "ANY" : verb, path, `${rel}:${lineAt(text, rm.index)}`);
     }
 
-    // NestJS controllers: a `@Controller('base')` prefix plus method decorators
-    // (`@Get(':id')`, `@Post()`, …). Path params already use the `:id` form.
+    // NestJS controllers: a Controller-decorator base prefix plus HTTP-method
+    // decorators (Get/Post/Put/Patch/Delete). Path params already use the colon
+    // form. (Examples are kept out of this comment so the detector doesn't match
+    // its own source when Archmantic analyzes itself.)
     const ctrl = /@Controller\s*\(\s*(?:[`'"]([^`'"]*)[`'"]|\{[^}]*?\bpath\s*:\s*[`'"]([^`'"]*)[`'"])?/.exec(text);
     if (ctrl) {
       const base = (ctrl[1] ?? ctrl[2] ?? "").replace(/^\/+|\/+$/g, "");

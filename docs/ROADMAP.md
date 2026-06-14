@@ -148,6 +148,23 @@ empty `@Controller()` → root). Verified on DrivePulse-Core: 0 → 31 endpoints
 12 controllers, package-tagged to `apps/api`. (`packages/contracts/openapi.json`
 was empty, so OpenAPI ingestion stays deferred until a populated spec appears.)
 
+### ✅ done · Laravel / PHP API + stack (1.6.0)
+PHP/Inertia repos analyzed only the JS frontend, so the API surface read empty
+(or showed a handful of JS client calls). Added a Laravel route detector
+(`src/analyze/laravel.ts`): parses `routes/*.php` for `Route::verb('path')`,
+nested prefix groups (`Route::prefix('x')->group` and
+`Route::group(['prefix'=>'x'], …)`), `Route::match([...])`, and
+`resource`/`apiResource` expansion; `routes/api.php` is served under `/api`;
+`{id}`/`{id?}` → `:id`. Grounded to file:line, merged + de-duped with the JS
+endpoints. Stack detection now also reads `composer.json`
+(Laravel/Symfony/Inertia/Livewire/Sanctum/PHP/…). Verified: **fantasy 0 → 201**,
+**sh-purchasing 12 → 217** endpoints. Walker ignore-list centralized
+(`src/analyze/ignore.ts`) and extended with PHP/Laravel defaults
+(`vendor/`, `storage/`, `bootstrap/`, `tmp/`) so Composer's `vendor/` can't flood
+the API surface. Also fixed: a `pnpm-workspace.yaml` listing `.` (root) no longer
+mislabels a single-package repo as a monorepo. OpenAPI ingestion + PHP-as-
+components remain deferred.
+
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
 appears that architecture-level elements can't serve.
