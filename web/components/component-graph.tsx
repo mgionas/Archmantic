@@ -277,16 +277,24 @@ function Graph({
     [graph],
   );
   const rolesPresent = useMemo(() => [...new Set(graph.nodes.map((n) => n.role))].sort(), [graph]);
+  const [roleFilter, setRoleFilter] = useState<string | null>(null);
+  const roleById = useMemo(() => new Map(graph.nodes.map((n) => [n.id, n.role])), [graph]);
 
   const focus = (id: string) => {
     setSelected(id);
     rf.fitView({ nodes: [{ id }], duration: 400, maxZoom: 1.4 });
   };
 
+  const decorated = nodes.map((n) => {
+    if (n.type !== "comp") return n;
+    const dim = roleFilter !== null && roleById.get(n.id) !== roleFilter;
+    return { ...n, selected: n.id === selected, style: { ...(n.style ?? {}), opacity: dim ? 0.25 : 1 } };
+  });
+
   return (
     <div className="relative h-full w-full">
       <ReactFlow
-        nodes={nodes.map((n) => (n.id === selected ? { ...n, selected: true } : n))}
+        nodes={decorated}
         edges={edges}
         nodeTypes={nodeTypes}
         fitView
@@ -319,12 +327,22 @@ function Graph({
             </button>
           ))}
         </Panel>
-        <Panel position="top-right" className="flex max-w-[36%] flex-wrap justify-end gap-x-3 gap-y-1 rounded-lg border border-border/60 bg-background/80 px-2.5 py-1.5 backdrop-blur">
+        <Panel position="top-right" className="flex max-w-[40%] flex-wrap justify-end gap-x-2 gap-y-1 rounded-lg border border-border/60 bg-background/80 px-2 py-1.5 backdrop-blur">
           {rolesPresent.map((r) => (
-            <span key={r} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+            <button
+              key={r}
+              type="button"
+              onClick={() => setRoleFilter((cur) => (cur === r ? null : r))}
+              title={roleFilter === r ? "Show all" : `Highlight ${r}`}
+              className={cn(
+                "flex items-center gap-1.5 rounded px-1 text-[11px] transition-opacity",
+                roleFilter !== null && roleFilter !== r ? "opacity-40" : "text-muted-foreground hover:text-foreground",
+                roleFilter === r && "font-medium text-foreground",
+              )}
+            >
               <span className="size-2 rounded-full" style={{ background: roleColor(r) }} />
               {r}
-            </span>
+            </button>
           ))}
         </Panel>
         <Background gap={18} />

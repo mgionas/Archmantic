@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useUrlState } from "@/lib/use-url-state";
 import type {
   GraphNode,
   GraphEdge,
@@ -136,7 +137,7 @@ export function ProjectTabs({
   data: DataModel | null;
   endpoints: Endpoint[];
 }) {
-  const [facet, setFacet] = useState("overview");
+  const [facetParam, setFacet] = useUrlState("view", "overview");
   const [apiQuery, setApiQuery] = useState("");
 
   const capCount = groups.reduce((n, g) => n + g.caps.length, 0);
@@ -149,6 +150,7 @@ export function ProjectTabs({
     ...(endpoints.length ? [{ id: "api", label: "API", count: endpoints.length }] : []),
     { id: "changes", label: "Changes", count: changes.total || undefined },
   ];
+  const facet = facets.some((f) => f.id === facetParam) ? facetParam : "overview";
 
   const filteredEndpoints = useMemo(() => {
     const q = apiQuery.trim().toLowerCase();

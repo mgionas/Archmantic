@@ -27,7 +27,21 @@ code-graph commodity territory?
 | ✅ done | Multi-repo auto-link | `analyzeLinks` → connected/inferred/dangling; web `/systems` panel + CLI `system` | High · Med-High |
 | ✅ done | Agent knowledge file | `AGENTS.md` projection in a managed block; auto on analyze/update + MCP refresh/sync; reaches non-MCP agents | High · Low |
 | ✅ done | Internal-pages redesign | full-bleed shell + icon rail + facet column + interactive diagram canvas (P0–P3); see docs/design/REDESIGN.md | High · High |
+| ✅ done | Interactive graphs | React Flow for Context/Components/ERD: grouping, role colors, click-through cross-facet panels | High · High |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
+
+## Next — v1.2: interactivity & accuracy
+
+Builds on the React Flow graphs + semantic roles. Web-only items deploy via Vercel;
+core items ship in a new npm release.
+
+| # | Item | Scope | Why |
+|---|---|---|---|
+| **1** | Deep-linkable view state | web | `?view=<facet>&d=<diagram>` in the URL → shareable/refresh-safe "look at this view" links |
+| **2** | Content-signal role refinement | core (→ npm 1.2.0) | use Tier-1 export/import signals (default-exports JSX → ui, `NextResponse`/`res.json` → route, …) to sharpen roles beyond path heuristics |
+| **3** | Graph polish | web | click a role in the legend to highlight/filter those nodes; dim non-neighbor edges on select |
+
+Order: 1 → 3 (web, ship together) → 2 (core, publish 1.2.0).
 
 Recommended sequence: **npm + docs** (coupled, cheap) → **ERD** → **GitHub
 Action** → **MCP usage stats** → API surface → multi-repo auto-link.

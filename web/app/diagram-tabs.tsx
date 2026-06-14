@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { useUrlState } from "@/lib/use-url-state";
 import { BpmnEditor, Mermaid } from "./diagrams-client";
 import type { GraphNode, GraphEdge, CompDetail, ContextNode, ContextEdge, ContextDetail } from "@/lib/diagrams";
 
@@ -33,7 +33,7 @@ export function DiagramTabs({
   edited: boolean;
   onNavigate?: (facet: string) => void;
 }) {
-  const [tab, setTab] = useState("context");
+  const [tab, setTab] = useUrlState("d", "context");
 
   return (
     <Tabs value={tab} onValueChange={setTab}>
