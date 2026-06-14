@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { SignInButton } from "@clerk/nextjs";
-import { Boxes, Workflow, ShieldCheck, GitCompareArrows, Bot, PencilRuler, ArrowRight } from "lucide-react";
+import { Boxes, Workflow, ShieldCheck, GitCompareArrows, Bot, PencilRuler, ArrowRight, AlertCircle } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -62,11 +62,9 @@ function StackStrip() {
               width={28}
               height={28}
               loading="lazy"
-              className="size-7 opacity-50 grayscale transition-all duration-200 group-hover:opacity-100 group-hover:grayscale-0"
+              className="size-7 opacity-80 transition-opacity duration-200 group-hover:opacity-100"
             />
-            <span className="text-[11px] text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
-              {name}
-            </span>
+            <span className="text-xs text-muted-foreground">{name}</span>
           </span>
         ))}
       </div>
@@ -284,7 +282,13 @@ export default async function Home() {
       </div>
 
       {error ? (
-        <Card className="p-6 text-sm text-muted-foreground">Could not reach the store: {error}</Card>
+        <Card className="flex items-start gap-3 border-danger/30 bg-danger/5 p-6 text-sm">
+          <AlertCircle className="mt-0.5 size-4 shrink-0 text-danger" />
+          <div>
+            <div className="font-medium text-danger">Could not reach the store</div>
+            <div className="mt-1 text-muted-foreground">{error}</div>
+          </div>
+        </Card>
       ) : projects.length === 0 ? (
         <EmptyState />
       ) : (

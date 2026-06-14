@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
+import { unstable_cache } from "next/cache";
 
 /** Minimal shape of the IR we render in the web viewer (mirrors the CLI's IR). */
 export interface Provenance {
@@ -147,7 +148,7 @@ export async function listSnapshots(owner: string, project: string): Promise<Sna
 }
 
 /** The model stored at a specific commit. */
-export async function modelAtCommit(owner: string, project: string, commit: string): Promise<Model | null> {
+async function fetchModelAtCommit(owner: string, project: string, commit: string): Promise<Model | null> {
   try {
     const rows = (await sql()`
       select model from archmantic_models
@@ -157,6 +158,16 @@ export async function modelAtCommit(owner: string, project: string, commit: stri
     if (missingTable(err)) return null;
     throw err;
   }
+}
+
+/**
+ * A model at a specific commit is immutable, so cache it (avoids re-fetching the
+ * ~500KB JSONB on every facet/diagram navigation). Keyed by owner+project+sha.
+ */
+export async function modelAtCommit(owner: string, project: string, commit: string): Promise<Model | null> {
+  return unstable_cache(() => fetchModelAtCommit(owner, project, commit), ["model-at-commit", owner, project, commit], {
+    revalidate: false,
+  })();
 }
 
 export async function latestModel(owner: string, project: string): Promise<Model | null> {

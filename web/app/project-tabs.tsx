@@ -115,6 +115,7 @@ const BAND_CLASS: Record<string, string> = {
   medium: "border-warning/30 text-warning",
   low: "border-danger/30 text-danger",
 };
+const BAR_CLASS: Record<string, string> = { high: "bg-success", medium: "bg-warning", low: "bg-danger" };
 const METHOD_CLASS: Record<string, string> = {
   GET: "text-success",
   QUERY: "text-success",
@@ -321,16 +322,21 @@ export function ProjectTabs({
               <Stat n={overview.trust.total} label="grounded elements" />
               <Stat n={overview.trust.refs} label="code references" />
               <Stat n={`${overview.trust.meanPct}%`} label="mean confidence" />
-              <div className="ml-auto flex gap-2">
-                <Badge variant="outline" className={BAND_CLASS.high}>
-                  {overview.trust.high} high
-                </Badge>
-                <Badge variant="outline" className={BAND_CLASS.medium}>
-                  {overview.trust.medium} medium
-                </Badge>
-                <Badge variant="outline" className={BAND_CLASS.low}>
-                  {overview.trust.low} low
-                </Badge>
+              <div className="ml-auto min-w-[200px] flex-1 sm:flex-none">
+                <div className="flex h-2 overflow-hidden rounded-full bg-muted" title="confidence distribution">
+                  {(["high", "medium", "low"] as const).map((b) => {
+                    const n = overview.trust[b];
+                    const pct = overview.trust.total ? (n / overview.trust.total) * 100 : 0;
+                    return pct > 0 ? (
+                      <div key={b} style={{ width: `${pct}%` }} className={BAR_CLASS[b]} title={`${n} ${b} confidence`} />
+                    ) : null;
+                  })}
+                </div>
+                <div className="mt-1.5 flex flex-wrap gap-x-3 text-xs text-muted-foreground">
+                  <span className="text-success">{overview.trust.high} high</span>
+                  <span className="text-warning">{overview.trust.medium} medium</span>
+                  <span className="text-danger">{overview.trust.low} low</span>
+                </div>
               </div>
             </Card>
             {isMono ? (
