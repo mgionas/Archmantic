@@ -23,6 +23,7 @@ import { incrementalUpdate } from "./analyze/incremental.js";
 import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess, knowledgeMarkdown, applyKnowledgeBlock, readManifest, detectAgents, scaffoldManifest, MANIFEST_PATH, seedFeatureFiles, FEATURES_DIR } from "./project/index.js";
 import { getFeature, listFeatures } from "./mcp/queries.js";
 import { syncFeatures } from "./project/feature-sync.js";
+import { pullFeatureEdits } from "./feature-pull.js";
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 import { runHandoff, runAutonomousBuild } from "./agent.js";
@@ -154,6 +155,19 @@ async function cmdFeature(args: string[]): Promise<number> {
     } else {
       console.log(`\nDry run — re-run with \`--write\` to save these to ${FEATURES_DIR}/.`);
     }
+    return 0;
+  }
+  if (sub === "pull") {
+    const res = await pullFeatureEdits(process.cwd(), model.project);
+    if (res.reason) {
+      console.error(`✗ ${res.reason}`);
+      return 1;
+    }
+    console.log(
+      res.written.length
+        ? `✓ Pulled ${res.written.length} feature edit${res.written.length === 1 ? "" : "s"} from the cloud → ${FEATURES_DIR}/ (${res.written.join(", ")}).\n  Review with \`git diff\`, then \`archmantic analyze\`.`
+        : "• No pending feature edits in the cloud.",
+    );
     return 0;
   }
   if (sub === "seed") {
@@ -917,7 +931,7 @@ Usage: archmantic <command> [options]
 Commands:
   init [name]    Create an empty .archmantic/model.json (+ project.json brain)
   project [--init]  Scaffold/show the project brain (.archmantic/project.json: goal, author, agents)
-  feature [list|show <name>|seed|sync [name] [--write]]  Features; sync = intent compiler (BYOK): edit a description → create/update related features
+  feature [list|show <name>|seed|sync [name] [--write]|pull]  Features; sync = intent compiler (BYOK); pull = fetch hosted-editor edits → .archmantic/features/*.md
   edit [--port N]  Local web feature editor (writes .archmantic/features/*.md; repo files = source)
   analyze [--tier N]  Reverse-engineer the model (--tier 2 adds the LLM pass, BYOK)
   update [--hook]  Incrementally re-analyze only what changed (git-diff driven)

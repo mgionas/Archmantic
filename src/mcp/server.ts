@@ -16,6 +16,7 @@ import { type ArchitectureModel, serializeModel } from "../ir/types.js";
 import { analyzeRepo } from "../analyze/index.js";
 import { knowledgeMarkdown, applyKnowledgeBlock } from "../project/index.js";
 import { syncFeatures } from "../project/feature-sync.js";
+import { pullFeatureEdits } from "../feature-pull.js";
 import { diffModels, summarizeChange } from "../diff/index.js";
 import {
   hasApiToken,
@@ -78,7 +79,7 @@ const text = (s: string) => ({ content: [{ type: "text" as const, text: s }] });
 export async function startMcpServer(root: string): Promise<void> {
   // Mutable so `refresh`/`sync` update what the read tools serve.
   let model = loadModel(root);
-  const server = new McpServer({ name: "archmantic", version: "1.13.0" });
+  const server = new McpServer({ name: "archmantic", version: "1.14.0" });
 
   // Usage stats: record each read tool + model pushes, best-effort flush to the
   // cloud (API if a token is set, else direct DB, else local-log only). Never breaks the agent.
@@ -88,6 +89,15 @@ export async function startMcpServer(root: string): Promise<void> {
   // the cloud (the local log is a durable outbox). Idempotent; best-effort.
   void usage.flushBacklog().then((n) => {
     if (n) process.stderr.write(`archmantic ◂ synced ${n} pending usage event${n === 1 ? "" : "s"} to the cloud\n`);
+  });
+  // Auto-pull hosted-editor feature edits into .archmantic/features/ so web edits
+  // flow into the repo while an agent works (polling on startup; webhooks can't
+  // reach a dev machine). Idempotent; refreshes the served model if anything changed.
+  void pullFeatureEdits(root, model.project).then((r) => {
+    if (r.written.length) {
+      model = reanalyze(root);
+      process.stderr.write(`archmantic ◂ pulled ${r.written.length} feature edit${r.written.length === 1 ? "" : "s"} from the cloud\n`);
+    }
   });
   /** Record the read, log it (visible in the agent's MCP logs), return as a text result. */
   const served = (tool: string, answer: string) => {

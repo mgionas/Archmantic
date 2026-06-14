@@ -21,6 +21,7 @@ import type {
 } from "@/lib/diagrams";
 import { DiagramTabs } from "./diagram-tabs";
 import { KnowledgeView } from "@/components/knowledge-view";
+import { FeatureEditor } from "@/components/feature-editor";
 import { band, roleColor } from "@/lib/format";
 
 const EntityGraph = dynamic(() => import("@/components/entity-graph").then((m) => m.EntityGraph), {
@@ -82,6 +83,7 @@ export interface FeatureView {
   actions: { name: string; description?: string }[];
   dependsOn: string[];
   components: string[];
+  componentPaths: string[];
   flow: { from: string; action: string; to: string }[];
   human: boolean;
 }
@@ -388,79 +390,7 @@ export function ProjectTabs({
               </p>
               <div className="grid gap-3 lg:grid-cols-2">
                 {features.map((f) => (
-                  <Card key={f.id} className="space-y-2.5 p-4">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{f.name}</span>
-                      {f.status ? (
-                        <Badge variant="outline" className="font-normal capitalize">
-                          {f.status}
-                        </Badge>
-                      ) : null}
-                      {f.human ? (
-                        <Badge variant="secondary" className="font-normal">
-                          authored
-                        </Badge>
-                      ) : null}
-                    </div>
-                    {f.description ? <p className="text-sm text-muted-foreground">{f.description}</p> : null}
-                    {f.shows.length ? (
-                      <div className="text-sm">
-                        <span className="text-xs font-medium text-muted-foreground">Shows</span>
-                        <ul className="mt-1 space-y-0.5">
-                          {f.shows.map((s, i) => (
-                            <li key={i} className="text-muted-foreground">
-                              • {s.text}
-                              {s.source ? <span className="text-xs"> (from {s.source})</span> : null}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ) : null}
-                    {f.actions.length ? (
-                      <div className="text-sm">
-                        <span className="text-xs font-medium text-muted-foreground">Actions</span>
-                        <ul className="mt-1 space-y-0.5">
-                          {f.actions.map((a, i) => (
-                            <li key={i} className="text-muted-foreground">
-                              • <span className="text-foreground">{a.name}</span>
-                              {a.description ? ` — ${a.description}` : ""}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ) : null}
-                    {f.dependsOn.length ? (
-                      <div className="flex flex-wrap items-center gap-1.5 text-xs">
-                        <span className="text-muted-foreground">Depends on:</span>
-                        {f.dependsOn.map((d) => (
-                          <Badge key={d} variant="outline" className="font-normal">
-                            {d}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : null}
-                    {f.flow.length ? (
-                      <div className="text-sm">
-                        <span className="text-xs font-medium text-muted-foreground">Flow</span>
-                        <ol className="mt-1 space-y-0.5">
-                          {f.flow.slice(0, 8).map((s, i) => (
-                            <li key={i} className="font-mono text-xs text-muted-foreground">
-                              {s.from} <span className="text-foreground/50">{s.action} →</span> {s.to}
-                            </li>
-                          ))}
-                          {f.flow.length > 8 ? (
-                            <li className="text-xs text-muted-foreground">…{f.flow.length - 8} more</li>
-                          ) : null}
-                        </ol>
-                      </div>
-                    ) : null}
-                    {f.components.length ? (
-                      <div className="text-xs text-muted-foreground">
-                        {f.components.length} component{f.components.length === 1 ? "" : "s"}: {f.components.slice(0, 4).join(", ")}
-                        {f.components.length > 4 ? ` +${f.components.length - 4}` : ""}
-                      </div>
-                    ) : null}
-                  </Card>
+                  <FeatureEditor key={f.id} project={project} feature={f} />
                 ))}
               </div>
             </div>

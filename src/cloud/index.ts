@@ -18,6 +18,8 @@ export {
   pullProcessEditApi,
   listModelsApi,
   recordUsageApi,
+  pullFeatureEditsApi,
+  type FeatureEditDTO,
   ApiError,
 } from "./api.js";
 

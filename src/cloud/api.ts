@@ -91,3 +91,24 @@ export async function pullProcessEditApi(project: string): Promise<string | null
   const data = (await res.json()) as { xml?: string };
   return data.xml ?? null;
 }
+
+/** One pending feature edit from the hosted editor (matches the CLI's FeatureEdit shape). */
+export interface FeatureEditDTO {
+  slug: string;
+  name: string;
+  description?: string;
+  shows?: string[];
+  actions?: string[];
+  dependsOn?: string[];
+  components?: string[];
+  status?: string;
+}
+
+/** Fetch the org's pending feature edits for a project (hosted editor → `feature pull`). */
+export async function pullFeatureEditsApi(project: string): Promise<FeatureEditDTO[]> {
+  const res = await send(`/api/feature-edits?project=${encodeURIComponent(project)}`, { headers: authHeader() });
+  if (!res.ok) throw new ApiError(`fetch feature edits failed (${res.status}): ${(await res.text()).slice(0, 200)}`);
+  assertJson(res, "fetch feature edits");
+  const data = (await res.json()) as { edits?: { payload: FeatureEditDTO }[] };
+  return (data.edits ?? []).map((e) => e.payload);
+}

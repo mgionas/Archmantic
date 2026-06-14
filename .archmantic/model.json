@@ -630,6 +630,22 @@
         "comp:src/cloud/api.ts"
       ],
       "confidence": 0.6,
+      "description": "Exported function `pullFeatureEditsApi` in src/cloud/api.ts",
+      "id": "cap:src/cloud/api.ts#pullFeatureEditsApi",
+      "name": "Pull Feature Edits Api",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/cloud/api.ts:108",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/cloud/api.ts"
+      ],
+      "confidence": 0.6,
       "description": "Exported function `pullLatestApi` in src/cloud/api.ts",
       "id": "cap:src/cloud/api.ts#pullLatestApi",
       "name": "Pull Latest Api",
@@ -700,7 +716,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/index.ts:32",
+          "ref": "src/cloud/index.ts:34",
           "source": "code"
         }
       ]
@@ -1037,6 +1053,22 @@
         {
           "confidence": 0.6,
           "ref": "src/env.ts:12",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/feature-pull.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `pullFeatureEdits` in src/feature-pull.ts",
+      "id": "cap:src/feature-pull.ts#pullFeatureEdits",
+      "name": "Pull Feature Edits",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/feature-pull.ts:16",
           "source": "code"
         }
       ]
@@ -1404,7 +1436,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/server.ts:78",
+          "ref": "src/mcp/server.ts:79",
           "source": "code"
         }
       ]
@@ -2643,6 +2675,21 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:src/feature-pull.ts",
+      "kind": "module",
+      "name": "src/feature-pull.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/feature-pull.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/index.ts",
       "kind": "module",
       "name": "src/index.ts",
@@ -3275,10 +3322,10 @@
         "comp:src/project/index.ts",
         "comp:src/mcp/queries.ts",
         "comp:src/project/feature-sync.ts",
+        "comp:src/feature-pull.ts",
         "comp:src/env.ts",
         "comp:src/auth.ts",
-        "comp:src/agent.ts",
-        "comp:src/system.ts"
+        "comp:src/agent.ts"
       ],
       "provenance": [
         {
@@ -3382,6 +3429,18 @@
               "source": "code"
             }
           ],
+          "to": "comp:src/feature-pull.ts"
+        },
+        {
+          "action": "uses",
+          "participant": "comp:src/feature-pull.ts",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/feature-pull.ts:1",
+              "source": "code"
+            }
+          ],
           "to": "comp:src/env.ts"
         },
         {
@@ -3407,23 +3466,11 @@
             }
           ],
           "to": "comp:src/agent.ts"
-        },
-        {
-          "action": "uses",
-          "participant": "comp:src/agent.ts",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/agent.ts:1",
-              "source": "code"
-            }
-          ],
-          "to": "comp:src/system.ts"
         }
       ]
     }
   ],
-  "generatedAt": "2026-06-14T16:52:00.380Z",
+  "generatedAt": "2026-06-14T17:11:01.274Z",
   "manifest": {
     "agents": [
       {
@@ -3592,6 +3639,17 @@
           ]
         },
         {
+          "id": "task:comp:src/feature-pull.ts",
+          "name": "Feature pull",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/feature-pull.ts:1",
+              "source": "code"
+            }
+          ]
+        },
+        {
           "id": "task:comp:src/env.ts",
           "name": "Env",
           "provenance": [
@@ -3620,17 +3678,6 @@
             {
               "confidence": 0.6,
               "ref": "src/agent.ts:1",
-              "source": "code"
-            }
-          ]
-        },
-        {
-          "id": "task:comp:src/system.ts",
-          "name": "System",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/system.ts:1",
               "source": "code"
             }
           ]
@@ -5344,7 +5391,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:28",
+          "ref": "src/cli.ts:29",
           "source": "code"
         }
       ],
@@ -5404,7 +5451,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:27",
+          "ref": "src/cli.ts:28",
           "source": "code"
         }
       ],
@@ -5419,7 +5466,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:30",
+          "ref": "src/cli.ts:31",
           "source": "code"
         }
       ],
@@ -5434,7 +5481,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:48",
+          "ref": "src/cli.ts:49",
           "source": "code"
         }
       ],
@@ -5449,7 +5496,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:45",
+          "ref": "src/cli.ts:46",
           "source": "code"
         }
       ],
@@ -5464,11 +5511,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:26",
+          "ref": "src/cli.ts:27",
           "source": "code"
         }
       ],
       "to": "comp:src/env.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/feature-pull.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/feature-pull.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:26",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/feature-pull.ts"
     },
     {
       "confidence": 0.95,
@@ -5494,7 +5556,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:47",
+          "ref": "src/cli.ts:48",
           "source": "code"
         }
       ],
@@ -5524,7 +5586,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:44",
+          "ref": "src/cli.ts:45",
           "source": "code"
         }
       ],
@@ -5539,7 +5601,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:46",
+          "ref": "src/cli.ts:47",
           "source": "code"
         }
       ],
@@ -5584,7 +5646,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:29",
+          "ref": "src/cli.ts:30",
           "source": "code"
         }
       ],
@@ -5679,7 +5741,7 @@
         },
         {
           "confidence": 0.95,
-          "ref": "src/cloud/index.ts:25",
+          "ref": "src/cloud/index.ts:27",
           "source": "code"
         }
       ],
@@ -5699,7 +5761,7 @@
         },
         {
           "confidence": 0.95,
-          "ref": "src/cloud/index.ts:24",
+          "ref": "src/cloud/index.ts:26",
           "source": "code"
         }
       ],
@@ -6067,6 +6129,36 @@
     },
     {
       "confidence": 0.95,
+      "from": "comp:src/feature-pull.ts",
+      "id": "rel:comp:src/feature-pull.ts=>comp:src/cloud/index.ts",
+      "kind": "depends_on",
+      "name": "comp:src/feature-pull.ts → comp:src/cloud/index.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/feature-pull.ts:8",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/cloud/index.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/feature-pull.ts",
+      "id": "rel:comp:src/feature-pull.ts=>comp:src/editor.ts",
+      "kind": "depends_on",
+      "name": "comp:src/feature-pull.ts → comp:src/editor.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/feature-pull.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/editor.ts"
+    },
+    {
+      "confidence": 0.95,
       "from": "comp:src/index.ts",
       "id": "rel:comp:src/index.ts=>comp:src/ir/types.ts",
       "kind": "depends_on",
@@ -6224,7 +6316,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:20",
+          "ref": "src/mcp/server.ts:21",
           "source": "code"
         }
       ],
@@ -6239,11 +6331,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:19",
+          "ref": "src/mcp/server.ts:20",
           "source": "code"
         }
       ],
       "to": "comp:src/diff/index.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/server.ts",
+      "id": "rel:comp:src/mcp/server.ts=>comp:src/feature-pull.ts",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/server.ts → comp:src/feature-pull.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/server.ts:19",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/feature-pull.ts"
     },
     {
       "confidence": 0.95,
@@ -6269,7 +6376,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:29",
+          "ref": "src/mcp/server.ts:30",
           "source": "code"
         }
       ],
@@ -6284,7 +6391,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:28",
+          "ref": "src/mcp/server.ts:29",
           "source": "code"
         }
       ],

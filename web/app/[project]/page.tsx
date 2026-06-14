@@ -121,6 +121,7 @@ export default async function ProjectPage({
       actions: f.actions ?? [],
       dependsOn: (f.dependsOn ?? []).map((id) => featureName.get(id) ?? id.replace(/^feature:/, "")),
       components: (f.components ?? []).map((c) => componentLabel(c)),
+      componentPaths: (f.components ?? []).map((c) => c.replace(/^comp:/, "")),
       flow: flowByFeature.get(f.id) ?? [],
       human: f.provenance?.[0]?.source === "human",
     }))

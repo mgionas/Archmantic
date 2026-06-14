@@ -4,7 +4,7 @@
 
 Point Archmantic at a repo and it reverse-engineers a single grounded **architecture model** (the IR). Every diagram is a *projection* of that one model, every element is traceable to `file:line`, and the same model answers your agent's questions over MCP. No drift between views, no ungrounded "AI diagram" guesswork.
 
-> Status: **v1.13.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
+> Status: **v1.14.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
 > _Note: the `amt` short alias was removed in 1.12.0 (it collided with a system binary on macOS) — use `archmantic` / `npx archmantic`._
 
 ---
@@ -28,7 +28,7 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 - **Feature layer** — user-perspective features (`what it shows · user actions · depends-on · components`), authored as git-versioned `.archmantic/features/*.md` and seeded bottom-up from pages/routes (drafts you refine). Surfaced via MCP `list_features`/`get_feature`, the CLI `feature` command, and a web Features facet.
 - **Intent compiler (edit-then-build for the spec)** — edit a feature's description (e.g. "Home must have a vendors section") and `archmantic feature sync` (BYOK) compiles it: fills `shows`/`actions`/`dependsOn`, **creates** the implied `Vendors` feature, and wires the dependency — written back as feature files for review. Agents can run it over MCP (`sync_features`).
 - **Behavior flows per feature** — each feature gets a sequence derived from its component subgraph (page → components it renders → services it calls), grounded to `file:line`. This makes sequence/process views meaningful for web apps (Next/Laravel/Vue), where a single entry-point chain doesn't exist. Shown in the feature detail, the Sequence diagram, and MCP `get_feature`.
-- **Local feature editor** — `archmantic edit` serves a small localhost UI to edit feature descriptions/shows/actions/dependencies; saves write the `.archmantic/features/*.md` files directly, so the repo stays the source of truth (the hosted web app is read-only — it can't reach your disk).
+- **Feature editing, two ways (repo files stay the source)** — edit locally (`archmantic edit`, writes the files directly) **or** in the hosted web app (saves to the cloud). `archmantic feature pull` writes hosted edits into `.archmantic/features/*.md`, and the MCP server auto-pulls them on startup — so web edits flow into the repo without webhooks (the hosted app can't reach your disk).
 - **Agent knowledge file** — auto-generates & keeps `AGENTS.md` in sync from the model (managed block), so even agents that don't speak MCP get accurate, drift-free project context.
 - **One model → many audiences** — C4-style context, components, per-feature sequences, BPMN process, an ERD, capability list, and an MCP surface for agents. The **web renders all graphs interactively with React Flow (`@xyflow/react`)** — pan/zoom, click-through, role coloring; the CLI also emits Mermaid/BPMN as static export artifacts (`archmantic view`).
 - **Token savings** — agents query the model over MCP instead of reading whole files (~98% fewer tokens on this repo, by the built-in benchmark).
@@ -66,6 +66,7 @@ node dist/cli.js analyze
 | `project [--init]` | Scaffold/show the project brain (`.archmantic/project.json`: goal, author, links; agents auto-detect from `.claude/agents/`) |
 | `feature [list\|show <name>\|seed\|sync [name] [--write]]` | User-perspective features; `seed` writes draft files; `sync` is the BYOK intent compiler (edit a description → create/update related features) |
 | `edit [--port N]` | Local web feature editor — saves write `.archmantic/features/*.md` (repo files = source) |
+| `feature pull` | Fetch hosted-editor feature edits from the cloud → `.archmantic/features/*.md` (org-token scoped) |
 | `analyze [--tier N]` | Reverse-engineer the model. `--tier 2` adds the LLM semantic pass (BYOK) |
 | `update [--hook]` | Incrementally re-analyze only what changed (git-diff driven). `--hook` prints a pre-commit hook |
 | `view` | Capability map, diagrams, and trust report; writes a self-contained `view.html` |

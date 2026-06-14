@@ -247,6 +247,17 @@ POST to a local endpoint that writes `.archmantic/features/<slug>.md` directly v
 the user's disk. The web Features facet points to the three edit paths (files /
 `edit` / `feature sync`). Completes the feature edit/update ask.
 
+### ✅ done · Hosted feature editing → cloud → pull (1.14.0)
+Edit features in the hosted web app (read-only before) — saves go to a cloud table
+`archmantic_feature_edits` (mirrors the BPMN process-edit flow). The repo stays the
+source of truth: `archmantic feature pull` writes pending edits into
+`.archmantic/features/*.md` (org-token scoped, last-write-wins), and the MCP server
+**auto-pulls on startup** so web edits flow into the repo while an agent works —
+polling, since webhooks can't reach a dev machine. Web: editable feature cards
+(`components/feature-editor.tsx`) POST to `/api/feature`; CLI reads via
+`/api/feature-edits`. Both edit paths now exist (local `edit` + hosted), and the
+interactive diagrams are fully on xyflow (Sequence + Process per-feature decks).
+
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
 appears that architecture-level elements can't serve.

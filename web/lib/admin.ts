@@ -133,6 +133,60 @@ export async function getProcessEdit(owner: string, project: string): Promise<st
   }
 }
 
+// ── Feature edits (hosted editor → cloud → `archmantic feature pull`) ─────────
+
+export interface FeatureEditPayload {
+  slug: string;
+  name: string;
+  description?: string;
+  shows?: string[];
+  actions?: string[];
+  dependsOn?: string[];
+  components?: string[];
+  status?: string;
+}
+
+export async function ensureFeatureEditSchema(): Promise<void> {
+  await db()`
+    create table if not exists archmantic_feature_edits (
+      owner text not null,
+      project text not null,
+      slug text not null,
+      payload jsonb not null,
+      updated_at timestamptz not null default now(),
+      primary key (owner, project, slug)
+    )`;
+}
+
+/** Persist a hosted-editor feature edit for (owner, project, slug). */
+export async function saveFeatureEdit(owner: string, project: string, payload: FeatureEditPayload): Promise<void> {
+  await ensureFeatureEditSchema();
+  await db()`
+    insert into archmantic_feature_edits (owner, project, slug, payload)
+    values (${owner}, ${project}, ${payload.slug}, ${JSON.stringify(payload)})
+    on conflict (owner, project, slug) do update set payload = excluded.payload, updated_at = now()`;
+}
+
+/** All pending feature edits for (owner, project) — the CLI pulls these to repo files. */
+export async function listFeatureEdits(
+  owner: string,
+  project: string,
+): Promise<{ slug: string; payload: FeatureEditPayload; updatedAt: string }[]> {
+  try {
+    await ensureFeatureEditSchema();
+    const rows = (await db()`
+      select slug, payload, updated_at from archmantic_feature_edits
+      where owner = ${owner} and project = ${project} order by updated_at desc`) as {
+      slug: string;
+      payload: FeatureEditPayload;
+      updated_at: string;
+    }[];
+    return rows.map((r) => ({ slug: r.slug, payload: r.payload, updatedAt: r.updated_at }));
+  } catch {
+    return [];
+  }
+}
+
 // ── MCP usage stats (proof-of-value + metering) ───────────────────────────────
 
 export interface UsageEvent {
