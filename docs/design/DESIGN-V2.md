@@ -1,5 +1,10 @@
 # Web Design v2 — plan
 
+> **Status: shipped (Phases 1–4).** Deferred by choice: full type/spacing token
+> migration, `<FacetToolbar>`, row virtualization (`@tanstack/react-virtual`),
+> per-node graph keyboard activation (covered by list views), self-hosted landing
+> logos, and the usage-chart data-table/CSV a11y. No new runtime deps added.
+
 Synthesis of a UX/IA audit (ux-researcher) + a visual/design-system audit (ui-designer)
 of the `web/` app. The system is solid (token plumbing, shared `useFlowProps`/
 `GraphDrawer`, dark-first oklch); gaps are scale (70+ feature deck picker), an
