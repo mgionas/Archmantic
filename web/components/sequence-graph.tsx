@@ -39,10 +39,10 @@ function StepNode({ data }: NodeProps & { data: { label: string; role: string } 
 }
 const nodeTypes = { step: StepNode };
 
-function layout(graph: { nodes: GraphNode[]; edges: FlowEdge[] }): Node[] {
+function layout(graph: { nodes: GraphNode[]; edges: FlowEdge[] }, rankdir: "TB" | "LR"): Node[] {
   const g = new dagre.graphlib.Graph();
   g.setDefaultEdgeLabel(() => ({}));
-  g.setGraph({ rankdir: "TB", nodesep: 40, ranksep: 64 });
+  g.setGraph({ rankdir, nodesep: 40, ranksep: rankdir === "LR" ? 96 : 64 });
   for (const n of graph.nodes) g.setNode(n.id, { width: NW, height: NH });
   for (const e of graph.edges) g.setEdge(e.source, e.target);
   dagre.layout(g);
@@ -52,9 +52,9 @@ function layout(graph: { nodes: GraphNode[]; edges: FlowEdge[] }): Node[] {
   });
 }
 
-function Graph({ graph }: { graph: { nodes: GraphNode[]; edges: FlowEdge[] } }) {
+function Graph({ graph, rankdir }: { graph: { nodes: GraphNode[]; edges: FlowEdge[] }; rankdir: "TB" | "LR" }) {
   const { resolvedTheme } = useTheme();
-  const nodes = useMemo(() => layout(graph), [graph]);
+  const nodes = useMemo(() => layout(graph, rankdir), [graph, rankdir]);
   const edges = useMemo<Edge[]>(
     () =>
       graph.edges.map((e) => ({
@@ -91,11 +91,17 @@ function Graph({ graph }: { graph: { nodes: GraphNode[]; edges: FlowEdge[] } }) 
   );
 }
 
-export function SequenceGraph({ graph }: { graph: { nodes: GraphNode[]; edges: FlowEdge[] } }) {
+export function SequenceGraph({
+  graph,
+  rankdir = "TB",
+}: {
+  graph: { nodes: GraphNode[]; edges: FlowEdge[] };
+  rankdir?: "TB" | "LR";
+}) {
   return (
     <div className="h-full w-full overflow-hidden rounded-lg border border-border/60 bg-canvas">
       <ReactFlowProvider>
-        <Graph graph={graph} />
+        <Graph graph={graph} rankdir={rankdir} />
       </ReactFlowProvider>
     </div>
   );
