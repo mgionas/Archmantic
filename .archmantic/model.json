@@ -131,6 +131,38 @@
     },
     {
       "componentIds": [
+        "comp:src/analyze/flows.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `deriveFeatureFlows` in src/analyze/flows.ts",
+      "id": "cap:src/analyze/flows.ts#deriveFeatureFlows",
+      "name": "Derive Feature Flows",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/flows.ts:19",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/flows.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `processFromFlow` in src/analyze/flows.ts",
+      "id": "cap:src/analyze/flows.ts#processFromFlow",
+      "name": "Process From Flow",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/flows.ts:75",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
         "comp:src/analyze/fs-util.ts"
       ],
       "confidence": 0.6,
@@ -188,7 +220,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/index.ts:82",
+          "ref": "src/analyze/index.ts:83",
           "source": "code"
         }
       ]
@@ -1004,7 +1036,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:275",
+          "ref": "src/ir/types.ts:277",
           "source": "code"
         }
       ]
@@ -1020,7 +1052,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:270",
+          "ref": "src/ir/types.ts:272",
           "source": "code"
         }
       ]
@@ -1036,7 +1068,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:240",
+          "ref": "src/ir/types.ts:242",
           "source": "code"
         }
       ]
@@ -1308,7 +1340,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:282",
+          "ref": "src/mcp/queries.ts:287",
           "source": "code"
         }
       ]
@@ -2120,6 +2152,21 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/endpoints.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/analyze/flows.ts",
+      "kind": "module",
+      "name": "src/analyze/flows.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/flows.ts:1",
           "source": "code"
         }
       ],
@@ -2953,6 +3000,21 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:test/flows.test.mjs",
+      "kind": "module",
+      "name": "test/flows.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/flows.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:test/knowledge.test.mjs",
       "kind": "module",
       "name": "test/knowledge.test.mjs",
@@ -3283,7 +3345,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T15:48:22.886Z",
+  "generatedAt": "2026-06-14T16:02:56.386Z",
   "manifest": {
     "agents": [
       {
@@ -3922,6 +3984,36 @@
     },
     {
       "confidence": 0.95,
+      "from": "comp:src/analyze/flows.ts",
+      "id": "rel:comp:src/analyze/flows.ts=>comp:src/ir/naming.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/flows.ts → comp:src/ir/naming.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/flows.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/naming.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/flows.ts",
+      "id": "rel:comp:src/analyze/flows.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/flows.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/flows.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
       "from": "comp:src/analyze/fs-util.ts",
       "id": "rel:comp:src/analyze/fs-util.ts=>comp:src/analyze/ignore.ts",
       "kind": "depends_on",
@@ -4129,6 +4221,21 @@
         }
       ],
       "to": "comp:src/analyze/endpoints.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/index.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/flows.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/index.ts → comp:src/analyze/flows.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/index.ts:22",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/flows.ts"
     },
     {
       "confidence": 0.95,
@@ -7230,6 +7337,36 @@
         {
           "confidence": 0.95,
           "ref": "test/features.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/flows.test.mjs",
+      "id": "rel:comp:test/flows.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/flows.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/flows.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/flows.test.mjs",
+      "id": "rel:comp:test/flows.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/flows.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/flows.test.mjs:2",
           "source": "code"
         }
       ],

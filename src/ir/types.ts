@@ -86,6 +86,8 @@ export interface FlowStep {
 export interface Flow extends ElementBase {
   participants: string[];
   steps: FlowStep[];
+  /** the Feature this flow belongs to (Spec layer Phase 3), if any. */
+  featureId?: string;
 }
 
 /** A business process — projects to BPMN 2.0. */

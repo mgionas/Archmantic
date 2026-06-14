@@ -145,7 +145,7 @@ export default function Docs() {
 npx archmantic view`}</Code>
           <p>Or install the CLI globally:</p>
           <Code>{`npm install -g archmantic
-amt analyze          # short alias for "archmantic"`}</Code>
+archmantic analyze`}</Code>
           <p>
             Requires <strong>Node 24+</strong>. The core CLI is Apache-2.0 and dependency-light.
           </p>
@@ -207,7 +207,7 @@ npx archmantic pull      # fetch the latest team model`}</Code>
             Expose the model to any MCP-compatible agent (Claude Code, Claude Desktop, Cursor, …). First build the model
             once, then register the server with your agent — you don&apos;t run it by hand.
           </p>
-          <Code>{`amt analyze        # build .archmantic/model.json (once)`}</Code>
+          <Code>{`archmantic analyze        # build .archmantic/model.json (once)`}</Code>
           <p>
             <strong>Claude Code</strong> — register it from the project directory:
           </p>
@@ -236,13 +236,13 @@ npx archmantic pull      # fetch the latest team model`}</Code>
             sequences, processes, the data model, and the API surface; gets cross-repo link suggestions (
             <Inline>suggest_links</Inline>); and can{" "}
             <Inline>refresh</Inline> or <Inline>sync</Inline> the model — instead of reading source files. After code changes, the agent calls <Inline>refresh</Inline> (or you re-run{" "}
-            <Inline>amt analyze</Inline>) so answers reflect reality.
+            <Inline>archmantic analyze</Inline>) so answers reflect reality.
           </p>
           <p>
             <strong>Agents that don&apos;t speak MCP</strong> (Cursor, Copilot, plain LLM chats) read a repo context
             file. Archmantic auto-writes <Inline>AGENTS.md</Inline> from the same model — a concise, grounded summary in a
             managed block — on every <Inline>analyze</Inline>/<Inline>update</Inline>, so it never drifts. Refresh it
-            anytime with <Inline>amt knowledge</Inline>; your own notes around the block are preserved.
+            anytime with <Inline>archmantic knowledge</Inline>; your own notes around the block are preserved.
           </p>
           <p>
             Every tool call is recorded with the tokens it saved. See it in the terminal with{" "}

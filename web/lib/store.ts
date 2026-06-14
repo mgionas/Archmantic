@@ -72,6 +72,7 @@ export interface Model {
   flows: (Element & {
     participants: string[];
     steps: { participant: string; action: string; to?: string }[];
+    featureId?: string;
   })[];
 }
 

@@ -275,6 +275,11 @@ export function getFeature(model: ArchitectureModel, name: string): string {
   }
   if (f.dependsOn?.length) out.push(`\nDepends on: ${f.dependsOn.map(nameOf).join(", ")}`);
   if (f.components?.length) out.push(`Components: ${f.components.map((c) => componentLabel(c)).join(", ")}`);
+  const flow = (model.flows ?? []).find((fl) => fl.featureId === f.id);
+  if (flow?.steps.length) {
+    out.push(`\nFlow:`);
+    for (const s of flow.steps) out.push(`  ${shortName(s.participant)} ${s.action} ${shortName(s.to ?? s.participant)}`);
+  }
   out.push(`\nGrounding: ${refOf(f)} (${f.provenance[0]?.source ?? "?"})`);
   return out.join("\n");
 }

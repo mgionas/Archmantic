@@ -81,6 +81,7 @@ export interface FeatureView {
   actions: { name: string; description?: string }[];
   dependsOn: string[];
   components: string[];
+  flow: { from: string; action: string; to: string }[];
   human: boolean;
 }
 export interface ProjectManifest {
@@ -433,6 +434,21 @@ export function ProjectTabs({
                             {d}
                           </Badge>
                         ))}
+                      </div>
+                    ) : null}
+                    {f.flow.length ? (
+                      <div className="text-sm">
+                        <span className="text-xs font-medium text-muted-foreground">Flow</span>
+                        <ol className="mt-1 space-y-0.5">
+                          {f.flow.slice(0, 8).map((s, i) => (
+                            <li key={i} className="font-mono text-xs text-muted-foreground">
+                              {s.from} <span className="text-foreground/50">{s.action} →</span> {s.to}
+                            </li>
+                          ))}
+                          {f.flow.length > 8 ? (
+                            <li className="text-xs text-muted-foreground">…{f.flow.length - 8} more</li>
+                          ) : null}
+                        </ol>
                       </div>
                     ) : null}
                     {f.components.length ? (

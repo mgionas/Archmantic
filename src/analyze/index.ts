@@ -19,6 +19,7 @@ import { refineRole, needsRefine } from "./roles.js";
 import { detectWorkspaces, packageOf } from "./workspaces.js";
 import { applyManifest } from "../project/manifest.js";
 import { detectFeatures } from "../project/features.js";
+import { deriveFeatureFlows, processFromFlow } from "./flows.js";
 
 /** Upgrade weak path-derived component roles using file content signals. */
 function refineRoles(root: string, model: ArchitectureModel): void {
@@ -96,6 +97,13 @@ export function analyzeRepo(root: string): ArchitectureModel {
   applyConfig(root, model);
   applyManifest(root, model);
   model.features = detectFeatures(root, model);
+  // Phase 3: feature-scoped flows. For web apps the entry-point flow is empty, so
+  // these become the sequences; keep the entry-point flow when there are none (CLIs).
+  const featureFlows = deriveFeatureFlows(model);
+  if (featureFlows.length) {
+    model.flows = featureFlows;
+    if (!model.processes.length && featureFlows[0]) model.processes = [processFromFlow(featureFlows[0])];
+  }
   return model;
 }
 

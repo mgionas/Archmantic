@@ -11,7 +11,7 @@ export function knowledgeMarkdown(model: Model): string {
 
   out.push("## Architecture (Archmantic)");
   out.push("");
-  out.push("> Auto-generated from the grounded architecture model. Refresh with `amt knowledge`.");
+  out.push("> Auto-generated from the grounded architecture model. Refresh with `archmantic knowledge`.");
   out.push("");
   out.push(`**${model.project}**${internal?.description ? ` — ${internal.description}` : ""}`);
   out.push("");

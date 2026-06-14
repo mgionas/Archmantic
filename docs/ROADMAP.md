@@ -226,11 +226,17 @@ gains a `kind` column (default 'read'). Feature seeding hardened: App Router-awa
 names (`app/.../page.tsx`, route groups `(x)`, dynamic `[id]`) and cleaner
 descriptions ("The X screen.") instead of "X page page.".
 
-### KNOWN GAP · Processes/flows empty for web apps (next: Phase 3)
-The entry-point-chain process derivation produces 0 processes/flows for Next.js/
-Laravel/Vue apps. Phase 3 (feature-scoped behavior flows) will derive a flow per
-feature from its components' imports + API calls. Also planned: feature edit/update
-in the web (write authored .archmantic/features/*.md back from the UI).
+### ✅ done · Spec layer Phase 3 — feature-scoped behavior flows (1.12.0)
+The entry-point-chain derivation produced 0 processes/flows for web apps. Now each
+feature gets a flow from its component subgraph (`src/analyze/flows.ts`
+`deriveFeatureFlows`): page → components it renders → external services it calls,
+each step grounded to the import edge's file:line, richest-first. These become
+`model.flows` (and a synthesized primary `process`) when present; the CLI
+entry-point flow stays the fallback for repos without features. Surfaced in the web
+feature detail (Flow list), the Sequence diagram (flows[0]), and MCP `get_feature`.
+Verified: fantasy 0 → 70 flows, SocialSeed 0 → 40, DrivePulse 0 → 11. Also in
+1.12.0: the `amt` bin alias was removed (collided with macOS `/usr/sbin/amt`).
+Still planned: feature edit/update in the web (write authored feature files back).
 
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need

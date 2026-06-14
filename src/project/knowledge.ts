@@ -21,7 +21,7 @@ export function knowledgeMarkdown(model: ArchitectureModel): string {
 
   out.push("## Architecture (Archmantic)");
   out.push("");
-  out.push("> Auto-generated from the grounded architecture model — do not edit inside this block. Refresh with `amt knowledge`.");
+  out.push("> Auto-generated from the grounded architecture model — do not edit inside this block. Refresh with `archmantic knowledge`.");
   out.push("");
   out.push(`**${model.project}**${internal?.description ? ` — ${internal.description}` : ""}`);
   out.push("");
@@ -123,7 +123,7 @@ export function knowledgeMarkdown(model: ArchitectureModel): string {
   }
 
   out.push("");
-  out.push("_Full detail: `amt view` (diagrams + trust) or the Archmantic MCP server (`get_context`, `get_component`, `get_api_surface`, …)._");
+  out.push("_Full detail: `archmantic view` (diagrams + trust) or the Archmantic MCP server (`get_context`, `get_component`, `get_api_surface`, …)._");
   return out.join("\n");
 }
 

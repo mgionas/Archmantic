@@ -101,6 +101,16 @@ export default async function ProjectPage({
 
   const featureName = new Map<string, string>();
   for (const f of model.features ?? []) featureName.set(f.id, f.name);
+  const nodeLabel = (id: string) =>
+    id.startsWith("comp:") ? componentLabel(id) : id.replace(/^sys:ext:/, "");
+  const flowByFeature = new Map<string, { from: string; action: string; to: string }[]>();
+  for (const fl of model.flows ?? []) {
+    if (!fl.featureId) continue;
+    flowByFeature.set(
+      fl.featureId,
+      fl.steps.map((s) => ({ from: nodeLabel(s.participant), action: s.action, to: nodeLabel(s.to ?? s.participant) })),
+    );
+  }
   const features = (model.features ?? [])
     .map((f) => ({
       id: f.id,
@@ -111,6 +121,7 @@ export default async function ProjectPage({
       actions: f.actions ?? [],
       dependsOn: (f.dependsOn ?? []).map((id) => featureName.get(id) ?? id.replace(/^feature:/, "")),
       components: (f.components ?? []).map((c) => componentLabel(c)),
+      flow: flowByFeature.get(f.id) ?? [],
       human: f.provenance?.[0]?.source === "human",
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
