@@ -85,12 +85,21 @@ node dist/cli.js analyze
 
 ## Use it with your AI agent (MCP)
 
-This repo ships a project [`.mcp.json`](.mcp.json). In Claude Code / Cursor, approve the **archmantic** server, then your agent can:
+Build the model once, then register the server with your agent — you don't run it by hand:
 
-- **Read** the model: `get_context`, `search_capabilities`, `get_component`, `get_process`, `whats_related`, `list_components`, `get_sequence`.
+```bash
+amt analyze                                   # build .archmantic/model.json (once)
+claude mcp add archmantic -- npx archmantic mcp   # Claude Code; or add to mcpServers (Desktop/Cursor)
+```
+
+> `archmantic mcp` is a **long-running stdio server**: your agent launches it on demand, talks over stdin/stdout, and shuts it down afterward — it stays running while connected (by design, not a hung process). Run it by hand and it prints a notice and waits; `Ctrl-C` to stop.
+
+Once connected your agent can:
+
+- **Read** the model: `get_context`, `search_capabilities`, `get_component`, `get_process`, `get_sequence`, `get_data_model`, `get_api_surface`, `whats_related`, `list_components`.
 - **Keep it live:** `refresh` (re-analyze from disk after a change) and `sync` (re-analyze **and push to the team cloud**, org-scoped). So when you ask the agent to change something, it can update the shared architecture model in the same flow — no manual `push`.
 
-The MCP server reads credentials from `.env.local` (so `sync` uses your `ARCHMANTIC_TOKEN`). For fully hands-free syncing, add a Claude Code **Stop hook** that runs `archmantic update && archmantic push` after each turn.
+The MCP server reads credentials from `.env.local` (so `sync` uses your `ARCHMANTIC_TOKEN`). Every tool call is recorded with the tokens it saved — see `amt usage` or the web `/usage` dashboard. This repo also ships a project [`.mcp.json`](.mcp.json) for working on Archmantic itself.
 
 ## Team cloud knowledge (shared model)
 

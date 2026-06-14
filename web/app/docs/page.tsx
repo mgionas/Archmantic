@@ -170,10 +170,17 @@ npx archmantic pull      # fetch the latest team model`}</Code>
 
         <Section id="mcp" title="MCP for agents">
           <p>
-            Expose the model to any MCP-compatible agent (Claude Code, Claude Desktop, etc.). The server runs over stdio:
+            Expose the model to any MCP-compatible agent (Claude Code, Claude Desktop, Cursor, …). First build the model
+            once, then register the server with your agent — you don&apos;t run it by hand.
           </p>
-          <Code>{`npx archmantic mcp`}</Code>
-          <p>Register it with your agent — for example, in a Claude Desktop config:</p>
+          <Code>{`amt analyze        # build .archmantic/model.json (once)`}</Code>
+          <p>
+            <strong>Claude Code</strong> — register it from the project directory:
+          </p>
+          <Code>{`claude mcp add archmantic -- npx archmantic mcp`}</Code>
+          <p>
+            <strong>Claude Desktop / Cursor</strong> — add it to the client&apos;s <Inline>mcpServers</Inline> config:
+          </p>
           <Code>{`{
   "mcpServers": {
     "archmantic": {
@@ -183,8 +190,16 @@ npx archmantic pull      # fetch the latest team model`}</Code>
   }
 }`}</Code>
           <p>
-            The agent can then query components, capabilities, context, sequences, processes, the data model, and the API
-            surface — and refresh or sync the model — instead of reading source files.
+            <strong>It&apos;s a long-running stdio server.</strong> Your agent launches it on demand, talks to it over
+            stdin/stdout, and shuts it down afterward — so it stays running while connected (that&apos;s by design, not a
+            hung process). You normally never run <Inline>archmantic mcp</Inline> yourself; if you do, it prints a notice
+            and waits — press <Inline>Ctrl-C</Inline> to stop.
+          </p>
+          <p>
+            Once connected, the agent queries components, capabilities, context, sequences, processes, the data model, and
+            the API surface — and can <Inline>refresh</Inline> or <Inline>sync</Inline> the model — instead of reading
+            source files. After code changes, the agent calls <Inline>refresh</Inline> (or you re-run{" "}
+            <Inline>amt analyze</Inline>) so answers reflect reality.
           </p>
           <p>
             Every tool call is recorded with the tokens it saved. See it in the terminal with{" "}
