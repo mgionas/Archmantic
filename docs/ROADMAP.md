@@ -121,6 +121,23 @@ output. ✅ MCP `suggest_links` tool (1.3.0): pulls the org's models (token/DB),
 runs `analyzeLinks`, and returns this repo's inferred/dangling links for an agent
 to apply to `.archmantic/config.json`.
 
+### ✅ done · Monorepo / nested projects (1.4.0)
+The structural walkers (`walkSourceFiles`, `findFiles`) skip nested packages so an
+independent sibling app (e.g. our own `web/`) doesn't bleed into the model. That
+same rule was silently dropping a monorepo's real packages — their API surface,
+components, and data model vanished (the "empty API" report). Fix: descend into a
+nested package **only when it's a workspace member**. Detection is fully dynamic —
+declared npm/yarn `workspaces` + `pnpm-workspace.yaml`, with a **convention
+fallback** (`apps/*`, `packages/*`, `services/*`, `libs/*`, …) so undeclared
+monorepos (Turborepo/Nx) still analyze as one model. Each element is tagged with
+its owning `package`; `model.workspaces` lists members. One model per repo (matches
+the per-commit history spine); the multi-repo `system` view still covers genuinely
+separate repos. Surfaced as a **package** grouping in the web Components + API
+facets and an Overview "Monorepo · N packages" card, package-grouped MCP
+`get_api_surface`, a `get_context` monorepo line, and a Monorepo line in
+AGENTS.md. Tech-stack detection now aggregates deps across members. The chosen
+approach was Option A (one grouped model) over Option B (system of sub-projects).
+
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need
 appears that architecture-level elements can't serve.

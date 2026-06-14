@@ -16,6 +16,8 @@ export interface Element {
   confidence: number;
   provenance: Provenance[];
   componentIds?: string[];
+  /** Monorepo: owning workspace member dir (e.g. "apps/api"). */
+  package?: string;
 }
 export interface DataField {
   name: string;
@@ -40,6 +42,7 @@ export interface Model {
   generatedAt?: string;
   system?: string;
   consumes?: string[];
+  workspaces?: string[];
   systems: Element[];
   components: Element[];
   relations: (Element & { from: string; to: string })[];

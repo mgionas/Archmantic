@@ -30,6 +30,11 @@ export function knowledgeMarkdown(model: ArchitectureModel): string {
       `${model.endpoints?.length ?? 0} endpoints · ${model.dataEntities?.length ?? 0} data entities.`,
   );
 
+  if (model.workspaces?.length) {
+    out.push("");
+    out.push(`**Monorepo** — ${model.workspaces.length} workspace packages: ${model.workspaces.join(", ")}`);
+  }
+
   // Component roles (route/page/service/…) so agents know what each kind is.
   const roleCounts = new Map<string, number>();
   for (const c of model.components) {

@@ -140,7 +140,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/fs-util.ts:25",
+          "ref": "src/analyze/fs-util.ts:26",
           "source": "code"
         }
       ]
@@ -156,7 +156,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/fs-util.ts:17",
+          "ref": "src/analyze/fs-util.ts:18",
           "source": "code"
         }
       ]
@@ -188,7 +188,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/index.ts:45",
+          "ref": "src/analyze/index.ts:65",
           "source": "code"
         }
       ]
@@ -316,7 +316,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/stack.ts:71",
+          "ref": "src/analyze/stack.ts:82",
           "source": "code"
         }
       ]
@@ -428,7 +428,39 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/walk.ts:19",
+          "ref": "src/analyze/walk.ts:20",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/workspaces.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `detectWorkspaces` in src/analyze/workspaces.ts",
+      "id": "cap:src/analyze/workspaces.ts#detectWorkspaces",
+      "name": "Detect Workspaces",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/workspaces.ts:124",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/workspaces.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `packageOf` in src/analyze/workspaces.ts",
+      "id": "cap:src/analyze/workspaces.ts#packageOf",
+      "name": "Package Of",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/workspaces.ts:134",
           "source": "code"
         }
       ]
@@ -908,7 +940,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:202",
+          "ref": "src/ir/types.ts:206",
           "source": "code"
         }
       ]
@@ -924,7 +956,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:197",
+          "ref": "src/ir/types.ts:201",
           "source": "code"
         }
       ]
@@ -940,7 +972,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:168",
+          "ref": "src/ir/types.ts:172",
           "source": "code"
         }
       ]
@@ -1020,7 +1052,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:137",
+          "ref": "src/mcp/queries.ts:139",
           "source": "code"
         }
       ]
@@ -1036,7 +1068,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:68",
+          "ref": "src/mcp/queries.ts:70",
           "source": "code"
         }
       ]
@@ -1068,7 +1100,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:114",
+          "ref": "src/mcp/queries.ts:116",
           "source": "code"
         }
       ]
@@ -1084,7 +1116,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:155",
+          "ref": "src/mcp/queries.ts:175",
           "source": "code"
         }
       ]
@@ -1100,7 +1132,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:97",
+          "ref": "src/mcp/queries.ts:99",
           "source": "code"
         }
       ]
@@ -1116,7 +1148,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:106",
+          "ref": "src/mcp/queries.ts:108",
           "source": "code"
         }
       ]
@@ -1132,7 +1164,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:56",
+          "ref": "src/mcp/queries.ts:58",
           "source": "code"
         }
       ]
@@ -1148,7 +1180,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:86",
+          "ref": "src/mcp/queries.ts:88",
           "source": "code"
         }
       ]
@@ -1164,7 +1196,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:188",
+          "ref": "src/mcp/queries.ts:208",
           "source": "code"
         }
       ]
@@ -1372,7 +1404,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/knowledge.ts:102",
+          "ref": "src/project/knowledge.ts:107",
           "source": "code"
         }
       ]
@@ -1900,6 +1932,21 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/walk.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/analyze/workspaces.ts",
+      "kind": "module",
+      "name": "src/analyze/workspaces.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/workspaces.ts:1",
           "source": "code"
         }
       ],
@@ -2490,6 +2537,21 @@
       ],
       "role": "module",
       "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:test/workspaces.test.mjs",
+      "kind": "module",
+      "name": "test/workspaces.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/workspaces.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
     }
   ],
   "dataEntities": [],
@@ -2657,7 +2719,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T11:04:26.997Z",
+  "generatedAt": "2026-06-14T11:35:45.081Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -3217,6 +3279,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/fs-util.ts",
+      "id": "rel:comp:src/analyze/fs-util.ts=>comp:src/analyze/workspaces.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/fs-util.ts → comp:src/analyze/workspaces.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/fs-util.ts:4",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/workspaces.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/fs-util.ts",
       "id": "rel:comp:src/analyze/fs-util.ts=>sys:ext:node:fs",
       "kind": "depends_on",
       "name": "comp:src/analyze/fs-util.ts → sys:ext:node:fs",
@@ -3472,6 +3549,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/index.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/workspaces.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/index.ts → comp:src/analyze/workspaces.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/index.ts:17",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/workspaces.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/index.ts",
       "id": "rel:comp:src/analyze/index.ts=>comp:src/ir/types.ts",
       "kind": "depends_on",
       "name": "comp:src/analyze/index.ts → comp:src/ir/types.ts",
@@ -3693,6 +3785,21 @@
         }
       ],
       "to": "comp:src/analyze/tier0.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/stack.ts",
+      "id": "rel:comp:src/analyze/stack.ts=>comp:src/analyze/workspaces.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/stack.ts → comp:src/analyze/workspaces.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/stack.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/workspaces.ts"
     },
     {
       "confidence": 0.95,
@@ -3952,6 +4059,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/walk.ts",
+      "id": "rel:comp:src/analyze/walk.ts=>comp:src/analyze/workspaces.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/walk.ts → comp:src/analyze/workspaces.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/walk.ts:4",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/workspaces.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/walk.ts",
       "id": "rel:comp:src/analyze/walk.ts=>sys:ext:node:fs",
       "kind": "depends_on",
       "name": "comp:src/analyze/walk.ts → sys:ext:node:fs",
@@ -3974,6 +4096,36 @@
         {
           "confidence": 0.95,
           "ref": "src/analyze/walk.ts:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/workspaces.ts",
+      "id": "rel:comp:src/analyze/workspaces.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/workspaces.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/workspaces.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/workspaces.ts",
+      "id": "rel:comp:src/analyze/workspaces.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/workspaces.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/workspaces.ts:13",
           "source": "code"
         }
       ],
@@ -5899,6 +6051,81 @@
         {
           "confidence": 0.95,
           "ref": "test/usage.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/workspaces.test.mjs",
+      "id": "rel:comp:test/workspaces.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/workspaces.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/workspaces.test.mjs:4",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/workspaces.test.mjs",
+      "id": "rel:comp:test/workspaces.test.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:test/workspaces.test.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/workspaces.test.mjs:5",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/workspaces.test.mjs",
+      "id": "rel:comp:test/workspaces.test.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:test/workspaces.test.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/workspaces.test.mjs:7",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/workspaces.test.mjs",
+      "id": "rel:comp:test/workspaces.test.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:test/workspaces.test.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/workspaces.test.mjs:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/workspaces.test.mjs",
+      "id": "rel:comp:test/workspaces.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/workspaces.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/workspaces.test.mjs:3",
           "source": "code"
         }
       ],

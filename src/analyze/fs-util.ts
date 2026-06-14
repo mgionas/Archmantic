@@ -1,6 +1,7 @@
 /** Shared filesystem walk for the structural detectors (data model, etc.). */
-import { readdirSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readdirSync } from "node:fs";
+import { join, relative } from "node:path";
+import { detectWorkspaces } from "./workspaces.js";
 
 const IGNORE = new Set([
   "node_modules",
@@ -25,6 +26,7 @@ export function isTestFile(rel: string): boolean {
 export function findFiles(root: string, match: (name: string) => boolean): string[] {
   const out: string[] = [];
   const stack = [root];
+  const members = new Set(detectWorkspaces(root));
   while (stack.length) {
     const dir = stack.pop()!;
     let entries;
@@ -37,6 +39,10 @@ export function findFiles(root: string, match: (name: string) => boolean): strin
       const full = join(dir, e.name);
       if (e.isDirectory()) {
         if (IGNORE.has(e.name) || e.name.startsWith(".")) continue;
+        // Same scoping rule as walkSourceFiles: skip an independent nested package
+        // (own package.json) unless it's a declared workspace member of this repo.
+        const rel = relative(root, full).split("\\").join("/");
+        if (existsSync(join(full, "package.json")) && !members.has(rel)) continue;
         stack.push(full);
       } else if (e.isFile() && match(e.name)) {
         out.push(full);

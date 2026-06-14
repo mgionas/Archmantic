@@ -14,6 +14,7 @@ import { detectStack } from "./stack.js";
 import { detectDataModel } from "./datamodel.js";
 import { detectEndpoints } from "./endpoints.js";
 import { refineRole, needsRefine } from "./roles.js";
+import { detectWorkspaces, packageOf } from "./workspaces.js";
 
 /** Upgrade weak path-derived component roles using file content signals. */
 function refineRoles(root: string, model: ArchitectureModel): void {
@@ -26,6 +27,25 @@ function refineRoles(root: string, model: ArchitectureModel): void {
       /* unreadable — keep path role */
     }
   }
+}
+
+/**
+ * Monorepo: tag each element with its owning workspace member so the model — one
+ * model per repo — stays navigable by package (web grouping, MCP answers). The
+ * file path comes from the component id (`comp:<rel>`) or the first provenance ref.
+ */
+function tagPackages(model: ArchitectureModel, members: string[]): void {
+  if (!members.length) return;
+  model.workspaces = members;
+  const refPath = (el: { provenance?: { ref?: string }[] }): string | undefined =>
+    el.provenance?.[0]?.ref?.split(":")[0];
+  const tag = (el: { package?: string }, rel: string | undefined): void => {
+    const p = rel ? packageOf(rel, members) : undefined;
+    if (p) el.package = p;
+  };
+  for (const c of model.components) tag(c, c.id.replace(/^comp:/, ""));
+  for (const e of model.endpoints) tag(e, refPath(e));
+  for (const e of model.dataEntities) tag(e, refPath(e));
 }
 
 /** Read optional `.archmantic/config.json` → multi-repo system + project overrides. */
@@ -51,6 +71,7 @@ export function analyzeRepo(root: string): ArchitectureModel {
   model.dataEntities = detectDataModel(root);
   model.endpoints = detectEndpoints(root);
   refineRoles(root, model);
+  tagPackages(model, detectWorkspaces(root));
   applyConfig(root, model);
   return model;
 }

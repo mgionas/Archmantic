@@ -9,6 +9,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { type Technology } from "../ir/types.js";
 import { STRUCTURAL_CONFIDENCE } from "./tier0.js";
+import { detectWorkspaces } from "./workspaces.js";
 
 type Cat = "framework" | "ui" | "database" | "orm" | "auth" | "ai" | "testing" | "build" | "language" | "infra";
 
@@ -67,17 +68,24 @@ interface PkgJson {
   devDependencies?: Record<string, string>;
 }
 
-/** Detect classified technologies from the repo's package.json. */
+/** Read & merge dependencies from a package.json, ignoring missing/malformed ones. */
+function readDeps(file: string): Record<string, string> {
+  try {
+    const pkg = JSON.parse(readFileSync(file, "utf8")) as PkgJson;
+    return { ...pkg.dependencies, ...pkg.devDependencies };
+  } catch {
+    return {};
+  }
+}
+
+/** Detect classified technologies from the repo's package.json (+ workspace members). */
 export function detectStack(root: string): Technology[] {
   const pkgPath = join(root, "package.json");
   if (!existsSync(pkgPath)) return [];
-  let pkg: PkgJson = {};
-  try {
-    pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as PkgJson;
-  } catch {
-    return [];
-  }
-  const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+  // Aggregate deps from the root and every declared workspace member — in a
+  // monorepo the real stack lives in the member packages, not the thin root.
+  const deps: Record<string, string> = { ...readDeps(pkgPath) };
+  for (const m of detectWorkspaces(root)) Object.assign(deps, readDeps(join(root, m, "package.json")));
   const techs: Technology[] = [];
   const seen = new Set<string>();
   for (const dep of Object.keys(deps)) {

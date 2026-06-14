@@ -50,6 +50,8 @@ export function getContext(model: ArchitectureModel): string {
     `Capabilities: ${model.capabilities.length}  ·  processes: ${model.processes.length}  ·  flows: ${model.flows.length}`,
   ];
   if (model.processes[0]) lines.push(`Primary process: ${model.processes[0].name}`);
+  const ws = model.workspaces ?? [];
+  if (ws.length) lines.push(`Monorepo (${ws.length} packages): ${ws.join(", ")}`);
   return lines.filter(Boolean).join("\n");
 }
 
@@ -137,12 +139,30 @@ export function getDataModel(model: ArchitectureModel): string {
 export function getApiSurface(model: ArchitectureModel): string {
   const eps = model.endpoints ?? [];
   if (!eps.length) return "No API endpoints detected (no routes/procedures/GraphQL schema found).";
+  const line = (e: (typeof eps)[number]) => `  ${e.method} ${e.path}  [${refOf(e)}]`;
+
+  // Monorepo: group by owning package first — the agent needs to know which app
+  // serves a route before it cares about the protocol.
+  if ((model.workspaces ?? []).length) {
+    const byPkg = new Map<string, typeof eps>();
+    for (const e of eps) {
+      const k = e.package ?? "(root)";
+      (byPkg.get(k) ?? byPkg.set(k, []).get(k)!).push(e);
+    }
+    const out: string[] = [`API surface: ${eps.length} endpoints across ${byPkg.size} packages`];
+    for (const [pkg, list] of [...byPkg.entries()].sort()) {
+      out.push(`\n${pkg} (${list.length})`);
+      for (const e of list) out.push(line(e));
+    }
+    return out.join("\n");
+  }
+
   const byProto = new Map<string, typeof eps>();
   for (const e of eps) (byProto.get(e.protocol) ?? byProto.set(e.protocol, []).get(e.protocol)!).push(e);
   const out: string[] = [`API surface: ${eps.length} endpoints`];
   for (const [proto, list] of [...byProto.entries()].sort()) {
     out.push(`\n${proto.toUpperCase()} (${list.length})`);
-    for (const e of list) out.push(`  ${e.method} ${e.path}  [${refOf(e)}]`);
+    for (const e of list) out.push(line(e));
   }
   return out.join("\n");
 }

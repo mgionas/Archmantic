@@ -87,6 +87,7 @@ export default async function ProjectPage({
     role: c.role ?? "module",
     path: c.id.slice("comp:".length),
     responsibility: c.responsibility ?? c.id.slice("comp:".length),
+    package: c.package,
   }));
   const d = modelDelta(prevModel, model);
 
@@ -95,6 +96,7 @@ export default async function ProjectPage({
     method: e.method,
     path: e.path,
     protocol: e.protocol,
+    package: e.package,
   }));
 
   const eg = entityGraph(model);
@@ -161,6 +163,7 @@ export default async function ProjectPage({
         changes={changes}
         data={data}
         endpoints={endpoints}
+        workspaces={model.workspaces ?? []}
         knowledge={knowledgeMarkdown(model)}
         diagrams={{
           contextGraph: contextGraph(model),

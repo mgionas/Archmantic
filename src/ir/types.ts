@@ -34,6 +34,8 @@ interface ElementBase {
   provenance: Provenance[];
   /** Aggregate confidence for the element, 0..1. */
   confidence: Confidence;
+  /** Monorepo: owning workspace member dir (e.g. "apps/api"); unset for root-level. */
+  package?: string;
 }
 
 export interface System extends ElementBase {
@@ -145,6 +147,8 @@ export interface ArchitectureModel {
   generatedAt?: string;
   /** Optional: the multi-repo system this project belongs to (from config). */
   system?: string;
+  /** Monorepo: declared workspace member dirs analyzed under this single model. */
+  workspaces?: string[];
   /** Optional: sibling services this project calls (declared in config). */
   consumes?: string[];
   systems: System[];

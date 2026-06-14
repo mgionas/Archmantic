@@ -43,6 +43,7 @@ export interface Comp {
   role: string;
   path: string;
   responsibility: string;
+  package?: string;
 }
 export interface Diagrams {
   contextGraph: { nodes: ContextNode[]; edges: ContextEdge[] };
@@ -69,6 +70,7 @@ export interface Endpoint {
   method: string;
   path: string;
   protocol: string;
+  package?: string;
 }
 export interface Overview {
   trust: { total: number; refs: number; meanPct: number; high: number; medium: number; low: number };
@@ -146,6 +148,7 @@ export function ProjectTabs({
   data,
   endpoints,
   knowledge,
+  workspaces = [],
 }: {
   project: string;
   overview: Overview;
@@ -156,11 +159,14 @@ export function ProjectTabs({
   data: DataModel | null;
   endpoints: Endpoint[];
   knowledge: string;
+  workspaces?: string[];
 }) {
+  const isMono = workspaces.length > 0;
   const [facetParam, setFacet] = useUrlState("view", "overview");
   const [apiQuery, setApiQuery] = useState("");
   const [compQuery, setCompQuery] = useState("");
-  const [compGroupBy, setCompGroupBy] = useState<"role" | "folder">("role");
+  const [compGroupBy, setCompGroupBy] = useState<"role" | "folder" | "package">(isMono ? "package" : "role");
+  const [apiGroupBy, setApiGroupBy] = useState<"resource" | "package">(isMono ? "package" : "resource");
 
   const capCount = groups.reduce((n, g) => n + g.caps.length, 0);
   const facets: { id: string; label: string; count?: number }[] = [
@@ -182,7 +188,8 @@ export function ProjectTabs({
     );
     const m = new Map<string, Comp[]>();
     for (const c of filtered) {
-      const key = compGroupBy === "role" ? c.role : folderOfPath(c.path);
+      const key =
+        compGroupBy === "role" ? c.role : compGroupBy === "package" ? c.package ?? "(root)" : folderOfPath(c.path);
       (m.get(key) ?? m.set(key, []).get(key)!).push(c);
     }
     return [...m.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
@@ -193,11 +200,11 @@ export function ProjectTabs({
     const filtered = endpoints.filter((e) => !q || `${e.method} ${e.path} ${e.protocol}`.toLowerCase().includes(q));
     const m = new Map<string, Endpoint[]>();
     for (const e of filtered) {
-      const key = resourceOf(e);
+      const key = apiGroupBy === "package" ? e.package ?? "(root)" : resourceOf(e);
       (m.get(key) ?? m.set(key, []).get(key)!).push(e);
     }
     return [...m.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
-  }, [endpoints, apiQuery]);
+  }, [endpoints, apiQuery, apiGroupBy]);
 
   return (
     <div className="mt-6 flex flex-col gap-6 md:flex-row">
@@ -240,6 +247,18 @@ export function ProjectTabs({
                 </Badge>
               </div>
             </Card>
+            {isMono ? (
+              <Card className="flex flex-wrap content-start items-center gap-2 p-5">
+                <span className="w-full text-xs font-medium text-muted-foreground">
+                  Monorepo · {workspaces.length} package{workspaces.length === 1 ? "" : "s"}
+                </span>
+                {workspaces.map((w) => (
+                  <Badge key={w} variant="secondary" className="font-mono">
+                    {w}
+                  </Badge>
+                ))}
+              </Card>
+            ) : null}
             <div className="grid gap-4 lg:grid-cols-2">
               <Card className="flex flex-wrap content-start gap-2 p-5">
                 <span className="w-full text-xs font-medium text-muted-foreground">External systems</span>
@@ -320,7 +339,7 @@ export function ProjectTabs({
                 className="max-w-sm"
               />
               <div className="ml-auto flex items-center gap-0.5 rounded-lg border border-border/60 p-0.5">
-                {(["role", "folder"] as const).map((g) => (
+                {((isMono ? ["package", "role", "folder"] : ["role", "folder"]) as Array<typeof compGroupBy>).map((g) => (
                   <button
                     key={g}
                     type="button"
@@ -388,12 +407,31 @@ export function ProjectTabs({
 
         {facet === "api" && endpoints.length ? (
           <div className="space-y-4">
-            <Input
-              value={apiQuery}
-              onChange={(e) => setApiQuery(e.target.value)}
-              placeholder="Filter by method, path, or protocol…"
-              className="max-w-sm"
-            />
+            <div className="flex flex-wrap items-center gap-3">
+              <Input
+                value={apiQuery}
+                onChange={(e) => setApiQuery(e.target.value)}
+                placeholder="Filter by method, path, or protocol…"
+                className="max-w-sm"
+              />
+              {isMono ? (
+                <div className="ml-auto flex items-center gap-0.5 rounded-lg border border-border/60 p-0.5">
+                  {(["package", "resource"] as const).map((g) => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => setApiGroupBy(g)}
+                      className={cn(
+                        "rounded-md px-2.5 py-1 text-xs capitalize transition-colors",
+                        apiGroupBy === g ? "bg-muted font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      {g}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
             {apiGroups.length === 0 ? (
               <p className="text-sm text-muted-foreground">No endpoints match “{apiQuery}”.</p>
             ) : (
@@ -401,7 +439,7 @@ export function ProjectTabs({
                 {apiGroups.map(([resource, eps]) => (
                   <CollapsibleSection
                     key={resource}
-                    storageKey={`arch:api:${project}:${resource}`}
+                    storageKey={`arch:api:${project}:${apiGroupBy}:${resource}`}
                     header={<span className="font-mono">{resource}</span>}
                     count={eps.length}
                   >

@@ -20,6 +20,11 @@ export function knowledgeMarkdown(model: Model): string {
       `${model.endpoints?.length ?? 0} endpoints · ${model.dataEntities?.length ?? 0} data entities.`,
   );
 
+  if (model.workspaces?.length) {
+    out.push("");
+    out.push(`**Monorepo** — ${model.workspaces.length} workspace packages: ${model.workspaces.join(", ")}`);
+  }
+
   const roleCounts = new Map<string, number>();
   for (const c of model.components) roleCounts.set(c.role ?? "module", (roleCounts.get(c.role ?? "module") ?? 0) + 1);
   const roles = [...roleCounts.entries()].sort((a, b) => b[1] - a[1]).map(([r, n]) => `${n} ${r}`);
