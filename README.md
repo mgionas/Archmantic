@@ -21,6 +21,7 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 - **Data model (ERD)** — entities, fields, and relations parsed from your Prisma schema, Drizzle tables, or SQL `CREATE TABLE` migrations, grounded to `file:line` and projected as a Mermaid ERD.
 - **API surface** — REST routes (Next.js App Router/Pages, Express/Fastify/Koa/Hono), tRPC procedures, and GraphQL operations, grounded to `file:line` — the contract layer for humans and agents.
 - **Multi-repo auto-linking** — across an org's repos, classifies cross-service links as connected, **inferred** (detected coupling not yet declared), or **dangling** (declared dependency on a repo that isn't there — a real gap).
+- **Agent knowledge file** — auto-generates & keeps `AGENTS.md` in sync from the model (managed block), so even agents that don't speak MCP get accurate, drift-free project context.
 - **One model → many audiences** — C4-style context, components, sequence (Mermaid), BPMN, an ERD, capability list, and an MCP surface for agents.
 - **Token savings** — agents query the model over MCP instead of reading whole files (~98% fewer tokens on this repo, by the built-in benchmark).
 - **Usage stats** — every MCP tool call is recorded with the tokens it saved; `archmantic usage` and the web `/usage` dashboard prove the model is earning its keep (and meter agent activity).
@@ -58,6 +59,7 @@ node dist/cli.js analyze
 | `update [--hook]` | Incrementally re-analyze only what changed (git-diff driven). `--hook` prints a pre-commit hook |
 | `view` | Capability map, diagrams, and trust report; writes a self-contained `view.html` |
 | `spec` | Emit an agent-ready **build spec** (`build-spec.md` + `.json`) from the model |
+| `knowledge` | Refresh `AGENTS.md` agent-context file (managed block; also auto-written on `analyze`/`update`) |
 | `apply [--from f]` | Merge a human BPMN canvas edit back into the model — the "edit" of edit-then-build (fetches your saved cloud edit via token, or a local `.bpmn`) |
 | `handoff [--apply] [--check "<cmd>"]` | Run the build spec through Claude (Opus 4.8, BYOK) → an implementation plan; **`--apply`** runs an autonomous agent loop that edits the repo **and self-verifies** (runs build + tests, fixes failures until green) — the "build" of edit-then-build. Commit first; review with `git diff`. |
 | `drift [--check]` | Compare the committed model vs. the code; `--check` exits 1 on drift (CI gate) |

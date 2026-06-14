@@ -1068,7 +1068,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/server.ts:68",
+          "ref": "src/mcp/server.ts:73",
           "source": "code"
         }
       ]
@@ -1228,7 +1228,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:88",
+          "ref": "src/project/index.ts:89",
           "source": "code"
         }
       ]
@@ -1244,7 +1244,39 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:28",
+          "ref": "src/project/index.ts:29",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/knowledge.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `applyKnowledgeBlock` in src/project/knowledge.ts",
+      "id": "cap:src/project/knowledge.ts#applyKnowledgeBlock",
+      "name": "Apply Knowledge Block",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/knowledge.ts:90",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/knowledge.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `knowledgeMarkdown` in src/project/knowledge.ts",
+      "id": "cap:src/project/knowledge.ts#knowledgeMarkdown",
+      "name": "Knowledge Markdown",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/knowledge.ts:17",
           "source": "code"
         }
       ]
@@ -2055,6 +2087,20 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:src/project/knowledge.ts",
+      "kind": "module",
+      "name": "src/project/knowledge.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/knowledge.ts:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/project/mermaid.ts",
       "kind": "module",
       "name": "src/project/mermaid.ts",
@@ -2174,6 +2220,20 @@
         {
           "confidence": 0.95,
           "ref": "test/endpoints.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:test/knowledge.test.mjs",
+      "kind": "module",
+      "name": "test/knowledge.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/knowledge.test.mjs:1",
           "source": "code"
         }
       ],
@@ -2477,7 +2537,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-14T00:38:46.547Z",
+  "generatedAt": "2026-06-14T00:56:20.775Z",
   "processes": [
     {
       "confidence": 0.6,
@@ -4513,7 +4573,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:18",
+          "ref": "src/mcp/server.ts:19",
           "source": "code"
         }
       ],
@@ -4528,7 +4588,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:17",
+          "ref": "src/mcp/server.ts:18",
           "source": "code"
         }
       ],
@@ -4558,7 +4618,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:27",
+          "ref": "src/mcp/server.ts:28",
           "source": "code"
         }
       ],
@@ -4573,11 +4633,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:26",
+          "ref": "src/mcp/server.ts:27",
           "source": "code"
         }
       ],
       "to": "comp:src/mcp/usage.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/server.ts",
+      "id": "rel:comp:src/mcp/server.ts=>comp:src/project/index.ts",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/server.ts → comp:src/project/index.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/server.ts:17",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/index.ts"
     },
     {
       "confidence": 0.95,
@@ -4908,7 +4983,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:20",
+          "ref": "src/project/index.ts:21",
           "source": "code"
         }
       ],
@@ -4997,6 +5072,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/project/index.ts",
+      "id": "rel:comp:src/project/index.ts=>comp:src/project/knowledge.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/index.ts → comp:src/project/knowledge.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/index.ts:20",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/knowledge.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/index.ts",
       "id": "rel:comp:src/project/index.ts=>comp:src/project/mermaid.ts",
       "kind": "depends_on",
       "name": "comp:src/project/index.ts → comp:src/project/mermaid.ts",
@@ -5043,11 +5133,41 @@
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:21",
+          "ref": "src/project/index.ts:22",
           "source": "code"
         }
       ],
       "to": "comp:src/project/trust.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/knowledge.ts",
+      "id": "rel:comp:src/project/knowledge.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/knowledge.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/knowledge.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/knowledge.ts",
+      "id": "rel:comp:src/project/knowledge.ts=>comp:src/project/capability.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/knowledge.ts → comp:src/project/capability.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/knowledge.ts:10",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/capability.ts"
     },
     {
       "confidence": 0.95,
@@ -5389,6 +5509,36 @@
         {
           "confidence": 0.95,
           "ref": "test/endpoints.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/knowledge.test.mjs",
+      "id": "rel:comp:test/knowledge.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/knowledge.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/knowledge.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/knowledge.test.mjs",
+      "id": "rel:comp:test/knowledge.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/knowledge.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/knowledge.test.mjs:2",
           "source": "code"
         }
       ],

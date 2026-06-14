@@ -20,7 +20,7 @@ import { type ArchitectureModel, createEmptyModel, serializeModel } from "./ir/t
 import { analyzeRepo } from "./analyze/index.js";
 import { tier2 } from "./analyze/tier2.js";
 import { incrementalUpdate } from "./analyze/incremental.js";
-import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess } from "./project/index.js";
+import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess, knowledgeMarkdown, applyKnowledgeBlock } from "./project/index.js";
 import { loadEnv } from "./env.js";
 import { hasAnthropicCredentials, NO_CREDENTIAL_HINT } from "./auth.js";
 import { runHandoff, runAutonomousBuild } from "./agent.js";
@@ -84,6 +84,15 @@ function parseTier(args: string[]): number {
   return 1;
 }
 
+const KNOWLEDGE_FILE = "AGENTS.md";
+
+/** Regenerate the managed Archmantic block in AGENTS.md from the model (agent context). */
+function writeKnowledgeFile(root: string, model: ArchitectureModel): void {
+  const file = join(root, KNOWLEDGE_FILE);
+  const existing = existsSync(file) ? readFileSync(file, "utf8") : null;
+  writeFileSync(file, applyKnowledgeBlock(existing, knowledgeMarkdown(model)), "utf8");
+}
+
 async function cmdAnalyze(args: string[]): Promise<number> {
   const root = process.cwd();
   const tier = parseTier(args);
@@ -116,8 +125,9 @@ async function cmdAnalyze(args: string[]): Promise<number> {
   const dir = join(root, MODEL_DIR);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, MODEL_FILE), serializeModel(model), "utf8");
+  writeKnowledgeFile(root, model);
 
-  console.log(`  → ${MODEL_DIR}/${MODEL_FILE}`);
+  console.log(`  → ${MODEL_DIR}/${MODEL_FILE}  ·  ${KNOWLEDGE_FILE} (agent context)`);
   console.log(`  Every element is grounded with file:line provenance.`);
   console.log(`  Next: \`archmantic view\` for the capability map, diagrams & trust report.`);
   return 0;
@@ -295,6 +305,7 @@ function cmdUpdate(args: string[]): number {
   for (const [name, content] of Object.entries(projectionArtifacts(model))) {
     writeFileSync(join(dir, name), content, "utf8");
   }
+  writeKnowledgeFile(root, model);
 
   console.log(`✓ Incremental update${fullFallback ? " (no git — full recompute)" : ""}`);
   console.log(
@@ -366,6 +377,27 @@ function cmdSpec(): number {
   console.log(`  ${model.capabilities.length} capabilities, ${model.components.length} components`);
   console.log(`  → ${MODEL_DIR}/build-spec.md  (hand to a coding agent to implement/verify)`);
   console.log(`  → ${MODEL_DIR}/build-spec.json (machine-readable)`);
+  return 0;
+}
+
+/** Regenerate the agent knowledge file (AGENTS.md managed block) from the model. */
+function cmdKnowledge(): number {
+  const root = process.cwd();
+  const file = join(root, MODEL_DIR, MODEL_FILE);
+  if (!existsSync(file)) {
+    console.error(`✗ No model at ${MODEL_DIR}/${MODEL_FILE}. Run \`archmantic analyze\` first.`);
+    return 1;
+  }
+  let model: ArchitectureModel;
+  try {
+    model = JSON.parse(readFileSync(file, "utf8")) as ArchitectureModel;
+  } catch {
+    console.error(`✗ ${MODEL_DIR}/${MODEL_FILE} is not valid JSON — run \`archmantic analyze\`.`);
+    return 1;
+  }
+  writeKnowledgeFile(root, model);
+  console.log(`✓ Updated ${KNOWLEDGE_FILE} (agent context · managed block) for "${model.project}".`);
+  console.log(`  Any agent that reads ${KNOWLEDGE_FILE} now has the current, grounded architecture.`);
   return 0;
 }
 
@@ -767,6 +799,7 @@ Commands:
   update [--hook]  Incrementally re-analyze only what changed (git-diff driven)
   view           Capability map + diagrams + trust report (writes view.html)
   spec           Emit an agent-ready build spec (build-spec.md + .json)
+  knowledge      Refresh AGENTS.md agent-context file (managed block; auto on analyze/update)
   apply [--from f]  Merge a human BPMN canvas edit back into the model (edit-then-build)
   handoff [--apply] [--check "<cmd>"]  Build spec → plan; --apply: agent edits repo + self-verifies (BYOK)
   system [name] --repos a,b,c  Unified cross-service view across multiple repos
@@ -822,6 +855,8 @@ async function main(argv: string[]): Promise<number> {
       return cmdView();
     case "spec":
       return cmdSpec();
+    case "knowledge":
+      return cmdKnowledge();
     case "apply":
       return cmdApply(rest);
     case "handoff":

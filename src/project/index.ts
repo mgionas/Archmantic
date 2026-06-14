@@ -17,6 +17,7 @@ export { bpmnXml } from "./bpmn.js";
 export { capabilityMapText, groupCapabilities } from "./capability.js";
 export { renderHtml } from "./html.js";
 export { buildSpecMarkdown, buildSpecJson, type BuildSpecJson } from "./spec.js";
+export { knowledgeMarkdown, applyKnowledgeBlock, KNOWLEDGE_START, KNOWLEDGE_END } from "./knowledge.js";
 export { parseBpmnProcess, type ParsedProcess } from "./bpmn-parse.js";
 export * from "./trust.js";
 

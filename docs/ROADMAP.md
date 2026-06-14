@@ -25,6 +25,8 @@ code-graph commodity territory?
 | ✅ done | MCP usage stats | Per-tool-call recording + token savings; CLI `usage` + web `/usage` dashboard; metering substrate | High · Med |
 | ✅ done | API surface (routes) | REST/tRPC/GraphQL → `Endpoint` IR; CLI/HTML/spec + web API tab + MCP `get_api_surface` | Med · Med |
 | ✅ done | Multi-repo auto-link | `analyzeLinks` → connected/inferred/dangling; web `/systems` panel + CLI `system` | High · Med-High |
+| ✅ done | Agent knowledge file | `AGENTS.md` projection in a managed block; auto on analyze/update + MCP refresh/sync; reaches non-MCP agents | High · Low |
+| ✅ done | Internal-pages redesign | full-bleed shell + icon rail + facet column + interactive diagram canvas (P0–P3); see docs/design/REDESIGN.md | High · High |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
 
 Recommended sequence: **npm + docs** (coupled, cheap) → **ERD** → **GitHub

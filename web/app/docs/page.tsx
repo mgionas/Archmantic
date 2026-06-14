@@ -52,6 +52,7 @@ const COMMANDS: [string, string][] = [
   ["update [--hook]", "Incrementally re-analyze only what changed (git-diff driven). --hook prints a pre-commit hook"],
   ["view", "Capability map, diagrams, and trust report → a self-contained view.html"],
   ["spec", "Emit an agent-ready build spec (build-spec.md + .json) from the model"],
+  ["knowledge", "Refresh AGENTS.md agent-context file (managed block; auto on analyze/update)"],
   ["apply [--from f]", "Merge a human BPMN canvas edit back into the model — the “edit” of edit-then-build"],
   ["handoff [--apply]", "Run the build spec through Claude → a plan; --apply runs an autonomous agent that edits the repo and self-verifies"],
   ["drift [--check]", "Compare the committed model vs. the code; --check exits 1 on drift (CI gate)"],
@@ -200,6 +201,12 @@ npx archmantic pull      # fetch the latest team model`}</Code>
             the API surface — and can <Inline>refresh</Inline> or <Inline>sync</Inline> the model — instead of reading
             source files. After code changes, the agent calls <Inline>refresh</Inline> (or you re-run{" "}
             <Inline>amt analyze</Inline>) so answers reflect reality.
+          </p>
+          <p>
+            <strong>Agents that don&apos;t speak MCP</strong> (Cursor, Copilot, plain LLM chats) read a repo context
+            file. Archmantic auto-writes <Inline>AGENTS.md</Inline> from the same model — a concise, grounded summary in a
+            managed block — on every <Inline>analyze</Inline>/<Inline>update</Inline>, so it never drifts. Refresh it
+            anytime with <Inline>amt knowledge</Inline>; your own notes around the block are preserved.
           </p>
           <p>
             Every tool call is recorded with the tokens it saved. See it in the terminal with{" "}

@@ -14,6 +14,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { type ArchitectureModel, serializeModel } from "../ir/types.js";
 import { analyzeRepo } from "../analyze/index.js";
+import { knowledgeMarkdown, applyKnowledgeBlock } from "../project/index.js";
 import { diffModels, summarizeChange } from "../diff/index.js";
 import {
   hasApiToken,
@@ -60,6 +61,10 @@ function reanalyze(root: string): ArchitectureModel {
   const dir = join(root, ".archmantic");
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "model.json"), serializeModel(model), "utf8");
+  // Keep the agent knowledge file (AGENTS.md) in sync for non-MCP agents too.
+  const agentsFile = join(root, "AGENTS.md");
+  const existing = existsSync(agentsFile) ? readFileSync(agentsFile, "utf8") : null;
+  writeFileSync(agentsFile, applyKnowledgeBlock(existing, knowledgeMarkdown(model)), "utf8");
   return model;
 }
 
@@ -68,7 +73,7 @@ const text = (s: string) => ({ content: [{ type: "text" as const, text: s }] });
 export async function startMcpServer(root: string): Promise<void> {
   // Mutable so `refresh`/`sync` update what the read tools serve.
   let model = loadModel(root);
-  const server = new McpServer({ name: "archmantic", version: "1.0.1" });
+  const server = new McpServer({ name: "archmantic", version: "1.1.0" });
 
   // Usage stats: record each read tool, best-effort flush to the cloud (API if a
   // token is set, else direct DB, else local-log only). Never breaks the agent.
