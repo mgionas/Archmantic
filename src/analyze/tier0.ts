@@ -6,6 +6,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { type ArchitectureModel, type Component, createEmptyModel } from "../ir/types.js";
+import { classifyRole } from "./roles.js";
 
 /** Confidence for deterministic structural facts (Tier 0/1). */
 export const STRUCTURAL_CONFIDENCE = 0.95;
@@ -16,6 +17,7 @@ export function componentFor(rel: string, systemId: string): Component {
     id: `comp:${rel}`,
     name: rel,
     kind: "module",
+    role: classifyRole(rel),
     systemId,
     provenance: [{ source: "code", ref: `${rel}:1`, confidence: STRUCTURAL_CONFIDENCE }],
     confidence: STRUCTURAL_CONFIDENCE,

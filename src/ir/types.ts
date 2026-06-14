@@ -43,6 +43,9 @@ export interface System extends ElementBase {
 export interface Component extends ElementBase {
   /** service | module | package | layer | etc. — kept open for now. */
   kind: string;
+  /** Semantic role inferred from path/usage: route | page | layout | ui | modal |
+   *  hook | store | model | service | middleware | config | util | module. */
+  role?: string;
   /** id of the System this belongs to. */
   systemId?: string;
   /** One-line statement of what this component is responsible for. */

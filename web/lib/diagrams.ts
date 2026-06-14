@@ -105,6 +105,7 @@ export interface GraphNode {
   id: string;
   label: string;
   kind: "component" | "external";
+  role: string;
 }
 export interface GraphEdge {
   id: string;
@@ -114,7 +115,12 @@ export interface GraphEdge {
 export function componentGraph(model: Model): { nodes: GraphNode[]; edges: GraphEdge[] } {
   const compIds = new Set(model.components.map((c) => c.id));
   const externalIds = new Set(model.systems.filter((s) => s.kind === "external").map((s) => s.id));
-  const nodes: GraphNode[] = model.components.map((c) => ({ id: c.id, label: componentLabel(c.id), kind: "component" }));
+  const nodes: GraphNode[] = model.components.map((c) => ({
+    id: c.id,
+    label: componentLabel(c.id),
+    kind: "component",
+    role: c.role ?? "module",
+  }));
   const edges: GraphEdge[] = [];
   const usedExternals = new Set<string>();
   for (const r of model.relations) {
@@ -127,7 +133,7 @@ export function componentGraph(model: Model): { nodes: GraphNode[]; edges: Graph
   }
   for (const id of usedExternals) {
     const ext = model.systems.find((s) => s.id === id);
-    if (ext) nodes.push({ id, label: ext.name, kind: "external" });
+    if (ext) nodes.push({ id, label: ext.name, kind: "external", role: "external" });
   }
   return { nodes, edges };
 }

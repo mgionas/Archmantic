@@ -12,6 +12,7 @@ export interface Element {
   description?: string;
   responsibility?: string;
   kind?: string;
+  role?: string;
   confidence: number;
   provenance: Provenance[];
   componentIds?: string[];

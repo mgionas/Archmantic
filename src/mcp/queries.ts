@@ -56,7 +56,11 @@ export function listComponents(model: ArchitectureModel, filter?: string): strin
   const f = filter?.trim().toLowerCase();
   const rows = model.components
     .filter((c) => !f || rel(c.id).toLowerCase().includes(f) || c.name.toLowerCase().includes(f))
-    .map((c) => `- ${componentLabel(c.id)} (${rel(c.id)})${c.responsibility ? ` — ${c.responsibility}` : ""}`);
+    .map(
+      (c) =>
+        `- ${componentLabel(c.id)} (${rel(c.id)})${c.role && c.role !== "module" ? ` [${c.role}]` : ""}` +
+        `${c.responsibility ? ` — ${c.responsibility}` : ""}`,
+    );
   return rows.length ? rows.join("\n") : "(no matching components)";
 }
 

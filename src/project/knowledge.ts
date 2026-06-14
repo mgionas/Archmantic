@@ -30,6 +30,18 @@ export function knowledgeMarkdown(model: ArchitectureModel): string {
       `${model.endpoints?.length ?? 0} endpoints · ${model.dataEntities?.length ?? 0} data entities.`,
   );
 
+  // Component roles (route/page/service/…) so agents know what each kind is.
+  const roleCounts = new Map<string, number>();
+  for (const c of model.components) {
+    const r = c.role ?? "module";
+    roleCounts.set(r, (roleCounts.get(r) ?? 0) + 1);
+  }
+  const roles = [...roleCounts.entries()].sort((a, b) => b[1] - a[1]).map(([r, n]) => `${n} ${r}`);
+  if (roles.length) {
+    out.push("");
+    out.push(`**Component roles:** ${roles.join(" · ")}`);
+  }
+
   const groups = groupCapabilities(model);
   if (groups.length) {
     out.push("");
