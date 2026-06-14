@@ -88,6 +88,7 @@ export interface FeatureView {
   componentPaths: string[];
   flow: { from: string; action: string; to: string }[];
   human: boolean;
+  pending: boolean;
 }
 export interface ProjectManifest {
   goal?: string;

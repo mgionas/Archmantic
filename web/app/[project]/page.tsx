@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { listSnapshots, modelAtCommit, latestModel } from "@/lib/store";
-import { getProcessEdit } from "@/lib/admin";
+import { getProcessEdit, listFeatureEdits } from "@/lib/admin";
 import { modelDelta } from "@/lib/diff";
 import { componentLabel, groupCapabilities, trust } from "@/lib/format";
 import {
@@ -103,6 +103,12 @@ export default async function ProjectPage({
     package: e.package,
   }));
 
+  // A feature is "pending pull" if a hosted-editor cloud edit is newer than the
+  // model shown here (i.e. edited in the app but not yet pulled → analyzed → pushed).
+  const featureEdits = owner ? await listFeatureEdits(owner, project) : [];
+  const genAt = model.generatedAt ? new Date(model.generatedAt).getTime() : 0;
+  const pendingSlugs = new Set(featureEdits.filter((e) => new Date(e.updatedAt).getTime() > genAt).map((e) => e.slug));
+
   const featureName = new Map<string, string>();
   for (const f of model.features ?? []) featureName.set(f.id, f.name);
   const nodeLabel = (id: string) =>
@@ -128,6 +134,7 @@ export default async function ProjectPage({
       componentPaths: (f.components ?? []).map((c) => c.replace(/^comp:/, "")),
       flow: flowByFeature.get(f.id) ?? [],
       human: f.provenance?.[0]?.source === "human",
+      pending: pendingSlugs.has(f.id.replace(/^feature:/, "")),
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil } from "lucide-react";
+import { Pencil, RefreshCw } from "lucide-react";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,12 +20,12 @@ export function FeatureEditor({ project, feature }: { project: string; feature: 
   const [actions, setActions] = useState(feature.actions.map((a) => (a.description ? `${a.name} — ${a.description}` : a.name)).join("\n"));
   const [deps, setDeps] = useState(feature.dependsOn.join(", "));
   const [status, setStatus] = useState(feature.status ?? "");
-  const [msg, setMsg] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [savedPending, setSavedPending] = useState(false); // optimistic until the page refetches
+  const pending = feature.pending || savedPending;
 
   async function save() {
     setSaving(true);
-    setMsg("Saving…");
     try {
       const res = await fetch("/api/feature", {
         method: "POST",
@@ -42,13 +43,17 @@ export function FeatureEditor({ project, feature }: { project: string; feature: 
         }),
       });
       if (res.ok) {
-        setMsg("Saved to cloud — run `archmantic feature pull` (or restart the MCP server) to write it to the repo.");
+        setSavedPending(true);
         setEditing(false);
+        toast.success("Saved to cloud", {
+          description: "Run `archmantic feature pull` (or restart the MCP server) to write it to the repo.",
+          action: { label: "Copy command", onClick: () => navigator.clipboard?.writeText("archmantic feature pull") },
+        });
       } else {
-        setMsg(`Error: ${res.status}`);
+        toast.error(`Save failed (${res.status})`);
       }
     } catch (e) {
-      setMsg(`Error: ${e instanceof Error ? e.message : "failed"}`);
+      toast.error(`Save failed: ${e instanceof Error ? e.message : "network error"}`);
     } finally {
       setSaving(false);
     }
@@ -76,7 +81,6 @@ export function FeatureEditor({ project, feature }: { project: string; feature: 
           <Button size="sm" variant="ghost" onClick={() => setEditing(false)} disabled={saving}>
             Cancel
           </Button>
-          {msg ? <span className="text-xs text-muted-foreground">{msg}</span> : null}
         </div>
       </Card>
     );
@@ -96,10 +100,15 @@ export function FeatureEditor({ project, feature }: { project: string; feature: 
             authored
           </Badge>
         ) : null}
+        {pending ? (
+          <Badge variant="outline" className="border-warning/40 font-normal text-warning" title="Edited in the app; run `archmantic feature pull` to write it to the repo">
+            <RefreshCw className="mr-1 size-3" /> pending pull
+          </Badge>
+        ) : null}
         <button
           type="button"
           onClick={() => setEditing(true)}
-          className="ml-auto inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+          className="ml-auto inline-flex items-center gap-1 rounded text-xs text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Pencil className="size-3" /> Edit
         </button>
@@ -160,7 +169,6 @@ export function FeatureEditor({ project, feature }: { project: string; feature: 
           {feature.components.length > 4 ? ` +${feature.components.length - 4}` : ""}
         </div>
       ) : null}
-      {msg ? <p className="text-xs text-muted-foreground">{msg}</p> : null}
     </Card>
   );
 }
