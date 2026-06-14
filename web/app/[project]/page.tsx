@@ -10,7 +10,7 @@ import {
   contextGraph,
   contextDetails,
   entityGraph,
-  sequenceDiagram,
+  sequenceDeck,
 } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
 import { knowledgeMarkdown } from "@/lib/knowledge";
@@ -199,7 +199,7 @@ export default async function ProjectPage({
           contextDetails: contextDetails(model),
           componentGraph: componentGraph(model),
           componentDetails: componentDetails(model),
-          sequence: sequenceDiagram(model),
+          sequences: sequenceDeck(model),
           processXml: savedBpmn ?? bpmnXml(model),
           edited: Boolean(savedBpmn),
         }}

@@ -298,15 +298,27 @@ export function entityGraph(model: Model): { nodes: EntityNode[]; edges: EntityE
   return { nodes, edges };
 }
 
-export function sequenceDiagram(model: Model): string | null {
-  const flow = model.flows[0];
-  if (!flow) return null;
+const seqNameFor = (id: string) =>
+  id.startsWith("comp:") ? componentLabel(id) : id.replace(/^sys:ext:/, "");
+
+/** Mermaid sequence for one flow. */
+export function sequenceForFlow(flow: Model["flows"][number]): string {
   const lines: string[] = ["sequenceDiagram"];
-  const nameFor = (id: string) => (id.startsWith("comp:") ? componentLabel(id) : id);
-  for (const p of flow.participants) lines.push(`  participant ${nodeId(p)} as ${label(nameFor(p))}`);
+  for (const p of flow.participants) lines.push(`  participant ${nodeId(p)} as ${label(seqNameFor(p))}`);
   for (const step of flow.steps) {
     const target = step.to ?? step.participant;
     lines.push(`  ${nodeId(step.participant)}->>${nodeId(target)}: ${label(step.action)}`);
   }
   return lines.join("\n");
+}
+
+/** One sequence per flow — a deck the UI can page through (feature flows first). */
+export function sequenceDeck(model: Model): { id: string; name: string; chart: string }[] {
+  return (model.flows ?? [])
+    .filter((f) => f.steps.length)
+    .map((f) => ({ id: f.id, name: f.name.replace(/ flow$/, ""), chart: sequenceForFlow(f) }));
+}
+
+export function sequenceDiagram(model: Model): string | null {
+  return model.flows[0] ? sequenceForFlow(model.flows[0]) : null;
 }

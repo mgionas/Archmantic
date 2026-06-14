@@ -50,7 +50,7 @@ export interface Diagrams {
   contextDetails: Record<string, ContextDetail>;
   componentGraph: { nodes: GraphNode[]; edges: GraphEdge[] };
   componentDetails: Record<string, CompDetail>;
-  sequence: string | null;
+  sequences: { id: string; name: string; chart: string }[];
   processXml: string | null;
   edited: boolean;
 }
@@ -367,7 +367,7 @@ export function ProjectTabs({
             contextDetails={diagrams.contextDetails}
             componentGraph={diagrams.componentGraph}
             componentDetails={diagrams.componentDetails}
-            sequence={diagrams.sequence}
+            sequences={diagrams.sequences}
             processXml={diagrams.processXml}
             edited={diagrams.edited}
             onNavigate={setFacet}
