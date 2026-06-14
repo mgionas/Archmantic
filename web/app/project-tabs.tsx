@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { CollapsibleSection } from "@/components/ui/collapsible-section";
 import { cn } from "@/lib/utils";
 import { useUrlState } from "@/lib/use-url-state";
 import type {
@@ -338,14 +339,13 @@ export function ProjectTabs({
               <p className="text-sm text-muted-foreground">No components match “{compQuery}”.</p>
             ) : (
               compGroups.map(([key, items]) => (
-                <div key={key}>
-                  <div className="mb-2 flex items-center gap-2">
-                    {compGroupBy === "role" ? (
-                      <span className="size-2 rounded-full" style={{ background: roleColor(key) }} />
-                    ) : null}
-                    <span className="text-sm font-medium">{compGroupBy === "folder" ? `${key}/` : key}</span>
-                    <span className="text-xs text-muted-foreground">{items.length}</span>
-                  </div>
+                <CollapsibleSection
+                  key={key}
+                  storageKey={`arch:cg:${project}:${compGroupBy}:${key}`}
+                  header={compGroupBy === "folder" ? `${key}/` : key}
+                  accent={compGroupBy === "role" ? roleColor(key) : undefined}
+                  count={items.length}
+                >
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {items.map((c) => (
                       <Card key={c.id} className="p-3">
@@ -361,7 +361,7 @@ export function ProjectTabs({
                       </Card>
                     ))}
                   </div>
-                </div>
+                </CollapsibleSection>
               ))
             )}
           </div>
@@ -397,28 +397,31 @@ export function ProjectTabs({
             {apiGroups.length === 0 ? (
               <p className="text-sm text-muted-foreground">No endpoints match “{apiQuery}”.</p>
             ) : (
-              <div className="grid gap-4 lg:grid-cols-2">
+              <div className="space-y-3">
                 {apiGroups.map(([resource, eps]) => (
-                  <Card key={resource} className="overflow-hidden p-0">
-                    <div className="flex items-center justify-between border-b border-border/60 bg-muted/30 px-3 py-1.5">
-                      <span className="font-mono text-sm font-medium">{resource}</span>
-                      <span className="text-xs text-muted-foreground">{eps.length}</span>
-                    </div>
-                    <ul>
-                      {eps.map((e) => (
-                        <li
-                          key={e.id}
-                          className="flex items-baseline gap-3 border-b border-border/30 px-3 py-1.5 last:border-0 hover:bg-muted/40"
-                        >
-                          <span className={`w-16 shrink-0 font-mono text-xs font-semibold ${METHOD_CLASS[e.method] ?? ""}`}>
-                            {e.method}
-                          </span>
-                          <span className="min-w-0 flex-1 truncate font-mono text-xs">{e.path}</span>
-                          <span className="shrink-0 text-[11px] text-muted-foreground">{e.protocol}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </Card>
+                  <CollapsibleSection
+                    key={resource}
+                    storageKey={`arch:api:${project}:${resource}`}
+                    header={<span className="font-mono">{resource}</span>}
+                    count={eps.length}
+                  >
+                    <Card className="overflow-hidden p-0">
+                      <ul>
+                        {eps.map((e) => (
+                          <li
+                            key={e.id}
+                            className="flex items-baseline gap-3 border-b border-border/30 px-3 py-1.5 last:border-0 hover:bg-muted/40"
+                          >
+                            <span className={`w-16 shrink-0 font-mono text-xs font-semibold ${METHOD_CLASS[e.method] ?? ""}`}>
+                              {e.method}
+                            </span>
+                            <span className="min-w-0 flex-1 truncate font-mono text-xs">{e.path}</span>
+                            <span className="shrink-0 text-[11px] text-muted-foreground">{e.protocol}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </Card>
+                  </CollapsibleSection>
                 ))}
               </div>
             )}
