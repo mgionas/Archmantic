@@ -2,18 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, Boxes, Activity, BookText, Settings } from "lucide-react";
+import { LayoutGrid, Boxes, Library, Activity, BookText, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/", label: "Projects", icon: LayoutGrid, match: (p: string) => isProjectsArea(p) },
   { href: "/systems", label: "Systems", icon: Boxes, match: (p: string) => p === "/systems" || p.startsWith("/system/") },
+  { href: "/knowledge", label: "Knowledge", icon: Library, match: (p: string) => p.startsWith("/knowledge") },
   { href: "/usage", label: "Usage", icon: Activity, match: (p: string) => p.startsWith("/usage") },
   { href: "/docs", label: "Docs", icon: BookText, match: (p: string) => p.startsWith("/docs") },
   { href: "/settings", label: "Settings", icon: Settings, match: (p: string) => p.startsWith("/settings") },
 ];
 
-const SECTIONS = ["/systems", "/system/", "/usage", "/docs", "/settings"];
+const SECTIONS = ["/systems", "/system/", "/knowledge", "/usage", "/docs", "/settings"];
 /** Projects owns "/" and every project page (e.g. "/payments-api") — i.e. not another section. */
 function isProjectsArea(p: string): boolean {
   return p === "/" || !SECTIONS.some((s) => p === s.replace(/\/$/, "") || p.startsWith(s));
