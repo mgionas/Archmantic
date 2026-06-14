@@ -22,6 +22,7 @@ import { X } from "lucide-react";
 import "@xyflow/react/dist/style.css";
 import type { GraphNode, GraphEdge, CompDetail } from "@/lib/diagrams";
 import { cn } from "@/lib/utils";
+import { roleColor } from "@/lib/format";
 
 const NW = 188;
 const NH = 38;
@@ -30,24 +31,6 @@ const GAP_Y = 12;
 const PAD_X = 12;
 const PAD_TOP = 30;
 const PAD_BOTTOM = 12;
-
-const ROLE_COLOR: Record<string, string> = {
-  route: "#f87171",
-  page: "#a78bfa",
-  ui: "#60a5fa",
-  modal: "#f472b6",
-  hook: "#2dd4bf",
-  store: "#fbbf24",
-  model: "#4ade80",
-  service: "#22d3ee",
-  middleware: "#fb923c",
-  layout: "#818cf8",
-  config: "#94a3b8",
-  util: "#cbd5e1",
-  module: "#94a3b8",
-  external: "#64748b",
-};
-const roleColor = (r: string) => ROLE_COLOR[r] ?? ROLE_COLOR.module;
 
 function CompNode({ data, selected }: NodeProps & { data: { label: string; role: string } }) {
   return (

@@ -19,7 +19,7 @@ import type {
 } from "@/lib/diagrams";
 import { DiagramTabs } from "./diagram-tabs";
 import { KnowledgeView } from "@/components/knowledge-view";
-import { band } from "@/lib/format";
+import { band, roleColor } from "@/lib/format";
 
 const EntityGraph = dynamic(() => import("@/components/entity-graph").then((m) => m.EntityGraph), {
   ssr: false,
@@ -39,6 +39,8 @@ export interface Group {
 export interface Comp {
   id: string;
   label: string;
+  role: string;
+  path: string;
   responsibility: string;
 }
 export interface Diagrams {
@@ -88,6 +90,20 @@ const METHOD_CLASS: Record<string, string> = {
   PATCH: "text-primary",
   DELETE: "text-danger",
 };
+
+const folderOfPath = (p: string) => {
+  const i = p.lastIndexOf("/");
+  return i === -1 ? "." : p.slice(0, i);
+};
+
+/** Group key for an endpoint: REST → its resource segment, else the protocol. */
+function resourceOf(e: Endpoint): string {
+  if (e.protocol === "trpc") return "tRPC";
+  if (e.protocol === "graphql") return "GraphQL";
+  const segs = e.path.split("/").filter(Boolean).filter((s) => s !== "api" && !/^v\d+$/.test(s));
+  const first = segs.find((s) => !s.startsWith(":") && s !== "*") ?? segs[0] ?? "";
+  return first ? `/${first}` : "/";
+}
 
 function ChangeGroup({ title, added, removed }: { title: string; added: string[]; removed: string[] }) {
   if (!added.length && !removed.length) return null;
@@ -142,6 +158,8 @@ export function ProjectTabs({
 }) {
   const [facetParam, setFacet] = useUrlState("view", "overview");
   const [apiQuery, setApiQuery] = useState("");
+  const [compQuery, setCompQuery] = useState("");
+  const [compGroupBy, setCompGroupBy] = useState<"role" | "folder">("role");
 
   const capCount = groups.reduce((n, g) => n + g.caps.length, 0);
   const facets: { id: string; label: string; count?: number }[] = [
@@ -156,10 +174,28 @@ export function ProjectTabs({
   ];
   const facet = facets.some((f) => f.id === facetParam) ? facetParam : "overview";
 
-  const filteredEndpoints = useMemo(() => {
+  const compGroups = useMemo(() => {
+    const q = compQuery.trim().toLowerCase();
+    const filtered = components.filter(
+      (c) => !q || `${c.label} ${c.path} ${c.responsibility} ${c.role}`.toLowerCase().includes(q),
+    );
+    const m = new Map<string, Comp[]>();
+    for (const c of filtered) {
+      const key = compGroupBy === "role" ? c.role : folderOfPath(c.path);
+      (m.get(key) ?? m.set(key, []).get(key)!).push(c);
+    }
+    return [...m.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+  }, [components, compQuery, compGroupBy]);
+
+  const apiGroups = useMemo(() => {
     const q = apiQuery.trim().toLowerCase();
-    if (!q) return endpoints;
-    return endpoints.filter((e) => `${e.method} ${e.path} ${e.protocol}`.toLowerCase().includes(q));
+    const filtered = endpoints.filter((e) => !q || `${e.method} ${e.path} ${e.protocol}`.toLowerCase().includes(q));
+    const m = new Map<string, Endpoint[]>();
+    for (const e of filtered) {
+      const key = resourceOf(e);
+      (m.get(key) ?? m.set(key, []).get(key)!).push(e);
+    }
+    return [...m.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
   }, [endpoints, apiQuery]);
 
   return (
@@ -274,13 +310,60 @@ export function ProjectTabs({
         ) : null}
 
         {facet === "components" ? (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {components.map((c) => (
-              <Card key={c.id} className="p-4">
-                <div className="font-semibold">{c.label}</div>
-                <div className="mt-1 text-sm text-muted-foreground">{c.responsibility}</div>
-              </Card>
-            ))}
+          <div className="space-y-5">
+            <div className="flex flex-wrap items-center gap-3">
+              <Input
+                value={compQuery}
+                onChange={(e) => setCompQuery(e.target.value)}
+                placeholder="Filter components…"
+                className="max-w-sm"
+              />
+              <div className="ml-auto flex items-center gap-0.5 rounded-lg border border-border/60 p-0.5">
+                {(["role", "folder"] as const).map((g) => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setCompGroupBy(g)}
+                    className={cn(
+                      "rounded-md px-2.5 py-1 text-xs capitalize transition-colors",
+                      compGroupBy === g ? "bg-muted font-medium text-foreground" : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {compGroups.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No components match “{compQuery}”.</p>
+            ) : (
+              compGroups.map(([key, items]) => (
+                <div key={key}>
+                  <div className="mb-2 flex items-center gap-2">
+                    {compGroupBy === "role" ? (
+                      <span className="size-2 rounded-full" style={{ background: roleColor(key) }} />
+                    ) : null}
+                    <span className="text-sm font-medium">{compGroupBy === "folder" ? `${key}/` : key}</span>
+                    <span className="text-xs text-muted-foreground">{items.length}</span>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {items.map((c) => (
+                      <Card key={c.id} className="p-3">
+                        <div className="flex items-center gap-2">
+                          <span className="size-2 shrink-0 rounded-full" style={{ background: roleColor(c.role) }} />
+                          <span className="truncate font-medium" title={c.path}>
+                            {c.label}
+                          </span>
+                        </div>
+                        <div className="mt-1 truncate text-xs text-muted-foreground" title={c.responsibility}>
+                          {c.responsibility}
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         ) : null}
 
@@ -304,40 +387,41 @@ export function ProjectTabs({
         ) : null}
 
         {facet === "api" && endpoints.length ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <Input
               value={apiQuery}
               onChange={(e) => setApiQuery(e.target.value)}
               placeholder="Filter by method, path, or protocol…"
               className="max-w-sm"
             />
-            <Card className="p-0">
-              <table className="w-full text-left text-sm">
-                <thead className="border-b border-border/60 text-muted-foreground">
-                  <tr>
-                    <th className="px-4 py-2.5 font-medium">Method</th>
-                    <th className="px-4 py-2.5 font-medium">Path / operation</th>
-                    <th className="px-4 py-2.5 font-medium">Protocol</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredEndpoints.map((e) => (
-                    <tr key={e.id} className="border-b border-border/40 last:border-0 hover:bg-muted/40">
-                      <td className={`px-4 py-2 font-mono font-semibold ${METHOD_CLASS[e.method] ?? ""}`}>{e.method}</td>
-                      <td className="px-4 py-2 font-mono">{e.path}</td>
-                      <td className="px-4 py-2 text-muted-foreground">{e.protocol}</td>
-                    </tr>
-                  ))}
-                  {filteredEndpoints.length === 0 ? (
-                    <tr>
-                      <td colSpan={3} className="px-4 py-6 text-center text-muted-foreground">
-                        No endpoints match “{apiQuery}”.
-                      </td>
-                    </tr>
-                  ) : null}
-                </tbody>
-              </table>
-            </Card>
+            {apiGroups.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No endpoints match “{apiQuery}”.</p>
+            ) : (
+              <div className="grid gap-4 lg:grid-cols-2">
+                {apiGroups.map(([resource, eps]) => (
+                  <Card key={resource} className="overflow-hidden p-0">
+                    <div className="flex items-center justify-between border-b border-border/60 bg-muted/30 px-3 py-1.5">
+                      <span className="font-mono text-sm font-medium">{resource}</span>
+                      <span className="text-xs text-muted-foreground">{eps.length}</span>
+                    </div>
+                    <ul>
+                      {eps.map((e) => (
+                        <li
+                          key={e.id}
+                          className="flex items-baseline gap-3 border-b border-border/30 px-3 py-1.5 last:border-0 hover:bg-muted/40"
+                        >
+                          <span className={`w-16 shrink-0 font-mono text-xs font-semibold ${METHOD_CLASS[e.method] ?? ""}`}>
+                            {e.method}
+                          </span>
+                          <span className="min-w-0 flex-1 truncate font-mono text-xs">{e.path}</span>
+                          <span className="shrink-0 text-[11px] text-muted-foreground">{e.protocol}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         ) : null}
 

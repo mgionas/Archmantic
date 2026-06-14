@@ -84,6 +84,8 @@ export default async function ProjectPage({
   const components = model.components.map((c) => ({
     id: c.id,
     label: componentLabel(c.id),
+    role: c.role ?? "module",
+    path: c.id.slice("comp:".length),
     responsibility: c.responsibility ?? c.id.slice("comp:".length),
   }));
   const d = modelDelta(prevModel, model);

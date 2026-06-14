@@ -1,5 +1,24 @@
 import type { Element, Model } from "./store";
 
+/** Role → accent color (shared by the component graph + facets). */
+export const ROLE_COLOR: Record<string, string> = {
+  route: "#f87171",
+  page: "#a78bfa",
+  ui: "#60a5fa",
+  modal: "#f472b6",
+  hook: "#2dd4bf",
+  store: "#fbbf24",
+  model: "#4ade80",
+  service: "#22d3ee",
+  middleware: "#fb923c",
+  layout: "#818cf8",
+  config: "#94a3b8",
+  util: "#cbd5e1",
+  module: "#94a3b8",
+  external: "#64748b",
+};
+export const roleColor = (r: string) => ROLE_COLOR[r] ?? ROLE_COLOR.module;
+
 export function humanize(raw: string): string {
   const stem = (raw.replace(/\.(ts|tsx|js|jsx|mjs|cjs)$/, "").split("/").pop() ?? raw)
     .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
