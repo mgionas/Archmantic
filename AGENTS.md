@@ -17,9 +17,9 @@ status: active · author: Giorgi (mgionas) (https://github.com/mgionas)
 
 **Links:** [npm](https://www.npmjs.com/package/archmantic) · [GitHub](https://github.com/mgionas/Archmantic) · [App](https://archmantic.vercel.app)
 
-86 components · 150 capabilities · 0 endpoints · 0 data entities.
+62 components · 150 capabilities · 0 endpoints · 0 data entities.
 
-**Component roles:** 81 module · 3 route · 2 util
+**Component roles:** 60 module · 2 util
 
 ### What it does (capabilities)
 - **src/** — Run Handoff, Run Autonomous Build, Ensure Anthropic Auth, Has Anthropic Credentials, Write Feature Edit, Editor Features, Start Editor, Load Env, Pull Feature Edits, Summarize Service, Shared Externals, Build System View, Analyze Links, System Html
@@ -29,7 +29,7 @@ status: active · author: Giorgi (mgionas) (https://github.com/mgionas)
 ### Primary process: Cli flow
 Cli → Types → Analyze → Tier 2 → Incremental → Project → Queries → Skills → Feature sync → Feature pull → Laravel db → Db introspect
 
-**External systems:** @anthropic-ai/sdk, node:fs, node:child_process, node:path, typescript, @neondatabase/serverless, node:os, node:http, @modelcontextprotocol/sdk, zod, node:crypto, node:test, node:assert/strict
+**External systems:** @anthropic-ai/sdk, node:fs, node:child_process, node:path, typescript, @neondatabase/serverless, node:os, node:http, @modelcontextprotocol/sdk, zod, node:crypto
 
 **Stack:** ai: Anthropic/MCP SDK · database: Neon · language: TypeScript
 

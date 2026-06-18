@@ -19,14 +19,14 @@
   (now that components carry it) would be exact and also let Components group by domain.
 - **why:** Closes the L2→L3 drill cleanly; surfaced while wiring the Architecture Map.
 
-### INS-012 · Test files are modeled as architecture components
-- **category:** product-gap · **audience:** both · **status:** open
-- **insight:** Dogfooding groups revealed a "Test" domain with 24 members — test files are
-  walked as `Component`s. They inflate the model, the Map, and trust stats, and aren't
-  architecture. Likely exclude `test/`/`*.test.*`/`*.spec.*` from components (or mark a
-  `test` role kept off the Map).
-- **why:** Found only because we cluster now — the flat graph hid it. Affects every repo
-  with tests (i.e. all of them); a clean Map depends on excluding non-architecture files.
+### INS-012 · Test files are modeled as architecture components — FIXED
+- **category:** product-gap · **audience:** both · **status:** shipped
+- **insight:** Dogfooding groups revealed a "Test" domain with 24 members — test files were
+  walked as `Component`s, inflating the model, the Map, and trust stats. Fixed: `walkSourceFiles`
+  now excludes `isTestFile` paths (test/spec/stories/mocks/e2e), so they never enter the model.
+- **why:** Found only because we cluster now — the flat graph hid it. Dogfood: this repo
+  62 components (was 86); the "Test" domain is gone. The clustering view paid for itself
+  on its first run by exposing a latent modeling bug.
 
 ### INS-011 · Capture insights as a first-class, MCP-exposable stream
 - **category:** idea · **audience:** both · **status:** open

@@ -3,6 +3,7 @@ import { existsSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 import { detectWorkspaces } from "./workspaces.js";
 import { IGNORE_DIRS } from "./ignore.js";
+import { isTestFile } from "./fs-util.js";
 
 const SOURCE_RE = /\.(ts|tsx|js|jsx|mjs|cjs|vue)$/;
 
@@ -33,7 +34,10 @@ export function walkSourceFiles(root: string): string[] {
         if (existsSync(join(full, "package.json")) && !members.has(rel)) continue;
         stack.push(full);
       } else if (e.isFile() && SOURCE_RE.test(e.name) && !e.name.endsWith(".d.ts")) {
-        out.push(relative(root, full).split("\\").join("/"));
+        // Test/spec/story/mock files are verification, not architecture — keep them
+        // out of the model so they don't inflate components, the Map, or trust stats.
+        const rel = relative(root, full).split("\\").join("/");
+        if (!isTestFile(rel)) out.push(rel);
       }
     }
   }
