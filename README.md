@@ -4,7 +4,7 @@
 
 Point Archmantic at a repo and it reverse-engineers a single grounded **architecture model** (the IR). Every diagram is a *projection* of that one model, every element is traceable to `file:line`, and the same model answers your agent's questions over MCP. No drift between views, no ungrounded "AI diagram" guesswork.
 
-> Status: **v1.17.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
+> Status: **v1.18.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
 > _Note: the `amt` short alias was removed in 1.12.0 (it collided with a system binary on macOS) — use `archmantic` / `npx archmantic`._
 
 ---
@@ -68,6 +68,8 @@ node dist/cli.js analyze
 | `project [--init]` | Scaffold/show the project brain (`.archmantic/project.json`: goal, author, links; agents auto-detect from `.claude/agents/`) |
 | `feature [list\|show <name>\|seed\|sync [name] [--write]]` | User-perspective features; `seed` writes draft files; `sync` is the BYOK intent compiler (edit a description → create/update related features) |
 | `skill [suggest\|list\|show <name>\|add <url>]` | On-shelf skills ranked against the model (`suggest`), the full shelf (`list`), a playbook (`show`), or pull a remote skill (`add`) |
+| `curate` | BYOK AI pass: name domains in product language + write descriptions and a positioning narrative → `.archmantic/curation.json` (or let your own agent do it over MCP via `curate`) |
+| `publish [--ai]` | One command to refresh the web: analyze → (`--ai`: curate) → push |
 | `edit [--port N]` | Local web feature editor — saves write `.archmantic/features/*.md` (repo files = source) |
 | `feature pull` | Fetch hosted-editor feature edits from the cloud → `.archmantic/features/*.md` (org-token scoped) |
 | `db-check [--check]` | Compare Laravel migrations vs the live DB (`.env` `DB_*`; MySQL/Postgres/SQLite); `--check` exits 1 on drift |
