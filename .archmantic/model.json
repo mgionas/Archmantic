@@ -227,6 +227,22 @@
     },
     {
       "componentIds": [
+        "comp:src/analyze/groups.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `deriveGroups` in src/analyze/groups.ts",
+      "id": "cap:src/analyze/groups.ts#deriveGroups",
+      "name": "Derive Groups",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/groups.ts:57",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
         "comp:src/analyze/incremental.ts"
       ],
       "confidence": 0.6,
@@ -236,7 +252,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/incremental.ts:47",
+          "ref": "src/analyze/incremental.ts:48",
           "source": "code"
         }
       ]
@@ -252,7 +268,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/index.ts:83",
+          "ref": "src/analyze/index.ts:84",
           "source": "code"
         }
       ]
@@ -1212,7 +1228,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:286",
+          "ref": "src/ir/types.ts:310",
           "source": "code"
         }
       ]
@@ -1228,7 +1244,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:281",
+          "ref": "src/ir/types.ts:305",
           "source": "code"
         }
       ]
@@ -1244,7 +1260,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:251",
+          "ref": "src/ir/types.ts:274",
           "source": "code"
         }
       ]
@@ -2389,6 +2405,7 @@
   "components": [
     {
       "confidence": 0.95,
+      "groupId": "group:domain:root",
       "id": "comp:src/agent.ts",
       "kind": "module",
       "name": "src/agent.ts",
@@ -2404,6 +2421,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/datamodel.ts",
       "kind": "module",
       "name": "src/analyze/datamodel.ts",
@@ -2419,6 +2437,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/db-introspect.ts",
       "kind": "module",
       "name": "src/analyze/db-introspect.ts",
@@ -2434,6 +2453,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/derive.ts",
       "kind": "module",
       "name": "src/analyze/derive.ts",
@@ -2449,6 +2469,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/drizzle.ts",
       "kind": "module",
       "name": "src/analyze/drizzle.ts",
@@ -2464,6 +2485,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/endpoints.ts",
       "kind": "module",
       "name": "src/analyze/endpoints.ts",
@@ -2479,6 +2501,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/flows.ts",
       "kind": "module",
       "name": "src/analyze/flows.ts",
@@ -2494,6 +2517,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/fs-util.ts",
       "kind": "module",
       "name": "src/analyze/fs-util.ts",
@@ -2509,6 +2533,23 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
+      "id": "comp:src/analyze/groups.ts",
+      "kind": "module",
+      "name": "src/analyze/groups.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/groups.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/ignore.ts",
       "kind": "module",
       "name": "src/analyze/ignore.ts",
@@ -2524,6 +2565,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/incremental.ts",
       "kind": "module",
       "name": "src/analyze/incremental.ts",
@@ -2539,6 +2581,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/index.ts",
       "kind": "module",
       "name": "src/analyze/index.ts",
@@ -2554,6 +2597,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/laravel-db.ts",
       "kind": "module",
       "name": "src/analyze/laravel-db.ts",
@@ -2569,6 +2613,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/laravel-views.ts",
       "kind": "module",
       "name": "src/analyze/laravel-views.ts",
@@ -2584,6 +2629,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/laravel.ts",
       "kind": "module",
       "name": "src/analyze/laravel.ts",
@@ -2599,6 +2645,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/parse-util.ts",
       "kind": "module",
       "name": "src/analyze/parse-util.ts",
@@ -2614,6 +2661,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/prisma.ts",
       "kind": "module",
       "name": "src/analyze/prisma.ts",
@@ -2629,6 +2677,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/roles.ts",
       "kind": "module",
       "name": "src/analyze/roles.ts",
@@ -2644,6 +2693,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/sql.ts",
       "kind": "module",
       "name": "src/analyze/sql.ts",
@@ -2659,6 +2709,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/stack.ts",
       "kind": "module",
       "name": "src/analyze/stack.ts",
@@ -2674,6 +2725,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/tier0.ts",
       "kind": "module",
       "name": "src/analyze/tier0.ts",
@@ -2689,6 +2741,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/tier1.ts",
       "kind": "module",
       "name": "src/analyze/tier1.ts",
@@ -2704,6 +2757,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/tier2.ts",
       "kind": "module",
       "name": "src/analyze/tier2.ts",
@@ -2719,6 +2773,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/walk.ts",
       "kind": "module",
       "name": "src/analyze/walk.ts",
@@ -2734,6 +2789,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:analyze",
       "id": "comp:src/analyze/workspaces.ts",
       "kind": "module",
       "name": "src/analyze/workspaces.ts",
@@ -2749,6 +2805,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:root",
       "id": "comp:src/auth.ts",
       "kind": "module",
       "name": "src/auth.ts",
@@ -2764,6 +2821,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:root",
       "id": "comp:src/cli.ts",
       "kind": "module",
       "name": "src/cli.ts",
@@ -2779,6 +2837,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:cloud",
       "id": "comp:src/cloud/api.ts",
       "kind": "module",
       "name": "src/cloud/api.ts",
@@ -2794,6 +2853,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:cloud",
       "id": "comp:src/cloud/index.ts",
       "kind": "module",
       "name": "src/cloud/index.ts",
@@ -2809,6 +2869,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:cloud",
       "id": "comp:src/cloud/store.ts",
       "kind": "module",
       "name": "src/cloud/store.ts",
@@ -2824,6 +2885,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:diff",
       "id": "comp:src/diff/history.ts",
       "kind": "module",
       "name": "src/diff/history.ts",
@@ -2839,6 +2901,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:diff",
       "id": "comp:src/diff/index.ts",
       "kind": "module",
       "name": "src/diff/index.ts",
@@ -2854,6 +2917,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:diff",
       "id": "comp:src/diff/model-diff.ts",
       "kind": "module",
       "name": "src/diff/model-diff.ts",
@@ -2869,6 +2933,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:diff",
       "id": "comp:src/diff/snapshot.ts",
       "kind": "module",
       "name": "src/diff/snapshot.ts",
@@ -2884,6 +2949,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:misc",
       "id": "comp:src/drift/schema-drift.ts",
       "kind": "module",
       "name": "src/drift/schema-drift.ts",
@@ -2899,6 +2965,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:root",
       "id": "comp:src/editor.ts",
       "kind": "module",
       "name": "src/editor.ts",
@@ -2914,6 +2981,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:root",
       "id": "comp:src/env.ts",
       "kind": "module",
       "name": "src/env.ts",
@@ -2929,6 +2997,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:root",
       "id": "comp:src/feature-pull.ts",
       "kind": "module",
       "name": "src/feature-pull.ts",
@@ -2944,6 +3013,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:root",
       "id": "comp:src/index.ts",
       "kind": "module",
       "name": "src/index.ts",
@@ -2959,6 +3029,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:ir",
       "id": "comp:src/ir/naming.ts",
       "kind": "module",
       "name": "src/ir/naming.ts",
@@ -2974,6 +3045,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:ir",
       "id": "comp:src/ir/types.ts",
       "kind": "module",
       "name": "src/ir/types.ts",
@@ -2989,6 +3061,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:mcp",
       "id": "comp:src/mcp/bench.ts",
       "kind": "module",
       "name": "src/mcp/bench.ts",
@@ -3004,6 +3077,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:mcp",
       "id": "comp:src/mcp/queries.ts",
       "kind": "module",
       "name": "src/mcp/queries.ts",
@@ -3019,6 +3093,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:mcp",
       "id": "comp:src/mcp/server.ts",
       "kind": "module",
       "name": "src/mcp/server.ts",
@@ -3034,6 +3109,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:mcp",
       "id": "comp:src/mcp/usage.ts",
       "kind": "module",
       "name": "src/mcp/usage.ts",
@@ -3049,6 +3125,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/bpmn-parse.ts",
       "kind": "module",
       "name": "src/project/bpmn-parse.ts",
@@ -3064,6 +3141,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/bpmn.ts",
       "kind": "module",
       "name": "src/project/bpmn.ts",
@@ -3079,6 +3157,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/capability.ts",
       "kind": "module",
       "name": "src/project/capability.ts",
@@ -3094,6 +3173,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/feature-sync.ts",
       "kind": "module",
       "name": "src/project/feature-sync.ts",
@@ -3109,6 +3189,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/features.ts",
       "kind": "module",
       "name": "src/project/features.ts",
@@ -3124,6 +3205,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/html.ts",
       "kind": "module",
       "name": "src/project/html.ts",
@@ -3139,6 +3221,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/index.ts",
       "kind": "module",
       "name": "src/project/index.ts",
@@ -3154,6 +3237,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/knowledge.ts",
       "kind": "module",
       "name": "src/project/knowledge.ts",
@@ -3169,6 +3253,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/manifest.ts",
       "kind": "module",
       "name": "src/project/manifest.ts",
@@ -3184,6 +3269,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/spec.ts",
       "kind": "module",
       "name": "src/project/spec.ts",
@@ -3199,6 +3285,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/trust.ts",
       "kind": "module",
       "name": "src/project/trust.ts",
@@ -3214,6 +3301,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:skills",
       "id": "comp:src/skills/catalog.ts",
       "kind": "module",
       "name": "src/skills/catalog.ts",
@@ -3229,6 +3317,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:skills",
       "id": "comp:src/skills/index.ts",
       "kind": "module",
       "name": "src/skills/index.ts",
@@ -3244,6 +3333,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:skills",
       "id": "comp:src/skills/parse.ts",
       "kind": "module",
       "name": "src/skills/parse.ts",
@@ -3259,6 +3349,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:skills",
       "id": "comp:src/skills/resolve.ts",
       "kind": "module",
       "name": "src/skills/resolve.ts",
@@ -3274,6 +3365,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:skills",
       "id": "comp:src/skills/types.ts",
       "kind": "module",
       "name": "src/skills/types.ts",
@@ -3289,6 +3381,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:root",
       "id": "comp:src/system.ts",
       "kind": "module",
       "name": "src/system.ts",
@@ -3304,6 +3397,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/bpmn.test.mjs",
       "kind": "module",
       "name": "test/bpmn.test.mjs",
@@ -3319,6 +3413,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/core.test.mjs",
       "kind": "module",
       "name": "test/core.test.mjs",
@@ -3334,6 +3429,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/data-model.test.mjs",
       "kind": "module",
       "name": "test/data-model.test.mjs",
@@ -3349,6 +3445,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/diff.test.mjs",
       "kind": "module",
       "name": "test/diff.test.mjs",
@@ -3364,6 +3461,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/editor.test.mjs",
       "kind": "module",
       "name": "test/editor.test.mjs",
@@ -3379,6 +3477,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/endpoints.test.mjs",
       "kind": "module",
       "name": "test/endpoints.test.mjs",
@@ -3394,6 +3493,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/feature-sync.test.mjs",
       "kind": "module",
       "name": "test/feature-sync.test.mjs",
@@ -3409,6 +3509,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/features.test.mjs",
       "kind": "module",
       "name": "test/features.test.mjs",
@@ -3424,6 +3525,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/flows.test.mjs",
       "kind": "module",
       "name": "test/flows.test.mjs",
@@ -3439,6 +3541,23 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
+      "id": "comp:test/groups.test.mjs",
+      "kind": "module",
+      "name": "test/groups.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/groups.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/knowledge.test.mjs",
       "kind": "module",
       "name": "test/knowledge.test.mjs",
@@ -3454,6 +3573,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/laravel-db.test.mjs",
       "kind": "module",
       "name": "test/laravel-db.test.mjs",
@@ -3469,6 +3589,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/laravel-frontend.test.mjs",
       "kind": "module",
       "name": "test/laravel-frontend.test.mjs",
@@ -3484,6 +3605,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/laravel.test.mjs",
       "kind": "module",
       "name": "test/laravel.test.mjs",
@@ -3499,6 +3621,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/manifest.test.mjs",
       "kind": "module",
       "name": "test/manifest.test.mjs",
@@ -3514,6 +3637,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/mcp.test.mjs",
       "kind": "module",
       "name": "test/mcp.test.mjs",
@@ -3529,6 +3653,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/roles.test.mjs",
       "kind": "module",
       "name": "test/roles.test.mjs",
@@ -3544,6 +3669,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/schema-drift.test.mjs",
       "kind": "module",
       "name": "test/schema-drift.test.mjs",
@@ -3559,6 +3685,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/skills.test.mjs",
       "kind": "module",
       "name": "test/skills.test.mjs",
@@ -3574,6 +3701,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/spec.test.mjs",
       "kind": "module",
       "name": "test/spec.test.mjs",
@@ -3589,6 +3717,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/stack-system.test.mjs",
       "kind": "module",
       "name": "test/stack-system.test.mjs",
@@ -3604,6 +3733,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/stack.test.mjs",
       "kind": "module",
       "name": "test/stack.test.mjs",
@@ -3619,6 +3749,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/usage.test.mjs",
       "kind": "module",
       "name": "test/usage.test.mjs",
@@ -3634,6 +3765,7 @@
     },
     {
       "confidence": 0.95,
+      "groupId": "group:domain:test",
       "id": "comp:test/workspaces.test.mjs",
       "kind": "module",
       "name": "test/workspaces.test.mjs",
@@ -3814,7 +3946,363 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-18T18:40:15.262Z",
+  "generatedAt": "2026-06-18T18:51:31.237Z",
+  "groups": [
+    {
+      "confidence": 0.85,
+      "id": "group:domain:analyze",
+      "kind": "domain",
+      "members": [
+        "comp:src/analyze/datamodel.ts",
+        "comp:src/analyze/db-introspect.ts",
+        "comp:src/analyze/derive.ts",
+        "comp:src/analyze/drizzle.ts",
+        "comp:src/analyze/endpoints.ts",
+        "comp:src/analyze/flows.ts",
+        "comp:src/analyze/fs-util.ts",
+        "comp:src/analyze/groups.ts",
+        "comp:src/analyze/ignore.ts",
+        "comp:src/analyze/incremental.ts",
+        "comp:src/analyze/index.ts",
+        "comp:src/analyze/laravel-db.ts",
+        "comp:src/analyze/laravel-views.ts",
+        "comp:src/analyze/laravel.ts",
+        "comp:src/analyze/parse-util.ts",
+        "comp:src/analyze/prisma.ts",
+        "comp:src/analyze/roles.ts",
+        "comp:src/analyze/sql.ts",
+        "comp:src/analyze/stack.ts",
+        "comp:src/analyze/tier0.ts",
+        "comp:src/analyze/tier1.ts",
+        "comp:src/analyze/tier2.ts",
+        "comp:src/analyze/walk.ts",
+        "comp:src/analyze/workspaces.ts"
+      ],
+      "name": "Analyze",
+      "provenance": [
+        {
+          "confidence": 0.85,
+          "ref": "src/analyze/datamodel.ts",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.85,
+      "id": "group:domain:cloud",
+      "kind": "domain",
+      "members": [
+        "comp:src/cloud/api.ts",
+        "comp:src/cloud/index.ts",
+        "comp:src/cloud/store.ts"
+      ],
+      "name": "Cloud",
+      "provenance": [
+        {
+          "confidence": 0.85,
+          "ref": "src/cloud/api.ts",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.85,
+      "id": "group:domain:diff",
+      "kind": "domain",
+      "members": [
+        "comp:src/diff/history.ts",
+        "comp:src/diff/index.ts",
+        "comp:src/diff/model-diff.ts",
+        "comp:src/diff/snapshot.ts"
+      ],
+      "name": "Diff",
+      "provenance": [
+        {
+          "confidence": 0.85,
+          "ref": "src/diff/history.ts",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.85,
+      "id": "group:domain:ir",
+      "kind": "domain",
+      "members": [
+        "comp:src/ir/naming.ts",
+        "comp:src/ir/types.ts"
+      ],
+      "name": "Ir",
+      "provenance": [
+        {
+          "confidence": 0.85,
+          "ref": "src/ir/naming.ts",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.85,
+      "id": "group:domain:mcp",
+      "kind": "domain",
+      "members": [
+        "comp:src/mcp/bench.ts",
+        "comp:src/mcp/queries.ts",
+        "comp:src/mcp/server.ts",
+        "comp:src/mcp/usage.ts"
+      ],
+      "name": "Mcp",
+      "provenance": [
+        {
+          "confidence": 0.85,
+          "ref": "src/mcp/bench.ts",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.85,
+      "id": "group:domain:misc",
+      "kind": "domain",
+      "members": [
+        "comp:src/drift/schema-drift.ts"
+      ],
+      "name": "Misc",
+      "provenance": [
+        {
+          "confidence": 0.85,
+          "ref": "src/drift/schema-drift.ts",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.85,
+      "id": "group:domain:project",
+      "kind": "domain",
+      "members": [
+        "comp:src/project/bpmn-parse.ts",
+        "comp:src/project/bpmn.ts",
+        "comp:src/project/capability.ts",
+        "comp:src/project/feature-sync.ts",
+        "comp:src/project/features.ts",
+        "comp:src/project/html.ts",
+        "comp:src/project/index.ts",
+        "comp:src/project/knowledge.ts",
+        "comp:src/project/manifest.ts",
+        "comp:src/project/spec.ts",
+        "comp:src/project/trust.ts"
+      ],
+      "name": "Project",
+      "provenance": [
+        {
+          "confidence": 0.85,
+          "ref": "src/project/bpmn-parse.ts",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.85,
+      "id": "group:domain:root",
+      "kind": "domain",
+      "members": [
+        "comp:src/agent.ts",
+        "comp:src/auth.ts",
+        "comp:src/cli.ts",
+        "comp:src/editor.ts",
+        "comp:src/env.ts",
+        "comp:src/feature-pull.ts",
+        "comp:src/index.ts",
+        "comp:src/system.ts"
+      ],
+      "name": "Root",
+      "provenance": [
+        {
+          "confidence": 0.85,
+          "ref": "src/agent.ts",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.85,
+      "id": "group:domain:skills",
+      "kind": "domain",
+      "members": [
+        "comp:src/skills/catalog.ts",
+        "comp:src/skills/index.ts",
+        "comp:src/skills/parse.ts",
+        "comp:src/skills/resolve.ts",
+        "comp:src/skills/types.ts"
+      ],
+      "name": "Skills",
+      "provenance": [
+        {
+          "confidence": 0.85,
+          "ref": "src/skills/catalog.ts",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.85,
+      "id": "group:domain:test",
+      "kind": "domain",
+      "members": [
+        "comp:test/bpmn.test.mjs",
+        "comp:test/core.test.mjs",
+        "comp:test/data-model.test.mjs",
+        "comp:test/diff.test.mjs",
+        "comp:test/editor.test.mjs",
+        "comp:test/endpoints.test.mjs",
+        "comp:test/feature-sync.test.mjs",
+        "comp:test/features.test.mjs",
+        "comp:test/flows.test.mjs",
+        "comp:test/groups.test.mjs",
+        "comp:test/knowledge.test.mjs",
+        "comp:test/laravel-db.test.mjs",
+        "comp:test/laravel-frontend.test.mjs",
+        "comp:test/laravel.test.mjs",
+        "comp:test/manifest.test.mjs",
+        "comp:test/mcp.test.mjs",
+        "comp:test/roles.test.mjs",
+        "comp:test/schema-drift.test.mjs",
+        "comp:test/skills.test.mjs",
+        "comp:test/spec.test.mjs",
+        "comp:test/stack-system.test.mjs",
+        "comp:test/stack.test.mjs",
+        "comp:test/usage.test.mjs",
+        "comp:test/workspaces.test.mjs"
+      ],
+      "name": "Test",
+      "provenance": [
+        {
+          "confidence": 0.85,
+          "ref": "test/bpmn.test.mjs",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.8,
+      "id": "group:layer:api",
+      "kind": "layer",
+      "members": [
+        "comp:test/endpoints.test.mjs",
+        "comp:test/roles.test.mjs",
+        "comp:test/workspaces.test.mjs"
+      ],
+      "name": "API",
+      "order": 1,
+      "provenance": [
+        {
+          "confidence": 0.8,
+          "ref": "derived:layer:api",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.8,
+      "id": "group:layer:domain",
+      "kind": "layer",
+      "members": [
+        "comp:src/agent.ts",
+        "comp:src/analyze/datamodel.ts",
+        "comp:src/analyze/db-introspect.ts",
+        "comp:src/analyze/derive.ts",
+        "comp:src/analyze/drizzle.ts",
+        "comp:src/analyze/endpoints.ts",
+        "comp:src/analyze/flows.ts",
+        "comp:src/analyze/fs-util.ts",
+        "comp:src/analyze/groups.ts",
+        "comp:src/analyze/ignore.ts",
+        "comp:src/analyze/incremental.ts",
+        "comp:src/analyze/index.ts",
+        "comp:src/analyze/laravel-db.ts",
+        "comp:src/analyze/laravel-views.ts",
+        "comp:src/analyze/laravel.ts",
+        "comp:src/analyze/parse-util.ts",
+        "comp:src/analyze/prisma.ts",
+        "comp:src/analyze/roles.ts",
+        "comp:src/analyze/sql.ts",
+        "comp:src/analyze/stack.ts",
+        "comp:src/analyze/tier0.ts",
+        "comp:src/analyze/tier1.ts",
+        "comp:src/analyze/tier2.ts",
+        "comp:src/analyze/walk.ts",
+        "comp:src/analyze/workspaces.ts",
+        "comp:src/auth.ts",
+        "comp:src/cli.ts",
+        "comp:src/cloud/api.ts",
+        "comp:src/cloud/index.ts",
+        "comp:src/cloud/store.ts",
+        "comp:src/diff/history.ts",
+        "comp:src/diff/index.ts",
+        "comp:src/diff/model-diff.ts",
+        "comp:src/diff/snapshot.ts",
+        "comp:src/drift/schema-drift.ts",
+        "comp:src/editor.ts",
+        "comp:src/env.ts",
+        "comp:src/feature-pull.ts",
+        "comp:src/index.ts",
+        "comp:src/ir/naming.ts",
+        "comp:src/ir/types.ts",
+        "comp:src/mcp/bench.ts",
+        "comp:src/mcp/queries.ts",
+        "comp:src/mcp/server.ts",
+        "comp:src/mcp/usage.ts",
+        "comp:src/project/bpmn-parse.ts",
+        "comp:src/project/bpmn.ts",
+        "comp:src/project/capability.ts",
+        "comp:src/project/feature-sync.ts",
+        "comp:src/project/features.ts",
+        "comp:src/project/html.ts",
+        "comp:src/project/index.ts",
+        "comp:src/project/knowledge.ts",
+        "comp:src/project/manifest.ts",
+        "comp:src/project/spec.ts",
+        "comp:src/project/trust.ts",
+        "comp:src/skills/catalog.ts",
+        "comp:src/skills/index.ts",
+        "comp:src/skills/parse.ts",
+        "comp:src/skills/resolve.ts",
+        "comp:src/skills/types.ts",
+        "comp:src/system.ts",
+        "comp:test/bpmn.test.mjs",
+        "comp:test/core.test.mjs",
+        "comp:test/data-model.test.mjs",
+        "comp:test/diff.test.mjs",
+        "comp:test/editor.test.mjs",
+        "comp:test/feature-sync.test.mjs",
+        "comp:test/features.test.mjs",
+        "comp:test/flows.test.mjs",
+        "comp:test/groups.test.mjs",
+        "comp:test/knowledge.test.mjs",
+        "comp:test/laravel-db.test.mjs",
+        "comp:test/laravel-frontend.test.mjs",
+        "comp:test/laravel.test.mjs",
+        "comp:test/manifest.test.mjs",
+        "comp:test/mcp.test.mjs",
+        "comp:test/schema-drift.test.mjs",
+        "comp:test/skills.test.mjs",
+        "comp:test/spec.test.mjs",
+        "comp:test/stack-system.test.mjs",
+        "comp:test/stack.test.mjs",
+        "comp:test/usage.test.mjs"
+      ],
+      "name": "Domain",
+      "order": 3,
+      "provenance": [
+        {
+          "confidence": 0.8,
+          "ref": "derived:layer:domain",
+          "source": "code"
+        }
+      ]
+    }
+  ],
   "manifest": {
     "agents": [
       {
@@ -4573,6 +5061,51 @@
     },
     {
       "confidence": 0.95,
+      "from": "comp:src/analyze/groups.ts",
+      "id": "rel:comp:src/analyze/groups.ts=>comp:src/analyze/workspaces.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/groups.ts → comp:src/analyze/workspaces.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/groups.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/workspaces.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/groups.ts",
+      "id": "rel:comp:src/analyze/groups.ts=>comp:src/ir/naming.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/groups.ts → comp:src/ir/naming.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/groups.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/naming.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/groups.ts",
+      "id": "rel:comp:src/analyze/groups.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/groups.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/groups.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
       "from": "comp:src/analyze/incremental.ts",
       "id": "rel:comp:src/analyze/incremental.ts=>comp:src/analyze/derive.ts",
       "kind": "depends_on",
@@ -4585,6 +5118,21 @@
         }
       ],
       "to": "comp:src/analyze/derive.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/incremental.ts",
+      "id": "rel:comp:src/analyze/incremental.ts=>comp:src/analyze/groups.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/incremental.ts → comp:src/analyze/groups.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/incremental.ts:21",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/groups.ts"
     },
     {
       "confidence": 0.95,
@@ -4730,11 +5278,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/index.ts:22",
+          "ref": "src/analyze/index.ts:23",
           "source": "code"
         }
       ],
       "to": "comp:src/analyze/flows.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/index.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/analyze/groups.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/index.ts → comp:src/analyze/groups.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/index.ts:20",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/groups.ts"
     },
     {
       "confidence": 0.95,
@@ -4880,7 +5443,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/index.ts:21",
+          "ref": "src/analyze/index.ts:22",
           "source": "code"
         }
       ],
@@ -4895,7 +5458,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/index.ts:20",
+          "ref": "src/analyze/index.ts:21",
           "source": "code"
         }
       ],
@@ -8311,6 +8874,36 @@
         {
           "confidence": 0.95,
           "ref": "test/flows.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/groups.test.mjs",
+      "id": "rel:comp:test/groups.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/groups.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/groups.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/groups.test.mjs",
+      "id": "rel:comp:test/groups.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/groups.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/groups.test.mjs:2",
           "source": "code"
         }
       ],

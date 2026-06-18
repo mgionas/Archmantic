@@ -57,8 +57,29 @@ export interface Component extends ElementBase {
   role?: string;
   /** id of the System this belongs to. */
   systemId?: string;
+  /** id of the domain Group this component belongs to (the cluster it lives in). */
+  groupId?: string;
   /** One-line statement of what this component is responsible for. */
   responsibility?: string;
+}
+
+/**
+ * A semantic cluster of components — the missing middle level between "the whole
+ * repo" and "every file." Powers the Architecture Map (C4 L1/L2): graphs cluster
+ * by `domain` and rank by `layer` instead of rendering a flat file hairball.
+ * Derived deterministically (folder / role / workspace package); the Tier-2/AI
+ * curation pass may rename, merge, and describe domains (raising confidence).
+ */
+export type GroupKind = "domain" | "layer" | "area" | "package";
+
+export interface Group extends ElementBase {
+  kind: GroupKind;
+  /** component ids that belong to this group. */
+  members: string[];
+  /** optional parent group id (area ⊃ domain, package ⊃ domain) for nesting. */
+  parentId?: string;
+  /** display ordering hint for layers (presentation=0 … data=4). */
+  order?: number;
 }
 
 export interface Actor extends ElementBase {
@@ -231,6 +252,8 @@ export interface ArchitectureModel {
   consumes?: string[];
   systems: System[];
   components: Component[];
+  /** Semantic clusters (domains/layers) over components — the Architecture Map. */
+  groups: Group[];
   actors: Actor[];
   relations: Relation[];
   flows: Flow[];
@@ -254,6 +277,7 @@ export function sortModel(m: ArchitectureModel): ArchitectureModel {
     ...m,
     systems: [...m.systems].sort(byId),
     components: [...m.components].sort(byId),
+    groups: [...m.groups].sort(byId),
     actors: [...m.actors].sort(byId),
     relations: [...m.relations].sort(byId),
     capabilities: [...m.capabilities].sort(byId),
@@ -289,6 +313,7 @@ export function createEmptyModel(project: string): ArchitectureModel {
     project,
     systems: [],
     components: [],
+    groups: [],
     actors: [],
     relations: [],
     flows: [],

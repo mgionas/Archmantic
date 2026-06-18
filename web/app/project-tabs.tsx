@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -19,8 +20,15 @@ import type {
   EntityNode,
   EntityEdge,
   SequenceModel,
+  MapNode,
+  MapEdge,
 } from "@/lib/diagrams";
 import { DiagramTabs } from "./diagram-tabs";
+
+const ArchitectureMap = dynamic(
+  () => import("@/components/architecture-map").then((m) => m.ArchitectureMap),
+  { ssr: false, loading: () => <div className="h-full w-full animate-pulse rounded-lg border border-border/60 bg-muted/30" /> },
+);
 import { KnowledgeView } from "@/components/knowledge-view";
 import { FeatureEditor } from "@/components/feature-editor";
 import { RoleLegend } from "@/components/ui/role-legend";
@@ -59,6 +67,7 @@ export interface Diagrams {
   sequences: { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] }; diagram: SequenceModel }[];
   processXml: string | null;
   erd: { nodes: EntityNode[]; edges: EntityEdge[] } | null;
+  map: { nodes: MapNode[]; edges: MapEdge[] };
   edited: boolean;
 }
 export interface Changes {
@@ -335,8 +344,10 @@ export function ProjectTabs({
   const [apiGroupBy, setApiGroupBy] = useState<"resource" | "package">(isMono ? "package" : "resource");
 
   const capCount = groups.reduce((n, g) => n + g.caps.length, 0);
+  const mapDomains = diagrams.map.nodes.filter((n) => n.kind === "domain").length;
   const facets: { id: string; label: string; count?: number }[] = [
     { id: "overview", label: "Overview" },
+    ...(mapDomains ? [{ id: "map", label: "Map", count: mapDomains }] : []),
     { id: "diagrams", label: "Diagrams" },
     ...(features.length ? [{ id: "features", label: "Features", count: features.length }] : []),
     { id: "capabilities", label: "Capabilities", count: capCount },
@@ -526,6 +537,25 @@ export function ProjectTabs({
             {overview.analyzedAt ? (
               <p className="text-xs text-muted-foreground">Analyzed {new Date(overview.analyzedAt).toLocaleString()}</p>
             ) : null}
+          </div>
+        ) : null}
+
+        {facet === "map" ? (
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              The system at a glance — components clustered into <span className="text-foreground">domains</span>, with the real
+              external systems they touch. Click a domain to see its connections and open its components. Libraries live on the
+              Dependencies page, off the map.
+            </p>
+            <div className="h-[72vh]">
+              <ArchitectureMap
+                graph={diagrams.map}
+                onOpenDomain={(label) => {
+                  setCompQuery(label.toLowerCase());
+                  setFacet("components");
+                }}
+              />
+            </div>
           </div>
         ) : null}
 

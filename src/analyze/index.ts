@@ -17,6 +17,7 @@ import { detectLaravelRoutes } from "./laravel.js";
 import { detectLaravelViews } from "./laravel-views.js";
 import { refineRole, needsRefine } from "./roles.js";
 import { detectWorkspaces, packageOf } from "./workspaces.js";
+import { deriveGroups } from "./groups.js";
 import { applyManifest } from "../project/manifest.js";
 import { detectFeatures } from "../project/features.js";
 import { deriveFeatureFlows, processFromFlow } from "./flows.js";
@@ -93,7 +94,9 @@ export function analyzeRepo(root: string): ArchitectureModel {
   model.dataEntities = detectDataModel(root);
   model.endpoints = mergeEndpoints(detectEndpoints(root), detectLaravelRoutes(root));
   refineRoles(root, model);
-  tagPackages(model, detectWorkspaces(root));
+  const members = detectWorkspaces(root);
+  tagPackages(model, members);
+  deriveGroups(model, members); // semantic clusters (domains/layers) once roles+packages exist
   applyConfig(root, model);
   applyManifest(root, model);
   model.features = detectFeatures(root, model);

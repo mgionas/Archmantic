@@ -22,6 +22,15 @@ export interface Element {
   /** External systems only: datastore|saas|infra|service|library|runtime. Drives whether
    *  the system appears on the architecture graphs (real systems) or the Technologies page. */
   externalKind?: string;
+  /** id of the domain Group a component belongs to (the Architecture Map cluster). */
+  groupId?: string;
+}
+
+/** A semantic cluster of components (domain/layer) — powers the Architecture Map. */
+export interface Group extends Element {
+  members: string[];
+  parentId?: string;
+  order?: number;
 }
 export interface DataField {
   name: string;
@@ -67,6 +76,7 @@ export interface Model {
   features?: Feature[];
   systems: Element[];
   components: Element[];
+  groups?: Group[];
   relations: (Element & { from: string; to: string })[];
   capabilities: Element[];
   technologies?: { id?: string; name: string; category: string; version?: string }[];

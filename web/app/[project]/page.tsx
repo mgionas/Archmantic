@@ -11,6 +11,7 @@ import {
   contextDetails,
   entityGraph,
   sequenceDeck,
+  architectureMap,
 } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
 import { knowledgeMarkdown } from "@/lib/knowledge";
@@ -240,6 +241,7 @@ export default async function ProjectPage({
           sequences: sequenceDeck(model),
           processXml: savedBpmn ?? bpmnXml(model),
           erd: data?.graph ?? null,
+          map: architectureMap(model),
           edited: Boolean(savedBpmn),
         }}
       />
