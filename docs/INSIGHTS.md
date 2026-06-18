@@ -12,6 +12,17 @@
 
 ---
 
+### INS-014 · Curation is agent-driven — and the "Misc" bucket reads as a real domain
+- **category:** agent-dx · **audience:** both · **status:** shipped (loop) / open (polish)
+- **insight:** Phase D landed the agent-driven curation loop (`get_architecture_map` →
+  `curate`, the user's agent on its own tokens, merged via committed `.archmantic/curation.json`,
+  no managed LLM). Dogfood: the agent curated this repo's 8 domains + a positioning narrative.
+  Polish needed: the singleton-collapse "Misc" bucket appears in the map (even as a dependency
+  target) — it should be visually de-emphasized / excluded from edges, or domains should
+  collapse more gracefully (e.g. attach singletons to their nearest dependency cluster).
+- **why:** Proves the "human + agent share one model" thesis end-to-end. The Misc noise is the
+  one rough edge a real onboarding view would trip on.
+
 ### INS-013 · Map drill is a name-match heuristic; Components needs a real domain filter
 - **category:** dx · **audience:** humans · **status:** open
 - **insight:** Clicking a domain on the Map jumps to Components with the domain *name* as a
