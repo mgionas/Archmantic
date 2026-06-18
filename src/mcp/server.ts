@@ -18,6 +18,7 @@ import { knowledgeMarkdown, applyKnowledgeBlock } from "../project/index.js";
 import { syncFeatures } from "../project/feature-sync.js";
 import { pullFeatureEdits } from "../feature-pull.js";
 import { allSkills, findSkill, renderSuggestions, renderSkillList, renderSkill } from "../skills/index.js";
+import { writeCuration } from "../project/curation.js";
 import { diffModels, summarizeChange } from "../diff/index.js";
 import {
   hasApiToken,
@@ -30,6 +31,7 @@ import {
 import { UsageRecorder } from "./usage.js";
 import {
   getApiSurface,
+  getArchitectureMap,
   getComponent,
   getContext,
   getDataModel,
@@ -246,6 +248,16 @@ export async function startMcpServer(root: string): Promise<void> {
     async ({ name }) => served("whats_related", whatsRelated(model, name)),
   );
 
+  server.registerTool(
+    "get_architecture_map",
+    {
+      title: "Get the architecture map",
+      description:
+        "The high-level map (C4 L1/L2): domains as containers, their cross-domain dependencies, and the real external systems each calls — plus the positioning narrative and which domains are still uncurated. Read this to understand the system's shape, and to see what to improve with `curate`.",
+    },
+    async () => served("get_architecture_map", getArchitectureMap(model)),
+  );
+
   // ── Skills: an on-shelf catalog of playbooks, resolved against the model ────
 
   server.registerTool(
@@ -312,6 +324,37 @@ export async function startMcpServer(root: string): Promise<void> {
       return text(
         `Compiled ${res.proposals.length} feature(s), wrote ${res.applied.length} file(s): ${res.proposals.map((f) => f.name).join(", ")}`,
       );
+    },
+  );
+
+  server.registerTool(
+    "curate",
+    {
+      title: "Curate the architecture for humans",
+      description:
+        "Write the human-comprehension layer: a plain-language `overview` (what this system is and how it's shaped) and product-language `name`/`description` for domains. You do this on your own tokens — read `get_architecture_map` first to see the domains and which are uncurated, then call this. Saved to .archmantic/curation.json (committed, merged into the model); never invent structure, only name/describe what's there.",
+      inputSchema: {
+        overview: z.string().optional().describe("1–2 paragraph positioning narrative for the project"),
+        domains: z
+          .array(
+            z.object({
+              slug: z.string().describe("the domain slug from get_architecture_map (e.g. 'analyze')"),
+              name: z.string().optional().describe("product-language name (e.g. 'Analysis pipeline')"),
+              description: z.string().optional().describe("one-line: what this domain does"),
+            }),
+          )
+          .optional()
+          .describe("per-domain name/description overrides"),
+      },
+    },
+    async ({ overview, domains }) => {
+      const domainMap = Object.fromEntries(
+        (domains ?? []).map((d) => [d.slug, { name: d.name, description: d.description }]),
+      );
+      writeCuration(root, { overview, domains: domainMap });
+      model = reanalyze(root); // re-read so the served model reflects the curation overlay
+      const n = domains?.length ?? 0;
+      return text(`Curated ${overview ? "the overview" : ""}${overview && n ? " + " : ""}${n ? `${n} domain(s)` : ""}. The map and web now reflect it.`);
     },
   );
 

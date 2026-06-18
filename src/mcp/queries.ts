@@ -10,6 +10,8 @@
 import { type ArchitectureModel, type Component } from "../ir/types.js";
 import { componentLabel } from "../ir/naming.js";
 import { analyzeLinks } from "../system.js";
+import { isSystemExternalKind } from "../analyze/stack.js";
+import { CURATION_PATH } from "../project/curation.js";
 
 const rel = (id: string) => id.slice(id.indexOf(":") + 1);
 
@@ -281,6 +283,58 @@ export function getFeature(model: ArchitectureModel, name: string): string {
     for (const s of flow.steps) out.push(`  ${shortName(s.participant)} ${s.action} ${shortName(s.to ?? s.participant)}`);
   }
   out.push(`\nGrounding: ${refOf(f)} (${f.provenance[0]?.source ?? "?"})`);
+  return out.join("\n");
+}
+
+/**
+ * The Architecture Map (C4 L1/L2): domains as containers, cross-domain edges, and the
+ * real external systems each touches — the high-level "what is this and how is it shaped"
+ * answer. Also flags uncurated domains so an agent knows what to name/describe via `curate`.
+ */
+export function getArchitectureMap(model: ArchitectureModel): string {
+  const domains = (model.groups ?? []).filter((g) => g.kind === "domain");
+  if (!domains.length) return "No domains derived. Run `archmantic analyze` first.";
+  const compDomain = new Map<string, string>();
+  for (const g of domains) for (const m of g.members) compDomain.set(m, g.id);
+  const roleOf = new Map(model.components.map((c) => [c.id, c.role ?? "module"]));
+  const sysExt = new Set(
+    model.systems.filter((s) => s.kind === "external" && isSystemExternalKind(s.externalKind)).map((s) => s.id),
+  );
+  const nameOf = (id: string) => domains.find((g) => g.id === id)?.name ?? id;
+  const isCurated = (g: (typeof domains)[number]) => g.provenance[0]?.ref === CURATION_PATH;
+
+  const deps = new Map<string, Set<string>>(); // domainId → domainIds it depends on
+  const calls = new Map<string, Set<string>>(); // domainId → external system ids
+  for (const r of model.relations) {
+    const fromD = compDomain.get(r.from);
+    if (!fromD) continue;
+    if (compDomain.has(r.to)) {
+      const toD = compDomain.get(r.to)!;
+      if (toD !== fromD) (deps.get(fromD) ?? deps.set(fromD, new Set()).get(fromD)!).add(toD);
+    } else if (sysExt.has(r.to)) {
+      (calls.get(fromD) ?? calls.set(fromD, new Set()).get(fromD)!).add(r.to);
+    }
+  }
+
+  const out = [`Architecture map: ${model.project} — ${domains.length} domains`];
+  if (model.narrative) out.push(`\n${model.narrative}`);
+  out.push(`\nDomains:`);
+  for (const g of [...domains].sort((a, b) => b.members.length - a.members.length)) {
+    const roles = [...new Set(g.members.map((m) => roleOf.get(m)).filter(Boolean))].slice(0, 4).join(", ");
+    out.push(`- ${g.name} (${g.members.length} components${roles ? `, roles: ${roles}` : ""})${isCurated(g) ? "" : "  [uncurated]"}`);
+    if (g.description) out.push(`    ${g.description}`);
+    const d = [...(deps.get(g.id) ?? [])].map(nameOf);
+    if (d.length) out.push(`    → depends on: ${d.join(", ")}`);
+    const c = [...(calls.get(g.id) ?? [])].map((id) => model.systems.find((s) => s.id === id)?.name ?? id);
+    if (c.length) out.push(`    → calls: ${c.join(", ")}`);
+  }
+  const uncurated = domains.filter((g) => !isCurated(g)).map((g) => g.id.replace(/^group:domain:/, ""));
+  if (uncurated.length) {
+    out.push(
+      `\n${uncurated.length} uncurated domain(s): ${uncurated.join(", ")}. ` +
+        `Use the \`curate\` tool to set product-language names, descriptions, and an overview.`,
+    );
+  }
   return out.join("\n");
 }
 

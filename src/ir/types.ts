@@ -242,6 +242,9 @@ export interface ArchitectureModel {
   project: string;
   /** Human-authored project brain (goal/author/agents/…); see ProjectManifest. */
   manifest?: ProjectManifest;
+  /** AI/human "positioning" narrative — what this system is and how it's shaped. The
+   *  Curate layer (agent-driven over MCP); merged from .archmantic/curation.json. */
+  narrative?: string;
   /** ISO timestamp; stamped by the caller (kept out of pure helpers). */
   generatedAt?: string;
   /** Optional: the multi-repo system this project belongs to (from config). */

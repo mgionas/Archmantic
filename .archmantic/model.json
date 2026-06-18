@@ -252,7 +252,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/incremental.ts:48",
+          "ref": "src/analyze/incremental.ts:49",
           "source": "code"
         }
       ]
@@ -268,7 +268,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/index.ts:84",
+          "ref": "src/analyze/index.ts:85",
           "source": "code"
         }
       ]
@@ -1228,7 +1228,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:310",
+          "ref": "src/ir/types.ts:313",
           "source": "code"
         }
       ]
@@ -1244,7 +1244,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:305",
+          "ref": "src/ir/types.ts:308",
           "source": "code"
         }
       ]
@@ -1260,7 +1260,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:274",
+          "ref": "src/ir/types.ts:277",
           "source": "code"
         }
       ]
@@ -1324,7 +1324,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:29",
+          "ref": "src/mcp/queries.ts:31",
           "source": "code"
         }
       ]
@@ -1340,7 +1340,23 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:168",
+          "ref": "src/mcp/queries.ts:170",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/mcp/queries.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `getArchitectureMap` in src/mcp/queries.ts",
+      "id": "cap:src/mcp/queries.ts#getArchitectureMap",
+      "name": "Get Architecture Map",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/mcp/queries.ts:294",
           "source": "code"
         }
       ]
@@ -1356,7 +1372,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:99",
+          "ref": "src/mcp/queries.ts:101",
           "source": "code"
         }
       ]
@@ -1372,7 +1388,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:41",
+          "ref": "src/mcp/queries.ts:43",
           "source": "code"
         }
       ]
@@ -1388,7 +1404,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:145",
+          "ref": "src/mcp/queries.ts:147",
           "source": "code"
         }
       ]
@@ -1404,7 +1420,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:262",
+          "ref": "src/mcp/queries.ts:264",
           "source": "code"
         }
       ]
@@ -1420,7 +1436,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:204",
+          "ref": "src/mcp/queries.ts:206",
           "source": "code"
         }
       ]
@@ -1436,7 +1452,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:128",
+          "ref": "src/mcp/queries.ts:130",
           "source": "code"
         }
       ]
@@ -1452,7 +1468,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:60",
+          "ref": "src/mcp/queries.ts:62",
           "source": "code"
         }
       ]
@@ -1468,7 +1484,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:137",
+          "ref": "src/mcp/queries.ts:139",
           "source": "code"
         }
       ]
@@ -1484,7 +1500,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:87",
+          "ref": "src/mcp/queries.ts:89",
           "source": "code"
         }
       ]
@@ -1500,7 +1516,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:246",
+          "ref": "src/mcp/queries.ts:248",
           "source": "code"
         }
       ]
@@ -1516,7 +1532,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:117",
+          "ref": "src/mcp/queries.ts:119",
           "source": "code"
         }
       ]
@@ -1532,7 +1548,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:287",
+          "ref": "src/mcp/queries.ts:341",
           "source": "code"
         }
       ]
@@ -1548,7 +1564,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/server.ts:80",
+          "ref": "src/mcp/server.ts:82",
           "source": "code"
         }
       ]
@@ -1677,6 +1693,70 @@
         {
           "confidence": 0.6,
           "ref": "src/project/capability.ts:24",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/curation.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `applyCuration` in src/project/curation.ts",
+      "id": "cap:src/project/curation.ts#applyCuration",
+      "name": "Apply Curation",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/curation.ts:53",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/curation.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `readCuration` in src/project/curation.ts",
+      "id": "cap:src/project/curation.ts#readCuration",
+      "name": "Read Curation",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/curation.ts:37",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/curation.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `uncuratedDomains` in src/project/curation.ts",
+      "id": "cap:src/project/curation.ts#uncuratedDomains",
+      "name": "Uncurated Domains",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/curation.ts:83",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/project/curation.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `writeCuration` in src/project/curation.ts",
+      "id": "cap:src/project/curation.ts#writeCuration",
+      "name": "Write Curation",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/curation.ts:69",
           "source": "code"
         }
       ]
@@ -3174,6 +3254,22 @@
     {
       "confidence": 0.95,
       "groupId": "group:domain:project",
+      "id": "comp:src/project/curation.ts",
+      "kind": "module",
+      "name": "src/project/curation.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/curation.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/feature-sync.ts",
       "kind": "module",
       "name": "src/project/feature-sync.ts",
@@ -3562,10 +3658,11 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-18T18:55:21.862Z",
+  "generatedAt": "2026-06-18T19:27:56.277Z",
   "groups": [
     {
-      "confidence": 0.85,
+      "confidence": 0.9,
+      "description": "Tiered, cheapest-first reverse-engineering (Tier 0/1 + stack, data model, endpoints, groups) that turns a repo into the grounded model.",
       "id": "group:domain:analyze",
       "kind": "domain",
       "members": [
@@ -3594,17 +3691,18 @@
         "comp:src/analyze/walk.ts",
         "comp:src/analyze/workspaces.ts"
       ],
-      "name": "Analyze",
+      "name": "Analysis pipeline",
       "provenance": [
         {
-          "confidence": 0.85,
-          "ref": "src/analyze/datamodel.ts",
-          "source": "code"
+          "confidence": 0.9,
+          "ref": ".archmantic/curation.json",
+          "source": "human"
         }
       ]
     },
     {
-      "confidence": 0.85,
+      "confidence": 0.9,
+      "description": "Push/pull the shared model and usage events to Neon — direct, or via the org-scoped API.",
       "id": "group:domain:cloud",
       "kind": "domain",
       "members": [
@@ -3612,17 +3710,18 @@
         "comp:src/cloud/index.ts",
         "comp:src/cloud/store.ts"
       ],
-      "name": "Cloud",
+      "name": "Team cloud",
       "provenance": [
         {
-          "confidence": 0.85,
-          "ref": "src/cloud/api.ts",
-          "source": "code"
+          "confidence": 0.9,
+          "ref": ".archmantic/curation.json",
+          "source": "human"
         }
       ]
     },
     {
-      "confidence": 0.85,
+      "confidence": 0.9,
+      "description": "Architecture diff, per-commit history, and PR-comment rendering.",
       "id": "group:domain:diff",
       "kind": "domain",
       "members": [
@@ -3631,34 +3730,36 @@
         "comp:src/diff/model-diff.ts",
         "comp:src/diff/snapshot.ts"
       ],
-      "name": "Diff",
+      "name": "Diff & history",
       "provenance": [
         {
-          "confidence": 0.85,
-          "ref": "src/diff/history.ts",
-          "source": "code"
+          "confidence": 0.9,
+          "ref": ".archmantic/curation.json",
+          "source": "human"
         }
       ]
     },
     {
-      "confidence": 0.85,
+      "confidence": 0.9,
+      "description": "The core typed model every element is grounded into; all diagrams and MCP answers are projections of it.",
       "id": "group:domain:ir",
       "kind": "domain",
       "members": [
         "comp:src/ir/naming.ts",
         "comp:src/ir/types.ts"
       ],
-      "name": "Ir",
+      "name": "Architecture model (IR)",
       "provenance": [
         {
-          "confidence": 0.85,
-          "ref": "src/ir/naming.ts",
-          "source": "code"
+          "confidence": 0.9,
+          "ref": ".archmantic/curation.json",
+          "source": "human"
         }
       ]
     },
     {
-      "confidence": 0.85,
+      "confidence": 0.9,
+      "description": "Exposes the model to AI agents as read/write tools over stdio, with per-call usage metering.",
       "id": "group:domain:mcp",
       "kind": "domain",
       "members": [
@@ -3667,12 +3768,12 @@
         "comp:src/mcp/server.ts",
         "comp:src/mcp/usage.ts"
       ],
-      "name": "Mcp",
+      "name": "MCP server",
       "provenance": [
         {
-          "confidence": 0.85,
-          "ref": "src/mcp/bench.ts",
-          "source": "code"
+          "confidence": 0.9,
+          "ref": ".archmantic/curation.json",
+          "source": "human"
         }
       ]
     },
@@ -3693,13 +3794,15 @@
       ]
     },
     {
-      "confidence": 0.85,
+      "confidence": 0.9,
+      "description": "The human-intent layer (project brain, features, curation) and the projections: HTML viewer, BPMN, build spec, AGENTS.md.",
       "id": "group:domain:project",
       "kind": "domain",
       "members": [
         "comp:src/project/bpmn-parse.ts",
         "comp:src/project/bpmn.ts",
         "comp:src/project/capability.ts",
+        "comp:src/project/curation.ts",
         "comp:src/project/feature-sync.ts",
         "comp:src/project/features.ts",
         "comp:src/project/html.ts",
@@ -3709,17 +3812,18 @@
         "comp:src/project/spec.ts",
         "comp:src/project/trust.ts"
       ],
-      "name": "Project",
+      "name": "Spec & projections",
       "provenance": [
         {
-          "confidence": 0.85,
-          "ref": "src/project/bpmn-parse.ts",
-          "source": "code"
+          "confidence": 0.9,
+          "ref": ".archmantic/curation.json",
+          "source": "human"
         }
       ]
     },
     {
-      "confidence": 0.85,
+      "confidence": 0.9,
+      "description": "The CLI entrypoint and top-level flows: analyze, agent hand-off, the local editor, and the multi-repo system view.",
       "id": "group:domain:root",
       "kind": "domain",
       "members": [
@@ -3732,17 +3836,18 @@
         "comp:src/index.ts",
         "comp:src/system.ts"
       ],
-      "name": "Root",
+      "name": "CLI & orchestration",
       "provenance": [
         {
-          "confidence": 0.85,
-          "ref": "src/agent.ts",
-          "source": "code"
+          "confidence": 0.9,
+          "ref": ".archmantic/curation.json",
+          "source": "human"
         }
       ]
     },
     {
-      "confidence": 0.85,
+      "confidence": 0.9,
+      "description": "On-shelf playbook catalog resolved against the model with cited reasons.",
       "id": "group:domain:skills",
       "kind": "domain",
       "members": [
@@ -3755,9 +3860,9 @@
       "name": "Skills",
       "provenance": [
         {
-          "confidence": 0.85,
-          "ref": "src/skills/catalog.ts",
-          "source": "code"
+          "confidence": 0.9,
+          "ref": ".archmantic/curation.json",
+          "source": "human"
         }
       ]
     },
@@ -3814,6 +3919,7 @@
         "comp:src/project/bpmn-parse.ts",
         "comp:src/project/bpmn.ts",
         "comp:src/project/capability.ts",
+        "comp:src/project/curation.ts",
         "comp:src/project/feature-sync.ts",
         "comp:src/project/features.ts",
         "comp:src/project/html.ts",
@@ -3905,6 +4011,7 @@
     ],
     "status": "active"
   },
+  "narrative": "Archmantic reverse-engineers a single grounded architecture model (the IR) from a repo and serves it to both humans — interactive diagrams plus an AI-curated map — and AI agents, over MCP. A tiered, cheapest-first pipeline collects everything with file:line provenance; projections render it as context / component / sequence / ERD views and a domain map; the spec layer (project brain, features) and skills add human intent on top of the structure. The same model an agent queries is the one a human edits.",
   "processes": [
     {
       "confidence": 0.6,
@@ -4749,6 +4856,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/analyze/incremental.ts",
+      "id": "rel:comp:src/analyze/incremental.ts=>comp:src/project/curation.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/incremental.ts → comp:src/project/curation.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/incremental.ts:22",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/curation.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/incremental.ts",
       "id": "rel:comp:src/analyze/incremental.ts=>sys:ext:node:child_process",
       "kind": "depends_on",
       "name": "comp:src/analyze/incremental.ts → sys:ext:node:child_process",
@@ -4815,7 +4937,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/analyze/index.ts:23",
+          "ref": "src/analyze/index.ts:24",
           "source": "code"
         }
       ],
@@ -4970,6 +5092,21 @@
         }
       ],
       "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/index.ts",
+      "id": "rel:comp:src/analyze/index.ts=>comp:src/project/curation.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/index.ts → comp:src/project/curation.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/index.ts:23",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/curation.ts"
     },
     {
       "confidence": 0.95,
@@ -6844,6 +6981,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/mcp/queries.ts",
+      "id": "rel:comp:src/mcp/queries.ts=>comp:src/analyze/stack.ts",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/queries.ts → comp:src/analyze/stack.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/queries.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/stack.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/queries.ts",
       "id": "rel:comp:src/mcp/queries.ts=>comp:src/ir/naming.ts",
       "kind": "depends_on",
       "name": "comp:src/mcp/queries.ts → comp:src/ir/naming.ts",
@@ -6870,6 +7022,21 @@
         }
       ],
       "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/queries.ts",
+      "id": "rel:comp:src/mcp/queries.ts=>comp:src/project/curation.ts",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/queries.ts → comp:src/project/curation.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/queries.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/curation.ts"
     },
     {
       "confidence": 0.95,
@@ -6910,7 +7077,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:22",
+          "ref": "src/mcp/server.ts:23",
           "source": "code"
         }
       ],
@@ -6925,7 +7092,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:21",
+          "ref": "src/mcp/server.ts:22",
           "source": "code"
         }
       ],
@@ -6970,7 +7137,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:31",
+          "ref": "src/mcp/server.ts:32",
           "source": "code"
         }
       ],
@@ -6985,11 +7152,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:30",
+          "ref": "src/mcp/server.ts:31",
           "source": "code"
         }
       ],
       "to": "comp:src/mcp/usage.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/server.ts",
+      "id": "rel:comp:src/mcp/server.ts=>comp:src/project/curation.ts",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/server.ts → comp:src/project/curation.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/server.ts:21",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/curation.ts"
     },
     {
       "confidence": 0.95,
@@ -7235,6 +7417,51 @@
         }
       ],
       "to": "comp:src/project/trust.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/curation.ts",
+      "id": "rel:comp:src/project/curation.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/curation.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/curation.ts:15",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/curation.ts",
+      "id": "rel:comp:src/project/curation.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/project/curation.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/curation.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/curation.ts",
+      "id": "rel:comp:src/project/curation.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/project/curation.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/curation.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
     },
     {
       "confidence": 0.95,

@@ -123,7 +123,7 @@ These rendered artifacts are **derived** — the IR is the source. We can regene
 
 ## 6. MCP server (Decision #6 — bidirectional)
 
-The MCP server is how agents consume (and the token-savings story). It exposes **structured tools over the IR**, not raw files. As shipped (`src/mcp/server.ts`, 1.17.0) it registers **19 tools**:
+The MCP server is how agents consume (and the token-savings story). It exposes **structured tools over the IR**, not raw files. As shipped (`src/mcp/server.ts`) it registers **21 tools**:
 
 **Read tools (agent ← Archmantic):**
 - `get_context` — system context, externals, counts, primary process (compact)
@@ -136,12 +136,14 @@ The MCP server is how agents consume (and the token-savings story). It exposes *
 - `suggest_links` — inferred/dangling cross-repo `consumes` edges vs the org's other repos
 - `list_features` / `get_feature(name)` — the Spec-layer feature intent (shows/actions/dependsOn)
 - `whats_related(name)` — graph neighborhood (the big token-saver: "what touches checkout?" returns ~200 tokens, not 20 files)
+- `get_architecture_map` — the C4 L1/L2 map: domains as containers, cross-domain edges, external systems, the positioning narrative, and which domains are uncurated (the Curate layer, §2.5)
 - `suggest_skills` / `list_skills` / `get_skill(name)` — the Skills layer (§8.5): model-ranked playbooks with grounded reasons, the shelf, and one skill's body
 
 **Write tools (agent → Archmantic):**
 - `refresh` — re-analyze the repo from disk and update the served model + `.archmantic/model.json`
 - `sync_features` — run the BYOK intent compiler (§2.5) and write features back
 - `sync` — re-analyze and push the model to the team cloud, returning what changed
+- `curate` — the user's agent writes domain names/descriptions + the positioning narrative on its own tokens (the Curate layer, §2.5), merged via `.archmantic/curation.json` (no managed LLM)
 
 Built on the official MCP TypeScript SDK; ships as a process the user's existing agent (Claude Code, Cursor) points at — satisfying "plug in first" (Decision #9). Every read call is metered (§8.6) for the proof-of-value loop.
 

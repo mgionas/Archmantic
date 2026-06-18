@@ -101,13 +101,21 @@ the raw semantic collection into something a human onboards on. It does five thi
 - **Incremental.** Re-curate only what the architecture diff says changed (a new domain,
   a changed feature) — not the whole repo every time. The per-commit history is the
   cursor.
-- **Cached per snapshot.** Curation is stored on the model/snapshot and reused across
-  views and sessions; it's computed at push/CI time, not per page load.
-- **Tiered & BYOK/managed.** Haiku for descriptions, Opus for the high-level
-  positioning/structure. Free/local stays deterministic; AI curation is the premium
-  (BYOK or managed + metered — the monetization path, on the existing usage substrate).
-- **Triggered by the sync loop.** Fits git-as-transport: CI runs `analyze` (collect) →
-  AI curate (incremental) → `push`. Humans open the web to a freshly curated model.
+- **The user's own agent runs it (decided 2026-06-18).** Archmantic is an MCP tool — the
+  user already has an agent (Claude Code, Cursor, …). Curation is **driven by that agent
+  over MCP, on the user's own tokens**: the agent reads the grounded map (`get_architecture_map`),
+  writes back domain names / descriptions / the positioning narrative (`curate`), grounded
+  with `source: "llm:<model>"`. We don't run or meter an LLM, so **monetization defers** (the
+  web is a viewer/store; charging for the user's own token spend makes no sense). A **BYOK CLI
+  `curate`** is the "run it for me" fallback for users without an agent in the loop.
+- **Persistence: committed, merges into `model.json`.** Curation is authored data
+  (`.archmantic/curation.json`, agent- or human-written) **merged into the model on analyze**
+  (like the manifest/features) so it survives re-derivation, stays diffable/in-PRs, and the
+  model carries it. Cloud is a cache/projection of the committed truth.
+- **Incremental, out of respect for the agent's budget.** Re-curate only what the
+  architecture diff says changed (a new/renamed domain, a changed feature) — never the whole
+  repo. The per-commit history is the cursor. Deterministic groups/descriptions are the
+  always-free floor when no agent curates.
 
 ## 5. Layer 3 — Present (the redesigned surface)
 
@@ -183,16 +191,18 @@ Additive where possible; one expected one-time churn (libraries leave the System
 | **A** | de-noise substrate | Classify externals (libs ≠ systems); deterministic groups; IR `Group`/`externalKind`; schema 0.2.0 | Cheapest change, dissolves ~6 complaints immediately, no AI needed |
 | **B** | present (visual win) | Architecture Map hero; Context/Components rework; retire Diagrams-as-tab; rendered Knowledge; Changes timeline; facet consolidation | Turns the substrate fix into the human-visible win |
 | **C** | behavior | Rebuild flows (semantic, feature-scoped); sequence on-demand; feature journeys; drop auto-BPMN | Fixes sequence/process honestly |
-| **D** | **AI curation layer** | Domain naming/descriptions; positioning narrative; logical ranking; incremental + cached + tiered + grounded; CI-triggered | The premium human-comprehension layer + the monetizable AI |
+| **D** | **AI curation layer (agent-driven)** | `get_architecture_map` (read) + `curate` (write) MCP tools so the user's agent names domains / writes descriptions / the positioning narrative on its own tokens, merged into the model via `.archmantic/curation.json`; BYOK CLI `curate` fallback | The "AI cleans for humans" vision — on the user's agent, no managed LLM |
 | **E** | system + impact | Microservices landscape (link-status, drill-to-map); impact/blast-radius; ties to breaking-change detection | Builds on groups + curation; the complex-system story |
 
 A is deterministic and immediate; D is where the founder's "AI cleans for humans" vision
 lands. B/C can proceed alongside D's groundwork.
 
-## 8. Open decisions
-- **Where curation is stored/triggered** — on the model JSON (committed, diffable) vs. a
-  cloud-only cache. Leaning: committed (grounded, versioned, reviewable) with the CI
-  reconciler computing it.
-- **Free-tier human experience** — deterministic groups only (no AI) vs. a managed
-  curation allowance. Affects positioning (free must still be useful).
-- **Curation cost ceiling** — per-repo budget + incremental-only after the first pass.
+## 8. Decisions (2026-06-18)
+- **Storage = committed, merged into `model.json`.** Authored in `.archmantic/curation.json`
+  (agent/human), merged on analyze like the manifest/features → the model carries it,
+  versioned and diffable. Cloud is a cache.
+- **Who runs it = the user's own agent over MCP, on their tokens** (`get_architecture_map`
+  → `curate`); BYOK CLI `curate` as the fallback. **No managed LLM, no metering — monetization
+  deferred.** We don't charge for the user's own token spend; the web is a viewer/store.
+- **Cadence = on-demand + incremental.** Re-curate only what the diff changed; deterministic
+  groups are the always-free floor.

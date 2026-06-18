@@ -73,6 +73,8 @@ export interface Model {
   consumes?: string[];
   workspaces?: string[];
   manifest?: ProjectManifest;
+  /** AI/human positioning narrative (the Curate layer) — what this system is and how it's shaped. */
+  narrative?: string;
   features?: Feature[];
   systems: Element[];
   components: Element[];

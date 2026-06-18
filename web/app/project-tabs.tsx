@@ -136,6 +136,7 @@ export interface Overview {
   technologies: { name: string; category: string }[];
   analyzedAt: string | null;
   manifest?: ProjectManifest | null;
+  narrative?: string | null;
 }
 
 const BAND_CLASS: Record<string, string> = {
@@ -411,6 +412,15 @@ export function ProjectTabs({
       <div className="min-w-0 flex-1">
         {facet === "overview" ? (
           <div className="space-y-4">
+            {overview.narrative ? (
+              <Card className="space-y-2 p-5">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-medium text-muted-foreground">How this system is shaped</span>
+                  <Badge variant="outline" className="border-primary/30 font-normal text-primary">AI-curated</Badge>
+                </div>
+                <p className="whitespace-pre-line text-sm leading-relaxed">{overview.narrative}</p>
+              </Card>
+            ) : null}
             {overview.manifest && (overview.manifest.goal || overview.manifest.author?.name || overview.manifest.agents?.length) ? (
               <Card className="space-y-3 p-5">
                 <div className="flex flex-wrap items-center gap-2">

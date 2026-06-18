@@ -20,6 +20,7 @@ import { detectWorkspaces, packageOf } from "./workspaces.js";
 import { deriveGroups } from "./groups.js";
 import { applyManifest } from "../project/manifest.js";
 import { detectFeatures } from "../project/features.js";
+import { readCuration, applyCuration } from "../project/curation.js";
 import { deriveFeatureFlows, processFromFlow } from "./flows.js";
 
 /** Upgrade weak path-derived component roles using file content signals. */
@@ -97,6 +98,7 @@ export function analyzeRepo(root: string): ArchitectureModel {
   const members = detectWorkspaces(root);
   tagPackages(model, members);
   deriveGroups(model, members); // semantic clusters (domains/layers) once roles+packages exist
+  applyCuration(model, readCuration(root)); // overlay agent/human curation onto the domains
   applyConfig(root, model);
   applyManifest(root, model);
   model.features = detectFeatures(root, model);
