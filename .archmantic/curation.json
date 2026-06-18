@@ -1,0 +1,37 @@
+{
+  "overview": "Archmantic reverse-engineers a single grounded architecture model (the IR) from a repo and serves it to both humans — interactive diagrams plus an AI-curated map — and AI agents, over MCP. A tiered, cheapest-first pipeline collects everything with file:line provenance; projections render it as context / component / sequence / ERD views and a domain map; the spec layer (project brain, features) and skills add human intent on top of the structure. The same model an agent queries is the one a human edits.",
+  "domains": {
+    "analyze": {
+      "name": "Analysis pipeline",
+      "description": "Tiered, cheapest-first reverse-engineering (Tier 0/1 + stack, data model, endpoints, groups) that turns a repo into the grounded model."
+    },
+    "ir": {
+      "name": "Architecture model (IR)",
+      "description": "The core typed model every element is grounded into; all diagrams and MCP answers are projections of it."
+    },
+    "mcp": {
+      "name": "MCP server",
+      "description": "Exposes the model to AI agents as read/write tools over stdio, with per-call usage metering."
+    },
+    "skills": {
+      "name": "Skills",
+      "description": "On-shelf playbook catalog resolved against the model with cited reasons."
+    },
+    "diff": {
+      "name": "Diff & history",
+      "description": "Architecture diff, per-commit history, and PR-comment rendering."
+    },
+    "cloud": {
+      "name": "Team cloud",
+      "description": "Push/pull the shared model and usage events to Neon — direct, or via the org-scoped API."
+    },
+    "project": {
+      "name": "Spec & projections",
+      "description": "The human-intent layer (project brain, features, curation) and the projections: HTML viewer, BPMN, build spec, AGENTS.md."
+    },
+    "root": {
+      "name": "CLI & orchestration",
+      "description": "The CLI entrypoint and top-level flows: analyze, agent hand-off, the local editor, and the multi-repo system view."
+    }
+  }
+}

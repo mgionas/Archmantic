@@ -33,19 +33,83 @@ code-graph commodity territory?
 | ✅ done | Skills (model-resolved) | On-shelf playbook catalog ranked against the grounded model with cited reasons; builtin + local + remote (`skill add`); MCP `suggest_skills`/`list_skills`/`get_skill` + CLI `skill` | High · Med |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
 
-## Next — v1.2: interactivity & accuracy
+## Next — future development & missing areas
 
-Builds on the React Flow graphs + semantic roles. Web-only items deploy via Vercel;
-core items ship in a new npm release.
+The MVP and Spec/Skills layers have shipped (M0–M6 + 1.3.0–1.17.0). What follows is
+the forward plan, grouped by theme and judged against the north star: does it make
+the model more **trustworthy**, more **useful to agents**, or more **adoptable** —
+without sliding into code-graph commodity territory. Each item names the gap it
+closes (verified against `src/` as of 1.17.0).
 
-| # | Item | Scope | Status |
+### Top candidates (highest signal first)
+
+| Item | Theme | Why now | Impact · Effort |
 |---|---|---|---|
-| **1** | Deep-linkable view state | web | ✅ `?view=<facet>&d=<diagram>` via `useUrlState` |
-| **2** | Content-signal role refinement | core | ✅ `refineRole` content signals (route/hook/store/ui); **pending npm 1.2.0 publish** |
-| **3** | Graph polish | web | ✅ clickable role legend (highlight/dim) |
+| **Experience layer (collect → curate → present)** | the concept | The diagrams are mechanical because they project the raw import graph. Reframe: deterministic analysis **collects** everything (for agents), an incremental **AI curation** pass cleans/names/narrates it (for humans), each audience gets the form it needs. The headline direction — see **[docs/design/EXPERIENCE-LAYER.md](./design/EXPERIENCE-LAYER.md)**. | Very High · High |
+| **Architecture rule/violation engine** | trust | Cycles, layering violations, change-amplifier hot-spots — turns the model from *descriptive* to *prescriptive*. The `monorepo-dependency-map` skill already *recommends* this; nothing computes it. Model-native, defensible, not code-graph. **Must stay generative, not a straitjacket** (principles below). | High · Med |
+| **Breaking-change detection in `diff`/PR diff** | trust | Lead with **cross-repo consumer impact** ("this PR removes `GET /orders/:id`, which `billing` consumes") — nobody does contract-breakage at the architecture level. The teeth on the PR-diff USP; promote it. | High · Med |
+| **Language expansion (backend langs + mobile family)** | adoption | Two families, not five equal parsers (below). Backend-pattern langs reuse the endpoint/data-model detectors; mobile needs new projections. Biggest adoption lever. | High · High |
+| **Web parity for CLI-only power** | adoption | Bring model-side flows into the hosted app for the non-CLI audience (PM/architect/EM) — the adoption + per-seat monetization bridge. "Bring vs show" split below. | Med · Med |
+| **Skills/agent usage stats** | agents·stats | Track *which* skills/agents the MCP serves (not just that `get_skill` was called) and surface on web `/usage` — proves the shelf earns its keep and informs the catalog + future registry. Small, reuses the metering substrate. | Med · Low |
+| **Skills v2 — remote shelf + execution** | agents | Signed remote registry (the "on-shelf when needed" vision), gated skill execution / agent invocation (today skills are data-only), web skill add/author. | Med · Med-High |
+| **Billing/metering on the usage substrate** | platform | The event stream + `/usage` dashboard already exist (the metering substrate, D6). Turn it into the open-SaaS revenue path (per-seat + metered AI). | High · Med |
 
-Recommended sequence: **npm + docs** (coupled, cheap) → **ERD** → **GitHub
-Action** → **MCP usage stats** → API surface → multi-repo auto-link.
+### By theme
+
+**0 · The experience layer — collect → curate → present (the headline concept).**
+Full design: **[docs/design/EXPERIENCE-LAYER.md](./design/EXPERIENCE-LAYER.md)**. One grounded model, two audiences, an AI layer between.
+- **Collect (deterministic, cheap):** classify externals so **libraries are `Technology`, never `System`** (kills the `lucide-react`/`node:fs`-in-the-context-diagram noise); deterministic groups (folder/role/package) as the cold-start scaffold. *Fixes ~6 of the diagram complaints with no AI.*
+- **Curate (AI, incremental, cached, grounded):** an LLM pass that reads the full model and produces the **human** layer — discovers & names domains, writes plain-language descriptions, ranks what matters, and generates the project's **positioning narrative** ("what this is, how it's shaped"). Never invents structure; carries `llm` provenance + an "AI-curated" trust band. Incremental via the architecture diff, cached per snapshot, tiered (Haiku/Opus), BYOK/managed — the monetizable premium on the existing usage substrate, triggered by the CI reconciler (collect → curate → push).
+- **Present (per audience):** humans get the **Architecture Map** (auto C4 L1/L2, curated domains as containers — the new hero/front door), Context (classified boundary), Components (clustered, libraries collapsed), feature **journeys** + on-demand behavior **sequences** (scoped to a feature/endpoint, *not* import edges), a feature map, rendered Knowledge, a Changes **timeline**, and a first-class microservices **System landscape**. Diagrams stop being a destination — they become zoom levels inside the facet that owns the question. Facets consolidate ~13 → ~8 (Capabilities folds into component detail + domain descriptions; Knowledge folds into Overview). Agents get the grounded model + curated summaries over MCP (`get_architecture_map`).
+- **IR (schema 0.1.0 → 0.2.0):** `Group`/`Component.groupId`; `System.externalKind` + `uses_library` relation; `FlowStep.kind` + `Flow.trigger` (behavior, feature-scoped); `Process.featureId`/`lanes` (journeys); curated `description`/positioning fields with `llm` provenance.
+
+**1 · Trust & accuracy (the core differentiator).**
+- **Architecture rule/violation engine** — and it must *leave room for new ideas*, not freeze the design. Principles:
+  - *Advisory by default*, CI-gating only on per-rule opt-in (severity: info / warn / error).
+  - *Baseline-ratchet, not zero-violations* — snapshot today's architecture as the baseline; flag only **new** violations (regressions). Existing structure and deliberate redesigns are grandfathered.
+  - *Rules-as-data, team-authored* (mirror the Skills shelf) — ship a starter set; teams author/extend their own constraints. The engine is a substrate for *this team's* evolving intent, not one imposed notion of "clean."
+  - *Violations can become decisions* — an acknowledged violation + reason records an intentional exception (a lightweight ADR) with provenance, instead of nagging forever.
+  - *Surface emergent/positive structure*, not just faults (a forming cluster, a god-module, a shareable service) — propose improvements, don't only police.
+  - *Check against the Spec layer* — validate structure against stated intent (features/manifest) so rules follow when intent changes.
+- **Breaking-change detection** — removed/renamed endpoints, changed methods/paths, removed capabilities, schema-breaking field/entity changes, removed consumed exports. **Lead with cross-repo impact** via the multi-repo link graph (consumer-aware). Promote as "PR review that tells you what *breaks*, including downstream repos."
+- Schema-drift: extend `db-check` from presence-only to **type/nullability** comparison (deferred in 1.15.0 for false-positive risk — revisit with a normalized type map).
+- Tier 3 (runtime): ingest traces/observability to confirm declared vs actual call paths (long-deferred; the highest-confidence grounding source).
+
+**2 · Language & framework coverage (adoption) — two families.**
+This is where the long-deferred **tree-sitter** substrate finally pays off: one parsing layer, per-language grammars + per-framework detectors. The IR is already language-agnostic — the work is walkers + detectors (+ new projections for mobile).
+- **Backend-pattern languages** — reuse the existing `Endpoint`/`DataEntity` shapes: **Python** first (Django/FastAPI/Flask; SQLAlchemy/Django ORM), then **Java/Kotlin (Spring)** (`@RestController`, JPA) and **C#/.NET** (ASP.NET controllers, EF). Lowest friction, highest backend adoption.
+- **Mobile family** — **Swift (SwiftUI)** and **Kotlin (Compose/Android)**. No HTTP surface; the valuable projections are **screen/navigation graphs, view-model dependencies, networking clients** — a distinct workstream, *not* "another grammar." The Spec layer (features + behavior flows) already fits mobile screens well.
+- Other detectors: **TypeORM** (the one open ORM detector since the ERD work), Mongoose, ActiveRecord; **OpenAPI/Swagger ingestion** (deferred in 1.5.0 awaiting a populated spec) and gRPC/proto for service contracts.
+
+**3 · Agent plane / Skills & stats (useful to agents).**
+- **Skills/agent usage tracking** — extend the usage event with the *subject* (skill slug / suggested agent) so `suggest_skills`/`get_skill` record which specific skills were surfaced/served; aggregate a "Skills served · agents suggested" panel on web `/usage`. Proves the shelf's value and feeds catalog/registry decisions. Small; reuses `src/mcp/usage.ts` + the cloud event stream.
+- **Skills v2** — remote skill registry + signing; gated execution/agent invocation; web skill management (see docs/design/SKILLS.md "Future").
+- A provenance-carrying **write/propose** MCP tool so an agent can suggest model/feature edits for human review (today writes are `refresh`/`sync`/`sync_features` only).
+- Harden the autonomous build (`handoff --apply`): tighter sandboxing, broader verification.
+
+**4 · Web parity & UX (adoptable) — "bring vs show".**
+The hosted app can't see the user's disk, so split parity explicitly:
+- **Bring to web** (operates on the *pushed model* — fully hostable):
+  - **AI `feature sync`** — "AI compile" on a feature: edit the description → review proposed shows/actions/implied features as a diff before save (the marquee edit-then-build-for-the-spec demo; server-side key = a monetization touch point).
+  - **Build-spec / hand-off view** — render the agent-ready spec from the model; copy/download; "generate plan".
+  - **Skill management UI** — add from URL, author/edit local skills, toggle which apply.
+  - **Architecture timeline** — drift% + added/removed elements across commits (compelling for EMs).
+  - **Per-package (monorepo) detail** and a **provenance deep-dive panel** (every `file:line` ref for an element, with source links).
+- **Show results in web** (inherently local → surfaced via CI/CLI, not run in-browser): true **`drift`** vs working tree and local file editing stay CLI/CI; the web displays the pushed result (e.g. CI pushes a drift snapshot → a drift status badge per project).
+
+**5 · Platform & business.**
+- Billing/metering (above); org settings, roles, and team management beyond token CRUD.
+
+### Decided · bidirectional web ↔ agent sync = git-as-transport + repo-canonical proposals
+The local constraint (the hosted app can't reach the dev's disk) is solved by making **git the message bus** — the one channel both sides reach, and already the source of truth. The cloud DB demotes to a cache/projection, not a second source of truth.
+- **Web → repo:** web edits are written as commits on a dedicated branch / PR via a git-host App (GitHub first). They are **proposals** — never silently overwriting; the human/agent reviews and merges. Git's 3-way merge + PR review handle history, attribution, and conflicts for free.
+- **Repo → web:** **CI as the always-on reconciler** — a GitHub Action runs `analyze && push` on every commit (the PR-diff Action already exists), so the cloud always reflects the repo with no dev box online.
+- **Conflict stance:** **repo-canonical, web-edits-as-proposals.** Every edit carries its **base model version/commit** so divergence is detectable; conflicts surface to the human (via the PR), they're never auto-resolved against the repo.
+- **Sequencing:** (1) now — polling+ (interval poll, base-version cursor on edits); (2) the bet — git-host App + CI reconciler; (3) only if real-time proves necessary — an outbound SSE nudge from the long-running MCP server via a managed realtime service (don't build speculatively).
+
+### DEFER (still red-ocean / premature)
+- Function-level tracking (see below).
+- Platform-orchestrated "Managed Agents" building — keep BYOK-first until the edit-then-build loop proves out.
 
 ---
 
@@ -279,6 +343,30 @@ dependency that isn't a curated tech as `category: "library"` (package.json
 The full library list shows under a collapsible "Libraries" in the web Overview;
 the curated stack still leads the knowledge file / terminal (a "+N libraries" note
 keeps those concise).
+
+### ✅ done · Real sequence diagrams + Mermaid removed (1.16.0)
+A dedicated React Flow sequence view (`web/components/sequence-diagram.tsx`):
+participant lifelines, activation bars, ordered labeled messages, self-message
+loops — driven by a `flowSequence` projection that keeps every step in time order
+(unlike `flowGraph`, which collapses repeated edges). And Mermaid was dropped
+everywhere: the web renders all graphs with React Flow; the CLI's standalone HTML
+viewer uses native HTML tables/lists; BPMN stays on `bpmn-js`. Removed the dead
+`.mmd` exports and the Mermaid string-generators from core + web.
+
+### ✅ done · Skills — model-resolved playbook catalog (1.17.0)
+An on-shelf catalog of reusable playbooks **resolved against the grounded model**
+(see docs/design/SKILLS.md). Each skill declares triggers (`tech:`/`category:`/
+`external:`/`role:`/`entity`/`endpoint`/`feature`/`process`/`monorepo`/`always`)
+matched against model facts, scored and ranked with **cited reasons** ("Laravel
+detected", "external dependency: Stripe"). Three supply layers: builtin catalog
+(`src/skills/catalog.ts`, 8 skills, bundled data), local `.archmantic/skills/*.md`,
+and remote (`archmantic skill add <url>` fetches markdown into the local cache).
+Skills are **data — recommended, never auto-executed**; the agent/human decides.
+Surfaced via MCP `suggest_skills`/`list_skills`/`get_skill`, CLI `skill
+[suggest|list|show|add]`, and a web **Skills** facet (resolved builtin shelf,
+grounded "why", collapsible playbook). The wedge: model-driven resolution, not a
+flat marketplace. Next (Skills v2): signed remote registry, gated skill execution/
+agent invocation, web skill-management UI.
 
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need

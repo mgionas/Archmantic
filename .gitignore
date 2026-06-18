@@ -39,3 +39,4 @@ yarn-error.log*
 # rebuilds view.html / *.mmd / *.bpmn from model.json).
 .archmantic/*
 !.archmantic/model.json
+!.archmantic/curation.json

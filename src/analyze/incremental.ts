@@ -18,6 +18,8 @@ import { componentFor } from "./tier0.js";
 import { extractFileEdges, buildExternalSystem } from "./tier1.js";
 import { extractFileCapabilities, deriveProcessAndFlow } from "./derive.js";
 import { detectStack } from "./stack.js";
+import { deriveGroups } from "./groups.js";
+import { readCuration, applyCuration } from "../project/curation.js";
 
 const relOf = (id: string) => id.slice(id.indexOf(":") + 1);
 
@@ -106,6 +108,10 @@ export function incrementalUpdate(root: string, base: ArchitectureModel): Increm
 
   // --- Tech stack: cheap re-detect from package.json ---
   model.technologies = detectStack(root);
+
+  // --- Semantic groups + curation overlay: cheap full re-derive over the patched components ---
+  deriveGroups(model, model.workspaces ?? []);
+  applyCuration(model, readCuration(root));
 
   // --- Process + flow: cheap full re-derive over the patched graph ---
   deriveProcessAndFlow(root, model);

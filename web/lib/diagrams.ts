@@ -4,6 +4,23 @@ import { componentLabel } from "./format";
 /** Projections from the one grounded model to the many interactive React Flow
  *  views (context, components, sequence, ERD). One model → many views. */
 
+/** External systems that belong on the architecture graphs: real systems
+ *  (datastore/saas/infra/service), not linked libraries or the runtime — those live
+ *  on the Technologies page. Falls back gracefully for pre-0.2.0 models without
+ *  `externalKind` (only `node:` runtime imports are excluded there). */
+export function systemExternalIds(model: Model): Set<string> {
+  const out = new Set<string>();
+  for (const s of model.systems) {
+    if (s.kind !== "external") continue;
+    const ek = s.externalKind;
+    const keep = ek
+      ? ek === "datastore" || ek === "saas" || ek === "infra" || ek === "service"
+      : !s.name.startsWith("node:");
+    if (keep) out.add(s.id);
+  }
+  return out;
+}
+
 /** Node/edge graph for the component view (React Flow). Externals included as leaf nodes. */
 export interface GraphNode {
   id: string;
@@ -18,7 +35,7 @@ export interface GraphEdge {
 }
 export function componentGraph(model: Model): { nodes: GraphNode[]; edges: GraphEdge[] } {
   const compIds = new Set(model.components.map((c) => c.id));
-  const externalIds = new Set(model.systems.filter((s) => s.kind === "external").map((s) => s.id));
+  const externalIds = systemExternalIds(model); // real systems only — libraries demoted
   const nodes: GraphNode[] = model.components.map((c) => ({
     id: c.id,
     label: componentLabel(c.id),
@@ -82,6 +99,74 @@ export function componentDetails(model: Model): Record<string, CompDetail> {
   return out;
 }
 
+// ── Architecture Map (C4 L1/L2: domains as containers) for React Flow ─────────
+
+export interface MapNode {
+  id: string;
+  label: string;
+  kind: "domain" | "external";
+  /** component count (domains) */
+  count: number;
+  /** dominant roles in the domain (for the colored mix dots) */
+  roles: string[];
+  /** datastore|saas|infra|service (external nodes only) */
+  externalKind?: string;
+}
+export interface MapEdge {
+  id: string;
+  source: string;
+  target: string;
+  /** number of underlying component relations this aggregates */
+  weight: number;
+}
+
+/** Project the model to a high-level map: domain clusters + the real external systems
+ *  they touch, with cross-domain edges aggregated from component relations. The C4
+ *  L1/L2 "what is this system and how is it shaped" view — files never appear here. */
+export function architectureMap(model: Model): { nodes: MapNode[]; edges: MapEdge[] } {
+  const domains = (model.groups ?? []).filter((g) => (g.kind ?? "") === "domain");
+  const compDomain = new Map<string, string>(); // componentId → domain group id
+  for (const g of domains) for (const cid of g.members) compDomain.set(cid, g.id);
+  const roleOf = new Map(model.components.map((c) => [c.id, c.role ?? "module"]));
+  const sysExt = systemExternalIds(model);
+  const extById = new Map(model.systems.map((s) => [s.id, s]));
+
+  const nodes: MapNode[] = domains.map((g) => {
+    const counts = new Map<string, number>();
+    for (const cid of g.members) {
+      const r = roleOf.get(cid) ?? "module";
+      counts.set(r, (counts.get(r) ?? 0) + 1);
+    }
+    const roles = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([r]) => r);
+    return { id: g.id, label: g.name, kind: "domain", count: g.members.length, roles };
+  });
+
+  const agg = new Map<string, MapEdge>();
+  const usedExt = new Set<string>();
+  for (const r of model.relations) {
+    const fromD = compDomain.get(r.from);
+    if (!fromD) continue;
+    let target: string | undefined;
+    if (compDomain.has(r.to)) {
+      const toD = compDomain.get(r.to)!;
+      if (toD === fromD) continue; // intra-domain edges stay inside the cluster
+      target = toD;
+    } else if (sysExt.has(r.to)) {
+      target = r.to;
+      usedExt.add(r.to);
+    } else continue;
+    const id = `${fromD}->${target}`;
+    const e = agg.get(id) ?? { id, source: fromD, target, weight: 0 };
+    e.weight++;
+    agg.set(id, e);
+  }
+  for (const id of usedExt) {
+    const s = extById.get(id);
+    if (s) nodes.push({ id, label: s.name, kind: "external", count: 0, roles: [], externalKind: s.externalKind });
+  }
+  return { nodes, edges: [...agg.values()] };
+}
+
 // ── Context graph (system ↔ externals) for React Flow ─────────────────────────
 
 export interface ContextNode {
@@ -98,7 +183,7 @@ export function contextGraph(model: Model): { nodes: ContextNode[]; edges: Conte
   const internal = model.systems.find((s) => s.kind === "internal");
   const sysId = internal?.id ?? "sys:internal";
   const nodes: ContextNode[] = [{ id: sysId, label: internal?.name ?? model.project, kind: "system" }];
-  const externalIds = new Set(model.systems.filter((s) => s.kind === "external").map((s) => s.id));
+  const externalIds = systemExternalIds(model); // real systems only — libraries demoted
   const edges: ContextEdge[] = [];
   const seen = new Set<string>();
   for (const r of model.relations) {

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { detectStack } from "../dist/analyze/stack.js";
+import { detectStack, classifyExternal, isSystemExternalKind } from "../dist/analyze/stack.js";
 
 function withRepo(files, fn) {
   const dir = mkdtempSync(join(tmpdir(), "archmantic-stack-"));
@@ -60,4 +60,41 @@ test("composer require → PHP libraries; php/ext + require-dev excluded", () =>
       assert.equal(t.find((x) => x.name === "barryvdh/laravel-debugbar"), undefined, "unknown require-dev not a library");
     },
   );
+});
+
+test("technologies carry their declared version", () => {
+  withRepo(
+    { "package.json": JSON.stringify({ name: "app", dependencies: { next: "^15.1.0", axios: "~1.7.2" } }) },
+    (dir) => {
+      const t = detectStack(dir);
+      assert.equal(t.find((x) => x.name === "Next.js")?.version, "^15.1.0", "curated tech keeps its version");
+      assert.equal(t.find((x) => x.name === "axios")?.version, "~1.7.2", "library keeps its version");
+    },
+  );
+});
+
+test("classifyExternal: real systems vs libraries vs runtime", () => {
+  // real external systems → drawn on the graphs
+  assert.equal(classifyExternal("pg", false), "datastore");
+  assert.equal(classifyExternal("@neondatabase/serverless", false), "datastore");
+  assert.equal(classifyExternal("stripe", false), "saas");
+  assert.equal(classifyExternal("@anthropic-ai/sdk", false), "saas");
+  assert.equal(classifyExternal("@aws-sdk/client-s3", false), "infra");
+  // linked libraries → demoted to the Technologies page, NOT the graph
+  assert.equal(classifyExternal("lucide-react", false), "library");
+  assert.equal(classifyExternal("clsx", false), "library");
+  assert.equal(classifyExternal("@modelcontextprotocol/sdk", false), "library");
+  // runtime / builtins → never drawn
+  assert.equal(classifyExternal("node:fs", false), "runtime");
+  assert.equal(classifyExternal("fs", true), "runtime");
+});
+
+test("isSystemExternalKind: only real systems are graph-worthy", () => {
+  assert.equal(isSystemExternalKind("datastore"), true);
+  assert.equal(isSystemExternalKind("saas"), true);
+  assert.equal(isSystemExternalKind("infra"), true);
+  assert.equal(isSystemExternalKind("service"), true);
+  assert.equal(isSystemExternalKind("library"), false);
+  assert.equal(isSystemExternalKind("runtime"), false);
+  assert.equal(isSystemExternalKind(undefined), false);
 });

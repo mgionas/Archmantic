@@ -15,6 +15,7 @@ import { dirname, join } from "node:path";
 import ts from "typescript";
 import { type ArchitectureModel, type Provenance, type Relation, type System } from "../ir/types.js";
 import { STRUCTURAL_CONFIDENCE } from "./tier0.js";
+import { classifyExternal } from "./stack.js";
 
 const NODE_BUILTINS = new Set([
   "fs", "path", "os", "http", "https", "crypto", "events", "stream", "util",
@@ -42,13 +43,23 @@ function vueScript(text: string): string {
 const compId = (rel: string) => `comp:${rel}`;
 const isBuiltin = (pkg: string) => NODE_BUILTINS.has(pkg);
 
-/** Build the System node for an external dependency (bare or `node:` specifier). */
+/** Build the System node for an external dependency (bare or `node:` specifier).
+ *  Classified (datastore/saas/infra/library/runtime) so projections can draw real
+ *  systems and demote libraries/runtime to the Technologies page. */
 export function buildExternalSystem(name: string, builtin: boolean): System {
+  const externalKind = classifyExternal(name, builtin);
+  const desc =
+    externalKind === "runtime"
+      ? "Node.js runtime/builtin module"
+      : externalKind === "library"
+        ? "External library"
+        : "External system";
   return {
     id: `sys:ext:${name}`,
     name,
     kind: "external",
-    description: builtin ? "Node.js runtime/builtin module" : "External dependency",
+    externalKind,
+    description: desc,
     provenance: [{ source: "code", ref: name, confidence: STRUCTURAL_CONFIDENCE }],
     confidence: STRUCTURAL_CONFIDENCE,
   };

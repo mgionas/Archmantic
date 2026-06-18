@@ -1,7 +1,9 @@
 # Archmantic — Technical Architecture
 
-> Status: **Design v0.1** — derived from `docs/CONCEPT.md`. Last updated: 2026-06-13.
+> Status: **Design v0.2** — derived from `docs/CONCEPT.md`, reconciled with the shipped system (through 1.17.0). Last updated: 2026-06-18.
 > This describes *how* we build the platform. Recommendations are decisive; anything marked **(confirm)** is a judgment call worth a second look before we commit code.
+>
+> Two layers above the original reverse-engineered structure have since shipped and are documented here: the **Spec layer** (§2.5, human-authored intent — see `docs/design/SPEC-LAYER.md`) and the **Skills layer** (§8.5, model-resolved playbooks — see `docs/design/SKILLS.md`). The model-first / provenance-on-every-derived-element invariant holds for all of it.
 
 ---
 
@@ -36,23 +38,43 @@ The IR is the product. Diagrams and MCP are interfaces onto it.
 
 ## 2. The Architecture Model (IR)
 
-A versioned graph. Conceptual shape (not final schema):
+A versioned graph (`src/ir/types.ts`, `SCHEMA_VERSION 0.1.0`). The full set of element types as shipped — every one extends `ElementBase` (id, name, description?, **provenance[]**, **confidence**, package?):
 
-| Element | Examples | Key fields |
+| Element | Examples | Key fields beyond the base |
 |---|---|---|
-| **System** | the project itself, external systems | id, name, kind, description |
-| **Component** | service, module, package, layer | id, name, responsibility, **provenance[]** |
-| **Actor** | user role, external system, scheduler | id, name, kind |
-| **Relation** | calls, depends-on, publishes-to, reads | from, to, kind, **provenance[]** |
-| **Flow** | a sequence (checkout, login) | ordered steps, participants, **provenance[]** |
-| **Process** | a business process (BPMN) | tasks, gateways, events, lanes |
-| **Capability** | a feature/capability description | id, title, prose, linked components |
+| **System** | the project itself, external systems | kind (`internal`/`external`) |
+| **Component** | service, module, package, layer | kind, role (route/page/hook/store/service/…), systemId, responsibility |
+| **Actor** | user role, external system, scheduler | kind (`user`/`external_system`/`scheduler`/`other`) |
+| **Relation** | calls, depends-on, publishes-to, reads | from, to, kind (`calls`/`depends_on`/`publishes_to`/`subscribes_to`/`reads`/`writes`) |
+| **Flow** | a sequence (checkout, login) | participants[], steps[] (each `file:line`-grounded), featureId? (Spec layer) |
+| **Process** | a business process (BPMN) | tasks[] (gateways/events/lanes deferred) |
+| **Capability** | the lightweight auto-derived "what can it do?" layer | componentIds[] |
+| **Technology** | detected framework/lib/db/orm/auth/ai/… | category (framework/ui/database/orm/auth/ai/testing/build/language/infra/library) |
+| **Feature** | user-perspective product feature (Spec layer) | shows[], actions[], dependsOn[], components[], status — see §2.5 |
+| **DataEntity** | a DB table / ORM model (projects to ERD) | fields[] (DataField: type, optional, list, isId, isUnique, relationTo, isForeignKey) |
+| **Endpoint** | REST route / tRPC procedure / GraphQL field | method, path, protocol (`rest`/`trpc`/`graphql`) |
 
-Every element and relation carries:
+Plus two human-intent records on the model itself (Spec layer, §2.5): **ProjectManifest** (the "project brain" — goal, status, author/owners, links, agent team, history) and the **Author**/**AgentRef** it references.
+
+Every derived element and relation carries:
 - `provenance[]` — list of `{source, ref, confidence}` (e.g. `{code, "src/pay/charge.ts:42", 0.9}`). **No element without provenance** (except user-authored edits, tagged `source: human`).
 - `confidence` — drives the "is this trustworthy?" surface and the tiered escalation (low confidence → escalate to a deeper, costlier analysis tier).
 
 Stored as **diffable text** (one canonical JSON/YAML doc per project, or sharded per subsystem) so it version-controls cleanly in the repo.
+
+---
+
+## 2.5 The Spec layer (human-authored intent on top of structure)
+
+The tiered pipeline (§3) reverse-engineers *structure*. The **Spec layer** adds the *intent* a machine can't read off code — authored by humans and agents, kept live, and merged into the one model so diagrams/MCP/web stay projections. Same invariants: model-first, repo files are the source of truth (git-versioned, agent-editable, diffable), `source: "human"` provenance on authored elements. Full design: **`docs/design/SPEC-LAYER.md`**.
+
+Three shipped phases, top to bottom:
+
+1. **Project brain** — `.archmantic/project.json` (`ProjectManifest`): goal, status, author/owners, links, the agent team (auto-seeded from `.claude/agents/*.md` when unset), and a history log. Merged into `model.manifest` during `analyze`; leads the Knowledge/web header; surfaced via MCP `get_project`.
+2. **Feature layer** — `.archmantic/features/<slug>.md` (frontmatter + `## Shows` / `## Actions` / `## Depends on`) → the `Feature` IR type. Seeded **bottom-up** from page/route components when no file exists; **authored files win** (provenance flips to human once edited). Surfaced via MCP `list_features` / `get_feature`. `Feature` is the richer user-perspective layer; `Capability` stays the lightweight auto-derived one.
+3. **Intent compiler** — `archmantic feature sync` / MCP `sync_features`: a BYOK Claude **Opus 4.8** pass (adaptive thinking, JSON-schema structured output) that fills `shows`/`actions`/`dependsOn` from each feature's description and **creates implied features** (e.g. "a vendors section" → a `Vendors` feature), writing the results back as files.
+
+Behavior is captured as **feature-scoped flows** (`Flow.featureId`) — per-feature, function-level sequences with `file:line` provenance on each step — not a global call graph (deliberately deferred).
 
 ---
 
@@ -101,21 +123,29 @@ These rendered artifacts are **derived** — the IR is the source. We can regene
 
 ## 6. MCP server (Decision #6 — bidirectional)
 
-The MCP server is how agents consume (and the token-savings story). It exposes **structured tools over the IR**, not raw files:
+The MCP server is how agents consume (and the token-savings story). It exposes **structured tools over the IR**, not raw files. As shipped (`src/mcp/server.ts`) it registers **21 tools**:
 
 **Read tools (agent ← Archmantic):**
-- `get_context` — system context + components (compact)
-- `get_component(name)` — one component's responsibility, relations, provenance
-- `get_sequence(flow)` / `list_flows`
-- `get_process(name)` (BPMN)
-- `search_capabilities(query)` — semantic search over capability descriptions
-- `whats_related(element)` — graph neighborhood (this is the big token-saver: "what touches checkout?" returns 200 tokens instead of 20 files)
+- `get_context` — system context, externals, counts, primary process (compact)
+- `get_project` — the project brain (goal, status, author, agent team, history) — the "why"
+- `list_components(filter?)` / `get_component(name)` — components + responsibilities; one component's relations & provenance
+- `search_capabilities(query)` — "what can this system do?" capabilities matching a query
+- `get_process` (BPMN) / `get_sequence` — primary process steps; primary call/dependency sequence
+- `get_data_model` — DB entities/fields with PK/FK/unique markers + relations (the ERD)
+- `get_api_surface` — REST/tRPC/GraphQL contract grouped by protocol
+- `suggest_links` — inferred/dangling cross-repo `consumes` edges vs the org's other repos
+- `list_features` / `get_feature(name)` — the Spec-layer feature intent (shows/actions/dependsOn)
+- `whats_related(name)` — graph neighborhood (the big token-saver: "what touches checkout?" returns ~200 tokens, not 20 files)
+- `get_architecture_map` — the C4 L1/L2 map: domains as containers, cross-domain edges, external systems, the positioning narrative, and which domains are uncurated (the Curate layer, §2.5)
+- `suggest_skills` / `list_skills` / `get_skill(name)` — the Skills layer (§8.5): model-ranked playbooks with grounded reasons, the shelf, and one skill's body
 
-**Write/feedback tools (agent → Archmantic):**
-- `propose_change(diagram_edit)` — agent edits the model (feeds the "edit then build" loop)
-- `report_drift(observation)` — agent flags model/reality mismatch it noticed while coding
+**Write tools (agent → Archmantic):**
+- `refresh` — re-analyze the repo from disk and update the served model + `.archmantic/model.json`
+- `sync_features` — run the BYOK intent compiler (§2.5) and write features back
+- `sync` — re-analyze and push the model to the team cloud, returning what changed
+- `curate` — the user's agent writes domain names/descriptions + the positioning narrative on its own tokens (the Curate layer, §2.5), merged via `.archmantic/curation.json` (no managed LLM)
 
-Built on the official MCP TypeScript SDK; ships as a process the user's existing agent (Claude Code, Cursor) points at — satisfying "plug in first" (Decision #9).
+Built on the official MCP TypeScript SDK; ships as a process the user's existing agent (Claude Code, Cursor) points at — satisfying "plug in first" (Decision #9). Every read call is metered (§8.6) for the proof-of-value loop.
 
 **Token-savings measurement is built into this layer:** every MCP response logs tokens returned; we run a benchmark harness comparing "agent answers task via MCP" vs "agent answers via raw file reads" and report the delta. This is a first-class feature, not an afterthought — it's the proof behind the headline value prop.
 
@@ -153,6 +183,35 @@ CLI commands (MVP-ish): `archmantic init`, `archmantic analyze [--tier N]`, `arc
 
 ---
 
+## 8.5 The Skills layer (model-resolved playbooks)
+
+Shipped 1.17.0 (`src/skills/`). A skill is a reusable **playbook** (a markdown body an agent applies, optionally tagged with an advisory subagent). The differentiator over a flat marketplace: skills are **resolved against the grounded model**, not browsed. Each skill declares **triggers** matched against model facts, and the resolver scores and ranks them, carrying a concrete *reason* for every hit ("Laravel detected", "external dependency: Stripe") so a recommendation is never a black box.
+
+- **Triggers** (`SkillTrigger`): `tech:<name>`, `category:<cat>`, `external:<name>`, `role:<role>`, presence checks `entity` / `endpoint` / `feature` / `process`, `monorepo`, and `always`. Weighted cheapest-signal-loses: a named `tech`/`external` (1.0) outranks a `category` (0.7), `role` (0.6), presence (0.5), and the `always` baseline (0.1).
+- **Three supply layers:** **builtin** (`src/skills/catalog.ts`, 8 bundled skills, no IO/network), **local** (`.archmantic/skills/*.md`, authored or fetched — local wins over builtin by id), **remote** (`archmantic skill add <url>` fetches markdown into the local cache, recording a provenance line).
+- **Safety boundary — data only, never executed.** Archmantic *recommends*; the agent or human decides whether to apply. No skill ever runs from here.
+- **Surface:** MCP `suggest_skills` / `list_skills` / `get_skill`; CLI `archmantic skill [suggest|list|show|add]`; a web Skills facet.
+
+Full design: **`docs/design/SKILLS.md`**.
+
+---
+
+## 8.6 Other shipped capabilities (analysis + substrate)
+
+These extend the pipeline (§3) and the IR (§2); each keeps the model-first/provenance framing.
+
+| Capability | What it does | Where |
+|---|---|---|
+| **API surface** | Detects REST routes, tRPC procedures, GraphQL fields (incl. NestJS, Laravel) → `Endpoint` IR; projected as the contract + `get_api_surface` | analyze pipeline (Tier 1) |
+| **Data model / ERD** | Reads Prisma/Drizzle/SQL/Laravel schemas → `DataEntity`/`DataField` with PK/FK/unique/relations; projects to an ERD + `get_data_model` | analyze pipeline (Tier 1) |
+| **Schema drift** | Diffs the migration-derived entities vs the live DB (introspected), presence-only by design to avoid false positives | `src/drift/schema-drift.ts` |
+| **Architecture diff + history** | Reconstructs the IR at past commits (non-destructive git-archive) and diffs consecutive versions → a per-commit record of how the architecture changed | `src/diff/` (`model-diff`, `history`, `snapshot`) |
+| **Multi-repo system view** | Aggregates per-repo models (each declares `system` + `consumes` in `.archmantic/config.json`) into one cross-service context diagram + cross-repo link inference | `src/system.ts`, `suggest_links` |
+| **Usage metering** | Records each read tool call's returned/saved tokens to a durable `.archmantic/usage.jsonl` outbox, best-effort flushed to the cloud `/usage` dashboard (idempotent by event id; cloud failures never surface to the agent) | `src/mcp/usage.ts` |
+| **Agent hand-off / autonomous build** | Runs the build spec (§9) through Claude Opus 4.8 (BYOK) to produce a concrete, file-level implementation plan a coding agent executes — read-only, it plans, it does not edit the repo | `src/agent.ts` |
+
+---
+
 ## 9. How "edit then build" works (Decision #8 — external-agent-first **(confirm)**)
 
 1. User edits a diagram in the web canvas → platform patches the **IR** (not code).
@@ -177,7 +236,7 @@ This keeps v1 honest: we prove the model→spec loop without owning code generat
 
 ---
 
-## 11. Agreed architecture decisions (2026-06-13)
+## 11. Agreed architecture decisions (2026-06-13, reconciled 2026-06-18)
 
 | Topic | Decision |
 |---|---|
@@ -189,7 +248,19 @@ This keeps v1 honest: we prove the model→spec loop without owning code generat
 | **Platform stack** | Web app = **Next.js on Vercel**; database = **Neon** (serverless Postgres) + **pgvector** for capability search. Local CLI/MCP stays dependency-light and DB-free (in-repo `.archmantic/`). |
 | **Data store (graph vs doc vs relational)** | **Neon Postgres**, used as document + vector + relational: **JSONB** for the evolving IR (MongoDB-style flexibility), **pgvector** for capability semantic search, all in one store. **No MongoDB, no graph DB.** The per-project graph is small → loaded into memory and traversed in app code (TS); the DB persists/indexes, it doesn't do graph compute. Revisit a graph layer (Apache AGE or a dedicated graph DB) only if deep, cross-repo, many-hop traversal becomes a measured bottleneck. |
 
-### Still open (lower-stakes, can decide during build)
-- IR storage shape: single doc vs sharded-per-subsystem (affects diff granularity).
+### Shipped since (decisions now settled in code, through 1.17.0)
+| Topic | Decision as shipped |
+|---|---|
+| **IR storage shape** | **Single canonical doc** — `.archmantic/model.json`, byte-stable (sorted arrays + recursively sorted keys via `serializeModel`) so analyze/incremental/DB-round-trip all produce identical output → churn-free committed IR and clean PR diffs. Sharding not needed at current graph sizes. |
+| **Spec layer** | Human-intent layer above structure: project brain → features → BYOK intent compiler → feature-scoped flows (§2.5, `docs/design/SPEC-LAYER.md`). |
+| **Skills layer** | Model-resolved playbook catalog (builtin/local/remote), data-only/never-executed, surfaced via MCP/CLI/web (§8.5, `docs/design/SKILLS.md`). |
+| **API surface & data model** | First-class IR (`Endpoint`, `DataEntity`); REST/tRPC/GraphQL/NestJS/Laravel + Prisma/Drizzle/SQL/Laravel detection in Tier 1 (§8.6). |
+| **Architecture history** | Per-commit IR reconstruction + diff (§8.6) — the first step of the team "cloud knowledge" story. |
+| **Usage metering** | Durable local outbox (`usage.jsonl`) → best-effort cloud flush; the proof-of-value substrate (§8.6). |
+| **Agent hand-off** | Build spec → Opus 4.8 implementation plan, read-only (§8.6/§9) — the v1 "build" half of edit-then-build. |
+
+### Still open (lower-stakes)
+- Process IR depth: `Process.tasks` is flat today; gateways/events/lanes for richer BPMN remain to be filled in.
+- Tier 3 (runtime/observability) is still future work.
 
 See `docs/MVP_PLAN.md` for the sequenced build.

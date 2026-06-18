@@ -19,6 +19,18 @@ export interface Element {
   componentIds?: string[];
   /** Monorepo: owning workspace member dir (e.g. "apps/api"). */
   package?: string;
+  /** External systems only: datastore|saas|infra|service|library|runtime. Drives whether
+   *  the system appears on the architecture graphs (real systems) or the Technologies page. */
+  externalKind?: string;
+  /** id of the domain Group a component belongs to (the Architecture Map cluster). */
+  groupId?: string;
+}
+
+/** A semantic cluster of components (domain/layer) — powers the Architecture Map. */
+export interface Group extends Element {
+  members: string[];
+  parentId?: string;
+  order?: number;
 }
 export interface DataField {
   name: string;
@@ -61,12 +73,15 @@ export interface Model {
   consumes?: string[];
   workspaces?: string[];
   manifest?: ProjectManifest;
+  /** AI/human positioning narrative (the Curate layer) — what this system is and how it's shaped. */
+  narrative?: string;
   features?: Feature[];
   systems: Element[];
   components: Element[];
+  groups?: Group[];
   relations: (Element & { from: string; to: string })[];
   capabilities: Element[];
-  technologies?: { name: string; category: string }[];
+  technologies?: { id?: string; name: string; category: string; version?: string }[];
   dataEntities?: DataEntity[];
   endpoints?: Endpoint[];
   processes: { id: string; name: string; description?: string; confidence: number; tasks: { id: string; name: string }[] }[];

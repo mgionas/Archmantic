@@ -9,7 +9,7 @@
  * provenance `{ source: "human" }`. Nothing derived is allowed in without a ref.
  */
 
-export const SCHEMA_VERSION = "0.1.0" as const;
+export const SCHEMA_VERSION = "0.2.0" as const;
 
 /** Where a piece of the model was derived from. */
 export type SourceKind = "repo" | "code" | "runtime" | "docs" | "human";
@@ -38,8 +38,15 @@ interface ElementBase {
   package?: string;
 }
 
+/** How an external is reached: real systems/services vs linked code vs the runtime.
+ *  Drives whether it appears on the architecture graphs or only the Technologies page. */
+export type ExternalKind = "datastore" | "saas" | "infra" | "service" | "library" | "runtime";
+
 export interface System extends ElementBase {
   kind: "internal" | "external";
+  /** Set on external systems: distinguishes real systems (datastore/saas/infra/service),
+   *  which belong on the context/component graphs, from `library`/`runtime`, which don't. */
+  externalKind?: ExternalKind;
 }
 
 export interface Component extends ElementBase {
@@ -50,8 +57,29 @@ export interface Component extends ElementBase {
   role?: string;
   /** id of the System this belongs to. */
   systemId?: string;
+  /** id of the domain Group this component belongs to (the cluster it lives in). */
+  groupId?: string;
   /** One-line statement of what this component is responsible for. */
   responsibility?: string;
+}
+
+/**
+ * A semantic cluster of components — the missing middle level between "the whole
+ * repo" and "every file." Powers the Architecture Map (C4 L1/L2): graphs cluster
+ * by `domain` and rank by `layer` instead of rendering a flat file hairball.
+ * Derived deterministically (folder / role / workspace package); the Tier-2/AI
+ * curation pass may rename, merge, and describe domains (raising confidence).
+ */
+export type GroupKind = "domain" | "layer" | "area" | "package";
+
+export interface Group extends ElementBase {
+  kind: GroupKind;
+  /** component ids that belong to this group. */
+  members: string[];
+  /** optional parent group id (area ⊃ domain, package ⊃ domain) for nesting. */
+  parentId?: string;
+  /** display ordering hint for layers (presentation=0 … data=4). */
+  order?: number;
 }
 
 export interface Actor extends ElementBase {
@@ -106,6 +134,8 @@ export interface Capability extends ElementBase {
 export interface Technology extends ElementBase {
   /** framework | ui | database | orm | auth | ai | testing | build | language | infra | library */
   category: string;
+  /** Declared version range from the manifest (e.g. "^1.2.0"), if known. */
+  version?: string;
 }
 
 /** Something a feature shows to the user (e.g. "hero slider", source "admin"). */
@@ -212,6 +242,9 @@ export interface ArchitectureModel {
   project: string;
   /** Human-authored project brain (goal/author/agents/…); see ProjectManifest. */
   manifest?: ProjectManifest;
+  /** AI/human "positioning" narrative — what this system is and how it's shaped. The
+   *  Curate layer (agent-driven over MCP); merged from .archmantic/curation.json. */
+  narrative?: string;
   /** ISO timestamp; stamped by the caller (kept out of pure helpers). */
   generatedAt?: string;
   /** Optional: the multi-repo system this project belongs to (from config). */
@@ -222,6 +255,8 @@ export interface ArchitectureModel {
   consumes?: string[];
   systems: System[];
   components: Component[];
+  /** Semantic clusters (domains/layers) over components — the Architecture Map. */
+  groups: Group[];
   actors: Actor[];
   relations: Relation[];
   flows: Flow[];
@@ -245,6 +280,7 @@ export function sortModel(m: ArchitectureModel): ArchitectureModel {
     ...m,
     systems: [...m.systems].sort(byId),
     components: [...m.components].sort(byId),
+    groups: [...m.groups].sort(byId),
     actors: [...m.actors].sort(byId),
     relations: [...m.relations].sort(byId),
     capabilities: [...m.capabilities].sort(byId),
@@ -280,6 +316,7 @@ export function createEmptyModel(project: string): ArchitectureModel {
     project,
     systems: [],
     components: [],
+    groups: [],
     actors: [],
     relations: [],
     flows: [],

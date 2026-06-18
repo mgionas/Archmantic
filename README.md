@@ -4,7 +4,7 @@
 
 Point Archmantic at a repo and it reverse-engineers a single grounded **architecture model** (the IR). Every diagram is a *projection* of that one model, every element is traceable to `file:line`, and the same model answers your agent's questions over MCP. No drift between views, no ungrounded "AI diagram" guesswork.
 
-> Status: **v1.16.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
+> Status: **v1.17.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
 > _Note: the `amt` short alias was removed in 1.12.0 (it collided with a system binary on macOS) — use `archmantic` / `npx archmantic`._
 
 ---
@@ -114,10 +114,11 @@ claude mcp add archmantic -- npx archmantic mcp   # Claude Code; or add to mcpSe
 
 Once connected your agent can:
 
-- **Read** the model: `get_project` (the goal/owner/agent-team brain), `list_features`/`get_feature` (user-perspective features), `get_context`, `search_capabilities`, `get_component`, `get_process`, `get_sequence`, `get_data_model`, `get_api_surface`, `whats_related`, `list_components`.
+- **Read** the model: `get_architecture_map` (the high-level domain map + positioning narrative), `get_project` (the goal/owner/agent-team brain), `list_features`/`get_feature` (user-perspective features), `get_context`, `search_capabilities`, `get_component`, `get_process`, `get_sequence`, `get_data_model`, `get_api_surface`, `whats_related`, `list_components`.
+- **Curate (your agent, your tokens)**: `curate` writes the human layer — product-language domain names/descriptions and a positioning narrative — into `.archmantic/curation.json` (committed, merged into the model). Archmantic doesn't run an LLM; your agent does the curation as it works.
 - **Skills**: `suggest_skills` ranks the on-shelf playbooks against this project (with grounded reasons), `list_skills` shows the whole shelf, and `get_skill` returns one skill's full playbook to apply.
 - **Cross-repo**: `suggest_links` compares this repo against your org's other repos and proposes links to declare (inferred) or fix (dangling) in `.archmantic/config.json`.
-- **Write/keep it live:** `refresh` (re-analyze from disk), `sync` (re-analyze **and push to the team cloud**, org-scoped), and `sync_features` (run the BYOK intent compiler over the authored features). So when you ask the agent to change something, it can update the shared architecture model in the same flow — no manual `push`. The server also auto-pulls hosted feature edits on startup.
+- **Write/keep it live:** `refresh` (re-analyze from disk), `sync` (re-analyze **and push to the team cloud**, org-scoped), `sync_features` (run the BYOK intent compiler over the authored features), and `curate` (write the domain names/descriptions/narrative). So when you ask the agent to change something, it can update the shared architecture model in the same flow — no manual `push`. The server also auto-pulls hosted feature edits on startup.
 
 The MCP server reads credentials from `.env.local` (so `sync` uses your `ARCHMANTIC_TOKEN`). Every tool call is recorded with the tokens it saved — see `archmantic usage` or the web `/usage` dashboard. This repo also ships a project [`.mcp.json`](.mcp.json) for working on Archmantic itself.
 

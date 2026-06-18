@@ -11,6 +11,7 @@ import {
   contextDetails,
   entityGraph,
   sequenceDeck,
+  architectureMap,
 } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
 import { knowledgeMarkdown } from "@/lib/knowledge";
@@ -153,6 +154,13 @@ export default async function ProjectPage({
     body: m.skill.body,
   }));
 
+  const technologies = (model.technologies ?? []).map((tech) => ({
+    id: tech.id ?? `tech:${tech.name}`,
+    name: tech.name,
+    category: tech.category,
+    version: tech.version ?? null,
+  }));
+
   const eg = entityGraph(model);
   const data = eg.nodes.length
     ? {
@@ -187,6 +195,7 @@ export default async function ProjectPage({
     technologies: (model.technologies ?? []).map((tech) => ({ name: tech.name, category: tech.category })),
     analyzedAt: model.generatedAt ?? null,
     manifest: model.manifest ?? null,
+    narrative: model.narrative ?? null,
   };
 
   return (
@@ -221,6 +230,7 @@ export default async function ProjectPage({
         endpoints={endpoints}
         features={features}
         skills={skills}
+        technologies={technologies}
         workspaces={model.workspaces ?? []}
         source={{ base: repoBase(model.manifest?.links), sha: selectedSha || null }}
         knowledge={knowledgeMarkdown(model)}
@@ -232,6 +242,7 @@ export default async function ProjectPage({
           sequences: sequenceDeck(model),
           processXml: savedBpmn ?? bpmnXml(model),
           erd: data?.graph ?? null,
+          map: architectureMap(model),
           edited: Boolean(savedBpmn),
         }}
       />
