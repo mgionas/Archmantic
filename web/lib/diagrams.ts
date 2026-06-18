@@ -111,6 +111,8 @@ export interface MapNode {
   roles: string[];
   /** datastore|saas|infra|service (external nodes only) */
   externalKind?: string;
+  /** the "Misc" catch-all of collapsed singletons — de-emphasized, no structural edges */
+  muted?: boolean;
 }
 export interface MapEdge {
   id: string;
@@ -124,6 +126,11 @@ export interface MapEdge {
  *  they touch, with cross-domain edges aggregated from component relations. The C4
  *  L1/L2 "what is this system and how is it shaped" view — files never appear here. */
 export function architectureMap(model: Model): { nodes: MapNode[]; edges: MapEdge[] } {
+  // The "Misc" domain is the deterministic catch-all of collapsed singletons (see
+  // deriveGroups). It's not a real domain, so we keep it on the map as a de-emphasized
+  // "leftovers" pile but exclude it from the structural dependency edges — otherwise it
+  // reads as a hub everything depends on (INS-014).
+  const MISC_ID = "group:domain:misc";
   const domains = (model.groups ?? []).filter((g) => (g.kind ?? "") === "domain");
   const compDomain = new Map<string, string>(); // componentId → domain group id
   for (const g of domains) for (const cid of g.members) compDomain.set(cid, g.id);
@@ -138,18 +145,18 @@ export function architectureMap(model: Model): { nodes: MapNode[]; edges: MapEdg
       counts.set(r, (counts.get(r) ?? 0) + 1);
     }
     const roles = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([r]) => r);
-    return { id: g.id, label: g.name, kind: "domain", count: g.members.length, roles };
+    return { id: g.id, label: g.name, kind: "domain", count: g.members.length, roles, muted: g.id === MISC_ID };
   });
 
   const agg = new Map<string, MapEdge>();
   const usedExt = new Set<string>();
   for (const r of model.relations) {
     const fromD = compDomain.get(r.from);
-    if (!fromD) continue;
+    if (!fromD || fromD === MISC_ID) continue; // Misc doesn't originate structural edges
     let target: string | undefined;
     if (compDomain.has(r.to)) {
       const toD = compDomain.get(r.to)!;
-      if (toD === fromD) continue; // intra-domain edges stay inside the cluster
+      if (toD === fromD || toD === MISC_ID) continue; // intra-domain / Misc edges stay off the map
       target = toD;
     } else if (sysExt.has(r.to)) {
       target = r.to;
@@ -162,7 +169,7 @@ export function architectureMap(model: Model): { nodes: MapNode[]; edges: MapEdg
   }
   for (const id of usedExt) {
     const s = extById.get(id);
-    if (s) nodes.push({ id, label: s.name, kind: "external", count: 0, roles: [], externalKind: s.externalKind });
+    if (s) nodes.push({ id, label: s.name, kind: "external", count: 0, roles: [], externalKind: s.externalKind, muted: false });
   }
   return { nodes, edges: [...agg.values()] };
 }

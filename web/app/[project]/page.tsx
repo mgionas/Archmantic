@@ -88,6 +88,9 @@ export default async function ProjectPage({
       ref: c.provenance?.[0]?.ref ?? null,
     })),
   }));
+  const domainNameById = new Map(
+    (model.groups ?? []).filter((g) => g.kind === "domain").map((g) => [g.id, g.name]),
+  );
   const components = model.components.map((c) => ({
     id: c.id,
     label: componentLabel(c.id),
@@ -95,6 +98,8 @@ export default async function ProjectPage({
     path: c.id.slice("comp:".length),
     responsibility: c.responsibility ?? c.id.slice("comp:".length),
     package: c.package,
+    groupId: c.groupId,
+    domain: c.groupId ? domainNameById.get(c.groupId) : undefined,
   }));
   const d = modelDelta(prevModel, model);
 

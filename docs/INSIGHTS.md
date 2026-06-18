@@ -46,22 +46,30 @@
   being annoying. A two-line quickstart note removes the friction and the "is this safe to
   allow-all?" doubt. Surfaced from a real user question while dogfooding.
 
-### INS-014 · Curation is agent-driven — and the "Misc" bucket reads as a real domain
-- **category:** agent-dx · **audience:** both · **status:** shipped (loop) / open (polish)
+### INS-014 · Curation is agent-driven — and the "Misc" bucket reads as a real domain — FIXED
+- **category:** agent-dx · **audience:** both · **status:** shipped
+- **fix:** `architectureMap` now flags the `group:domain:misc` catch-all as `muted` and excludes
+  it from the structural dependency edges (it was both originating and receiving cross-domain
+  edges, reading as a hub everything depends on). The Map renders it as a de-emphasized,
+  dashed "leftovers" pile — still openable to find its components, but clearly not a real domain.
 - **insight:** Phase D landed the agent-driven curation loop (`get_architecture_map` →
   `curate`, the user's agent on its own tokens, merged via committed `.archmantic/curation.json`,
   no managed LLM). Dogfood: the agent curated this repo's 8 domains + a positioning narrative.
-  Polish needed: the singleton-collapse "Misc" bucket appears in the map (even as a dependency
-  target) — it should be visually de-emphasized / excluded from edges, or domains should
-  collapse more gracefully (e.g. attach singletons to their nearest dependency cluster).
-- **why:** Proves the "human + agent share one model" thesis end-to-end. The Misc noise is the
+  The singleton-collapse "Misc" bucket appeared in the map (even as a dependency target) — it
+  should be visually de-emphasized / excluded from edges, or domains should collapse more
+  gracefully (e.g. attach singletons to their nearest dependency cluster — a future option).
+- **why:** Proves the "human + agent share one model" thesis end-to-end. The Misc noise was the
   one rough edge a real onboarding view would trip on.
 
-### INS-013 · Map drill is a name-match heuristic; Components needs a real domain filter
-- **category:** dx · **audience:** humans · **status:** open
-- **insight:** Clicking a domain on the Map jumps to Components with the domain *name* as a
-  text query. It works because names ≈ folders, but a first-class "filter by `groupId`"
-  (now that components carry it) would be exact and also let Components group by domain.
+### INS-013 · Map drill is a name-match heuristic; Components needs a real domain filter — FIXED
+- **category:** dx · **audience:** humans · **status:** shipped
+- **fix:** The Map drill now passes the domain **`groupId`** (not its label) to Components,
+  which filters exactly on `c.groupId`. Components carry `groupId`/`domain` end-to-end
+  (page → `Comp`), there's a removable domain-filter chip, and a new **group-by-domain**
+  option in the Components toolbar (shown when domains exist).
+- **insight:** Clicking a domain on the Map jumped to Components with the domain *name* as a
+  text query. It worked because names ≈ folders, but a first-class "filter by `groupId`"
+  (now that components carry it) is exact and also lets Components group by domain.
 - **why:** Closes the L2→L3 drill cleanly; surfaced while wiring the Architecture Map.
 
 ### INS-012 · Test files are modeled as architecture components — FIXED

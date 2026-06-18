@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { CollapsibleSection } from "@/components/ui/collapsible-section";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Boxes, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUrlState } from "@/lib/use-url-state";
 import type {
@@ -58,6 +59,8 @@ export interface Comp {
   path: string;
   responsibility: string;
   package?: string;
+  groupId?: string;
+  domain?: string;
 }
 export interface Diagrams {
   contextGraph: { nodes: ContextNode[]; edges: ContextEdge[] };
@@ -335,7 +338,9 @@ export function ProjectTabs({
   const [facetParam, setFacet] = useUrlState("view", "overview");
   const [apiQuery, setApiQuery] = useState("");
   const [compQuery, setCompQuery] = useState("");
-  const [compGroupBy, setCompGroupBy] = useState<"role" | "folder" | "package">(isMono ? "package" : "role");
+  // First-class domain filter (groupId), set by the Map drill — exact, not a name match (INS-013).
+  const [compDomain, setCompDomain] = useState<{ id: string; label: string } | null>(null);
+  const [compGroupBy, setCompGroupBy] = useState<"role" | "folder" | "package" | "domain">(isMono ? "package" : "role");
   const [compView, setCompView] = useState<"grid" | "list">("grid");
   const [focusNode, setFocusNode] = useState<string | null>(null);
   const openInGraph = (id: string) => {
@@ -365,16 +370,24 @@ export function ProjectTabs({
   const compGroups = useMemo(() => {
     const q = compQuery.trim().toLowerCase();
     const filtered = components.filter(
-      (c) => !q || `${c.label} ${c.path} ${c.responsibility} ${c.role}`.toLowerCase().includes(q),
+      (c) =>
+        (!compDomain || c.groupId === compDomain.id) &&
+        (!q || `${c.label} ${c.path} ${c.responsibility} ${c.role}`.toLowerCase().includes(q)),
     );
     const m = new Map<string, Comp[]>();
     for (const c of filtered) {
       const key =
-        compGroupBy === "role" ? c.role : compGroupBy === "package" ? c.package ?? "(root)" : folderOfPath(c.path);
+        compGroupBy === "role"
+          ? c.role
+          : compGroupBy === "package"
+            ? c.package ?? "(root)"
+            : compGroupBy === "domain"
+              ? c.domain ?? "(ungrouped)"
+              : folderOfPath(c.path);
       (m.get(key) ?? m.set(key, []).get(key)!).push(c);
     }
     return [...m.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
-  }, [components, compQuery, compGroupBy]);
+  }, [components, compQuery, compDomain, compGroupBy]);
 
   const apiGroups = useMemo(() => {
     const q = apiQuery.trim().toLowerCase();
@@ -560,8 +573,9 @@ export function ProjectTabs({
             <div className="h-[72vh]">
               <ArchitectureMap
                 graph={diagrams.map}
-                onOpenDomain={(label) => {
-                  setCompQuery(label.toLowerCase());
+                onOpenDomain={(domain) => {
+                  setCompDomain(domain);
+                  setCompQuery("");
                   setFacet("components");
                 }}
               />
@@ -643,10 +657,29 @@ export function ProjectTabs({
                 placeholder="Filter components…"
                 className="max-w-sm"
               />
+              {compDomain ? (
+                <button
+                  type="button"
+                  onClick={() => setCompDomain(null)}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 text-xs text-foreground hover:border-primary/60"
+                  title="Clear domain filter"
+                >
+                  <Boxes className="size-3 text-muted-foreground" />
+                  <span className="font-medium">{compDomain.label}</span>
+                  <X className="size-3 text-muted-foreground" />
+                </button>
+              ) : null}
               <div className="ml-auto flex flex-wrap items-center gap-2">
                 <SegmentedControl options={["grid", "list"] as const} value={compView} onChange={setCompView} />
                 <SegmentedControl
-                  options={(isMono ? ["package", "role", "folder"] : ["role", "folder"]) as Array<typeof compGroupBy>}
+                  options={
+                    [
+                      ...(isMono ? ["package"] : []),
+                      "role",
+                      "folder",
+                      ...(mapDomains ? ["domain"] : []),
+                    ] as Array<typeof compGroupBy>
+                  }
                   value={compGroupBy}
                   onChange={setCompGroupBy}
                 />
@@ -654,7 +687,10 @@ export function ProjectTabs({
             </div>
             <RoleLegend roles={[...new Set(components.map((c) => c.role))].sort()} />
             {compGroups.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No components match “{compQuery}”.</p>
+              <p className="text-sm text-muted-foreground">
+                No components{compDomain ? ` in ${compDomain.label}` : ""}
+                {compQuery ? ` match “${compQuery}”` : ""}.
+              </p>
             ) : (
               compGroups.map(([key, items]) => (
                 <CollapsibleSection
