@@ -36,19 +36,23 @@ const EXT_COLOR: Record<string, string> = {
 };
 const dims = (n: MapNode) => (n.kind === "domain" ? { w: DW, h: DH } : { w: XW, h: XH });
 
-function DomainCard({ data, selected }: NodeProps & { data: { label: string; count: number; roles: string[] } }) {
+function DomainCard({ data, selected }: NodeProps & { data: { label: string; count: number; roles: string[]; muted?: boolean } }) {
   return (
     <div
       className={cn(
         "flex flex-col gap-1.5 rounded-lg border bg-card px-3 py-2 text-card-foreground shadow-sm",
         selected ? "border-primary ring-1 ring-primary" : "border-border",
+        // Misc = collapsed singletons: a de-emphasized "leftovers" pile, not a real domain.
+        data.muted ? "border-dashed bg-muted/30 opacity-60" : "",
       )}
       style={{ width: DW, height: DH }}
+      title={data.muted ? "Ungrouped singletons — not a real domain" : undefined}
     >
       <Handle type="target" position={Position.Top} className="!size-1.5 !border-0 !bg-border" />
       <div className="flex items-center gap-1.5">
         <Boxes className="size-3.5 shrink-0 text-muted-foreground" />
         <span className="truncate text-sm font-semibold">{data.label}</span>
+        {data.muted ? <span className="shrink-0 text-[10px] text-muted-foreground">leftovers</span> : null}
         <span className="ml-auto shrink-0 text-xs tabular-nums text-muted-foreground">{data.count}</span>
       </div>
       <div className="flex items-center gap-1">
@@ -100,7 +104,7 @@ function layout(graph: { nodes: MapNode[]; edges: MapEdge[] }): Node[] {
       id: n.id,
       type: n.kind,
       position: { x: p.x - w / 2, y: p.y - h / 2 },
-      data: { label: n.label, count: n.count, roles: n.roles, externalKind: n.externalKind },
+      data: { label: n.label, count: n.count, roles: n.roles, externalKind: n.externalKind, muted: n.muted },
     };
   });
 }
@@ -110,7 +114,7 @@ function Graph({
   onOpenDomain,
 }: {
   graph: { nodes: MapNode[]; edges: MapEdge[] };
-  onOpenDomain?: (label: string) => void;
+  onOpenDomain?: (domain: { id: string; label: string }) => void;
 }) {
   const flow = useFlowProps();
   const rf = useReactFlow();
@@ -179,7 +183,7 @@ function Graph({
           {node.kind === "domain" && onOpenDomain ? (
             <button
               type="button"
-              onClick={() => onOpenDomain(node.label)}
+              onClick={() => onOpenDomain({ id: node.id, label: node.label })}
               className="flex items-center gap-1.5 rounded-md border border-border/60 bg-muted/40 px-2 py-1 text-xs hover:border-primary/50 hover:text-foreground"
             >
               Open components <ArrowRight className="size-3" />
@@ -229,7 +233,7 @@ function Graph({
 
 export function ArchitectureMap(props: {
   graph: { nodes: MapNode[]; edges: MapEdge[] };
-  onOpenDomain?: (label: string) => void;
+  onOpenDomain?: (domain: { id: string; label: string }) => void;
 }) {
   if (!props.graph.nodes.some((n) => n.kind === "domain")) {
     return (

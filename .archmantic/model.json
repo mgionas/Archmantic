@@ -1980,7 +1980,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/knowledge.ts:137",
+          "ref": "src/project/knowledge.ts:165",
           "source": "code"
         }
       ]
@@ -1996,7 +1996,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/knowledge.ts:17",
+          "ref": "src/project/knowledge.ts:18",
           "source": "code"
         }
       ]
@@ -3690,7 +3690,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-18T20:15:22.240Z",
+  "generatedAt": "2026-06-18T20:35:54.761Z",
   "groups": [
     {
       "confidence": 0.9,
@@ -7996,6 +7996,21 @@
         }
       ],
       "to": "comp:src/project/trust.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/knowledge.ts",
+      "id": "rel:comp:src/project/knowledge.ts=>comp:src/analyze/stack.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/knowledge.ts → comp:src/analyze/stack.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/knowledge.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/stack.ts"
     },
     {
       "confidence": 0.95,

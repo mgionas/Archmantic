@@ -32,6 +32,7 @@ code-graph commodity territory?
 | ✅ done | Mermaid removed | Dropped Mermaid everywhere (web + CLI `.mmd` exports + HTML viewer); React Flow in the web, native HTML tables/lists in the CLI viewer, BPMN via `bpmn-js` | Med · Med |
 | ✅ done | Skills (model-resolved) | On-shelf playbook catalog ranked against the grounded model with cited reasons; builtin + local + remote (`skill add`); MCP `suggest_skills`/`list_skills`/`get_skill` + CLI `skill` | High · Med |
 | ✅ done | Experience layer (1.18.0) | Collect→curate→present: classify externals (libs≠systems) + Dependencies page; semantic Groups + **Architecture Map**; agent-driven **curation** (`get_architecture_map`/`curate` MCP + BYOK CLI `curate`/`publish --ai`); schema 0.2.0. See [design/EXPERIENCE-LAYER.md](./design/EXPERIENCE-LAYER.md) | Very High · High |
+| ✅ done | Map polish (1.18.1) | Exact L2→L3 drill: Map opens Components filtered by domain `groupId` (not a name match) + group-by-domain + filter chip (INS-013); the "Misc" catch-all is de-emphasized and dropped from structural edges (INS-014); ships the deterministic AGENTS.md + sharpened `sync` from main | Med · Low |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
 
 ## Next — future development & missing areas
