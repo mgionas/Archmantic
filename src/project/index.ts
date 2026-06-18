@@ -5,6 +5,7 @@
  * with React Flow; the CLI emits this HTML. See docs/ARCHITECTURE.md §1.
  */
 import { type ArchitectureModel } from "../ir/types.js";
+import { isRealExternalSystem } from "../analyze/stack.js";
 import { capabilityMapText } from "./capability.js";
 import { renderHtml } from "./html.js";
 import { summarize, type Grounded } from "./trust.js";
@@ -72,7 +73,7 @@ export function terminalPreview(model: ArchitectureModel): string {
   out.push(`\n${BOLD}Capability map${RESET} ${DIM}— what can this system do?${RESET}`);
   out.push(capabilityMapText(model));
 
-  const externals = model.systems.filter((s) => s.kind === "external");
+  const externals = model.systems.filter((s) => s.kind === "external" && isRealExternalSystem(s));
   if (externals.length) {
     const internal = model.systems.find((s) => s.kind === "internal");
     out.push(`\n${BOLD}Context${RESET} ${DIM}— ${internal?.name ?? model.project} depends on${RESET}`);

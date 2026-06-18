@@ -7,6 +7,7 @@
  */
 import { type ArchitectureModel } from "../ir/types.js";
 import { componentLabel } from "../ir/naming.js";
+import { isRealExternalSystem } from "../analyze/stack.js";
 import { groupCapabilities } from "./capability.js";
 import { badge, band, isLowConfidence, summarize, type Grounded } from "./trust.js";
 
@@ -88,8 +89,8 @@ function capabilitySection(model: ArchitectureModel): string {
 function contextSection(model: ArchitectureModel): string {
   const internal = model.systems.find((s) => s.kind === "internal");
   const intName = esc(internal?.name ?? model.project);
-  const externals = model.systems.filter((s) => s.kind === "external");
-  if (!externals.length) return `<p><b>${intName}</b> <span class="muted">— no external dependencies detected</span></p>`;
+  const externals = model.systems.filter((s) => s.kind === "external" && isRealExternalSystem(s));
+  if (!externals.length) return `<p><b>${intName}</b> <span class="muted">— no external systems detected</span></p>`;
   const items = externals
     .map((e) => `<li><span class="cap">${esc(e.name)}</span><span class="badge">external</span></li>`)
     .join("\n");

@@ -18,6 +18,7 @@ import { execFileSync } from "node:child_process";
 const pkg = require("../package.json") as { version: string };
 import { type ArchitectureModel, createEmptyModel, serializeModel } from "./ir/types.js";
 import { analyzeRepo } from "./analyze/index.js";
+import { isRealExternalSystem } from "./analyze/stack.js";
 import { tier2 } from "./analyze/tier2.js";
 import { incrementalUpdate } from "./analyze/incremental.js";
 import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, knowledgeMarkdown, applyKnowledgeBlock, readManifest, detectAgents, scaffoldManifest, MANIFEST_PATH, seedFeatureFiles, FEATURES_DIR } from "./project/index.js";
@@ -320,7 +321,7 @@ async function cmdAnalyze(args: string[]): Promise<number> {
   const tier = parseTier(args);
   const model = { ...analyzeRepo(root), generatedAt: new Date().toISOString() };
 
-  const externalSystems = model.systems.filter((s) => s.kind === "external").length;
+  const externalSystems = model.systems.filter((s) => s.kind === "external" && isRealExternalSystem(s)).length;
   const internalDeps = model.relations.filter((r) => r.to.startsWith("comp:")).length;
   const externalDeps = model.relations.filter((r) => r.to.startsWith("sys:ext:")).length;
 

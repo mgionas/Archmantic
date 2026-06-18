@@ -26,15 +26,29 @@
 - **why:** The collapse is meant to kill confetti, but here it hid a coherent, real group and
   exposed a curate↔map conflict. The one rough edge left on the onboarding view.
 
+### INS-021 · Path-alias imports (`@/*`) were modeled as external systems — FIXED
+- **category:** product-gap · **audience:** both · **status:** shipped
+- **fix:** `tier1` now loads `compilerOptions.paths` (+ `baseUrl`) from tsconfig/jsconfig
+  (`loadAliases`) and resolves alias imports to internal files **before** the external
+  fallback. Dogfood on `social-seed` (`"@/*": ["./*"]`): the fake externals `@/components`,
+  `@/db`, `@/lib` are gone, and **internal dependency edges jumped 8 → 176** — the alias
+  imports were the bulk of the real graph, previously dropped. Also fixes the old "Used by (0)"
+  under-representation for any aliased codebase (most Next.js apps).
+- **why:** Any import starting with `@` was assumed to be an npm scope, so the single most
+  common Next.js convention (`@/`) produced garbage external systems *and* a near-empty
+  dependency graph. The Map/Context looked sparse and noisy at the same time.
+
 ### INS-019 · External classifier misses AI/SaaS SDKs and raw-HTTP services
-- **category:** product-gap · **audience:** both · **status:** open
-- **insight:** On `social-seed`, `@google/genai` (Gemini) classified as `library`, so the AI
-  provider never appears as a real system on the Context graph / Map — only Neon does.
-  `EXTERNAL_SYSTEMS` (`stack.ts`) should tag the major AI SDKs `saas` like `anthropic`/`openai`:
-  `@google/genai`, `@google/generative-ai`, `cohere-ai`, `@mistralai/*`, `replicate`, etc.
-  Deeper gap: the Facebook Graph API and Telegram Bot API are reached over **raw `fetch`** (no
-  npm package), so a package-name classifier can't see them at all — capturing HTTP-host
-  externals (from fetch base URLs / env-configured endpoints) is a larger, separate piece.
+- **category:** product-gap · **audience:** both · **status:** shipped (SDKs) / open (raw HTTP)
+- **fix:** Added the major AI provider SDKs to `EXTERNAL_SYSTEMS` (`stack.ts`) as `saas` —
+  `@google/genai`, `@google/generative-ai`, `@langchain/{google-genai,openai,anthropic}`,
+  `@mistralai/mistralai`, `cohere-ai`, `replicate`, `@huggingface/inference`. Dogfood: Gemini
+  (`@google/genai` + `@langchain/google-genai`) now appears as a real system on `social-seed`.
+- **insight:** `@google/genai` (Gemini) was classified `library`, so the AI provider never
+  appeared as a real system on the Context graph / Map — only Neon did.
+- **still open:** the Facebook Graph API and Telegram Bot API are reached over **raw `fetch`**
+  (no npm package), so a package-name classifier can't see them — capturing HTTP-host externals
+  (from fetch base URLs / env-configured endpoints) is a larger, separate piece.
 - **why:** "What external systems does this touch?" is a core Context/Map answer; missing the
   AI provider and the social APIs badly understates the real integration blast radius.
 

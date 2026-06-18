@@ -444,7 +444,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/stack.ts:48",
+          "ref": "src/analyze/stack.ts:58",
           "source": "code"
         }
       ]
@@ -460,7 +460,23 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/stack.ts:177",
+          "ref": "src/analyze/stack.ts:193",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/stack.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `isRealExternalSystem` in src/analyze/stack.ts",
+      "id": "cap:src/analyze/stack.ts#isRealExternalSystem",
+      "name": "Is Real External System",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/stack.ts:71",
           "source": "code"
         }
       ]
@@ -476,7 +492,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/stack.ts:55",
+          "ref": "src/analyze/stack.ts:65",
           "source": "code"
         }
       ]
@@ -540,7 +556,23 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/tier1.ts:91",
+          "ref": "src/analyze/tier1.ts:153",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/tier1.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `loadAliases` in src/analyze/tier1.ts",
+      "id": "cap:src/analyze/tier1.ts#loadAliases",
+      "name": "Load Aliases",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/tier1.ts:96",
           "source": "code"
         }
       ]
@@ -556,7 +588,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/tier1.ts:154",
+          "ref": "src/analyze/tier1.ts:223",
           "source": "code"
         }
       ]
@@ -940,7 +972,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/diff/model-diff.ts:86",
+          "ref": "src/diff/model-diff.ts:90",
           "source": "code"
         }
       ]
@@ -956,7 +988,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/diff/model-diff.ts:125",
+          "ref": "src/diff/model-diff.ts:129",
           "source": "code"
         }
       ]
@@ -972,7 +1004,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/diff/model-diff.ts:177",
+          "ref": "src/diff/model-diff.ts:181",
           "source": "code"
         }
       ]
@@ -988,7 +1020,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/diff/model-diff.ts:159",
+          "ref": "src/diff/model-diff.ts:163",
           "source": "code"
         }
       ]
@@ -1004,7 +1036,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/diff/model-diff.ts:130",
+          "ref": "src/diff/model-diff.ts:134",
           "source": "code"
         }
       ]
@@ -1324,7 +1356,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:170",
+          "ref": "src/mcp/queries.ts:172",
           "source": "code"
         }
       ]
@@ -1340,7 +1372,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:294",
+          "ref": "src/mcp/queries.ts:296",
           "source": "code"
         }
       ]
@@ -1356,7 +1388,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:101",
+          "ref": "src/mcp/queries.ts:103",
           "source": "code"
         }
       ]
@@ -1388,7 +1420,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:147",
+          "ref": "src/mcp/queries.ts:149",
           "source": "code"
         }
       ]
@@ -1404,7 +1436,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:264",
+          "ref": "src/mcp/queries.ts:266",
           "source": "code"
         }
       ]
@@ -1420,7 +1452,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:206",
+          "ref": "src/mcp/queries.ts:208",
           "source": "code"
         }
       ]
@@ -1436,7 +1468,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:130",
+          "ref": "src/mcp/queries.ts:132",
           "source": "code"
         }
       ]
@@ -1452,7 +1484,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:62",
+          "ref": "src/mcp/queries.ts:64",
           "source": "code"
         }
       ]
@@ -1468,7 +1500,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:139",
+          "ref": "src/mcp/queries.ts:141",
           "source": "code"
         }
       ]
@@ -1484,7 +1516,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:89",
+          "ref": "src/mcp/queries.ts:91",
           "source": "code"
         }
       ]
@@ -1500,7 +1532,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:248",
+          "ref": "src/mcp/queries.ts:250",
           "source": "code"
         }
       ]
@@ -1516,7 +1548,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:119",
+          "ref": "src/mcp/queries.ts:121",
           "source": "code"
         }
       ]
@@ -1532,7 +1564,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/queries.ts:341",
+          "ref": "src/mcp/queries.ts:343",
           "source": "code"
         }
       ]
@@ -1884,7 +1916,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/html.ts:156",
+          "ref": "src/project/html.ts:157",
           "source": "code"
         }
       ]
@@ -1900,7 +1932,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:110",
+          "ref": "src/project/index.ts:111",
           "source": "code"
         }
       ]
@@ -1916,7 +1948,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:42",
+          "ref": "src/project/index.ts:43",
           "source": "code"
         }
       ]
@@ -2044,7 +2076,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/spec.ts:142",
+          "ref": "src/project/spec.ts:143",
           "source": "code"
         }
       ]
@@ -2060,7 +2092,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/spec.ts:24",
+          "ref": "src/project/spec.ts:25",
           "source": "code"
         }
       ]
@@ -2380,7 +2412,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/system.ts:103",
+          "ref": "src/system.ts:104",
           "source": "code"
         }
       ]
@@ -2396,7 +2428,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/system.ts:51",
+          "ref": "src/system.ts:52",
           "source": "code"
         }
       ]
@@ -2412,7 +2444,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/system.ts:35",
+          "ref": "src/system.ts:36",
           "source": "code"
         }
       ]
@@ -2428,7 +2460,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/system.ts:22",
+          "ref": "src/system.ts:23",
           "source": "code"
         }
       ]
@@ -2444,7 +2476,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/system.ts:163",
+          "ref": "src/system.ts:164",
           "source": "code"
         }
       ]
@@ -3457,6 +3489,7 @@
         "comp:src/cli.ts",
         "comp:src/ir/types.ts",
         "comp:src/analyze/index.ts",
+        "comp:src/analyze/stack.ts",
         "comp:src/analyze/tier2.ts",
         "comp:src/analyze/incremental.ts",
         "comp:src/project/index.ts",
@@ -3464,8 +3497,7 @@
         "comp:src/skills/index.ts",
         "comp:src/project/feature-sync.ts",
         "comp:src/project/curate-ai.ts",
-        "comp:src/project/curation.ts",
-        "comp:src/feature-pull.ts"
+        "comp:src/project/curation.ts"
       ],
       "provenance": [
         {
@@ -3506,6 +3538,18 @@
             {
               "confidence": 0.6,
               "ref": "src/analyze/index.ts:1",
+              "source": "code"
+            }
+          ],
+          "to": "comp:src/analyze/stack.ts"
+        },
+        {
+          "action": "uses",
+          "participant": "comp:src/analyze/stack.ts",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/analyze/stack.ts:1",
               "source": "code"
             }
           ],
@@ -3594,23 +3638,11 @@
             }
           ],
           "to": "comp:src/project/curation.ts"
-        },
-        {
-          "action": "uses",
-          "participant": "comp:src/project/curation.ts",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/project/curation.ts:1",
-              "source": "code"
-            }
-          ],
-          "to": "comp:src/feature-pull.ts"
         }
       ]
     }
   ],
-  "generatedAt": "2026-06-18T21:29:33.925Z",
+  "generatedAt": "2026-06-18T21:49:50.659Z",
   "groups": [
     {
       "confidence": 0.9,
@@ -4010,6 +4042,17 @@
           ]
         },
         {
+          "id": "task:comp:src/analyze/stack.ts",
+          "name": "Stack",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/analyze/stack.ts:1",
+              "source": "code"
+            }
+          ]
+        },
+        {
           "id": "task:comp:src/analyze/tier2.ts",
           "name": "Tier 2",
           "provenance": [
@@ -4093,17 +4136,6 @@
             {
               "confidence": 0.6,
               "ref": "src/project/curation.ts:1",
-              "source": "code"
-            }
-          ]
-        },
-        {
-          "id": "task:comp:src/feature-pull.ts",
-          "name": "Feature pull",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/feature-pull.ts:1",
               "source": "code"
             }
           ]
@@ -5982,7 +6014,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:35",
+          "ref": "src/cli.ts:36",
           "source": "code"
         }
       ],
@@ -5997,7 +6029,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:31",
+          "ref": "src/cli.ts:32",
           "source": "code"
         }
       ],
@@ -6012,7 +6044,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:22",
+          "ref": "src/cli.ts:23",
           "source": "code"
         }
       ],
@@ -6042,11 +6074,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:30",
+          "ref": "src/cli.ts:31",
           "source": "code"
         }
       ],
       "to": "comp:src/analyze/laravel-db.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/analyze/stack.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/analyze/stack.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:21",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/stack.ts"
     },
     {
       "confidence": 0.95,
@@ -6057,7 +6104,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:21",
+          "ref": "src/cli.ts:22",
           "source": "code"
         }
       ],
@@ -6072,7 +6119,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:34",
+          "ref": "src/cli.ts:35",
           "source": "code"
         }
       ],
@@ -6087,7 +6134,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:37",
+          "ref": "src/cli.ts:38",
           "source": "code"
         }
       ],
@@ -6102,7 +6149,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:54",
+          "ref": "src/cli.ts:55",
           "source": "code"
         }
       ],
@@ -6117,7 +6164,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:32",
+          "ref": "src/cli.ts:33",
           "source": "code"
         }
       ],
@@ -6132,7 +6179,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:51",
+          "ref": "src/cli.ts:52",
           "source": "code"
         }
       ],
@@ -6147,7 +6194,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:33",
+          "ref": "src/cli.ts:34",
           "source": "code"
         }
       ],
@@ -6162,7 +6209,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:29",
+          "ref": "src/cli.ts:30",
           "source": "code"
         }
       ],
@@ -6192,7 +6239,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:53",
+          "ref": "src/cli.ts:54",
           "source": "code"
         }
       ],
@@ -6207,7 +6254,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:24",
+          "ref": "src/cli.ts:25",
           "source": "code"
         }
       ],
@@ -6222,7 +6269,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:50",
+          "ref": "src/cli.ts:51",
           "source": "code"
         }
       ],
@@ -6237,7 +6284,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:52",
+          "ref": "src/cli.ts:53",
           "source": "code"
         }
       ],
@@ -6252,7 +6299,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:27",
+          "ref": "src/cli.ts:28",
           "source": "code"
         }
       ],
@@ -6267,7 +6314,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:28",
+          "ref": "src/cli.ts:29",
           "source": "code"
         }
       ],
@@ -6282,7 +6329,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:26",
+          "ref": "src/cli.ts:27",
           "source": "code"
         }
       ],
@@ -6297,7 +6344,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:23",
+          "ref": "src/cli.ts:24",
           "source": "code"
         }
       ],
@@ -6312,7 +6359,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:25",
+          "ref": "src/cli.ts:26",
           "source": "code"
         }
       ],
@@ -6327,7 +6374,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:36",
+          "ref": "src/cli.ts:37",
           "source": "code"
         }
       ],
@@ -6567,6 +6614,21 @@
         }
       ],
       "to": "comp:src/diff/snapshot.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/diff/model-diff.ts",
+      "id": "rel:comp:src/diff/model-diff.ts=>comp:src/analyze/stack.ts",
+      "kind": "depends_on",
+      "name": "comp:src/diff/model-diff.ts → comp:src/analyze/stack.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/diff/model-diff.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/stack.ts"
     },
     {
       "confidence": 0.95,
@@ -7656,6 +7718,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/project/html.ts",
+      "id": "rel:comp:src/project/html.ts=>comp:src/analyze/stack.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/html.ts → comp:src/analyze/stack.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/html.ts:10",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/stack.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/html.ts",
       "id": "rel:comp:src/project/html.ts=>comp:src/ir/naming.ts",
       "kind": "depends_on",
       "name": "comp:src/project/html.ts → comp:src/ir/naming.ts",
@@ -7692,7 +7769,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/html.ts:10",
+          "ref": "src/project/html.ts:11",
           "source": "code"
         }
       ],
@@ -7707,11 +7784,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/html.ts:11",
+          "ref": "src/project/html.ts:12",
           "source": "code"
         }
       ],
       "to": "comp:src/project/trust.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/index.ts",
+      "id": "rel:comp:src/project/index.ts=>comp:src/analyze/stack.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/index.ts → comp:src/analyze/stack.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/index.ts:8",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/stack.ts"
     },
     {
       "confidence": 0.95,
@@ -7737,12 +7829,12 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:8",
+          "ref": "src/project/index.ts:9",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:12",
+          "ref": "src/project/index.ts:13",
           "source": "code"
         }
       ],
@@ -7757,7 +7849,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:24",
+          "ref": "src/project/index.ts:25",
           "source": "code"
         }
       ],
@@ -7772,12 +7864,12 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:9",
+          "ref": "src/project/index.ts:10",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:13",
+          "ref": "src/project/index.ts:14",
           "source": "code"
         }
       ],
@@ -7792,7 +7884,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:15",
+          "ref": "src/project/index.ts:16",
           "source": "code"
         }
       ],
@@ -7807,7 +7899,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:16",
+          "ref": "src/project/index.ts:17",
           "source": "code"
         }
       ],
@@ -7822,7 +7914,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:14",
+          "ref": "src/project/index.ts:15",
           "source": "code"
         }
       ],
@@ -7837,12 +7929,12 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:10",
+          "ref": "src/project/index.ts:11",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:35",
+          "ref": "src/project/index.ts:36",
           "source": "code"
         }
       ],
@@ -7941,6 +8033,21 @@
     {
       "confidence": 0.95,
       "from": "comp:src/project/spec.ts",
+      "id": "rel:comp:src/project/spec.ts=>comp:src/analyze/stack.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/spec.ts → comp:src/analyze/stack.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/spec.ts:13",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/stack.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/spec.ts",
       "id": "rel:comp:src/project/spec.ts=>comp:src/ir/naming.ts",
       "kind": "depends_on",
       "name": "comp:src/project/spec.ts → comp:src/ir/naming.ts",
@@ -7977,7 +8084,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/spec.ts:13",
+          "ref": "src/project/spec.ts:14",
           "source": "code"
         }
       ],
@@ -8182,6 +8289,21 @@
         }
       ],
       "to": "comp:src/skills/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/system.ts",
+      "id": "rel:comp:src/system.ts=>comp:src/analyze/stack.ts",
+      "kind": "depends_on",
+      "name": "comp:src/system.ts → comp:src/analyze/stack.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/system.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/stack.ts"
     },
     {
       "confidence": 0.95,
