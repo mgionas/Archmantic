@@ -31,6 +31,7 @@ code-graph commodity territory?
 | ✅ done | Real sequence diagrams | Dedicated React Flow sequence view: participant lifelines, activation bars, ordered labeled messages, self-message loops (web Sequence tab) | High · Med |
 | ✅ done | Mermaid removed | Dropped Mermaid everywhere (web + CLI `.mmd` exports + HTML viewer); React Flow in the web, native HTML tables/lists in the CLI viewer, BPMN via `bpmn-js` | Med · Med |
 | ✅ done | Skills (model-resolved) | On-shelf playbook catalog ranked against the grounded model with cited reasons; builtin + local + remote (`skill add`); MCP `suggest_skills`/`list_skills`/`get_skill` + CLI `skill` | High · Med |
+| ✅ done | Experience layer (1.18.0) | Collect→curate→present: classify externals (libs≠systems) + Dependencies page; semantic Groups + **Architecture Map**; agent-driven **curation** (`get_architecture_map`/`curate` MCP + BYOK CLI `curate`/`publish --ai`); schema 0.2.0. See [design/EXPERIENCE-LAYER.md](./design/EXPERIENCE-LAYER.md) | Very High · High |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
 
 ## Next — future development & missing areas
@@ -367,6 +368,21 @@ Surfaced via MCP `suggest_skills`/`list_skills`/`get_skill`, CLI `skill
 grounded "why", collapsible playbook). The wedge: model-driven resolution, not a
 flat marketplace. Next (Skills v2): signed remote registry, gated skill execution/
 agent invocation, web skill-management UI.
+
+### ✅ done · Experience layer — collect → curate → present (1.18.0)
+The big rethink (see [design/EXPERIENCE-LAYER.md](./design/EXPERIENCE-LAYER.md)): diagrams were
+mechanical because they projected the raw import graph. Fixed across three layers.
+- **Collect:** `classifyExternal` tags externals datastore/saas/infra/service/**library**/runtime
+  (`System.externalKind`); graphs draw real systems only, libraries move to a **Dependencies**
+  page (with versions). Test files excluded from the model. Semantic **Groups** (domains from
+  folder/package, layers from role) — the missing middle level; schema 0.2.0.
+- **Present:** a new **Architecture Map** (C4 L1/L2: domains as containers + the external
+  systems they touch, drill to components). Curated narrative on Overview.
+- **Curate (agent-driven, no managed LLM):** the user's own agent names domains / writes
+  descriptions + a positioning narrative over MCP (`get_architecture_map` → `curate`) on its
+  own tokens, merged via committed `.archmantic/curation.json`; **BYOK CLI `curate`** and
+  **`publish [--ai]`** (analyze → curate → push) are the run-it-for-me fallback. Decisions:
+  committed storage, agent-driven, on-demand+incremental — monetization deferred.
 
 ### DEFER · Function-level tracking
 Red-ocean. Revisit only as an optional drill-down if a concrete user need

@@ -1699,6 +1699,22 @@
     },
     {
       "componentIds": [
+        "comp:src/project/curate-ai.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `runCuration` in src/project/curate-ai.ts",
+      "id": "cap:src/project/curate-ai.ts#runCuration",
+      "name": "Run Curation",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/project/curate-ai.ts:100",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
         "comp:src/project/curation.ts"
       ],
       "confidence": 0.6,
@@ -3254,6 +3270,22 @@
     {
       "confidence": 0.95,
       "groupId": "group:domain:project",
+      "id": "comp:src/project/curate-ai.ts",
+      "kind": "module",
+      "name": "src/project/curate-ai.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/curate-ai.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "groupId": "group:domain:project",
       "id": "comp:src/project/curation.ts",
       "kind": "module",
       "name": "src/project/curation.ts",
@@ -3511,9 +3543,9 @@
         "comp:src/mcp/queries.ts",
         "comp:src/skills/index.ts",
         "comp:src/project/feature-sync.ts",
-        "comp:src/feature-pull.ts",
-        "comp:src/analyze/laravel-db.ts",
-        "comp:src/analyze/db-introspect.ts"
+        "comp:src/project/curate-ai.ts",
+        "comp:src/project/curation.ts",
+        "comp:src/feature-pull.ts"
       ],
       "provenance": [
         {
@@ -3629,36 +3661,36 @@
               "source": "code"
             }
           ],
+          "to": "comp:src/project/curate-ai.ts"
+        },
+        {
+          "action": "uses",
+          "participant": "comp:src/project/curate-ai.ts",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/project/curate-ai.ts:1",
+              "source": "code"
+            }
+          ],
+          "to": "comp:src/project/curation.ts"
+        },
+        {
+          "action": "uses",
+          "participant": "comp:src/project/curation.ts",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/project/curation.ts:1",
+              "source": "code"
+            }
+          ],
           "to": "comp:src/feature-pull.ts"
-        },
-        {
-          "action": "uses",
-          "participant": "comp:src/feature-pull.ts",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/feature-pull.ts:1",
-              "source": "code"
-            }
-          ],
-          "to": "comp:src/analyze/laravel-db.ts"
-        },
-        {
-          "action": "uses",
-          "participant": "comp:src/analyze/laravel-db.ts",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/analyze/laravel-db.ts:1",
-              "source": "code"
-            }
-          ],
-          "to": "comp:src/analyze/db-introspect.ts"
         }
       ]
     }
   ],
-  "generatedAt": "2026-06-18T19:28:47.257Z",
+  "generatedAt": "2026-06-18T19:59:33.806Z",
   "groups": [
     {
       "confidence": 0.9,
@@ -3802,6 +3834,7 @@
         "comp:src/project/bpmn-parse.ts",
         "comp:src/project/bpmn.ts",
         "comp:src/project/capability.ts",
+        "comp:src/project/curate-ai.ts",
         "comp:src/project/curation.ts",
         "comp:src/project/feature-sync.ts",
         "comp:src/project/features.ts",
@@ -3919,6 +3952,7 @@
         "comp:src/project/bpmn-parse.ts",
         "comp:src/project/bpmn.ts",
         "comp:src/project/capability.ts",
+        "comp:src/project/curate-ai.ts",
         "comp:src/project/curation.ts",
         "comp:src/project/feature-sync.ts",
         "comp:src/project/features.ts",
@@ -4126,34 +4160,34 @@
           ]
         },
         {
+          "id": "task:comp:src/project/curate-ai.ts",
+          "name": "Curate ai",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/project/curate-ai.ts:1",
+              "source": "code"
+            }
+          ]
+        },
+        {
+          "id": "task:comp:src/project/curation.ts",
+          "name": "Curation",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/project/curation.ts:1",
+              "source": "code"
+            }
+          ]
+        },
+        {
           "id": "task:comp:src/feature-pull.ts",
           "name": "Feature pull",
           "provenance": [
             {
               "confidence": 0.6,
               "ref": "src/feature-pull.ts:1",
-              "source": "code"
-            }
-          ]
-        },
-        {
-          "id": "task:comp:src/analyze/laravel-db.ts",
-          "name": "Laravel db",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/analyze/laravel-db.ts:1",
-              "source": "code"
-            }
-          ]
-        },
-        {
-          "id": "task:comp:src/analyze/db-introspect.ts",
-          "name": "Db introspect",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/analyze/db-introspect.ts:1",
               "source": "code"
             }
           ]
@@ -6032,7 +6066,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:33",
+          "ref": "src/cli.ts:35",
           "source": "code"
         }
       ],
@@ -6047,7 +6081,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:29",
+          "ref": "src/cli.ts:31",
           "source": "code"
         }
       ],
@@ -6092,7 +6126,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:28",
+          "ref": "src/cli.ts:30",
           "source": "code"
         }
       ],
@@ -6122,7 +6156,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:32",
+          "ref": "src/cli.ts:34",
           "source": "code"
         }
       ],
@@ -6137,7 +6171,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:35",
+          "ref": "src/cli.ts:37",
           "source": "code"
         }
       ],
@@ -6152,7 +6186,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:53",
+          "ref": "src/cli.ts:55",
           "source": "code"
         }
       ],
@@ -6167,7 +6201,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:30",
+          "ref": "src/cli.ts:32",
           "source": "code"
         }
       ],
@@ -6182,7 +6216,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:50",
+          "ref": "src/cli.ts:52",
           "source": "code"
         }
       ],
@@ -6197,7 +6231,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:31",
+          "ref": "src/cli.ts:33",
           "source": "code"
         }
       ],
@@ -6212,7 +6246,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:27",
+          "ref": "src/cli.ts:29",
           "source": "code"
         }
       ],
@@ -6242,7 +6276,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:52",
+          "ref": "src/cli.ts:54",
           "source": "code"
         }
       ],
@@ -6272,7 +6306,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:49",
+          "ref": "src/cli.ts:51",
           "source": "code"
         }
       ],
@@ -6287,11 +6321,41 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:51",
+          "ref": "src/cli.ts:53",
           "source": "code"
         }
       ],
       "to": "comp:src/mcp/usage.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/project/curate-ai.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/project/curate-ai.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:27",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/curate-ai.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/project/curation.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/project/curation.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:28",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/curation.ts"
     },
     {
       "confidence": 0.95,
@@ -6347,7 +6411,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:34",
+          "ref": "src/cli.ts:36",
           "source": "code"
         }
       ],
@@ -7417,6 +7481,66 @@
         }
       ],
       "to": "comp:src/project/trust.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/curate-ai.ts",
+      "id": "rel:comp:src/project/curate-ai.ts=>comp:src/auth.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/curate-ai.ts → comp:src/auth.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/curate-ai.ts:11",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/auth.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/curate-ai.ts",
+      "id": "rel:comp:src/project/curate-ai.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/curate-ai.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/curate-ai.ts:10",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/curate-ai.ts",
+      "id": "rel:comp:src/project/curate-ai.ts=>comp:src/project/curation.ts",
+      "kind": "depends_on",
+      "name": "comp:src/project/curate-ai.ts → comp:src/project/curation.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/curate-ai.ts:12",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/project/curation.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/project/curate-ai.ts",
+      "id": "rel:comp:src/project/curate-ai.ts=>sys:ext:@anthropic-ai/sdk",
+      "kind": "depends_on",
+      "name": "comp:src/project/curate-ai.ts → sys:ext:@anthropic-ai/sdk",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/project/curate-ai.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:@anthropic-ai/sdk"
     },
     {
       "confidence": 0.95,

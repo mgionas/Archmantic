@@ -12,6 +12,18 @@
 
 ---
 
+### INS-015 · Document the MCP allow-list — users hit per-tool permission friction
+- **category:** dx · **audience:** humans · **status:** open
+- **insight:** When you wire archmantic as an MCP server in a host (Claude Code, etc.), the
+  host prompts "Allow tool use?" on *every* tool call. The fix is one permission rule —
+  `mcp__archmantic__*` in the host's `.claude/settings.json` `permissions.allow` (the bare
+  `mcp__archmantic` does **not** work; the `__*` is required). The README/quickstart's MCP
+  section should call this out, with both the allow-all rule and a reads-only variant (since
+  `*` also auto-approves the write tools `refresh`/`sync`/`sync_features`/`curate`).
+- **why:** Every real user hits this on first connect; undocumented, it reads as the tool
+  being annoying. A two-line quickstart note removes the friction and the "is this safe to
+  allow-all?" doubt. Surfaced from a real user question while dogfooding.
+
 ### INS-014 · Curation is agent-driven — and the "Misc" bucket reads as a real domain
 - **category:** agent-dx · **audience:** both · **status:** shipped (loop) / open (polish)
 - **insight:** Phase D landed the agent-driven curation loop (`get_architecture_map` →

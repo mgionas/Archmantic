@@ -24,6 +24,8 @@ import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson,
 import { getFeature, listFeatures } from "./mcp/queries.js";
 import { allSkills, findSkill, addRemoteSkill, renderSuggestions, renderSkillList, renderSkill, SKILLS_DIR } from "./skills/index.js";
 import { syncFeatures } from "./project/feature-sync.js";
+import { runCuration } from "./project/curate-ai.js";
+import { CURATION_PATH } from "./project/curation.js";
 import { pullFeatureEdits } from "./feature-pull.js";
 import { detectLaravelMigrations } from "./analyze/laravel-db.js";
 import { readDbConfig, introspectSchema } from "./analyze/db-introspect.js";
@@ -240,6 +242,24 @@ async function cmdSkill(args: string[]): Promise<number> {
   return 0;
 }
 
+/** `curate` — BYOK AI curation: name domains + write descriptions + a positioning narrative. */
+async function cmdCurate(): Promise<number> {
+  const root = process.cwd();
+  const model = loadModelOrNull();
+  if (!model) return 1;
+  const res = await runCuration(root, model, { write: true });
+  if (!res.ran) {
+    console.error(`✗ ${res.reason}`);
+    return 1;
+  }
+  // Re-analyze so model.json reflects the curation overlay immediately.
+  persistModel(root, { ...analyzeRepo(root), generatedAt: new Date().toISOString() });
+  console.log(`✓ Curated ${res.domains} domain${res.domains === 1 ? "" : "s"} + an overview → ${CURATION_PATH}`);
+  console.log(`  LLM: ${res.inputTokens} in / ${res.outputTokens} out tokens · ~$${res.estCostUsd.toFixed(4)}`);
+  console.log(`  Review with \`git diff\`; \`archmantic publish\` (or \`push\`) to update the web.`);
+  return 0;
+}
+
 /** `db-check [--check]` — compare Laravel migrations vs the live database (opt-in). */
 async function cmdDbCheck(args: string[]): Promise<number> {
   const root = process.cwd();
@@ -286,6 +306,14 @@ function writeKnowledgeFile(root: string, model: ArchitectureModel): void {
   const file = join(root, KNOWLEDGE_FILE);
   const existing = existsSync(file) ? readFileSync(file, "utf8") : null;
   writeFileSync(file, applyKnowledgeBlock(existing, knowledgeMarkdown(model)), "utf8");
+}
+
+/** Write the canonical model.json + refresh the agent knowledge file. */
+function persistModel(root: string, model: ArchitectureModel): void {
+  const dir = join(root, MODEL_DIR);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, MODEL_FILE), serializeModel(model), "utf8");
+  writeKnowledgeFile(root, model);
 }
 
 async function cmdAnalyze(args: string[]): Promise<number> {
@@ -835,6 +863,34 @@ function resolveProject(root: string): string {
   return basename(root);
 }
 
+/** `publish [--ai]` — one command to refresh the web: analyze → (AI curate) → push. */
+async function cmdPublish(args: string[]): Promise<number> {
+  const root = process.cwd();
+  const ai = args.includes("--ai");
+
+  let model = { ...analyzeRepo(root), generatedAt: new Date().toISOString() };
+  persistModel(root, model);
+  const domainCount = model.groups.filter((g) => g.kind === "domain").length;
+  console.log(`✓ Analyzed "${model.project}" — ${model.components.length} components, ${domainCount} domains`);
+
+  if (ai) {
+    const res = await runCuration(root, model, { write: true });
+    if (!res.ran) {
+      console.log(`⚠ AI curation skipped: ${res.reason}`);
+    } else {
+      model = { ...analyzeRepo(root), generatedAt: new Date().toISOString() }; // re-derive to apply curation
+      persistModel(root, model);
+      console.log(
+        `✓ AI curation — ${res.domains} domain${res.domains === 1 ? "" : "s"} + overview · ` +
+          `${res.inputTokens} in / ${res.outputTokens} out tokens · ~$${res.estCostUsd.toFixed(4)}`,
+      );
+    }
+  }
+
+  console.log(`  Pushing to the cloud…`);
+  return cmdPush();
+}
+
 /** Push the committed model to the shared cloud store under the current commit. */
 async function cmdPush(): Promise<number> {
   const root = process.cwd();
@@ -1018,6 +1074,8 @@ Commands:
   log [-n N]     Architecture history: how the architecture changed per commit
   mcp            Start the MCP server exposing the model to AI agents (stdio)
   bench [--exact]  Token-savings benchmark: MCP queries vs raw file reads
+  curate         AI-name domains + write descriptions & a positioning narrative (BYOK) → curation.json
+  publish [--ai]  One-shot refresh the web: analyze → (--ai: curate) → push
   push           Share the model to the team cloud store (Neon) @ this commit
   pull           Fetch the team's latest shared model into .archmantic/
   cloud-log      List per-commit snapshots stored in the cloud
@@ -1051,6 +1109,10 @@ async function main(argv: string[]): Promise<number> {
       return cmdFeature(rest);
     case "skill":
       return cmdSkill(rest);
+    case "curate":
+      return cmdCurate();
+    case "publish":
+      return cmdPublish(rest);
     case "edit":
       return cmdEdit(rest);
     case "db-check":
