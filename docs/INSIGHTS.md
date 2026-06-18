@@ -12,6 +12,49 @@
 
 ---
 
+### INS-020 · Singleton-collapse "Misc" can swallow a legitimately-separate group
+- **category:** dx · **audience:** humans · **status:** open (INS-014 follow-up)
+- **insight:** `deriveGroups` collapses every <2-member domain into "Misc". Dogfooding on
+  `social-seed`, that swept **7 real public/account pages** (login, register, my-pages,
+  privacy, terms, deletion, connect-page) into Misc — which the Map then de-emphasizes and
+  drops from edges (INS-014), losing real signal. Options: don't collapse when the leftover
+  set is itself sizeable (≥N members → its own "Pages"/"Other" cluster), attach singletons to
+  their nearest dependency cluster, or bucket by a coarser path/role before dumping to Misc.
+  Also a tension surfaced: curation can rename Misc (I named it "Public & Account Pages"), but
+  the Map still mutes `group:domain:misc` **by id** regardless of name — a curated name on a
+  muted bucket. The mute should key off "is-this-the-catch-all" semantics, not a fixed id.
+- **why:** The collapse is meant to kill confetti, but here it hid a coherent, real group and
+  exposed a curate↔map conflict. The one rough edge left on the onboarding view.
+
+### INS-019 · External classifier misses AI/SaaS SDKs and raw-HTTP services
+- **category:** product-gap · **audience:** both · **status:** open
+- **insight:** On `social-seed`, `@google/genai` (Gemini) classified as `library`, so the AI
+  provider never appears as a real system on the Context graph / Map — only Neon does.
+  `EXTERNAL_SYSTEMS` (`stack.ts`) should tag the major AI SDKs `saas` like `anthropic`/`openai`:
+  `@google/genai`, `@google/generative-ai`, `cohere-ai`, `@mistralai/*`, `replicate`, etc.
+  Deeper gap: the Facebook Graph API and Telegram Bot API are reached over **raw `fetch`** (no
+  npm package), so a package-name classifier can't see them at all — capturing HTTP-host
+  externals (from fetch base URLs / env-configured endpoints) is a larger, separate piece.
+- **why:** "What external systems does this touch?" is a core Context/Map answer; missing the
+  AI provider and the social APIs badly understates the real integration blast radius.
+
+### INS-018 · Agent-driven curation is the headline — the keyless path shouldn't read as "skipped"
+- **category:** agent-dx · **audience:** both · **status:** open
+- **insight:** Running `publish --ai` on `social-seed` from inside a CLI agent session printed
+  *"AI curation skipped: no ANTHROPIC_API_KEY"* and nudged toward BYOK. That framing is
+  backwards: the locked design is **agent-driven** — the connected agent *is* the AI (read
+  `get_architecture_map`, write `curate`) on the session the user already pays for; BYOK is the
+  CI/headless **fallback**, not the headline. Proof it works keyless: the agent hand-authored
+  `social-seed`'s `curation.json` (10 domains named + positioning narrative), `analyze` merged
+  it, `push` shipped it — no key, no metered LLM.
+- **fix sketch:** (1) `cmdCurate` / `publish --ai` messaging when no key → print the
+  agent-driven instructions (or the `get_architecture_map` payload) instead of a skip warning;
+  (2) a `curate --emit` that dumps the map payload for an agent to act on; (3) lead the
+  README/quickstart curation section with the agent path, BYOK second.
+- **why:** The current message makes the cheapest, most on-strategy path look *unavailable* and
+  pushes users toward a paid key they don't need — undercutting the whole "your agent, your
+  tokens" positioning.
+
 ### INS-017 · A stale MCP server can't warn about its own staleness
 - **category:** agent-dx · **audience:** both · **status:** open
 - **insight:** Dogfooding on the `social-seed` test project, the wired MCP server was a
