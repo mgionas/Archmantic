@@ -7,11 +7,53 @@
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { type Technology } from "../ir/types.js";
+import { type ExternalKind, type Technology } from "../ir/types.js";
 import { STRUCTURAL_CONFIDENCE } from "./tier0.js";
 import { detectWorkspaces } from "./workspaces.js";
 
 type Cat = "framework" | "ui" | "database" | "orm" | "auth" | "ai" | "testing" | "build" | "language" | "infra";
+
+/**
+ * Curated packages that are real external *systems* (network services / datastores),
+ * not linked libraries. This is the single source of truth that keeps the context /
+ * component graphs meaningful: Stripe and Postgres are systems; lucide-react and
+ * clsx are not. Everything not listed (and not a runtime builtin) is a `library`.
+ */
+const EXTERNAL_SYSTEMS: Record<string, ExternalKind> = {
+  // datastores / drivers
+  pg: "datastore",
+  "@neondatabase/serverless": "datastore",
+  mysql2: "datastore",
+  mysql: "datastore",
+  mongodb: "datastore",
+  redis: "datastore",
+  ioredis: "datastore",
+  "@planetscale/database": "datastore",
+  // SaaS / external APIs
+  stripe: "saas",
+  "@clerk/nextjs": "saas",
+  "@clerk/clerk-sdk-node": "saas",
+  "@anthropic-ai/sdk": "saas",
+  openai: "saas",
+  twilio: "saas",
+  resend: "saas",
+  "@sendgrid/mail": "saas",
+  "@supabase/supabase-js": "saas",
+};
+
+/**
+ * Classify a bare/builtin import as a real external system vs a linked library vs the
+ * runtime. The graphs draw only real systems; libraries live on the Technologies page.
+ */
+export function classifyExternal(pkg: string, builtin: boolean): ExternalKind {
+  if (builtin || pkg.startsWith("node:")) return "runtime";
+  if (pkg.startsWith("@aws-sdk/") || pkg.startsWith("@google-cloud/")) return "infra";
+  return EXTERNAL_SYSTEMS[pkg] ?? "library";
+}
+
+/** Is this external a real system (drawn on the graphs) vs a library/runtime (not drawn)? */
+export const isSystemExternalKind = (k: ExternalKind | undefined): boolean =>
+  k === "datastore" || k === "saas" || k === "infra" || k === "service";
 
 /** Curated Composer (PHP) package → {category, display name}. */
 const KNOWN_PHP: Record<string, { cat: Cat; name: string }> = {
@@ -112,12 +154,12 @@ function readComposer(file: string): Record<string, string> {
   }
 }
 
-/** Runtime dependency names from package.json (`dependencies` only — not dev tooling). */
-function readRuntimeDeps(file: string): string[] {
+/** Runtime dependencies (name → version range) from package.json `dependencies` only. */
+function readRuntimeDepsMap(file: string): Record<string, string> {
   try {
-    return Object.keys((JSON.parse(readFileSync(file, "utf8")) as PkgJson).dependencies ?? {});
+    return (JSON.parse(readFileSync(file, "utf8")) as PkgJson).dependencies ?? {};
   } catch {
-    return [];
+    return {};
   }
 }
 
@@ -135,17 +177,19 @@ function readComposerRequire(file: string): string[] {
 export function detectStack(root: string): Technology[] {
   const techs: Technology[] = [];
   const seen = new Set<string>();
-  const add = (dep: string, hit: { cat: Cat; name: string } | undefined, ref: string) => {
+  const add = (dep: string, hit: { cat: Cat; name: string } | undefined, ref: string, version?: string) => {
     if (!hit || seen.has(hit.name)) return;
     seen.add(hit.name);
-    techs.push({
+    const tech: Technology = {
       id: `tech:${dep}`,
       name: hit.name,
       category: hit.cat,
       description: `${hit.cat} (${dep})`,
       provenance: [{ source: "repo", ref, confidence: STRUCTURAL_CONFIDENCE }],
       confidence: STRUCTURAL_CONFIDENCE,
-    });
+    };
+    if (version) tech.version = version;
+    techs.push(tech);
   };
 
   // JS/TS: aggregate deps from the root and every workspace member — in a
@@ -154,39 +198,45 @@ export function detectStack(root: string): Technology[] {
   if (existsSync(pkgPath)) {
     const deps: Record<string, string> = { ...readDeps(pkgPath) };
     for (const m of detectWorkspaces(root)) Object.assign(deps, readDeps(join(root, m, "package.json")));
-    for (const dep of Object.keys(deps)) add(dep, KNOWN[dep], "package.json");
+    for (const dep of Object.keys(deps)) add(dep, KNOWN[dep], "package.json", deps[dep]);
   }
 
   // PHP: Laravel/Symfony/Inertia/etc. from composer.json (only known packages;
   // the `php` platform requirement maps to the PHP language).
   const composerPath = join(root, "composer.json");
   if (existsSync(composerPath)) {
-    for (const dep of Object.keys(readComposer(composerPath))) add(dep, KNOWN_PHP[dep], "composer.json");
+    const cdeps = readComposer(composerPath);
+    for (const dep of Object.keys(cdeps)) add(dep, KNOWN_PHP[dep], "composer.json", cdeps[dep]);
   }
 
   // Used libraries: every *runtime* dependency that isn't a curated tech, as
   // category "library" — so the model reflects the full dependency surface, not
   // just the highlighted stack. (devDependencies/build tooling are excluded.)
-  const lib = (dep: string, ref: string) => {
+  const lib = (dep: string, ref: string, version?: string) => {
     if (KNOWN[dep] || KNOWN_PHP[dep]) return; // already shown as a categorized tech
     const id = `tech:${dep}`;
     if (seen.has(id)) return;
     seen.add(id);
-    techs.push({
+    const tech: Technology = {
       id,
       name: dep,
       category: "library",
       description: `library (${dep})`,
       provenance: [{ source: "repo", ref, confidence: STRUCTURAL_CONFIDENCE }],
       confidence: STRUCTURAL_CONFIDENCE,
-    });
+    };
+    if (version) tech.version = version;
+    techs.push(tech);
   };
   if (existsSync(pkgPath)) {
-    const names = new Set(readRuntimeDeps(pkgPath));
-    for (const m of detectWorkspaces(root)) for (const d of readRuntimeDeps(join(root, m, "package.json"))) names.add(d);
-    for (const dep of names) lib(dep, "package.json");
+    const runtime: Record<string, string> = { ...readRuntimeDepsMap(pkgPath) };
+    for (const m of detectWorkspaces(root)) Object.assign(runtime, readRuntimeDepsMap(join(root, m, "package.json")));
+    for (const dep of Object.keys(runtime)) lib(dep, "package.json", runtime[dep]);
   }
-  if (existsSync(composerPath)) for (const dep of readComposerRequire(composerPath)) lib(dep, "composer.json");
+  if (existsSync(composerPath)) {
+    const creq = readComposer(composerPath);
+    for (const dep of readComposerRequire(composerPath)) lib(dep, "composer.json", creq[dep]);
+  }
 
   return techs;
 }

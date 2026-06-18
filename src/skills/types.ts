@@ -6,7 +6,7 @@
  * Skills are data, never executed here. `suggest_skills` recommends; the agent (or
  * human) decides whether to apply one. Supply has three layers: builtin (bundled),
  * local (`.archmantic/skills/*.md`, authored or fetched), and remote (pulled on
- * demand via `archmantic skill add <url>`). See docs/design/SPEC-LAYER.md.
+ * demand via `archmantic skill add <url>`). See docs/design/SKILLS.md.
  */
 
 /** Where a skill came from. */

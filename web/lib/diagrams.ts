@@ -4,6 +4,23 @@ import { componentLabel } from "./format";
 /** Projections from the one grounded model to the many interactive React Flow
  *  views (context, components, sequence, ERD). One model → many views. */
 
+/** External systems that belong on the architecture graphs: real systems
+ *  (datastore/saas/infra/service), not linked libraries or the runtime — those live
+ *  on the Technologies page. Falls back gracefully for pre-0.2.0 models without
+ *  `externalKind` (only `node:` runtime imports are excluded there). */
+export function systemExternalIds(model: Model): Set<string> {
+  const out = new Set<string>();
+  for (const s of model.systems) {
+    if (s.kind !== "external") continue;
+    const ek = s.externalKind;
+    const keep = ek
+      ? ek === "datastore" || ek === "saas" || ek === "infra" || ek === "service"
+      : !s.name.startsWith("node:");
+    if (keep) out.add(s.id);
+  }
+  return out;
+}
+
 /** Node/edge graph for the component view (React Flow). Externals included as leaf nodes. */
 export interface GraphNode {
   id: string;
@@ -18,7 +35,7 @@ export interface GraphEdge {
 }
 export function componentGraph(model: Model): { nodes: GraphNode[]; edges: GraphEdge[] } {
   const compIds = new Set(model.components.map((c) => c.id));
-  const externalIds = new Set(model.systems.filter((s) => s.kind === "external").map((s) => s.id));
+  const externalIds = systemExternalIds(model); // real systems only — libraries demoted
   const nodes: GraphNode[] = model.components.map((c) => ({
     id: c.id,
     label: componentLabel(c.id),
@@ -98,7 +115,7 @@ export function contextGraph(model: Model): { nodes: ContextNode[]; edges: Conte
   const internal = model.systems.find((s) => s.kind === "internal");
   const sysId = internal?.id ?? "sys:internal";
   const nodes: ContextNode[] = [{ id: sysId, label: internal?.name ?? model.project, kind: "system" }];
-  const externalIds = new Set(model.systems.filter((s) => s.kind === "external").map((s) => s.id));
+  const externalIds = systemExternalIds(model); // real systems only — libraries demoted
   const edges: ContextEdge[] = [];
   const seen = new Set<string>();
   for (const r of model.relations) {

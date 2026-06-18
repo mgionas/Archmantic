@@ -19,6 +19,9 @@ export interface Element {
   componentIds?: string[];
   /** Monorepo: owning workspace member dir (e.g. "apps/api"). */
   package?: string;
+  /** External systems only: datastore|saas|infra|service|library|runtime. Drives whether
+   *  the system appears on the architecture graphs (real systems) or the Technologies page. */
+  externalKind?: string;
 }
 export interface DataField {
   name: string;
@@ -66,7 +69,7 @@ export interface Model {
   components: Element[];
   relations: (Element & { from: string; to: string })[];
   capabilities: Element[];
-  technologies?: { name: string; category: string }[];
+  technologies?: { id?: string; name: string; category: string; version?: string }[];
   dataEntities?: DataEntity[];
   endpoints?: Endpoint[];
   processes: { id: string; name: string; description?: string; confidence: number; tasks: { id: string; name: string }[] }[];

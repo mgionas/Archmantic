@@ -17,19 +17,19 @@ status: active · author: Giorgi (mgionas) (https://github.com/mgionas)
 
 **Links:** [npm](https://www.npmjs.com/package/archmantic) · [GitHub](https://github.com/mgionas/Archmantic) · [App](https://archmantic.vercel.app)
 
-84 components · 147 capabilities · 0 endpoints · 0 data entities.
+84 components · 149 capabilities · 0 endpoints · 0 data entities.
 
 **Component roles:** 79 module · 3 route · 2 util
 
 ### What it does (capabilities)
-- **src/** — Run Autonomous Build, Run Handoff, Ensure Anthropic Auth, Has Anthropic Credentials, Editor Features, Start Editor, Write Feature Edit, Load Env, Pull Feature Edits, Analyze Links, Build System View, Shared Externals, Summarize Service, System Html
-- **src/analyze/** — Detect Data Model, Introspect Schema, Read Db Config, Derive Process And Flow, Derive Semantics, Extract File Capabilities, Detect Drizzle Model, Detect Endpoints, Derive Feature Flows, Process From Flow, Find Files, Is Test File, Incremental Update, Analyze Repo, Detect Laravel Migrations, Detect Laravel Views, Detect Laravel Routes, Balanced Block, Split Top Level, Detect Prisma Model, Classify Role, Needs Refine, Refine Role, Detect Sql Model, Detect Stack, Component For
-- …and 107 more
+- **src/** — Run Handoff, Run Autonomous Build, Ensure Anthropic Auth, Has Anthropic Credentials, Write Feature Edit, Editor Features, Start Editor, Load Env, Pull Feature Edits, Summarize Service, Shared Externals, Build System View, Analyze Links, System Html
+- **src/analyze/** — Detect Data Model, Read Db Config, Introspect Schema, Extract File Capabilities, Derive Process And Flow, Derive Semantics, Detect Drizzle Model, Detect Endpoints, Derive Feature Flows, Process From Flow, Is Test File, Find Files, Incremental Update, Analyze Repo, Detect Laravel Migrations, Detect Laravel Views, Detect Laravel Routes, Balanced Block, Split Top Level, Detect Prisma Model, Needs Refine, Refine Role, Classify Role, Detect Sql Model, Classify External, Is System External Kind
+- …and 109 more
 
 ### Primary process: Cli flow
 Cli → Types → Analyze → Tier 2 → Incremental → Project → Queries → Skills → Feature sync → Feature pull → Laravel db → Db introspect
 
-**External systems:** @anthropic-ai/sdk, @modelcontextprotocol/sdk, @neondatabase/serverless, node:assert/strict, node:child_process, node:crypto, node:fs, node:http, node:os, node:path, node:test, typescript, zod
+**External systems:** @anthropic-ai/sdk, node:fs, node:child_process, node:path, typescript, @neondatabase/serverless, node:os, node:http, @modelcontextprotocol/sdk, zod, node:crypto, node:test, node:assert/strict
 
 **Stack:** ai: Anthropic/MCP SDK · database: Neon · language: TypeScript
 

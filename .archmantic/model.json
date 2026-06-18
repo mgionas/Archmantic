@@ -422,13 +422,45 @@
         "comp:src/analyze/stack.ts"
       ],
       "confidence": 0.6,
+      "description": "Exported function `classifyExternal` in src/analyze/stack.ts",
+      "id": "cap:src/analyze/stack.ts#classifyExternal",
+      "name": "Classify External",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/stack.ts:48",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/stack.ts"
+      ],
+      "confidence": 0.6,
       "description": "Exported function `detectStack` in src/analyze/stack.ts",
       "id": "cap:src/analyze/stack.ts#detectStack",
       "name": "Detect Stack",
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/stack.ts:135",
+          "ref": "src/analyze/stack.ts:177",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/analyze/stack.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `isSystemExternalKind` in src/analyze/stack.ts",
+      "id": "cap:src/analyze/stack.ts#isSystemExternalKind",
+      "name": "Is System External Kind",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/analyze/stack.ts:55",
           "source": "code"
         }
       ]
@@ -476,7 +508,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/tier1.ts:46",
+          "ref": "src/analyze/tier1.ts:49",
           "source": "code"
         }
       ]
@@ -492,7 +524,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/tier1.ts:80",
+          "ref": "src/analyze/tier1.ts:91",
           "source": "code"
         }
       ]
@@ -508,7 +540,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/analyze/tier1.ts:143",
+          "ref": "src/analyze/tier1.ts:154",
           "source": "code"
         }
       ]
@@ -1180,7 +1212,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:277",
+          "ref": "src/ir/types.ts:286",
           "source": "code"
         }
       ]
@@ -1196,7 +1228,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:272",
+          "ref": "src/ir/types.ts:281",
           "source": "code"
         }
       ]
@@ -1212,7 +1244,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/ir/types.ts:242",
+          "ref": "src/ir/types.ts:251",
           "source": "code"
         }
       ]
@@ -3782,7 +3814,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-18T17:21:18.990Z",
+  "generatedAt": "2026-06-18T18:40:15.262Z",
   "manifest": {
     "agents": [
       {
@@ -5453,6 +5485,21 @@
         }
       ],
       "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/analyze/tier1.ts",
+      "id": "rel:comp:src/analyze/tier1.ts=>comp:src/analyze/stack.ts",
+      "kind": "depends_on",
+      "name": "comp:src/analyze/tier1.ts → comp:src/analyze/stack.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/analyze/tier1.ts:18",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/analyze/stack.ts"
     },
     {
       "confidence": 0.95,
@@ -9050,7 +9097,7 @@
       "to": "sys:ext:node:test"
     }
   ],
-  "schemaVersion": "0.1.0",
+  "schemaVersion": "0.2.0",
   "systems": [
     {
       "confidence": 0.95,
@@ -9068,7 +9115,8 @@
     },
     {
       "confidence": 0.95,
-      "description": "External dependency",
+      "description": "External system",
+      "externalKind": "saas",
       "id": "sys:ext:@anthropic-ai/sdk",
       "kind": "external",
       "name": "@anthropic-ai/sdk",
@@ -9082,7 +9130,8 @@
     },
     {
       "confidence": 0.95,
-      "description": "External dependency",
+      "description": "External library",
+      "externalKind": "library",
       "id": "sys:ext:@modelcontextprotocol/sdk",
       "kind": "external",
       "name": "@modelcontextprotocol/sdk",
@@ -9096,7 +9145,8 @@
     },
     {
       "confidence": 0.95,
-      "description": "External dependency",
+      "description": "External system",
+      "externalKind": "datastore",
       "id": "sys:ext:@neondatabase/serverless",
       "kind": "external",
       "name": "@neondatabase/serverless",
@@ -9111,6 +9161,7 @@
     {
       "confidence": 0.95,
       "description": "Node.js runtime/builtin module",
+      "externalKind": "runtime",
       "id": "sys:ext:node:assert/strict",
       "kind": "external",
       "name": "node:assert/strict",
@@ -9125,6 +9176,7 @@
     {
       "confidence": 0.95,
       "description": "Node.js runtime/builtin module",
+      "externalKind": "runtime",
       "id": "sys:ext:node:child_process",
       "kind": "external",
       "name": "node:child_process",
@@ -9139,6 +9191,7 @@
     {
       "confidence": 0.95,
       "description": "Node.js runtime/builtin module",
+      "externalKind": "runtime",
       "id": "sys:ext:node:crypto",
       "kind": "external",
       "name": "node:crypto",
@@ -9153,6 +9206,7 @@
     {
       "confidence": 0.95,
       "description": "Node.js runtime/builtin module",
+      "externalKind": "runtime",
       "id": "sys:ext:node:fs",
       "kind": "external",
       "name": "node:fs",
@@ -9167,6 +9221,7 @@
     {
       "confidence": 0.95,
       "description": "Node.js runtime/builtin module",
+      "externalKind": "runtime",
       "id": "sys:ext:node:http",
       "kind": "external",
       "name": "node:http",
@@ -9181,6 +9236,7 @@
     {
       "confidence": 0.95,
       "description": "Node.js runtime/builtin module",
+      "externalKind": "runtime",
       "id": "sys:ext:node:os",
       "kind": "external",
       "name": "node:os",
@@ -9195,6 +9251,7 @@
     {
       "confidence": 0.95,
       "description": "Node.js runtime/builtin module",
+      "externalKind": "runtime",
       "id": "sys:ext:node:path",
       "kind": "external",
       "name": "node:path",
@@ -9209,6 +9266,7 @@
     {
       "confidence": 0.95,
       "description": "Node.js runtime/builtin module",
+      "externalKind": "runtime",
       "id": "sys:ext:node:test",
       "kind": "external",
       "name": "node:test",
@@ -9222,7 +9280,8 @@
     },
     {
       "confidence": 0.95,
-      "description": "External dependency",
+      "description": "External library",
+      "externalKind": "library",
       "id": "sys:ext:typescript",
       "kind": "external",
       "name": "typescript",
@@ -9236,7 +9295,8 @@
     },
     {
       "confidence": 0.95,
-      "description": "External dependency",
+      "description": "External library",
+      "externalKind": "library",
       "id": "sys:ext:zod",
       "kind": "external",
       "name": "zod",
@@ -9262,7 +9322,8 @@
           "ref": "package.json",
           "source": "repo"
         }
-      ]
+      ],
+      "version": "^0.104.1"
     },
     {
       "category": "ai",
@@ -9276,7 +9337,8 @@
           "ref": "package.json",
           "source": "repo"
         }
-      ]
+      ],
+      "version": "^1.29.0"
     },
     {
       "category": "database",
@@ -9290,7 +9352,8 @@
           "ref": "package.json",
           "source": "repo"
         }
-      ]
+      ],
+      "version": "^1.1.0"
     },
     {
       "category": "language",
@@ -9304,7 +9367,8 @@
           "ref": "package.json",
           "source": "repo"
         }
-      ]
+      ],
+      "version": "^6.0.3"
     }
   ]
 }

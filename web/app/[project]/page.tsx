@@ -153,6 +153,13 @@ export default async function ProjectPage({
     body: m.skill.body,
   }));
 
+  const technologies = (model.technologies ?? []).map((tech) => ({
+    id: tech.id ?? `tech:${tech.name}`,
+    name: tech.name,
+    category: tech.category,
+    version: tech.version ?? null,
+  }));
+
   const eg = entityGraph(model);
   const data = eg.nodes.length
     ? {
@@ -221,6 +228,7 @@ export default async function ProjectPage({
         endpoints={endpoints}
         features={features}
         skills={skills}
+        technologies={technologies}
         workspaces={model.workspaces ?? []}
         source={{ base: repoBase(model.manifest?.links), sha: selectedSha || null }}
         knowledge={knowledgeMarkdown(model)}

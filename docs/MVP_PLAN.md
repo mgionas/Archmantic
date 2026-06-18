@@ -1,5 +1,13 @@
 # Archmantic — MVP Build Plan (repositioned around white-space USPs)
 
+> ⚠️ **Historical artifact (superseded).** This is the original MVP plan (M0–M6, all
+> shipped). The MVP is done — the product has shipped through **v1.17.0** with much
+> beyond this plan (PHP/Laravel, monorepo, the Spec layer, Skills, hosted editing,
+> multi-repo system view). For the current roadmap and the forward plan, see
+> [ROADMAP.md](./ROADMAP.md); for the shipped design, [ARCHITECTURE.md](./ARCHITECTURE.md).
+> Two decisions below were later reversed (noted inline): **Mermaid → React Flow**
+> (removed in 1.16.0) and **TS/JS-only → +PHP/Laravel** (1.6.0+). Kept for the rationale.
+
 > Status: **Draft v0.2** — repositioned 2026-06-13 to lead with differentiators competitors lack (see `docs/COMPETITORS.md`). Derived from `docs/CONCEPT.md` + `docs/ARCHITECTURE.md`.
 
 ## The repositioning, in one line
@@ -42,7 +50,7 @@ Each milestone is demoable. Accuracy (provenance) and the white-space USPs are f
 - **Demo:** run on a sample repo → grounded IR, no LLM yet.
 
 ### M2 — **The differentiated first demo** (USPs 1–3)
-- Project IR → **context diagram** (Mermaid) + **capability map** (plain-English, USP 1) + **one BPMN process** (USP 2).
+- Project IR → **context diagram** (~~Mermaid~~ → React Flow, since 1.16.0) + **capability map** (plain-English, USP 1) + **one BPMN process** (USP 2).
 - **Trust layer (USP 3):** every diagram element shows "grounded in N refs" + confidence; low-confidence flagged.
 - Minimal viewer (`archmantic view` terminal preview + tiny static HTML).
 - **Demo (lead with this):** point at a repo → get a *verifiable* capability map + context + a business-process diagram. **This is the part CodeGraph/tokensave/Swark can't show.**
@@ -68,7 +76,7 @@ Each milestone is demoable. Accuracy (provenance) and the white-space USPs are f
 ---
 
 ## After MVP (the long-term moat)
-1. Web platform with **editable** diagram canvas (`bpmn-js` + Mermaid) — USP 7 fully realized.
+1. Web platform with **editable** diagram canvas (`bpmn-js` + ~~Mermaid~~ React Flow) — USP 7 fully realized.
 2. **Edit-then-build** loop → emit build spec → external agent implements. *(No competitor in either camp does this — the ultimate differentiator.)*
 3. Freemium/subscriptions (editing = paid; small projects free).
 4. More language grammars (Go, Java, C#, Ruby, …).
@@ -78,6 +86,6 @@ Each milestone is demoable. Accuracy (provenance) and the white-space USPs are f
 ## Agreed (2026-06-13)
 - **Topology:** local-first hybrid (free local CLI+MCP+in-repo; paid cloud platform for editing/collab).
 - **LLM/privacy:** BYOK first (code stays local), managed+configurable later.
-- **Languages for v1:** **TypeScript/JS only** — dogfood on our own codebase.
-- **Diagram formats:** Mermaid (context/sequence) + BPMN 2.0 (process).
+- **Languages for v1:** ~~**TypeScript/JS only**~~ — *superseded:* PHP/Laravel added in 1.6.0+ (Vue/Inertia, Blade/Livewire, migrations→data-model). Still dogfooded on this codebase.
+- **Diagram formats:** ~~Mermaid (context/sequence)~~ → **React Flow** (context/components/sequence/ERD, since 1.16.0) + BPMN 2.0 (process).
 - **Sample dogfood repo:** the Archmantic codebase itself (this repo) as we build it.

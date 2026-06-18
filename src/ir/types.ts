@@ -9,7 +9,7 @@
  * provenance `{ source: "human" }`. Nothing derived is allowed in without a ref.
  */
 
-export const SCHEMA_VERSION = "0.1.0" as const;
+export const SCHEMA_VERSION = "0.2.0" as const;
 
 /** Where a piece of the model was derived from. */
 export type SourceKind = "repo" | "code" | "runtime" | "docs" | "human";
@@ -38,8 +38,15 @@ interface ElementBase {
   package?: string;
 }
 
+/** How an external is reached: real systems/services vs linked code vs the runtime.
+ *  Drives whether it appears on the architecture graphs or only the Technologies page. */
+export type ExternalKind = "datastore" | "saas" | "infra" | "service" | "library" | "runtime";
+
 export interface System extends ElementBase {
   kind: "internal" | "external";
+  /** Set on external systems: distinguishes real systems (datastore/saas/infra/service),
+   *  which belong on the context/component graphs, from `library`/`runtime`, which don't. */
+  externalKind?: ExternalKind;
 }
 
 export interface Component extends ElementBase {
@@ -106,6 +113,8 @@ export interface Capability extends ElementBase {
 export interface Technology extends ElementBase {
   /** framework | ui | database | orm | auth | ai | testing | build | language | infra | library */
   category: string;
+  /** Declared version range from the manifest (e.g. "^1.2.0"), if known. */
+  version?: string;
 }
 
 /** Something a feature shows to the user (e.g. "hero slider", source "admin"). */
