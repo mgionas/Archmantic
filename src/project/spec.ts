@@ -10,6 +10,7 @@
  */
 import { type ArchitectureModel } from "../ir/types.js";
 import { componentLabel } from "../ir/naming.js";
+import { isRealExternalSystem } from "../analyze/stack.js";
 import { groupCapabilities } from "./capability.js";
 
 const rel = (id: string) => id.slice(id.indexOf(":") + 1);
@@ -23,7 +24,7 @@ function shortTarget(id: string): string {
 
 export function buildSpecMarkdown(model: ArchitectureModel): string {
   const internal = model.systems.find((s) => s.kind === "internal");
-  const externals = model.systems.filter((s) => s.kind === "external");
+  const externals = model.systems.filter((s) => s.kind === "external" && isRealExternalSystem(s));
   const internalDeps = model.relations.filter((r) => r.to.startsWith("comp:")).length;
   const out: string[] = [];
 
@@ -140,7 +141,7 @@ export interface BuildSpecJson {
 }
 
 export function buildSpecJson(model: ArchitectureModel): BuildSpecJson {
-  const externals = model.systems.filter((s) => s.kind === "external");
+  const externals = model.systems.filter((s) => s.kind === "external" && isRealExternalSystem(s));
   const proc = model.processes[0];
   return {
     project: model.project,

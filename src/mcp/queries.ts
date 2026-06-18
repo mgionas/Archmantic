@@ -10,7 +10,7 @@
 import { type ArchitectureModel, type Component } from "../ir/types.js";
 import { componentLabel } from "../ir/naming.js";
 import { analyzeLinks } from "../system.js";
-import { isSystemExternalKind } from "../analyze/stack.js";
+import { isRealExternalSystem } from "../analyze/stack.js";
 import { CURATION_PATH } from "../project/curation.js";
 
 const rel = (id: string) => id.slice(id.indexOf(":") + 1);
@@ -42,7 +42,9 @@ export function findComponent(model: ArchitectureModel, name: string): Component
 
 export function getContext(model: ArchitectureModel): string {
   const internal = model.systems.find((s) => s.kind === "internal");
-  const externals = model.systems.filter((s) => s.kind === "external");
+  // Real external systems only (datastore/saas/infra/service) — libraries/runtime are
+  // linked code, not systems; they'd just be noise in the agent's context.
+  const externals = model.systems.filter((s) => s.kind === "external" && isRealExternalSystem(s));
   const internalDeps = model.relations.filter((r) => r.to.startsWith("comp:")).length;
   const lines = [
     `Project: ${model.project}`,
@@ -298,7 +300,7 @@ export function getArchitectureMap(model: ArchitectureModel): string {
   for (const g of domains) for (const m of g.members) compDomain.set(m, g.id);
   const roleOf = new Map(model.components.map((c) => [c.id, c.role ?? "module"]));
   const sysExt = new Set(
-    model.systems.filter((s) => s.kind === "external" && isSystemExternalKind(s.externalKind)).map((s) => s.id),
+    model.systems.filter((s) => s.kind === "external" && isRealExternalSystem(s)).map((s) => s.id),
   );
   const nameOf = (id: string) => domains.find((g) => g.id === id)?.name ?? id;
   const isCurated = (g: (typeof domains)[number]) => g.provenance[0]?.ref === CURATION_PATH;

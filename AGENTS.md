@@ -19,7 +19,7 @@ status: active · author: Giorgi (mgionas) (https://github.com/mgionas)
 
 **Links:** [npm](https://www.npmjs.com/package/archmantic) · [GitHub](https://github.com/mgionas/Archmantic) · [App](https://archmantic.vercel.app)
 
-62 components · 153 capabilities · 0 endpoints · 0 data entities.
+62 components · 155 capabilities · 0 endpoints · 0 data entities.
 
 **Component roles:** 60 module · 2 util
 
@@ -27,11 +27,11 @@ status: active · author: Giorgi (mgionas) (https://github.com/mgionas)
 
 ### What it does (capabilities)
 - **src/** — Analyze Links, Build System View, Editor Features, Ensure Anthropic Auth, Has Anthropic Credentials, Load Env, Pull Feature Edits, Run Autonomous Build, Run Handoff, Shared Externals, Start Editor, Summarize Service, System Html, Write Feature Edit
-- **src/analyze/** — Analyze Repo, Balanced Block, Build External System, Classify External, Classify Role, Component For, Derive Feature Flows, Derive Groups, Derive Process And Flow, Derive Semantics, Detect Data Model, Detect Drizzle Model, Detect Endpoints, Detect Laravel Migrations, Detect Laravel Routes, Detect Laravel Views, Detect Prisma Model, Detect Sql Model, Detect Stack, Detect Workspaces, Extract File Capabilities, Extract File Edges, Find Files, Incremental Update, Introspect Schema, Is System External Kind
-- …and 113 more
+- **src/analyze/** — Analyze Repo, Balanced Block, Build External System, Classify External, Classify Role, Component For, Derive Feature Flows, Derive Groups, Derive Process And Flow, Derive Semantics, Detect Data Model, Detect Drizzle Model, Detect Endpoints, Detect Laravel Migrations, Detect Laravel Routes, Detect Laravel Views, Detect Prisma Model, Detect Sql Model, Detect Stack, Detect Workspaces, Extract File Capabilities, Extract File Edges, Find Files, Incremental Update, Introspect Schema, Is Real External System
+- …and 115 more
 
 ### Primary process: Cli flow
-Cli → Types → Analyze → Tier 2 → Incremental → Project → Queries → Skills → Feature sync → Curate ai → Curation → Feature pull
+Cli → Types → Analyze → Stack → Tier 2 → Incremental → Project → Queries → Skills → Feature sync → Curate ai → Curation
 
 **External systems:** @anthropic-ai/sdk, @neondatabase/serverless
 

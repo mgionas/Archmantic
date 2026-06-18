@@ -35,6 +35,16 @@ const EXTERNAL_SYSTEMS: Record<string, ExternalKind> = {
   "@clerk/clerk-sdk-node": "saas",
   "@anthropic-ai/sdk": "saas",
   openai: "saas",
+  // AI providers (SDKs that call a hosted model API — real external systems, not libs) — INS-019
+  "@google/genai": "saas",
+  "@google/generative-ai": "saas",
+  "@langchain/google-genai": "saas",
+  "@langchain/openai": "saas",
+  "@langchain/anthropic": "saas",
+  "@mistralai/mistralai": "saas",
+  "cohere-ai": "saas",
+  replicate: "saas",
+  "@huggingface/inference": "saas",
   twilio: "saas",
   resend: "saas",
   "@sendgrid/mail": "saas",
@@ -54,6 +64,12 @@ export function classifyExternal(pkg: string, builtin: boolean): ExternalKind {
 /** Is this external a real system (drawn on the graphs) vs a library/runtime (not drawn)? */
 export const isSystemExternalKind = (k: ExternalKind | undefined): boolean =>
   k === "datastore" || k === "saas" || k === "infra" || k === "service";
+
+/** Should this external system appear as a real system (context graph / map / agent
+ *  context) vs a library/runtime? Pre-0.2.0 models have no `externalKind` — fall back
+ *  to dropping only `node:` runtime imports (matches the web's `systemExternalIds`). */
+export const isRealExternalSystem = (s: { externalKind?: ExternalKind; name: string }): boolean =>
+  s.externalKind ? isSystemExternalKind(s.externalKind) : !s.name.startsWith("node:");
 
 /** Curated Composer (PHP) package → {category, display name}. */
 const KNOWN_PHP: Record<string, { cat: Cat; name: string }> = {

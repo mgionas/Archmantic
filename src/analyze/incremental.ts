@@ -15,7 +15,7 @@ import { execFileSync } from "node:child_process";
 import { type ArchitectureModel } from "../ir/types.js";
 import { walkSourceFiles } from "./walk.js";
 import { componentFor } from "./tier0.js";
-import { extractFileEdges, buildExternalSystem } from "./tier1.js";
+import { extractFileEdges, buildExternalSystem, loadAliases } from "./tier1.js";
 import { extractFileCapabilities, deriveProcessAndFlow } from "./derive.js";
 import { detectStack } from "./stack.js";
 import { deriveGroups } from "./groups.js";
@@ -84,8 +84,9 @@ export function incrementalUpdate(root: string, base: ArchitectureModel): Increm
     if (r.to.startsWith("comp:") && removedSet.has(relOf(r.to))) return false;
     return true;
   });
+  const aliases = loadAliases(root);
   for (const f of recomputed) {
-    const { edges } = extractFileEdges(root, f, currentSet);
+    const { edges } = extractFileEdges(root, f, currentSet, aliases);
     for (const e of edges) model.relations.push(e);
   }
 

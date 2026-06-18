@@ -9,6 +9,7 @@
  */
 import { type ArchitectureModel, type Relation } from "../ir/types.js";
 import { componentLabel } from "../ir/naming.js";
+import { isRealExternalSystem } from "../analyze/stack.js";
 
 export interface ElementChange {
   id: string;
@@ -65,7 +66,10 @@ function group(model: ArchitectureModel): Grouped {
   }
   const externalSystems = new Map<string, ElementChange>();
   for (const s of model.systems) {
-    if (s.kind === "external") externalSystems.set(s.id, { id: s.id, label: s.name, ref: firstRef(s) });
+    // Track only real systems — library/runtime churn isn't an architecture change.
+    if (s.kind === "external" && isRealExternalSystem(s)) {
+      externalSystems.set(s.id, { id: s.id, label: s.name, ref: firstRef(s) });
+    }
   }
   const capabilities = new Map<string, ElementChange>();
   for (const cap of model.capabilities) {

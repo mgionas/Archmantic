@@ -65,18 +65,80 @@ export function buildExternalSystem(name: string, builtin: boolean): System {
   };
 }
 
-/** Resolve a relative import specifier to a known source file (component). */
-function resolveInternal(importerRel: string, spec: string, fileSet: Set<string>): string | undefined {
-  const base = join(dirname(importerRel), spec).split("\\").join("/");
-  // NodeNext/ESM imports carry a `.js`-family extension that maps to the `.ts`
-  // source on disk (`./walk.js` → `walk.ts`); also try the extensionless stem.
-  const stem = base.replace(/\.(js|jsx|mjs|cjs)$/, "");
+/** Resolve a repo-relative module base to a known source file, trying the usual
+ *  extension + index fallbacks (NodeNext `.js`→`.ts`, extensionless, `/index.*`). */
+function resolveModuleBase(base: string, fileSet: Set<string>): string | undefined {
+  const norm = base.split("\\").join("/").replace(/^\.\//, "");
+  const stem = norm.replace(/\.(js|jsx|mjs|cjs)$/, "");
   const candidates = [
-    base,
-    `${stem}.ts`, `${stem}.tsx`, `${stem}.js`, `${stem}.jsx`, `${stem}.mjs`, `${stem}.cjs`,
+    norm,
+    `${stem}.ts`, `${stem}.tsx`, `${stem}.js`, `${stem}.jsx`, `${stem}.mjs`, `${stem}.cjs`, `${stem}.vue`,
     `${stem}/index.ts`, `${stem}/index.tsx`, `${stem}/index.js`,
   ];
   for (const c of candidates) if (fileSet.has(c)) return c;
+  return undefined;
+}
+
+/** Resolve a relative import specifier to a known source file (component). */
+function resolveInternal(importerRel: string, spec: string, fileSet: Set<string>): string | undefined {
+  return resolveModuleBase(join(dirname(importerRel), spec).split("\\").join("/"), fileSet);
+}
+
+/** A tsconfig/jsconfig path alias: a pattern (e.g. `@/*`) → repo-relative targets. */
+export interface PathAlias {
+  pattern: string;
+  targets: string[];
+}
+
+/** Read `compilerOptions.paths` (+ `baseUrl`) from tsconfig.json / jsconfig.json so
+ *  alias imports (`@/lib`, `~/components`) resolve to internal files instead of being
+ *  mistaken for npm packages. Uses the TS config reader (tolerates comments). */
+export function loadAliases(root: string): PathAlias[] {
+  for (const name of ["tsconfig.json", "jsconfig.json"]) {
+    const file = join(root, name);
+    let raw: string;
+    try {
+      raw = readFileSync(file, "utf8");
+    } catch {
+      continue;
+    }
+    const parsed = ts.readConfigFile(file, () => raw).config as
+      | { compilerOptions?: { baseUrl?: string; paths?: Record<string, string[]> } }
+      | undefined;
+    const co = parsed?.compilerOptions;
+    if (!co?.paths) continue;
+    const baseUrl = co.baseUrl ?? ".";
+    const aliases: PathAlias[] = [];
+    for (const [pattern, targets] of Object.entries(co.paths)) {
+      if (!Array.isArray(targets)) continue;
+      aliases.push({ pattern, targets: targets.map((t) => join(baseUrl, t).split("\\").join("/")) });
+    }
+    if (aliases.length) return aliases;
+  }
+  return [];
+}
+
+/** Resolve a non-relative specifier via tsconfig path aliases to an internal file. */
+function resolveAlias(spec: string, aliases: PathAlias[], fileSet: Set<string>): string | undefined {
+  for (const { pattern, targets } of aliases) {
+    const star = pattern.indexOf("*");
+    if (star === -1) {
+      if (spec !== pattern) continue;
+      for (const t of targets) {
+        const hit = resolveModuleBase(t, fileSet);
+        if (hit) return hit;
+      }
+      continue;
+    }
+    const pre = pattern.slice(0, star);
+    const post = pattern.slice(star + 1);
+    if (!spec.startsWith(pre) || !spec.endsWith(post) || spec.length < pre.length + post.length) continue;
+    const captured = spec.slice(pre.length, spec.length - post.length);
+    for (const t of targets) {
+      const hit = resolveModuleBase(t.replace("*", captured), fileSet);
+      if (hit) return hit;
+    }
+  }
   return undefined;
 }
 
@@ -88,7 +150,7 @@ export interface FileEdges {
 }
 
 /** Extract one file's outgoing import edges + referenced external systems. */
-export function extractFileEdges(root: string, rel: string, fileSet: Set<string>): FileEdges {
+export function extractFileEdges(root: string, rel: string, fileSet: Set<string>, aliases: PathAlias[] = []): FileEdges {
   const edges = new Map<string, Relation>();
   const externals = new Map<string, System>();
   const fromId = compId(rel);
@@ -135,6 +197,13 @@ export function extractFileEdges(root: string, rel: string, fileSet: Set<string>
     } else if (spec.startsWith("node:")) {
       addRelation(ensureExternal(spec, true), prov);
     } else {
+      // A tsconfig path alias (e.g. `@/lib`, `~/components`) is internal, not an npm
+      // package — resolve it to a file before falling back to an external system.
+      const aliased = resolveAlias(spec, aliases, fileSet);
+      if (aliased) {
+        addRelation(compId(aliased), prov);
+        return;
+      }
       const pkg = spec.startsWith("@") ? spec.split("/").slice(0, 2).join("/") : spec.split("/")[0]!;
       addRelation(ensureExternal(pkg, isBuiltin(pkg)), prov);
     }
@@ -153,10 +222,11 @@ export function extractFileEdges(root: string, rel: string, fileSet: Set<string>
 
 export function tier1(root: string, sourceFiles: string[], model: ArchitectureModel): void {
   const fileSet = new Set(sourceFiles);
+  const aliases = loadAliases(root);
   const externals = new Map<string, System>();
 
   for (const rel of sourceFiles) {
-    const { edges, externals: exts } = extractFileEdges(root, rel, fileSet);
+    const { edges, externals: exts } = extractFileEdges(root, rel, fileSet, aliases);
     for (const e of edges) model.relations.push(e);
     for (const s of exts) if (!externals.has(s.id)) externals.set(s.id, s);
   }

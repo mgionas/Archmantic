@@ -8,6 +8,7 @@
  * the "one unified usage view" across repos. Pure functions over the models.
  */
 import { type ArchitectureModel } from "./ir/types.js";
+import { isRealExternalSystem } from "./analyze/stack.js";
 
 export interface ServiceSummary {
   project: string;
@@ -26,7 +27,7 @@ export function summarizeService(m: ArchitectureModel): ServiceSummary {
     consumes: m.consumes ?? [],
     components: m.components.length,
     capabilities: m.capabilities.length,
-    externals: m.systems.filter((s) => s.kind === "external").map((s) => s.name),
+    externals: m.systems.filter((s) => s.kind === "external" && isRealExternalSystem(s)).map((s) => s.name),
     technologies: (m.technologies ?? []).map((t) => t.name),
   };
 }
