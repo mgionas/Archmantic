@@ -82,16 +82,6 @@ export async function recordUsageApi(events: UsageEvent[]): Promise<void> {
   assertJson(res, "usage");
 }
 
-/** Fetch the org's human-edited BPMN for a project (null if none saved). */
-export async function pullProcessEditApi(project: string): Promise<string | null> {
-  const res = await send(`/api/process-edit?project=${encodeURIComponent(project)}`, { headers: authHeader() });
-  if (res.status === 404) return null;
-  if (!res.ok) throw new ApiError(`fetch edit failed (${res.status}): ${(await res.text()).slice(0, 200)}`);
-  assertJson(res, "fetch edit");
-  const data = (await res.json()) as { xml?: string };
-  return data.xml ?? null;
-}
-
 /** One pending feature edit from the hosted editor (matches the CLI's FeatureEdit shape). */
 export interface FeatureEditDTO {
   slug: string;

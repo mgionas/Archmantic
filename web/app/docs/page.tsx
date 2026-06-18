@@ -60,7 +60,6 @@ const COMMANDS: [string, string][] = [
   ["view", "Capability map, diagrams, and trust report → a self-contained view.html"],
   ["spec", "Emit an agent-ready build spec (build-spec.md + .json) from the model"],
   ["knowledge", "Refresh AGENTS.md agent-context file (managed block; auto on analyze/update)"],
-  ["apply [--from f]", "Merge a human BPMN canvas edit back into the model — the “edit” of edit-then-build"],
   ["handoff [--apply]", "Run the build spec through Claude → a plan; --apply runs an autonomous agent that edits the repo and self-verifies"],
   ["drift [--check]", "Compare the committed model vs. the code; --check exits 1 on drift (CI gate)"],
   ["diff [<ref>]", "Architecture diff from a git ref → working tree; writes PR-comment-ready pr-diff.md"],
@@ -102,7 +101,7 @@ export default function Docs() {
         <Section id="about" title="What is Archmantic">
           <p>
             Point Archmantic at a repo and it reverse-engineers a single <strong>architecture model</strong> (the IR).
-            Every diagram — C4-style context, components, sequence (interactive graphs), an auto-detected BPMN business process, and
+            Every diagram — C4-style context, components, sequence (interactive graphs), an auto-detected business process, and
             an ERD of your data model (from Prisma, Drizzle, SQL, or <strong>Laravel migrations</strong>), plus a detected
             API surface (REST/tRPC/GraphQL, incl. <strong>NestJS</strong> and <strong>Laravel</strong> routes) — is a{" "}
             <strong>projection</strong> of that one model. Every element is traceable to <Inline>file:line</Inline> with a
@@ -322,8 +321,8 @@ jobs:
 npx archmantic handoff            # → an implementation plan (Claude, BYOK)
 npx archmantic handoff --apply    # autonomous agent edits the repo and self-verifies`}</Code>
           <p>
-            Edit the BPMN canvas in the web app, <Inline>apply</Inline> it back into the model, emit a build spec, and
-            hand it to an agent that implements <em>and</em> verifies (runs build + tests, fixes failures until green).
+            Refine the model — capabilities, features, the process — then emit a build spec and hand it to an agent
+            that implements <em>and</em> verifies (runs build + tests, fixes failures until green).
             Commit first; review with <Inline>git diff</Inline>.
           </p>
         </Section>

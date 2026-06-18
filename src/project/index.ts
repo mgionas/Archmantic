@@ -1,16 +1,14 @@
 /**
  * Projection layer — turns the one grounded IR into the many views (context,
- * components, sequence, the BPMN process, the capability map, the trust surface)
+ * components, sequence, the process flow, the capability map, the trust surface)
  * and a self-contained HTML viewer. The web app renders graphs interactively
- * with React Flow; the CLI emits this HTML + BPMN. See docs/ARCHITECTURE.md §1.
+ * with React Flow; the CLI emits this HTML. See docs/ARCHITECTURE.md §1.
  */
 import { type ArchitectureModel } from "../ir/types.js";
-import { bpmnXml } from "./bpmn.js";
 import { capabilityMapText } from "./capability.js";
 import { renderHtml } from "./html.js";
 import { summarize, type Grounded } from "./trust.js";
 
-export { bpmnXml } from "./bpmn.js";
 export { capabilityMapText, groupCapabilities } from "./capability.js";
 export { renderHtml } from "./html.js";
 export { buildSpecMarkdown, buildSpecJson, type BuildSpecJson } from "./spec.js";
@@ -34,7 +32,6 @@ export {
   slugify,
   FEATURES_DIR,
 } from "./features.js";
-export { parseBpmnProcess, type ParsedProcess } from "./bpmn-parse.js";
 export * from "./trust.js";
 
 const DIM = "\x1b[2m";
@@ -100,7 +97,7 @@ export function terminalPreview(model: ArchitectureModel): string {
 
   const proc = model.processes[0];
   if (proc) {
-    out.push(`\n${BOLD}Process${RESET} ${DIM}(BPMN)${RESET} — ${proc.name}`);
+    out.push(`\n${BOLD}Process${RESET} ${DIM}— ${proc.name}${RESET}`);
     out.push("  " + proc.tasks.map((t) => t.name).join("  →  "));
   }
 
@@ -109,11 +106,9 @@ export function terminalPreview(model: ArchitectureModel): string {
 
 /** Everything the `view` command emits to disk, keyed by relative filename.
  *  Interactive graphs live in the web app (React Flow); the CLI ships the
- *  self-contained HTML viewer plus the BPMN process as a portable artifact. */
+ *  self-contained HTML viewer. */
 export function projectionArtifacts(model: ArchitectureModel): Record<string, string> {
-  const artifacts: Record<string, string> = {
+  return {
     "view.html": renderHtml(model),
   };
-  if (model.processes[0]) artifacts["process.bpmn"] = bpmnXml(model.processes[0]);
-  return artifacts;
 }

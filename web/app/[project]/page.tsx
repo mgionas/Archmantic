@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { listSnapshots, modelAtCommit, latestModel } from "@/lib/store";
-import { getProcessEdit, listFeatureEdits } from "@/lib/admin";
+import { listFeatureEdits } from "@/lib/admin";
 import { modelDelta } from "@/lib/diff";
 import { componentLabel, groupCapabilities, trust, repoBase } from "@/lib/format";
 import {
@@ -11,9 +11,9 @@ import {
   contextDetails,
   entityGraph,
   sequenceDeck,
+  processGraph,
   architectureMap,
 } from "@/lib/diagrams";
-import { bpmnXml } from "@/lib/bpmn";
 import { knowledgeMarkdown } from "@/lib/knowledge";
 import { resolveSkills, triggerLabel } from "@/lib/skills";
 import { Card } from "@/components/ui/card";
@@ -76,7 +76,6 @@ export default async function ProjectPage({
 
   const t = trust(model);
   const externals = model.systems.filter((s) => s.kind === "external");
-  const savedBpmn = owner ? await getProcessEdit(owner, project) : null;
 
   const groups: Group[] = groupCapabilities(model).map((g) => ({
     area: g.area,
@@ -245,10 +244,9 @@ export default async function ProjectPage({
           componentGraph: componentGraph(model),
           componentDetails: componentDetails(model),
           sequences: sequenceDeck(model),
-          processXml: savedBpmn ?? bpmnXml(model),
+          process: processGraph(model),
           erd: data?.graph ?? null,
           map: architectureMap(model),
-          edited: Boolean(savedBpmn),
         }}
       />
     </div>

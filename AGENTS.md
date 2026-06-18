@@ -19,16 +19,16 @@ status: active · author: Giorgi (mgionas) (https://github.com/mgionas)
 
 **Links:** [npm](https://www.npmjs.com/package/archmantic) · [GitHub](https://github.com/mgionas/Archmantic) · [App](https://archmantic.vercel.app)
 
-64 components · 156 capabilities · 0 endpoints · 0 data entities.
+62 components · 153 capabilities · 0 endpoints · 0 data entities.
 
-**Component roles:** 62 module · 2 util
+**Component roles:** 60 module · 2 util
 
-**Domains:** Analysis pipeline (24) · Spec & projections (13) · CLI & orchestration (8) · Skills (5) · Diff & history (4) · MCP server (4) · Team cloud (3) · Architecture model (IR) (2) · Misc (1)
+**Domains:** Analysis pipeline (24) · Spec & projections (11) · CLI & orchestration (8) · Skills (5) · Diff & history (4) · MCP server (4) · Team cloud (3) · Architecture model (IR) (2) · Misc (1)
 
 ### What it does (capabilities)
 - **src/** — Analyze Links, Build System View, Editor Features, Ensure Anthropic Auth, Has Anthropic Credentials, Load Env, Pull Feature Edits, Run Autonomous Build, Run Handoff, Shared Externals, Start Editor, Summarize Service, System Html, Write Feature Edit
 - **src/analyze/** — Analyze Repo, Balanced Block, Build External System, Classify External, Classify Role, Component For, Derive Feature Flows, Derive Groups, Derive Process And Flow, Derive Semantics, Detect Data Model, Detect Drizzle Model, Detect Endpoints, Detect Laravel Migrations, Detect Laravel Routes, Detect Laravel Views, Detect Prisma Model, Detect Sql Model, Detect Stack, Detect Workspaces, Extract File Capabilities, Extract File Edges, Find Files, Incremental Update, Introspect Schema, Is System External Kind
-- …and 116 more
+- …and 113 more
 
 ### Primary process: Cli flow
 Cli → Types → Analyze → Tier 2 → Incremental → Project → Queries → Skills → Feature sync → Curate ai → Curation → Feature pull

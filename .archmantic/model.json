@@ -716,7 +716,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/api.ts:108",
+          "ref": "src/cloud/api.ts:98",
           "source": "code"
         }
       ]
@@ -733,22 +733,6 @@
         {
           "confidence": 0.6,
           "ref": "src/cloud/api.ts:55",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "componentIds": [
-        "comp:src/cloud/api.ts"
-      ],
-      "confidence": 0.6,
-      "description": "Exported function `pullProcessEditApi` in src/cloud/api.ts",
-      "id": "cap:src/cloud/api.ts#pullProcessEditApi",
-      "name": "Pull Process Edit Api",
-      "provenance": [
-        {
-          "confidence": 0.6,
-          "ref": "src/cloud/api.ts:86",
           "source": "code"
         }
       ]
@@ -796,7 +780,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/cloud/index.ts:34",
+          "ref": "src/cloud/index.ts:33",
           "source": "code"
         }
       ]
@@ -1635,38 +1619,6 @@
     },
     {
       "componentIds": [
-        "comp:src/project/bpmn-parse.ts"
-      ],
-      "confidence": 0.6,
-      "description": "Exported function `parseBpmnProcess` in src/project/bpmn-parse.ts",
-      "id": "cap:src/project/bpmn-parse.ts#parseBpmnProcess",
-      "name": "Parse Bpmn Process",
-      "provenance": [
-        {
-          "confidence": 0.6,
-          "ref": "src/project/bpmn-parse.ts:19",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "componentIds": [
-        "comp:src/project/bpmn.ts"
-      ],
-      "confidence": 0.6,
-      "description": "Exported function `bpmnXml` in src/project/bpmn.ts",
-      "id": "cap:src/project/bpmn.ts#bpmnXml",
-      "name": "Bpmn Xml",
-      "provenance": [
-        {
-          "confidence": 0.6,
-          "ref": "src/project/bpmn.ts:26",
-          "source": "code"
-        }
-      ]
-    },
-    {
-      "componentIds": [
         "comp:src/project/capability.ts"
       ],
       "confidence": 0.6,
@@ -1932,7 +1884,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/html.ts:150",
+          "ref": "src/project/html.ts:156",
           "source": "code"
         }
       ]
@@ -1948,7 +1900,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:113",
+          "ref": "src/project/index.ts:110",
           "source": "code"
         }
       ]
@@ -1964,7 +1916,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/project/index.ts:45",
+          "ref": "src/project/index.ts:42",
           "source": "code"
         }
       ]
@@ -3222,38 +3174,6 @@
     {
       "confidence": 0.95,
       "groupId": "group:domain:project",
-      "id": "comp:src/project/bpmn-parse.ts",
-      "kind": "module",
-      "name": "src/project/bpmn-parse.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/bpmn-parse.ts:1",
-          "source": "code"
-        }
-      ],
-      "role": "module",
-      "systemId": "sys:archmantic"
-    },
-    {
-      "confidence": 0.95,
-      "groupId": "group:domain:project",
-      "id": "comp:src/project/bpmn.ts",
-      "kind": "module",
-      "name": "src/project/bpmn.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/bpmn.ts:1",
-          "source": "code"
-        }
-      ],
-      "role": "module",
-      "systemId": "sys:archmantic"
-    },
-    {
-      "confidence": 0.95,
-      "groupId": "group:domain:project",
       "id": "comp:src/project/capability.ts",
       "kind": "module",
       "name": "src/project/capability.ts",
@@ -3690,7 +3610,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-18T20:56:36.210Z",
+  "generatedAt": "2026-06-18T21:29:33.925Z",
   "groups": [
     {
       "confidence": 0.9,
@@ -3831,8 +3751,6 @@
       "id": "group:domain:project",
       "kind": "domain",
       "members": [
-        "comp:src/project/bpmn-parse.ts",
-        "comp:src/project/bpmn.ts",
         "comp:src/project/capability.ts",
         "comp:src/project/curate-ai.ts",
         "comp:src/project/curation.ts",
@@ -3949,8 +3867,6 @@
         "comp:src/mcp/queries.ts",
         "comp:src/mcp/server.ts",
         "comp:src/mcp/usage.ts",
-        "comp:src/project/bpmn-parse.ts",
-        "comp:src/project/bpmn.ts",
         "comp:src/project/capability.ts",
         "comp:src/project/curate-ai.ts",
         "comp:src/project/curation.ts",
@@ -6186,7 +6102,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:55",
+          "ref": "src/cli.ts:54",
           "source": "code"
         }
       ],
@@ -6216,7 +6132,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:52",
+          "ref": "src/cli.ts:51",
           "source": "code"
         }
       ],
@@ -6276,7 +6192,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:54",
+          "ref": "src/cli.ts:53",
           "source": "code"
         }
       ],
@@ -6306,7 +6222,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:51",
+          "ref": "src/cli.ts:50",
           "source": "code"
         }
       ],
@@ -6321,7 +6237,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:53",
+          "ref": "src/cli.ts:52",
           "source": "code"
         }
       ],
@@ -6506,7 +6422,7 @@
         },
         {
           "confidence": 0.95,
-          "ref": "src/cloud/index.ts:27",
+          "ref": "src/cloud/index.ts:26",
           "source": "code"
         }
       ],
@@ -6526,7 +6442,7 @@
         },
         {
           "confidence": 0.95,
-          "ref": "src/cloud/index.ts:26",
+          "ref": "src/cloud/index.ts:25",
           "source": "code"
         }
       ],
@@ -7439,21 +7355,6 @@
     },
     {
       "confidence": 0.95,
-      "from": "comp:src/project/bpmn.ts",
-      "id": "rel:comp:src/project/bpmn.ts=>comp:src/ir/types.ts",
-      "kind": "depends_on",
-      "name": "comp:src/project/bpmn.ts → comp:src/ir/types.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/bpmn.ts:9",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/ir/types.ts"
-    },
-    {
-      "confidence": 0.95,
       "from": "comp:src/project/capability.ts",
       "id": "rel:comp:src/project/capability.ts=>comp:src/ir/types.ts",
       "kind": "depends_on",
@@ -7785,28 +7686,13 @@
     {
       "confidence": 0.95,
       "from": "comp:src/project/html.ts",
-      "id": "rel:comp:src/project/html.ts=>comp:src/project/bpmn.ts",
-      "kind": "depends_on",
-      "name": "comp:src/project/html.ts → comp:src/project/bpmn.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/html.ts:10",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/project/bpmn.ts"
-    },
-    {
-      "confidence": 0.95,
-      "from": "comp:src/project/html.ts",
       "id": "rel:comp:src/project/html.ts=>comp:src/project/capability.ts",
       "kind": "depends_on",
       "name": "comp:src/project/html.ts → comp:src/project/capability.ts",
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/html.ts:11",
+          "ref": "src/project/html.ts:10",
           "source": "code"
         }
       ],
@@ -7821,7 +7707,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/html.ts:12",
+          "ref": "src/project/html.ts:11",
           "source": "code"
         }
       ],
@@ -7845,24 +7731,9 @@
     {
       "confidence": 0.95,
       "from": "comp:src/project/index.ts",
-      "id": "rel:comp:src/project/index.ts=>comp:src/project/bpmn-parse.ts",
+      "id": "rel:comp:src/project/index.ts=>comp:src/project/capability.ts",
       "kind": "depends_on",
-      "name": "comp:src/project/index.ts → comp:src/project/bpmn-parse.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/index.ts:37",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/project/bpmn-parse.ts"
-    },
-    {
-      "confidence": 0.95,
-      "from": "comp:src/project/index.ts",
-      "id": "rel:comp:src/project/index.ts=>comp:src/project/bpmn.ts",
-      "kind": "depends_on",
-      "name": "comp:src/project/index.ts → comp:src/project/bpmn.ts",
+      "name": "comp:src/project/index.ts → comp:src/project/capability.ts",
       "provenance": [
         {
           "confidence": 0.95,
@@ -7871,27 +7742,7 @@
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:13",
-          "source": "code"
-        }
-      ],
-      "to": "comp:src/project/bpmn.ts"
-    },
-    {
-      "confidence": 0.95,
-      "from": "comp:src/project/index.ts",
-      "id": "rel:comp:src/project/index.ts=>comp:src/project/capability.ts",
-      "kind": "depends_on",
-      "name": "comp:src/project/index.ts → comp:src/project/capability.ts",
-      "provenance": [
-        {
-          "confidence": 0.95,
-          "ref": "src/project/index.ts:9",
-          "source": "code"
-        },
-        {
-          "confidence": 0.95,
-          "ref": "src/project/index.ts:14",
+          "ref": "src/project/index.ts:12",
           "source": "code"
         }
       ],
@@ -7906,7 +7757,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:26",
+          "ref": "src/project/index.ts:24",
           "source": "code"
         }
       ],
@@ -7921,12 +7772,12 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:10",
+          "ref": "src/project/index.ts:9",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:15",
+          "ref": "src/project/index.ts:13",
           "source": "code"
         }
       ],
@@ -7941,7 +7792,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:17",
+          "ref": "src/project/index.ts:15",
           "source": "code"
         }
       ],
@@ -7956,7 +7807,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:18",
+          "ref": "src/project/index.ts:16",
           "source": "code"
         }
       ],
@@ -7971,7 +7822,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:16",
+          "ref": "src/project/index.ts:14",
           "source": "code"
         }
       ],
@@ -7986,12 +7837,12 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:11",
+          "ref": "src/project/index.ts:10",
           "source": "code"
         },
         {
           "confidence": 0.95,
-          "ref": "src/project/index.ts:38",
+          "ref": "src/project/index.ts:35",
           "source": "code"
         }
       ],

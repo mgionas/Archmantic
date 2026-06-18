@@ -4,7 +4,7 @@
 
 Point Archmantic at a repo and it reverse-engineers a single grounded **architecture model** (the IR). Every diagram is a *projection* of that one model, every element is traceable to `file:line`, and the same model answers your agent's questions over MCP. No drift between views, no ungrounded "AI diagram" guesswork.
 
-> Status: **v1.18.1** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
+> Status: **v1.19.0** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
 > _Note: the `amt` short alias was removed in 1.12.0 (it collided with a system binary on macOS) — use `archmantic` / `npx archmantic`._
 
 ---
@@ -14,7 +14,7 @@ Point Archmantic at a repo and it reverse-engineers a single grounded **architec
 Most tools pick one camp: agent code-graph tools emit symbols/calls (no human view, no business semantics), and diagram tools draw pretty pictures you can't trust or query. Archmantic does the parts both camps miss:
 
 - **Capability map** — plain-English "what can this system do?", for PMs/architects/new hires, not just engineers.
-- **BPMN business-process view** — auto-detected from code. White space nobody else occupies.
+- **Business-process view** — auto-detected from code, rendered as an interactive React Flow graph. White space nobody else occupies.
 - **Provenance + confidence** — every element shows "grounded in N refs" and a confidence band; low-confidence is flagged. Verifiable, not plausible.
 - **Drift detection** — "your committed model vs. the code" diff.
 - **PR architecture diff** — how a change reshapes the architecture (not a line diff), postable as a PR comment.
@@ -32,7 +32,7 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 - **Feature editing, two ways (repo files stay the source)** — edit locally (`archmantic edit`, writes the files directly) **or** in the hosted web app (saves to the cloud). `archmantic feature pull` writes hosted edits into `.archmantic/features/*.md`, and the MCP server auto-pulls them on startup — so web edits flow into the repo without webhooks (the hosted app can't reach your disk).
 - **Skills (on-shelf, model-resolved)** — a catalog of reusable playbooks (API review, safe migrations, payment-integration audit, Laravel test scaffolding, …) that Archmantic **ranks against the grounded model**: it surfaces the *right* skill for this repo and cites *why* (e.g. "Laravel detected", "Stripe dependency"). Supply has three layers — builtin, local `.archmantic/skills/*.md`, and remote pulled on demand (`archmantic skill add <url>`). Surfaced via MCP `suggest_skills`/`list_skills`/`get_skill` and the CLI `skill` command. Skills are data — recommended, never auto-executed; the agent decides whether to apply one.
 - **Agent knowledge file** — auto-generates & keeps `AGENTS.md` in sync from the model (managed block), so even agents that don't speak MCP get accurate, drift-free project context.
-- **One model → many audiences** — C4-style context, components, per-feature sequences, BPMN process, an ERD, capability list, and an MCP surface for agents. The **web renders every graph interactively with React Flow (`@xyflow/react`)** — pan/zoom, click-through, role coloring, real sequence diagrams (lifelines + activation bars); the CLI ships a dependency-light self-contained HTML viewer plus the BPMN process as a portable artifact (`archmantic view`).
+- **One model → many audiences** — C4-style context, components, per-feature sequences, the business process, an ERD, capability list, and an MCP surface for agents. The **web renders every graph interactively with React Flow (`@xyflow/react`)** — pan/zoom, click-through, role coloring, real sequence diagrams (lifelines + activation bars); the CLI ships a dependency-light self-contained HTML viewer (`archmantic view`).
 - **Token savings** — agents query the model over MCP instead of reading whole files (~98% fewer tokens on this repo, by the built-in benchmark).
 - **Usage stats** — every MCP tool call is recorded with the tokens it saved, plus **model pushes** (each `push`/`sync` is tracked too); `archmantic usage` and the web `/usage` dashboard prove the model is earning its keep (and meter agent + push activity).
 
@@ -78,8 +78,7 @@ node dist/cli.js analyze
 | `view` | Capability map, diagrams, and trust report; writes a self-contained `view.html` |
 | `spec` | Emit an agent-ready **build spec** (`build-spec.md` + `.json`) from the model |
 | `knowledge` | Refresh `AGENTS.md` agent-context file (managed block; also auto-written on `analyze`/`update`) |
-| `apply [--from f]` | Merge a human BPMN canvas edit back into the model — the "edit" of edit-then-build (fetches your saved cloud edit via token, or a local `.bpmn`) |
-| `handoff [--apply] [--check "<cmd>"]` | Run the build spec through Claude (Opus 4.8, BYOK) → an implementation plan; **`--apply`** runs an autonomous agent loop that edits the repo **and self-verifies** (runs build + tests, fixes failures until green) — the "build" of edit-then-build. Commit first; review with `git diff`. |
+| `handoff [--apply] [--check "<cmd>"]` | Run the build spec through Claude (Opus 4.8, BYOK) → an implementation plan; **`--apply`** runs an autonomous agent loop that edits the repo **and self-verifies** (runs build + tests, fixes failures until green). Commit first; review with `git diff`. |
 | `drift [--check]` | Compare the committed model vs. the code; `--check` exits 1 on drift (CI gate) |
 | `diff [<ref>]` | Architecture diff from a git ref → working tree; writes PR-comment-ready `pr-diff.md` |
 | `log [-n N]` | Architecture history: how the architecture changed per commit |

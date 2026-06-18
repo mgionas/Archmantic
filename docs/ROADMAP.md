@@ -29,10 +29,11 @@ code-graph commodity territory?
 | ✅ done | Internal-pages redesign | full-bleed shell + icon rail + facet column + interactive diagram canvas (P0–P3); see docs/design/REDESIGN.md | High · High |
 | ✅ done | Interactive graphs | React Flow for Context/Components/ERD: grouping, role colors, click-through cross-facet panels | High · High |
 | ✅ done | Real sequence diagrams | Dedicated React Flow sequence view: participant lifelines, activation bars, ordered labeled messages, self-message loops (web Sequence tab) | High · Med |
-| ✅ done | Mermaid removed | Dropped Mermaid everywhere (web + CLI `.mmd` exports + HTML viewer); React Flow in the web, native HTML tables/lists in the CLI viewer, BPMN via `bpmn-js` | Med · Med |
+| ✅ done | Mermaid removed | Dropped Mermaid everywhere (web + CLI `.mmd` exports + HTML viewer); React Flow in the web, native HTML tables/lists in the CLI viewer | Med · Med |
 | ✅ done | Skills (model-resolved) | On-shelf playbook catalog ranked against the grounded model with cited reasons; builtin + local + remote (`skill add`); MCP `suggest_skills`/`list_skills`/`get_skill` + CLI `skill` | High · Med |
 | ✅ done | Experience layer (1.18.0) | Collect→curate→present: classify externals (libs≠systems) + Dependencies page; semantic Groups + **Architecture Map**; agent-driven **curation** (`get_architecture_map`/`curate` MCP + BYOK CLI `curate`/`publish --ai`); schema 0.2.0. See [design/EXPERIENCE-LAYER.md](./design/EXPERIENCE-LAYER.md) | Very High · High |
 | ✅ done | Map polish (1.18.1) | Exact L2→L3 drill: Map opens Components filtered by domain `groupId` (not a name match) + group-by-domain + filter chip (INS-013); the "Misc" catch-all is de-emphasized and dropped from structural edges (INS-014); ships the deterministic AGENTS.md + sharpened `sync` from main | Med · Low |
+| ✅ done | BPMN removed | Dropped `bpmn-js` + BPMN 2.0 entirely; the business process renders as a React Flow graph (Start → tasks → End) like every other view — one process renderer. Removed the editable BPMN canvas, the `apply` edit-then-build command, the `process.bpmn` artifact, and the HTML-viewer BPMN | Med · Low |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
 
 ## Next — future development & missing areas
@@ -318,7 +319,7 @@ the user's disk. The web Features facet points to the three edit paths (files /
 
 ### ✅ done · Hosted feature editing → cloud → pull (1.14.0)
 Edit features in the hosted web app (read-only before) — saves go to a cloud table
-`archmantic_feature_edits` (mirrors the BPMN process-edit flow). The repo stays the
+`archmantic_feature_edits`. The repo stays the
 source of truth: `archmantic feature pull` writes pending edits into
 `.archmantic/features/*.md` (org-token scoped, last-write-wins), and the MCP server
 **auto-pulls on startup** so web edits flow into the repo while an agent works —
@@ -352,8 +353,9 @@ participant lifelines, activation bars, ordered labeled messages, self-message
 loops — driven by a `flowSequence` projection that keeps every step in time order
 (unlike `flowGraph`, which collapses repeated edges). And Mermaid was dropped
 everywhere: the web renders all graphs with React Flow; the CLI's standalone HTML
-viewer uses native HTML tables/lists; BPMN stays on `bpmn-js`. Removed the dead
-`.mmd` exports and the Mermaid string-generators from core + web.
+viewer uses native HTML tables/lists. (BPMN/`bpmn-js` was later removed too — the
+process renders as React Flow like every other view.) Removed the dead `.mmd`
+exports and the Mermaid string-generators from core + web.
 
 ### ✅ done · Skills — model-resolved playbook catalog (1.17.0)
 An on-shelf catalog of reusable playbooks **resolved against the grounded model**

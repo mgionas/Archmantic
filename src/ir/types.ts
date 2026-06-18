@@ -1,7 +1,7 @@
 /**
  * Archmantic — the Architecture Model (IR).
  *
- * The IR is the product. Diagrams (context / sequence / BPMN) are *projections*
+ * The IR is the product. Diagrams (context / sequence / process) are *projections*
  * of this model; the MCP server answers queries over it. See docs/ARCHITECTURE.md §2.
  *
  * Design invariant: every derived element carries `provenance` (where it came
@@ -118,7 +118,7 @@ export interface Flow extends ElementBase {
   featureId?: string;
 }
 
-/** A business process — projects to BPMN 2.0. */
+/** A business process — projects to a linear React Flow graph (Start → tasks → End). */
 export interface Process extends ElementBase {
   /** kept loose for v0; will gain tasks/gateways/events/lanes. */
   tasks: { id: string; name: string; provenance: Provenance[] }[];

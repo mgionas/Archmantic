@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 
 const USPS = [
   { icon: Boxes, title: "Capability map", body: "Plain-English “what can this system do?” — for PMs, architects, and new hires, not just engineers." },
-  { icon: Workflow, title: "BPMN business process", body: "Auto-detected business processes from code — white space no code-graph tool occupies." },
+  { icon: Workflow, title: "Business process", body: "Auto-detected business processes from code — white space no code-graph tool occupies." },
   { icon: ShieldCheck, title: "Provenance & trust", body: "Every element shows “grounded in N refs” + confidence. Verifiable, not plausible AI guesswork." },
   { icon: GitCompareArrows, title: "Drift & PR diffs", body: "“Your docs vs reality,” and how a PR reshapes the architecture — not a line diff." },
   { icon: Bot, title: "MCP for agents", body: "Your AI agent queries the same model — ~98% fewer tokens than reading files." },
@@ -170,7 +170,7 @@ function Landing() {
         </h1>
         <p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
           Point Archmantic at a repo → an accurate capability map, context &amp; sequence diagrams, an ERD, the API
-          surface, and an auto-detected BPMN process. Works across TS/JS &amp; PHP/Laravel and monorepos. Every element
+          surface, and an auto-detected business process. Works across TS/JS &amp; PHP/Laravel and monorepos. Every element
           grounded in code. Your agents query the same model over MCP.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

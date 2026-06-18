@@ -1,13 +1,12 @@
 /**
  * Static HTML viewer — a single self-contained file that renders every
  * projection (context, components, sequence, the data model, the capability map,
- * the trust layer) as native HTML, plus the process via bpmn-js from a CDN. The
- * interactive graph views (pan/zoom React Flow) live in the web app; this is the
- * dependency-light local fallback the CLI writes to .archmantic/view.html.
+ * the trust layer) as native HTML. The interactive graph views (pan/zoom React
+ * Flow) live in the web app; this is the dependency-light local fallback the CLI
+ * writes to .archmantic/view.html.
  */
 import { type ArchitectureModel } from "../ir/types.js";
 import { componentLabel } from "../ir/naming.js";
-import { bpmnXml } from "./bpmn.js";
 import { groupCapabilities } from "./capability.js";
 import { badge, band, isLowConfidence, summarize, type Grounded } from "./trust.js";
 
@@ -125,6 +124,13 @@ function sequenceSection(model: ArchitectureModel): string {
   return `<ol class="seq">${items}</ol>`;
 }
 
+function processSection(model: ArchitectureModel): string {
+  const proc = model.processes[0];
+  if (!proc?.tasks?.length) return "<p class='empty'>No process derived.</p>";
+  const steps = ["Start", ...proc.tasks.map((t) => t.name), "End"];
+  return `<div class="flow">${steps.map((s) => `<span class="step">${esc(s)}</span>`).join('<span class="arrow">→</span>')}</div>`;
+}
+
 /** Data model — one field table per entity (PK/FK/UK/nullable markers). */
 function dataSection(model: ArchitectureModel): string {
   const entities = model.dataEntities ?? [];
@@ -149,7 +155,6 @@ function dataSection(model: ArchitectureModel): string {
 
 export function renderHtml(model: ArchitectureModel): string {
   const proc = model.processes[0];
-  const bpmn = proc ? bpmnXml(proc) : "";
   const flow = model.flows[0];
 
   return `<!DOCTYPE html>
@@ -200,7 +205,9 @@ export function renderHtml(model: ArchitectureModel): string {
   td.method.m-get { color: #4ade80; } td.method.m-post { color: #facc15; }
   td.method.m-put, td.method.m-patch { color: #60a5fa; } td.method.m-delete { color: #f87171; }
   td.method.m-query { color: #4ade80; } td.method.m-mutation { color: #facc15; }
-  #bpmn { height: 420px; background: #fff; border-radius: 12px; }
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .flow .step { background: #1f232e; border: 1px solid #232734; border-radius: 8px; padding: 6px 12px; font-size: 13px; }
+  .flow .arrow { color: #5a6172; }
   footer { color: #5a6172; font-size: 12px; padding: 0 32px 40px; }
 </style>
 </head>
@@ -228,19 +235,10 @@ export function renderHtml(model: ArchitectureModel): string {
   <h2>Sequence — ${esc(flow?.name ?? "")}</h2>
   <div class="card">${sequenceSection(model)}</div>
 
-  <h2>Process (BPMN) — ${esc(proc?.name ?? "")}</h2>
-  <div class="card"><div id="bpmn"></div></div>
+  <h2>Process — ${esc(proc?.name ?? "")}</h2>
+  <div class="card">${processSection(model)}</div>
 </main>
 <footer>Archmantic · diagrams are projections of one grounded model · ⚠ = low confidence, flagged for review</footer>
-
-<script src="https://unpkg.com/bpmn-js@17/dist/bpmn-navigated-viewer.development.js"></script>
-<script>
-  const BPMN_XML = ${JSON.stringify(bpmn)};
-  if (BPMN_XML && window.BpmnJS) {
-    const viewer = new BpmnJS({ container: "#bpmn" });
-    viewer.importXML(BPMN_XML).then(() => viewer.get("canvas").zoom("fit-viewport")).catch(console.error);
-  }
-</script>
 </body>
 </html>
 `;
