@@ -12,6 +12,22 @@
 
 ---
 
+### INS-013 · Map drill is a name-match heuristic; Components needs a real domain filter
+- **category:** dx · **audience:** humans · **status:** open
+- **insight:** Clicking a domain on the Map jumps to Components with the domain *name* as a
+  text query. It works because names ≈ folders, but a first-class "filter by `groupId`"
+  (now that components carry it) would be exact and also let Components group by domain.
+- **why:** Closes the L2→L3 drill cleanly; surfaced while wiring the Architecture Map.
+
+### INS-012 · Test files are modeled as architecture components
+- **category:** product-gap · **audience:** both · **status:** open
+- **insight:** Dogfooding groups revealed a "Test" domain with 24 members — test files are
+  walked as `Component`s. They inflate the model, the Map, and trust stats, and aren't
+  architecture. Likely exclude `test/`/`*.test.*`/`*.spec.*` from components (or mark a
+  `test` role kept off the Map).
+- **why:** Found only because we cluster now — the flat graph hid it. Affects every repo
+  with tests (i.e. all of them); a clean Map depends on excluding non-architecture files.
+
 ### INS-011 · Capture insights as a first-class, MCP-exposable stream
 - **category:** idea · **audience:** both · **status:** open
 - **insight:** This file should become structured data an agent can read *and append to*
