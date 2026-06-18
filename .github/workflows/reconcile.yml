@@ -1,0 +1,43 @@
+name: Reconcile model
+
+# The git-as-transport reconciler: on every push to main, re-analyze the repo and
+# push the fresh, grounded model (with the committed .archmantic/curation.json overlay)
+# to the cloud — so the web always reflects merged code without anyone running a local
+# `push`. Deterministic: curation is already committed, so no LLM/Anthropic key is needed
+# here. Requires ARCHMANTIC_TOKEN (org-scoped API) — or DATABASE_URL — as a repo secret;
+# the push step is skipped (green) when it's not configured.
+on:
+  push:
+    branches: [main]
+
+# Don't let overlapping pushes race the cloud; keep only the latest.
+concurrency:
+  group: reconcile-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    env:
+      ARCHMANTIC_TOKEN: ${{ secrets.ARCHMANTIC_TOKEN }}
+      ARCHMANTIC_API_URL: ${{ secrets.ARCHMANTIC_API_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - run: npm ci
+      - run: npm run build
+
+      # Fresh analysis (applies the committed curation overlay) into .archmantic/model.json.
+      - run: node dist/cli.js analyze
+
+      - name: Push model to the cloud (if configured)
+        if: ${{ env.ARCHMANTIC_TOKEN != '' || env.DATABASE_URL != '' }}
+        run: node dist/cli.js push
+
+      - name: Note when not configured
+        if: ${{ env.ARCHMANTIC_TOKEN == '' && env.DATABASE_URL == '' }}
+        run: echo "::notice::No ARCHMANTIC_TOKEN/DATABASE_URL secret set — analyzed but skipped the cloud push."
