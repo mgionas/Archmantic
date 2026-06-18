@@ -12,6 +12,22 @@
 
 ---
 
+### INS-017 · A stale MCP server can't warn about its own staleness
+- **category:** agent-dx · **audience:** both · **status:** open
+- **insight:** Dogfooding on the `social-seed` test project, the wired MCP server was a
+  pre-0.2.0 build. Its `model.json` stayed `schemaVersion: 0.1.0` (no `groups`/`externalKind`/
+  `narrative`) even after `refresh` — so the agent got a silently-degraded, flat,
+  pre-experience-layer analysis with **no signal anything was out of date**. The 1.15.0
+  schema-drift check only fires from a *current* CLI; an old server doesn't know newer
+  schemas exist, so it can't flag itself. The staleness signal has to come from outside the
+  old server: `get_project` (and `analyze`/`refresh` output) should report the running
+  archmantic version + model `schemaVersion`, and the npx/host path should warn when the
+  linked server lags `latest` on npm (or when `model.schemaVersion < SCHEMA_VERSION`).
+- **why:** Users wire the server once and forget it. A version that silently regresses the
+  whole product surface — no domains, no Architecture Map, unclassified externals — reads as
+  "the tool is shallow," not "the server is old." This is the single failure mode most likely
+  to make a real user mis-judge Archmantic on first contact.
+
 ### INS-016 · AGENTS.md is non-deterministic, stale-classified, and not re-committed — FIXED
 - **category:** dx · **audience:** both · **status:** shipped
 - **fix:** `knowledge.ts` now sorts all lists (capabilities/externals/roles → deterministic,
