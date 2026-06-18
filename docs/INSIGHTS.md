@@ -12,6 +12,21 @@
 
 ---
 
+### INS-016 · AGENTS.md is non-deterministic, stale-classified, and not re-committed
+- **category:** dx · **audience:** both · **status:** open
+- **insight:** Three papercuts in the generated knowledge file (`knowledgeMarkdown`), all
+  surfaced while wiring the CI reconciler: (1) capability/external **ordering is
+  non-deterministic** — every `analyze`/`update` reshuffles AGENTS.md, so it churns; it
+  should sort like `model.json` does. (2) It still lists **libraries/runtime as "External
+  systems"** (`node:fs`, `typescript`, `zod`) — it never adopted the 1.18.0 `externalKind`
+  classification; should filter to real systems. (3) It's **missing the new layers** — no
+  domains/Architecture-Map summary, no curated narrative. Also the `update --hook` snippet
+  `git add`s `model.json` but **not `AGENTS.md`**, so the regenerated AGENTS.md is left
+  perpetually dirty in the worktree after every commit.
+- **why:** AGENTS.md is the non-MCP agent's whole context — non-determinism makes diffs
+  noisy and erodes trust, and the stale "externals" contradict the de-noised graphs. Quick,
+  high-leverage fix in `src/project/knowledge.ts` (+ the hook snippet).
+
 ### INS-015 · Document the MCP allow-list — users hit per-tool permission friction
 - **category:** dx · **audience:** humans · **status:** open
 - **insight:** When you wire archmantic as an MCP server in a host (Claude Code, etc.), the

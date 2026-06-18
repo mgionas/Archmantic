@@ -363,7 +363,7 @@ export async function startMcpServer(root: string): Promise<void> {
     {
       title: "Sync the model to the cloud",
       description:
-        "Re-analyze the repo and push the updated architecture model to the team cloud (org-scoped via your token; direct via DATABASE_URL otherwise). Returns what changed. Call this after making architectural changes.",
+        "Re-analyze the repo from disk and push the updated architecture model to the team cloud, so teammates and the web view reflect your changes. Returns what changed (added/removed components, capabilities, externals). CALL THIS whenever you've changed the architecture — added/removed/renamed a component, dependency, route, entity, or external service — so the shared model never drifts from the code. Org-scoped via ARCHMANTIC_TOKEN, or direct via DATABASE_URL; no manual `push` needed. (Use `refresh` for a local-only re-analyze; `curate` to update domain names/descriptions.)",
     },
     async () => {
       const before = model;
