@@ -68,10 +68,9 @@ export interface Diagrams {
   componentGraph: { nodes: GraphNode[]; edges: GraphEdge[] };
   componentDetails: Record<string, CompDetail>;
   sequences: { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] }; diagram: SequenceModel }[];
-  processXml: string | null;
+  process: { nodes: GraphNode[]; edges: FlowEdge[] } | null;
   erd: { nodes: EntityNode[]; edges: EntityEdge[] } | null;
   map: { nodes: MapNode[]; edges: MapEdge[] };
-  edited: boolean;
 }
 export interface Changes {
   hasPrev: boolean;
@@ -585,16 +584,14 @@ export function ProjectTabs({
 
         {facet === "diagrams" ? (
           <DiagramTabs
-            project={project}
             contextGraph={diagrams.contextGraph}
             contextDetails={diagrams.contextDetails}
             componentGraph={diagrams.componentGraph}
             componentDetails={diagrams.componentDetails}
             sequences={diagrams.sequences}
-            processXml={diagrams.processXml}
+            process={diagrams.process}
             erd={diagrams.erd}
             focusNode={focusNode}
-            edited={diagrams.edited}
             onNavigate={setFacet}
           />
         ) : null}

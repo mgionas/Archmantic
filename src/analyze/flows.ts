@@ -71,7 +71,7 @@ export function deriveFeatureFlows(model: ArchitectureModel): Flow[] {
   return flows.sort((a, b) => b.steps.length - a.steps.length);
 }
 
-/** Synthesize a BPMN-ish process from a flow's ordered participants. */
+/** Synthesize a linear process from a flow's ordered participants. */
 export function processFromFlow(flow: Flow): Process {
   const prov: Provenance = { source: "code", ref: flow.provenance[0]?.ref ?? "?", confidence: FLOW_CONFIDENCE };
   const nameOf = (id: string) => (id.startsWith("comp:") ? componentLabel(id) : id.replace(/^sys:ext:/, ""));

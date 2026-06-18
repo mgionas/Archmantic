@@ -3,8 +3,8 @@
  * "build spec": what the system should be (capabilities, components,
  * responsibilities, dependencies, processes), grounded in `file:line`.
  *
- * This is the bridge of the edit-then-build loop: edit the model (capabilities,
- * the BPMN process), emit a spec, and hand it to an external coding agent (e.g.
+ * This is the bridge to the build loop: edit the model (capabilities, the
+ * process), emit a spec, and hand it to an external coding agent (e.g.
  * Claude Code) to implement or verify. Markdown for humans/agents, JSON for
  * programmatic consumers. Pure projection over the IR.
  */

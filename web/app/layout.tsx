@@ -2,10 +2,6 @@ import "./globals.css";
 import type { ReactNode } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
-// bpmn-js editor styles (palette, context pad, icons) — global CSS, layout-only.
-import "bpmn-js/dist/assets/diagram-js.css";
-import "bpmn-js/dist/assets/bpmn-js.css";
-import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import { Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";

@@ -368,6 +368,23 @@ export function flowSequence(model: Model, flow: Model["flows"][number]): Sequen
   return { participants, messages };
 }
 
+/** The primary process as a linear React Flow graph (Start → ordered tasks → End),
+ *  rendered by the same SequenceGraph the per-feature flows use. Replaces the old BPMN
+ *  canvas — one process renderer, not two. */
+export function processGraph(model: Model): { nodes: GraphNode[]; edges: FlowEdge[] } | null {
+  const proc = model.processes?.[0];
+  if (!proc || !proc.tasks.length) return null;
+  const ids = ["__start", ...proc.tasks.map((_, i) => `pt:${i}`), "__end"];
+  const nodes: GraphNode[] = [
+    { id: "__start", label: "Start", kind: "external", role: "event" },
+    ...proc.tasks.map((t, i) => ({ id: `pt:${i}`, label: t.name, kind: "component" as const, role: "process" })),
+    { id: "__end", label: "End", kind: "external", role: "event" },
+  ];
+  const edges: FlowEdge[] = [];
+  for (let i = 0; i < ids.length - 1; i++) edges.push({ id: `pe:${i}`, source: ids[i]!, target: ids[i + 1]!, label: "" });
+  return { nodes, edges };
+}
+
 /** One graph per flow — a deck the UI pages through (feature flows, richest first).
  *  `graph` feeds the generic node-graph (Process LR, System); `diagram` feeds the
  *  true sequence view (lifelines + activation bars). */

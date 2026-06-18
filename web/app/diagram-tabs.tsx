@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useUrlState } from "@/lib/use-url-state";
 import { DiagramPicker } from "@/components/diagram-picker";
-import { BpmnEditor } from "./diagrams-client";
 import type { GraphNode, GraphEdge, FlowEdge, CompDetail, ContextNode, ContextEdge, ContextDetail, EntityNode, EntityEdge, SequenceModel } from "@/lib/diagrams";
 
 // React Flow + dagre (~70kB) only load when an interactive graph view is opened.
@@ -47,27 +46,23 @@ function DeckPicker({ items, active, onPick, label }: { items: { id: string; nam
 }
 
 export function DiagramTabs({
-  project,
   contextGraph,
   contextDetails,
   componentGraph,
   componentDetails,
   sequences,
-  processXml,
+  process,
   erd,
-  edited,
   focusNode,
   onNavigate,
 }: {
-  project: string;
   contextGraph: { nodes: ContextNode[]; edges: ContextEdge[] };
   contextDetails: Record<string, ContextDetail>;
   componentGraph: { nodes: GraphNode[]; edges: GraphEdge[] };
   componentDetails: Record<string, CompDetail>;
   sequences: { id: string; name: string; graph: { nodes: GraphNode[]; edges: FlowEdge[] }; diagram: SequenceModel }[];
-  processXml: string | null;
+  process: { nodes: GraphNode[]; edges: FlowEdge[] } | null;
   erd: { nodes: EntityNode[]; edges: EntityEdge[] } | null;
-  edited: boolean;
   focusNode?: string | null;
   onNavigate?: (facet: string) => void;
 }) {
@@ -81,12 +76,12 @@ export function DiagramTabs({
   const activeSeq = sequences.find((s) => s.id === seqId) ?? sequences[0];
   const hasSeq = sequences.length > 0;
 
-  // Process deck: the editable "Main" BPMN (edit-then-build) + one process per feature.
+  // Process deck: the primary "Main" process (React Flow) + one process per feature.
   const procItems = [
-    ...(processXml ? [{ id: "__main", name: edited ? "Main · edited" : "Main process" }] : []),
+    ...(process ? [{ id: "__main", name: "Main process" }] : []),
     ...sequences.map((s) => ({ id: s.id, name: s.name })),
   ];
-  const [procId, setProcId] = useUrlState("proc", processXml ? "__main" : sequences[0]?.id ?? "");
+  const [procId, setProcId] = useUrlState("proc", process ? "__main" : sequences[0]?.id ?? "");
   const activeProcId = procItems.find((p) => p.id === procId)?.id ?? procItems[0]?.id ?? "";
   const procFlow = sequences.find((s) => s.id === activeProcId);
   const hasProcess = procItems.length > 0;
@@ -123,8 +118,8 @@ export function DiagramTabs({
         ) : null}
         {tab === "sequence" && activeSeq ? <SequenceDiagram key={activeSeq.id} diagram={activeSeq.diagram} /> : null}
         {tab === "process" ? (
-          activeProcId === "__main" && processXml ? (
-            <BpmnEditor project={project} initialXml={processXml} />
+          activeProcId === "__main" && process ? (
+            <SequenceGraph key="__main" graph={process} rankdir="LR" />
           ) : procFlow ? (
             <SequenceGraph key={procFlow.id} graph={procFlow.graph} rankdir="LR" />
           ) : null

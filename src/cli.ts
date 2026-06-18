@@ -20,7 +20,7 @@ import { type ArchitectureModel, createEmptyModel, serializeModel } from "./ir/t
 import { analyzeRepo } from "./analyze/index.js";
 import { tier2 } from "./analyze/tier2.js";
 import { incrementalUpdate } from "./analyze/incremental.js";
-import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess, knowledgeMarkdown, applyKnowledgeBlock, readManifest, detectAgents, scaffoldManifest, MANIFEST_PATH, seedFeatureFiles, FEATURES_DIR } from "./project/index.js";
+import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, knowledgeMarkdown, applyKnowledgeBlock, readManifest, detectAgents, scaffoldManifest, MANIFEST_PATH, seedFeatureFiles, FEATURES_DIR } from "./project/index.js";
 import { getFeature, listFeatures } from "./mcp/queries.js";
 import { allSkills, findSkill, addRemoteSkill, renderSuggestions, renderSkillList, renderSkill, SKILLS_DIR } from "./skills/index.js";
 import { syncFeatures } from "./project/feature-sync.js";
@@ -42,7 +42,6 @@ import {
   hasApiToken,
   pushModelApi,
   pullLatestApi,
-  pullProcessEditApi,
   recordUsage,
   recordUsageApi,
   flushUsageEvents,
@@ -758,80 +757,6 @@ async function cmdHandoff(args: string[]): Promise<number> {
   return 0;
 }
 
-/** Edit-then-build: merge a human BPMN canvas edit back into the IR's process. */
-async function cmdApply(args: string[]): Promise<number> {
-  const root = process.cwd();
-  const file = join(root, MODEL_DIR, MODEL_FILE);
-  if (!existsSync(file)) {
-    console.error(`✗ No model at ${MODEL_DIR}/${MODEL_FILE}. Run \`archmantic analyze\` first.`);
-    return 1;
-  }
-  let model: ArchitectureModel;
-  try {
-    model = JSON.parse(readFileSync(file, "utf8")) as ArchitectureModel;
-  } catch {
-    console.error(`✗ ${MODEL_DIR}/${MODEL_FILE} is not valid JSON — run \`archmantic analyze\`.`);
-    return 1;
-  }
-
-  // Edit source: a local .bpmn file (self-host) or the saved cloud canvas edit.
-  const fromIdx = args.indexOf("--from");
-  const fromFile = fromIdx !== -1 ? args[fromIdx + 1] : undefined;
-  let xml: string | null = null;
-  if (fromFile) {
-    if (!existsSync(fromFile)) {
-      console.error(`✗ File not found: ${fromFile}`);
-      return 1;
-    }
-    xml = readFileSync(fromFile, "utf8");
-  } else if (hasApiToken()) {
-    try {
-      xml = await pullProcessEditApi(model.project);
-    } catch (err) {
-      if (err instanceof ApiError) {
-        console.error(`✗ ${err.message}`);
-        return 1;
-      }
-      throw err;
-    }
-  } else {
-    console.error(`✗ No edit source. Pass \`--from <file.bpmn>\`, or set ARCHMANTIC_TOKEN to fetch your saved canvas edit.`);
-    return 1;
-  }
-  if (!xml) {
-    console.log(`No saved canvas edit for "${model.project}". Edit the process in the web app and Save first.`);
-    return 0;
-  }
-
-  const parsed = parseBpmnProcess(xml);
-  if (!parsed || !parsed.tasks.length) {
-    console.error(`✗ Could not parse a process from the BPMN.`);
-    return 1;
-  }
-
-  const human = { source: "human" as const, ref: "canvas-edit", confidence: 1 };
-  const procId = model.processes[0]?.id ?? `proc:${model.project}`;
-  model.processes = [
-    {
-      id: procId,
-      name: parsed.name,
-      description: "Human-edited process (from the BPMN canvas).",
-      tasks: parsed.tasks.map((t, i) => ({ id: `task:edit:${i + 1}`, name: t.name, provenance: [human] })),
-      provenance: [human],
-      confidence: 1,
-    },
-  ];
-
-  const dir = join(root, MODEL_DIR);
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, MODEL_FILE), serializeModel({ ...model, generatedAt: new Date().toISOString() }), "utf8");
-
-  console.log(`✓ Applied canvas edit to "${model.project}" — process "${parsed.name}" (${parsed.tasks.length} steps), human-authored.`);
-  console.log(`  Steps: ${parsed.tasks.map((t) => t.name).join("  →  ")}`);
-  console.log(`  Next: \`archmantic spec\` to emit a build spec reflecting your edit.`);
-  return 0;
-}
-
 // ── Cloud knowledge (shared team model over Neon) ────────────────────────────
 
 function currentCommit(root: string): string {
@@ -1066,7 +991,6 @@ Commands:
   view           Capability map + diagrams + trust report (writes view.html)
   spec           Emit an agent-ready build spec (build-spec.md + .json)
   knowledge      Refresh AGENTS.md agent-context file (managed block; auto on analyze/update)
-  apply [--from f]  Merge a human BPMN canvas edit back into the model (edit-then-build)
   handoff [--apply] [--check "<cmd>"]  Build spec → plan; --apply: agent edits repo + self-verifies (BYOK)
   system [name] --repos a,b,c  Unified cross-service view across multiple repos
   drift [--check]  Compare the committed model vs the code (--check exits 1 on drift)
@@ -1139,8 +1063,6 @@ async function main(argv: string[]): Promise<number> {
       return cmdSpec();
     case "knowledge":
       return cmdKnowledge();
-    case "apply":
-      return cmdApply(rest);
     case "handoff":
       return cmdHandoff(rest);
     case "system":

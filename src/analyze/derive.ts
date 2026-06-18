@@ -6,7 +6,7 @@
  *     (USP 1). Naming intent is heuristic, so these carry a *lower* confidence
  *     and are flagged for the Tier-2 LLM pass to refine.
  *   - One Process + one Flow: the dependency chain orchestrated from the main
- *     entry point → a BPMN process (USP 2) and a sequence (one model, many views).
+ *     entry point → a process (USP 2) and a sequence (one model, many views).
  *
  * Everything here is reproducible from the AST + import graph; the LLM later
  * rewrites the prose and raises confidence, it does not invent structure.
