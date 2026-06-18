@@ -94,6 +94,18 @@ export interface FeatureView {
   human: boolean;
   pending: boolean;
 }
+export interface SkillMatchView {
+  id: string;
+  name: string;
+  description: string;
+  source: string;
+  agent?: string;
+  tags: string[];
+  /** grounded reasons this skill matched the model (the "why") */
+  reasons: string[];
+  triggers: string[];
+  body: string;
+}
 export interface ProjectManifest {
   goal?: string;
   status?: string;
@@ -162,9 +174,50 @@ function ChangeGroup({ title, added, removed }: { title: string; added: string[]
   );
 }
 
+function SkillCard({ project, skill }: { project: string; skill: SkillMatchView }) {
+  return (
+    <Card className="flex flex-col gap-3 p-5">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="font-medium">{skill.name}</span>
+        <Badge variant="outline" className="font-normal capitalize text-muted-foreground">
+          {skill.source}
+        </Badge>
+        {skill.agent ? (
+          <Badge variant="secondary" className="font-normal" title="Suggested agent to run this skill">
+            agent: {skill.agent}
+          </Badge>
+        ) : null}
+      </div>
+      {skill.description ? <p className="text-sm text-muted-foreground">{skill.description}</p> : null}
+      {skill.reasons.length ? (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-xs text-muted-foreground">why:</span>
+          {skill.reasons.map((r) => (
+            <Badge key={r} variant="outline" className="border-success/30 font-normal text-success">
+              {r}
+            </Badge>
+          ))}
+        </div>
+      ) : null}
+      {skill.tags.length ? (
+        <div className="flex flex-wrap gap-1.5">
+          {skill.tags.map((tag) => (
+            <span key={tag} className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
+              {tag}
+            </span>
+          ))}
+        </div>
+      ) : null}
+      <CollapsibleSection storageKey={`arch:skill:${project}:${skill.id}`} header="Playbook" defaultOpen={false}>
+        <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-muted-foreground">{skill.body}</pre>
+      </CollapsibleSection>
+    </Card>
+  );
+}
+
 function Stat({ n, label }: { n: number | string; label: string }) {
   return (
-    <div>
+    <div className="flex items-baseline gap-2">
       <div className="text-2xl font-semibold tabular-nums tracking-tight">{n}</div>
       <div className="text-sm text-muted-foreground">{label}</div>
     </div>
@@ -181,6 +234,7 @@ export function ProjectTabs({
   data,
   endpoints,
   features = [],
+  skills = [],
   knowledge,
   workspaces = [],
   source = { base: null, sha: null },
@@ -194,6 +248,7 @@ export function ProjectTabs({
   data: DataModel | null;
   endpoints: Endpoint[];
   features?: FeatureView[];
+  skills?: SkillMatchView[];
   knowledge: string;
   workspaces?: string[];
   source?: SourceInfo;
@@ -220,6 +275,7 @@ export function ProjectTabs({
     { id: "components", label: "Components", count: components.length },
     ...(data ? [{ id: "data", label: "Data", count: data.entities.length }] : []),
     ...(endpoints.length ? [{ id: "api", label: "API", count: endpoints.length }] : []),
+    ...(skills.length ? [{ id: "skills", label: "Skills", count: skills.length }] : []),
     { id: "changes", label: "Changes", count: changes.total || undefined },
     { id: "knowledge", label: "Knowledge" },
   ];
@@ -628,6 +684,27 @@ export function ProjectTabs({
               </div>
             )}
           </div>
+        ) : null}
+
+        {facet === "skills" ? (
+          skills.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No skills matched this project.</p>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                Reusable playbooks ranked against this project&apos;s grounded model — the right skill, and{" "}
+                <span className="text-success">why</span> it matched. This is the builtin shelf; extend it with{" "}
+                <code className="rounded bg-muted px-1 py-0.5 text-xs">archmantic skill add &lt;url&gt;</code> or{" "}
+                <code className="rounded bg-muted px-1 py-0.5 text-xs">.archmantic/skills/*.md</code>. Skills are
+                recommendations — your agent decides whether to apply one.
+              </p>
+              <div className="grid gap-3 lg:grid-cols-2">
+                {skills.map((s) => (
+                  <SkillCard key={s.id} project={project} skill={s} />
+                ))}
+              </div>
+            </div>
+          )
         ) : null}
 
         {facet === "changes" ? (

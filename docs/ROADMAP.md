@@ -30,6 +30,7 @@ code-graph commodity territory?
 | ✅ done | Interactive graphs | React Flow for Context/Components/ERD: grouping, role colors, click-through cross-facet panels | High · High |
 | ✅ done | Real sequence diagrams | Dedicated React Flow sequence view: participant lifelines, activation bars, ordered labeled messages, self-message loops (web Sequence tab) | High · Med |
 | ✅ done | Mermaid removed | Dropped Mermaid everywhere (web + CLI `.mmd` exports + HTML viewer); React Flow in the web, native HTML tables/lists in the CLI viewer, BPMN via `bpmn-js` | Med · Med |
+| ✅ done | Skills (model-resolved) | On-shelf playbook catalog ranked against the grounded model with cited reasons; builtin + local + remote (`skill add`); MCP `suggest_skills`/`list_skills`/`get_skill` + CLI `skill` | High · Med |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
 
 ## Next — v1.2: interactivity & accuracy

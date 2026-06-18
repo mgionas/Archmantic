@@ -14,6 +14,7 @@ import {
 } from "@/lib/diagrams";
 import { bpmnXml } from "@/lib/bpmn";
 import { knowledgeMarkdown } from "@/lib/knowledge";
+import { resolveSkills, triggerLabel } from "@/lib/skills";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -140,6 +141,18 @@ export default async function ProjectPage({
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
+  const skills = resolveSkills(model).map((m) => ({
+    id: m.skill.id,
+    name: m.skill.name,
+    description: m.skill.description,
+    source: m.skill.source,
+    agent: m.skill.agent,
+    tags: m.skill.tags,
+    reasons: m.reasons,
+    triggers: m.skill.when.map(triggerLabel),
+    body: m.skill.body,
+  }));
+
   const eg = entityGraph(model);
   const data = eg.nodes.length
     ? {
@@ -207,6 +220,7 @@ export default async function ProjectPage({
         data={data}
         endpoints={endpoints}
         features={features}
+        skills={skills}
         workspaces={model.workspaces ?? []}
         source={{ base: repoBase(model.manifest?.links), sha: selectedSha || null }}
         knowledge={knowledgeMarkdown(model)}

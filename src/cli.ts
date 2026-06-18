@@ -22,6 +22,7 @@ import { tier2 } from "./analyze/tier2.js";
 import { incrementalUpdate } from "./analyze/incremental.js";
 import { terminalPreview, projectionArtifacts, buildSpecMarkdown, buildSpecJson, parseBpmnProcess, knowledgeMarkdown, applyKnowledgeBlock, readManifest, detectAgents, scaffoldManifest, MANIFEST_PATH, seedFeatureFiles, FEATURES_DIR } from "./project/index.js";
 import { getFeature, listFeatures } from "./mcp/queries.js";
+import { allSkills, findSkill, addRemoteSkill, renderSuggestions, renderSkillList, renderSkill, SKILLS_DIR } from "./skills/index.js";
 import { syncFeatures } from "./project/feature-sync.js";
 import { pullFeatureEdits } from "./feature-pull.js";
 import { detectLaravelMigrations } from "./analyze/laravel-db.js";
@@ -191,6 +192,51 @@ async function cmdFeature(args: string[]): Promise<number> {
     return 0;
   }
   console.log(listFeatures(model));
+  return 0;
+}
+
+/** `skill [suggest | list | show <name> | add <url>]` — the on-shelf skill catalog. */
+async function cmdSkill(args: string[]): Promise<number> {
+  const root = process.cwd();
+  const sub = args[0] ?? "suggest";
+
+  if (sub === "add") {
+    const url = args[1];
+    if (!url) {
+      console.error("Usage: archmantic skill add <url-to-skill.md>");
+      return 1;
+    }
+    try {
+      const { slug, file } = await addRemoteSkill(root, url);
+      console.log(`✓ Added skill "${slug}" → ${file}`);
+      console.log(`  It's now on the shelf — \`archmantic skill suggest\` will rank it against this project.`);
+    } catch (err) {
+      console.error(`✗ Could not add skill: ${err instanceof Error ? err.message : String(err)}`);
+      return 1;
+    }
+    return 0;
+  }
+
+  if (sub === "list") {
+    console.log(renderSkillList(allSkills(root)));
+    return 0;
+  }
+
+  if (sub === "show") {
+    if (!args[1]) {
+      console.error("Usage: archmantic skill show <name>");
+      return 1;
+    }
+    const skill = findSkill(allSkills(root), args[1]);
+    console.log(skill ? renderSkill(skill) : `No skill matches "${args[1]}". Try \`archmantic skill list\`.`);
+    return skill ? 0 : 1;
+  }
+
+  // default: suggest — needs the model to resolve against.
+  const model = loadModelOrNull();
+  if (!model) return 1;
+  console.log(renderSuggestions(model, allSkills(root)));
+  console.log(`\n  Add more to the shelf: \`archmantic skill add <url>\` (saved to ${SKILLS_DIR}/).`);
   return 0;
 }
 
@@ -956,6 +1002,7 @@ Commands:
   init [name]    Create an empty .archmantic/model.json (+ project.json brain)
   project [--init]  Scaffold/show the project brain (.archmantic/project.json: goal, author, agents)
   feature [list|show <name>|seed|sync [name] [--write]|pull]  Features; sync = intent compiler (BYOK); pull = fetch hosted-editor edits → .archmantic/features/*.md
+  skill [suggest|list|show <name>|add <url>]  On-shelf skills ranked against the model; add pulls a remote skill → .archmantic/skills/*.md
   edit [--port N]  Local web feature editor (writes .archmantic/features/*.md; repo files = source)
   db-check [--check]  Compare Laravel migrations vs the live DB (.env DB_*); --check exits 1 on drift
   analyze [--tier N]  Reverse-engineer the model (--tier 2 adds the LLM pass, BYOK)
@@ -1002,6 +1049,8 @@ async function main(argv: string[]): Promise<number> {
       return cmdProject(rest);
     case "feature":
       return cmdFeature(rest);
+    case "skill":
+      return cmdSkill(rest);
     case "edit":
       return cmdEdit(rest);
     case "db-check":

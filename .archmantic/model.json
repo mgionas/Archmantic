@@ -1500,7 +1500,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/server.ts:79",
+          "ref": "src/mcp/server.ts:80",
           "source": "code"
         }
       ]
@@ -2061,6 +2061,214 @@
         {
           "confidence": 0.6,
           "ref": "src/project/trust.ts:57",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/index.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `addRemoteSkill` in src/skills/index.ts",
+      "id": "cap:src/skills/index.ts#addRemoteSkill",
+      "name": "Add Remote Skill",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/index.ts:66",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/index.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `allSkills` in src/skills/index.ts",
+      "id": "cap:src/skills/index.ts#allSkills",
+      "name": "All Skills",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/index.ts:43",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/index.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `findSkill` in src/skills/index.ts",
+      "id": "cap:src/skills/index.ts#findSkill",
+      "name": "Find Skill",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/index.ts:51",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/index.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `readLocalSkills` in src/skills/index.ts",
+      "id": "cap:src/skills/index.ts#readLocalSkills",
+      "name": "Read Local Skills",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/index.ts:22",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/index.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `renderSkill` in src/skills/index.ts",
+      "id": "cap:src/skills/index.ts#renderSkill",
+      "name": "Render Skill",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/index.ts:117",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/index.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `renderSkillList` in src/skills/index.ts",
+      "id": "cap:src/skills/index.ts#renderSkillList",
+      "name": "Render Skill List",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/index.ts:101",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/index.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `renderSuggestions` in src/skills/index.ts",
+      "id": "cap:src/skills/index.ts#renderSuggestions",
+      "name": "Render Suggestions",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/index.ts:84",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/parse.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `parseSkillFile` in src/skills/parse.ts",
+      "id": "cap:src/skills/parse.ts#parseSkillFile",
+      "name": "Parse Skill File",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/parse.ts:37",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/parse.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `parseTrigger` in src/skills/parse.ts",
+      "id": "cap:src/skills/parse.ts#parseTrigger",
+      "name": "Parse Trigger",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/parse.ts:28",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/parse.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `skillFileMarkdown` in src/skills/parse.ts",
+      "id": "cap:src/skills/parse.ts#skillFileMarkdown",
+      "name": "Skill File Markdown",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/parse.ts:81",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/parse.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `skillSlug` in src/skills/parse.ts",
+      "id": "cap:src/skills/parse.ts#skillSlug",
+      "name": "Skill Slug",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/parse.ts:15",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/resolve.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `resolveSkills` in src/skills/resolve.ts",
+      "id": "cap:src/skills/resolve.ts#resolveSkills",
+      "name": "Resolve Skills",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/resolve.ts:89",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "componentIds": [
+        "comp:src/skills/resolve.ts"
+      ],
+      "confidence": 0.6,
+      "description": "Exported function `scoreSkill` in src/skills/resolve.ts",
+      "id": "cap:src/skills/resolve.ts#scoreSkill",
+      "name": "Score Skill",
+      "provenance": [
+        {
+          "confidence": 0.6,
+          "ref": "src/skills/resolve.ts:71",
           "source": "code"
         }
       ]
@@ -2974,6 +3182,81 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:src/skills/catalog.ts",
+      "kind": "module",
+      "name": "src/skills/catalog.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/catalog.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/skills/index.ts",
+      "kind": "module",
+      "name": "src/skills/index.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/skills/parse.ts",
+      "kind": "module",
+      "name": "src/skills/parse.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/parse.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/skills/resolve.ts",
+      "kind": "module",
+      "name": "src/skills/resolve.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/resolve.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "id": "comp:src/skills/types.ts",
+      "kind": "module",
+      "name": "src/skills/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/types.ts:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:src/system.ts",
       "kind": "module",
       "name": "src/system.ts",
@@ -3244,6 +3527,21 @@
     },
     {
       "confidence": 0.95,
+      "id": "comp:test/skills.test.mjs",
+      "kind": "module",
+      "name": "test/skills.test.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/skills.test.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "module",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "id": "comp:test/spec.test.mjs",
       "kind": "module",
       "name": "test/spec.test.mjs",
@@ -3335,11 +3633,11 @@
         "comp:src/analyze/incremental.ts",
         "comp:src/project/index.ts",
         "comp:src/mcp/queries.ts",
+        "comp:src/skills/index.ts",
         "comp:src/project/feature-sync.ts",
         "comp:src/feature-pull.ts",
         "comp:src/analyze/laravel-db.ts",
-        "comp:src/analyze/db-introspect.ts",
-        "comp:src/drift/schema-drift.ts"
+        "comp:src/analyze/db-introspect.ts"
       ],
       "provenance": [
         {
@@ -3431,6 +3729,18 @@
               "source": "code"
             }
           ],
+          "to": "comp:src/skills/index.ts"
+        },
+        {
+          "action": "uses",
+          "participant": "comp:src/skills/index.ts",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/skills/index.ts:1",
+              "source": "code"
+            }
+          ],
           "to": "comp:src/project/feature-sync.ts"
         },
         {
@@ -3468,23 +3778,11 @@
             }
           ],
           "to": "comp:src/analyze/db-introspect.ts"
-        },
-        {
-          "action": "uses",
-          "participant": "comp:src/analyze/db-introspect.ts",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/analyze/db-introspect.ts:1",
-              "source": "code"
-            }
-          ],
-          "to": "comp:src/drift/schema-drift.ts"
         }
       ]
     }
   ],
-  "generatedAt": "2026-06-14T21:41:16.325Z",
+  "generatedAt": "2026-06-18T17:21:18.990Z",
   "manifest": {
     "agents": [
       {
@@ -3642,6 +3940,17 @@
           ]
         },
         {
+          "id": "task:comp:src/skills/index.ts",
+          "name": "Skills",
+          "provenance": [
+            {
+              "confidence": 0.6,
+              "ref": "src/skills/index.ts:1",
+              "source": "code"
+            }
+          ]
+        },
+        {
           "id": "task:comp:src/project/feature-sync.ts",
           "name": "Feature sync",
           "provenance": [
@@ -3681,17 +3990,6 @@
             {
               "confidence": 0.6,
               "ref": "src/analyze/db-introspect.ts:1",
-              "source": "code"
-            }
-          ]
-        },
-        {
-          "id": "task:comp:src/drift/schema-drift.ts",
-          "name": "Schema drift",
-          "provenance": [
-            {
-              "confidence": 0.6,
-              "ref": "src/drift/schema-drift.ts:1",
               "source": "code"
             }
           ]
@@ -5435,7 +5733,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:32",
+          "ref": "src/cli.ts:33",
           "source": "code"
         }
       ],
@@ -5450,7 +5748,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:28",
+          "ref": "src/cli.ts:29",
           "source": "code"
         }
       ],
@@ -5495,7 +5793,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:27",
+          "ref": "src/cli.ts:28",
           "source": "code"
         }
       ],
@@ -5525,7 +5823,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:31",
+          "ref": "src/cli.ts:32",
           "source": "code"
         }
       ],
@@ -5540,7 +5838,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:34",
+          "ref": "src/cli.ts:35",
           "source": "code"
         }
       ],
@@ -5555,7 +5853,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:52",
+          "ref": "src/cli.ts:53",
           "source": "code"
         }
       ],
@@ -5570,7 +5868,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:29",
+          "ref": "src/cli.ts:30",
           "source": "code"
         }
       ],
@@ -5585,7 +5883,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:49",
+          "ref": "src/cli.ts:50",
           "source": "code"
         }
       ],
@@ -5600,7 +5898,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:30",
+          "ref": "src/cli.ts:31",
           "source": "code"
         }
       ],
@@ -5615,7 +5913,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:26",
+          "ref": "src/cli.ts:27",
           "source": "code"
         }
       ],
@@ -5645,7 +5943,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:51",
+          "ref": "src/cli.ts:52",
           "source": "code"
         }
       ],
@@ -5675,7 +5973,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:48",
+          "ref": "src/cli.ts:49",
           "source": "code"
         }
       ],
@@ -5690,7 +5988,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:50",
+          "ref": "src/cli.ts:51",
           "source": "code"
         }
       ],
@@ -5705,7 +6003,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:25",
+          "ref": "src/cli.ts:26",
           "source": "code"
         }
       ],
@@ -5729,13 +6027,28 @@
     {
       "confidence": 0.95,
       "from": "comp:src/cli.ts",
+      "id": "rel:comp:src/cli.ts=>comp:src/skills/index.ts",
+      "kind": "depends_on",
+      "name": "comp:src/cli.ts → comp:src/skills/index.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/cli.ts:25",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/skills/index.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/cli.ts",
       "id": "rel:comp:src/cli.ts=>comp:src/system.ts",
       "kind": "depends_on",
       "name": "comp:src/cli.ts → comp:src/system.ts",
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/cli.ts:33",
+          "ref": "src/cli.ts:34",
           "source": "code"
         }
       ],
@@ -6435,7 +6748,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:21",
+          "ref": "src/mcp/server.ts:22",
           "source": "code"
         }
       ],
@@ -6450,7 +6763,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:20",
+          "ref": "src/mcp/server.ts:21",
           "source": "code"
         }
       ],
@@ -6495,7 +6808,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:30",
+          "ref": "src/mcp/server.ts:31",
           "source": "code"
         }
       ],
@@ -6510,7 +6823,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/mcp/server.ts:29",
+          "ref": "src/mcp/server.ts:30",
           "source": "code"
         }
       ],
@@ -6545,6 +6858,21 @@
         }
       ],
       "to": "comp:src/project/index.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/mcp/server.ts",
+      "id": "rel:comp:src/mcp/server.ts=>comp:src/skills/index.ts",
+      "kind": "depends_on",
+      "name": "comp:src/mcp/server.ts → comp:src/skills/index.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/mcp/server.ts:20",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/skills/index.ts"
     },
     {
       "confidence": 0.95,
@@ -7290,6 +7618,191 @@
         }
       ],
       "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/skills/catalog.ts",
+      "id": "rel:comp:src/skills/catalog.ts=>comp:src/skills/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/skills/catalog.ts → comp:src/skills/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/catalog.ts:7",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/skills/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/skills/index.ts",
+      "id": "rel:comp:src/skills/index.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/skills/index.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:8",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/skills/index.ts",
+      "id": "rel:comp:src/skills/index.ts=>comp:src/skills/catalog.ts",
+      "kind": "depends_on",
+      "name": "comp:src/skills/index.ts → comp:src/skills/catalog.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:9",
+          "source": "code"
+        },
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/skills/catalog.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/skills/index.ts",
+      "id": "rel:comp:src/skills/index.ts=>comp:src/skills/parse.ts",
+      "kind": "depends_on",
+      "name": "comp:src/skills/index.ts → comp:src/skills/parse.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:10",
+          "source": "code"
+        },
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:16",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/skills/parse.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/skills/index.ts",
+      "id": "rel:comp:src/skills/index.ts=>comp:src/skills/resolve.ts",
+      "kind": "depends_on",
+      "name": "comp:src/skills/index.ts → comp:src/skills/resolve.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:11",
+          "source": "code"
+        },
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:15",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/skills/resolve.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/skills/index.ts",
+      "id": "rel:comp:src/skills/index.ts=>comp:src/skills/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/skills/index.ts → comp:src/skills/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:12",
+          "source": "code"
+        },
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:17",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/skills/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/skills/index.ts",
+      "id": "rel:comp:src/skills/index.ts=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:src/skills/index.ts → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:6",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/skills/index.ts",
+      "id": "rel:comp:src/skills/index.ts=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:src/skills/index.ts → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/index.ts:7",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/skills/parse.ts",
+      "id": "rel:comp:src/skills/parse.ts=>comp:src/skills/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/skills/parse.ts → comp:src/skills/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/parse.ts:9",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/skills/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/skills/resolve.ts",
+      "id": "rel:comp:src/skills/resolve.ts=>comp:src/ir/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/skills/resolve.ts → comp:src/ir/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/resolve.ts:6",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/ir/types.ts"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/skills/resolve.ts",
+      "id": "rel:comp:src/skills/resolve.ts=>comp:src/skills/types.ts",
+      "kind": "depends_on",
+      "name": "comp:src/skills/resolve.ts → comp:src/skills/types.ts",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/skills/resolve.ts:7",
+          "source": "code"
+        }
+      ],
+      "to": "comp:src/skills/types.ts"
     },
     {
       "confidence": 0.95,
@@ -8216,6 +8729,36 @@
         {
           "confidence": 0.95,
           "ref": "test/schema-drift.test.mjs:2",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:test"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/skills.test.mjs",
+      "id": "rel:comp:test/skills.test.mjs=>sys:ext:node:assert/strict",
+      "kind": "depends_on",
+      "name": "comp:test/skills.test.mjs → sys:ext:node:assert/strict",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/skills.test.mjs:3",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:assert/strict"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:test/skills.test.mjs",
+      "id": "rel:comp:test/skills.test.mjs=>sys:ext:node:test",
+      "kind": "depends_on",
+      "name": "comp:test/skills.test.mjs → sys:ext:node:test",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "test/skills.test.mjs:2",
           "source": "code"
         }
       ],

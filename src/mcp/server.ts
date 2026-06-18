@@ -17,6 +17,7 @@ import { analyzeRepo } from "../analyze/index.js";
 import { knowledgeMarkdown, applyKnowledgeBlock } from "../project/index.js";
 import { syncFeatures } from "../project/feature-sync.js";
 import { pullFeatureEdits } from "../feature-pull.js";
+import { allSkills, findSkill, renderSuggestions, renderSkillList, renderSkill } from "../skills/index.js";
 import { diffModels, summarizeChange } from "../diff/index.js";
 import {
   hasApiToken,
@@ -79,7 +80,7 @@ const text = (s: string) => ({ content: [{ type: "text" as const, text: s }] });
 export async function startMcpServer(root: string): Promise<void> {
   // Mutable so `refresh`/`sync` update what the read tools serve.
   let model = loadModel(root);
-  const server = new McpServer({ name: "archmantic", version: "1.16.0" });
+  const server = new McpServer({ name: "archmantic", version: "1.17.0" });
 
   // Usage stats: record each read tool + model pushes, best-effort flush to the
   // cloud (API if a token is set, else direct DB, else local-log only). Never breaks the agent.
@@ -243,6 +244,42 @@ export async function startMcpServer(root: string): Promise<void> {
       inputSchema: { name: z.string().describe("component name, basename, or repo path") },
     },
     async ({ name }) => served("whats_related", whatsRelated(model, name)),
+  );
+
+  // ── Skills: an on-shelf catalog of playbooks, resolved against the model ────
+
+  server.registerTool(
+    "suggest_skills",
+    {
+      title: "Suggest skills",
+      description:
+        "Recommend reusable skills/playbooks relevant to THIS project, ranked by the grounded model (stack, data model, API surface, externals, features) with the reason each one matched. Call this when deciding how to approach a task.",
+    },
+    async () => served("suggest_skills", renderSuggestions(model, allSkills(root))),
+  );
+
+  server.registerTool(
+    "list_skills",
+    {
+      title: "List skills",
+      description:
+        "The full skill shelf available here (builtin catalog + local .archmantic/skills/*.md), with each skill's source, tags, and the conditions it applies under.",
+    },
+    async () => served("list_skills", renderSkillList(allSkills(root))),
+  );
+
+  server.registerTool(
+    "get_skill",
+    {
+      title: "Get skill playbook",
+      description:
+        "One skill's full playbook — the concrete steps to apply when using it. Read this after suggest_skills picks a relevant skill.",
+      inputSchema: { name: z.string().describe("skill name or slug") },
+    },
+    async ({ name }) => {
+      const skill = findSkill(allSkills(root), name);
+      return served("get_skill", skill ? renderSkill(skill) : `No skill matches "${name}". Try \`list_skills\`.`);
+    },
   );
 
   // ── Write tools: the agent keeps the living model current ──────────────────
