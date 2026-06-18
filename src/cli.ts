@@ -494,7 +494,7 @@ function printHookSnippet(): void {
 
 #!/bin/sh
 npx archmantic update >/dev/null 2>&1
-git add .archmantic/model.json`);
+git add .archmantic/model.json AGENTS.md`);
 }
 
 /** M6: git-diff-driven incremental re-analysis — patch the IR, refresh projections, fast. */

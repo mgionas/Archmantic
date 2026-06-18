@@ -8,6 +8,7 @@
  */
 import { type ArchitectureModel } from "../ir/types.js";
 import { groupCapabilities } from "./capability.js";
+import { isSystemExternalKind } from "../analyze/stack.js";
 
 export const KNOWLEDGE_START = "<!-- archmantic:start -->";
 export const KNOWLEDGE_END = "<!-- archmantic:end -->";
@@ -16,7 +17,14 @@ const refOf = (el: { provenance: { ref: string }[] }) => el.provenance[0]?.ref ?
 
 export function knowledgeMarkdown(model: ArchitectureModel): string {
   const internal = model.systems.find((s) => s.kind === "internal");
-  const externals = model.systems.filter((s) => s.kind === "external").map((s) => s.name);
+  // Real external systems only (datastore/saas/infra/service) — libraries/runtime live in
+  // the stack list, not here. Pre-0.2.0 fallback: drop only `node:` runtime imports.
+  const isRealSystem = (s: { externalKind?: string; name: string }) =>
+    s.externalKind ? isSystemExternalKind(s.externalKind as never) : !s.name.startsWith("node:");
+  const externals = model.systems
+    .filter((s) => s.kind === "external" && isRealSystem(s))
+    .map((s) => s.name)
+    .sort((a, b) => a.localeCompare(b)); // deterministic — no churn between runs
   const out: string[] = [];
 
   out.push("## Architecture (Archmantic)");
@@ -30,6 +38,11 @@ export function knowledgeMarkdown(model: ArchitectureModel): string {
   const m = model.manifest;
   if (m?.goal) {
     out.push(`**Goal:** ${m.goal}`);
+    out.push("");
+  }
+  // The AI/human positioning narrative (the Curate layer) — what it is and how it's shaped.
+  if (model.narrative) {
+    out.push(model.narrative);
     out.push("");
   }
   const meta: string[] = [];
@@ -65,13 +78,25 @@ export function knowledgeMarkdown(model: ArchitectureModel): string {
     const r = c.role ?? "module";
     roleCounts.set(r, (roleCounts.get(r) ?? 0) + 1);
   }
-  const roles = [...roleCounts.entries()].sort((a, b) => b[1] - a[1]).map(([r, n]) => `${n} ${r}`);
+  // Sort by count desc, then role name — stable so AGENTS.md doesn't churn between runs.
+  const roles = [...roleCounts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([r, n]) => `${n} ${r}`);
   if (roles.length) {
     out.push("");
     out.push(`**Component roles:** ${roles.join(" · ")}`);
   }
 
-  const groups = groupCapabilities(model);
+  // Domains (the Architecture Map clusters) — the high-level shape, biggest first.
+  const domains = model.groups
+    .filter((g) => g.kind === "domain")
+    .sort((a, b) => b.members.length - a.members.length || a.name.localeCompare(b.name));
+  if (domains.length) {
+    out.push("");
+    out.push("**Domains:** " + domains.map((d) => `${d.name} (${d.members.length})`).join(" · "));
+  }
+
+  const groups = [...groupCapabilities(model)].sort((a, b) => a.area.localeCompare(b.area));
   if (groups.length) {
     out.push("");
     out.push("### What it does (capabilities)");
@@ -79,7 +104,10 @@ export function knowledgeMarkdown(model: ArchitectureModel): string {
     const CAP = 40;
     for (const g of groups) {
       if (shown >= CAP) break;
-      const names = g.capabilities.slice(0, CAP - shown).map((c) => c.name);
+      const names = [...g.capabilities]
+        .map((c) => c.name)
+        .sort((a, b) => a.localeCompare(b)) // deterministic order within a group
+        .slice(0, CAP - shown);
       shown += names.length;
       out.push(`- **${g.area}/** — ${names.join(", ")}`);
     }

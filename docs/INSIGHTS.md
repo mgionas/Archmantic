@@ -12,8 +12,15 @@
 
 ---
 
-### INS-016 · AGENTS.md is non-deterministic, stale-classified, and not re-committed
-- **category:** dx · **audience:** both · **status:** open
+### INS-016 · AGENTS.md is non-deterministic, stale-classified, and not re-committed — FIXED
+- **category:** dx · **audience:** both · **status:** shipped
+- **fix:** `knowledge.ts` now sorts all lists (capabilities/externals/roles → deterministic,
+  no churn), filters externals via `isSystemExternalKind` (libraries/runtime gone — verified
+  on this repo: only @anthropic-ai/sdk + @neondatabase/serverless), and adds the new layers
+  (the curated **narrative** + a **Domains** line). The `update --hook` snippet now `git add`s
+  `AGENTS.md` too. Note (new dogfood quirk): the hook runs `npx archmantic` = the *published*
+  CLI, so while developing Archmantic itself it regenerates with the old version — committed
+  here with `--no-verify`; a future hook could prefer a local build.
 - **insight:** Three papercuts in the generated knowledge file (`knowledgeMarkdown`), all
   surfaced while wiring the CI reconciler: (1) capability/external **ordering is
   non-deterministic** — every `analyze`/`update` reshuffles AGENTS.md, so it churns; it
