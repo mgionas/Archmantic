@@ -1,7 +1,18 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { SignInButton } from "@clerk/nextjs";
-import { Boxes, Workflow, ShieldCheck, GitCompareArrows, Bot, PencilRuler, ArrowRight, AlertCircle } from "lucide-react";
+import {
+  Boxes,
+  Workflow,
+  ShieldCheck,
+  GitCompareArrows,
+  Bot,
+  PencilRuler,
+  ArrowRight,
+  AlertCircle,
+  Users,
+  Check,
+} from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -11,18 +22,55 @@ import { ProjectsClient } from "./projects-client";
 export const dynamic = "force-dynamic";
 
 const USPS = [
-  { icon: Boxes, title: "Capability map", body: "Plain-English “what can this system do?” — for PMs, architects, and new hires, not just engineers." },
-  { icon: Workflow, title: "Business process", body: "Auto-detected business processes from code — white space no code-graph tool occupies." },
-  { icon: ShieldCheck, title: "Provenance & trust", body: "Every element shows “grounded in N refs” + confidence. Verifiable, not plausible AI guesswork." },
-  { icon: GitCompareArrows, title: "Drift & PR diffs", body: "“Your docs vs reality,” and how a PR reshapes the architecture — not a line diff." },
-  { icon: Bot, title: "MCP for agents", body: "Your AI agent queries the same model — ~98% fewer tokens than reading files." },
-  { icon: PencilRuler, title: "Edit-then-build", body: "Edit the diagram; it becomes the source. Emit a build spec for an agent to implement." },
+  {
+    icon: Boxes,
+    title: "Capability map",
+    body: "What the system does, in plain English. PMs, architects, and new hires get the picture without reading code.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Trustworthy by construction",
+    body: "Every element is traced to file:line with a confidence score. Verifiable architecture — not plausible-looking AI guesswork.",
+  },
+  {
+    icon: Workflow,
+    title: "Diagrams that stay true",
+    body: "C4 context, components, sequences, an ERD, and the business process — all projected from one model, so they never drift.",
+  },
+  {
+    icon: GitCompareArrows,
+    title: "Drift & PR review",
+    body: "Your committed model vs. reality, and how a pull request reshapes the architecture — a code review at the architecture level.",
+  },
+  {
+    icon: Bot,
+    title: "MCP for agents",
+    body: "Your AI agent queries the same model and gets the exact slice it needs — about 98% fewer tokens than reading files.",
+  },
+  {
+    icon: PencilRuler,
+    title: "Edit-then-build",
+    body: "Refine the model, emit a build spec, hand it to an agent that implements and verifies. The model is a source, not a read-out.",
+  },
+];
+
+const HUMAN_POINTS = [
+  "Capability map in plain English",
+  "C4 context, components, ERD & process",
+  "Drift & PR architecture review",
+  "Onboard to any service in minutes",
+];
+const AGENT_POINTS = [
+  "Query the model over MCP",
+  "Exact slice, ~98% fewer tokens",
+  "Grounded answers with file:line",
+  "Write back: curate & build specs",
 ];
 
 const STEPS: [string, string, string][] = [
-  ["Analyze", "archmantic analyze", "Reverse-engineer a grounded model from any repo."],
-  ["Connect", "archmantic push", "Generate a CLI token here, then push to your org."],
-  ["Share & build", "one model", "Your team and agents read the same model; emit a build spec."],
+  ["Analyze", "archmantic analyze", "Reverse-engineer a grounded model from any repo — no config."],
+  ["Connect", "archmantic push", "Generate a CLI token here, then push the model to your org."],
+  ["Share & build", "one model", "Your team and agents read the same model; edit it and emit a build spec."],
 ];
 
 const STACKS: { name: string; slug: string }[] = [
@@ -48,7 +96,7 @@ const STACKS: { name: string; slug: string }[] = [
 function StackStrip() {
   return (
     <section className="mt-28 text-center">
-      <h2 className="eyebrow text-muted-foreground">Detects your stack — TS/JS &amp; PHP, monorepos, APIs &amp; data models</h2>
+      <h2 className="eyebrow text-muted-foreground">Polyglot — TS/JS &amp; PHP/Laravel · monorepos · APIs &amp; data models</h2>
       <div className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-x-9 gap-y-7">
         {STACKS.map(({ name, slug }) => (
           <span key={slug} className="group inline-flex flex-col items-center gap-2" title={name}>
@@ -134,6 +182,106 @@ function HeroPreview() {
   );
 }
 
+/** The core thesis: one grounded model, served to two audiences. */
+function TwoAudiences() {
+  const Col = ({
+    icon: Icon,
+    tag,
+    title,
+    body,
+    points,
+  }: {
+    icon: typeof Users;
+    tag: string;
+    title: string;
+    body: string;
+    points: string[];
+  }) => (
+    <Card className="p-7">
+      <div className="flex items-center gap-2.5">
+        <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
+          <Icon className="size-4.5" />
+        </span>
+        <span className="eyebrow text-muted-foreground">{tag}</span>
+      </div>
+      <div className="mt-4 text-xl font-semibold tracking-tight">{title}</div>
+      <p className="mt-2 text-sm text-muted-foreground">{body}</p>
+      <ul className="mt-5 space-y-2.5">
+        {points.map((p) => (
+          <li key={p} className="flex items-start gap-2.5 text-sm">
+            <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+            <span>{p}</span>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+  return (
+    <section className="mt-28">
+      <div className="mx-auto max-w-2xl text-center">
+        <h2 className="eyebrow text-primary">One model, two audiences</h2>
+        <p className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
+          The same grounded model — read as docs by people, queried as context by agents.
+        </p>
+        <p className="mt-3 text-muted-foreground">
+          No second source to maintain, no drift between what humans see and what agents act on.
+        </p>
+      </div>
+      <div className="mt-10 grid gap-4 md:grid-cols-2">
+        <Col
+          icon={Users}
+          tag="For your team"
+          title="Understand any service, fast"
+          body="A visual, navigable model you can actually trust — and edit. Onboard, review, and reason about the system without spelunking the code."
+          points={HUMAN_POINTS}
+        />
+        <Col
+          icon={Bot}
+          tag="For your agents"
+          title="Grounded context over MCP"
+          body="Your coding agent asks the model instead of reading files — getting the precise architectural slice it needs, with citations it can verify."
+          points={AGENT_POINTS}
+        />
+      </div>
+    </section>
+  );
+}
+
+/** Trust is the #1 differentiator — give it a dedicated band. */
+function TrustBand() {
+  const stats: [string, string][] = [
+    ["545", "grounded elements"],
+    ["552", "code references"],
+    ["86%", "mean confidence"],
+  ];
+  return (
+    <section className="mt-28">
+      <Card className="relative overflow-hidden p-8 sm:p-10">
+        <div aria-hidden className="glow pointer-events-none absolute inset-x-0 -top-16 h-48 opacity-60" />
+        <div className="grid items-center gap-8 md:grid-cols-[1.3fr_1fr]">
+          <div>
+            <h2 className="eyebrow text-primary">Grounded, or it doesn&apos;t ship</h2>
+            <p className="mt-3 text-2xl font-bold tracking-tight">Every element shows where it came from.</p>
+            <p className="mt-3 max-w-xl text-muted-foreground">
+              Each component, capability, endpoint, and relation carries its <span className="text-foreground">file:line</span>{" "}
+              provenance and a confidence band. Low-confidence items are flagged for review, not hidden — so you can tell
+              what&apos;s solid from what needs a look.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-4 md:grid-cols-1 md:gap-5">
+            {stats.map(([n, label]) => (
+              <div key={label} className="rounded-lg border border-border bg-background/40 px-4 py-3 text-center md:text-left">
+                <div className="text-2xl font-bold tracking-tight text-primary">{n}</div>
+                <div className="mt-0.5 text-xs text-muted-foreground">{label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card>
+    </section>
+  );
+}
+
 function Landing() {
   return (
     <div className="relative isolate">
@@ -151,9 +299,9 @@ function Landing() {
           The architecture model your team and your <span className="text-primary">AI agents</span> actually trust.
         </h1>
         <p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
-          Point Archmantic at a repo → an accurate capability map, context &amp; sequence diagrams, an ERD, the API
-          surface, and an auto-detected business process. Works across TS/JS &amp; PHP/Laravel and monorepos. Every
-          element grounded in code. Your agents query the same model over MCP.
+          Point Archmantic at a repo and it reverse-engineers one grounded model — a capability map, diagrams, a data
+          model, and the API surface. Your team reads it as living docs; your agents query it over MCP. Every element
+          traced to a line of code.
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <SignInButton>
@@ -171,10 +319,21 @@ function Landing() {
         <HeroPreview />
       </section>
 
+      <StackStrip />
+
+      <TwoAudiences />
+
       <section className="mt-28">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="eyebrow text-primary">What you get</h2>
+          <p className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">Everything that makes architecture knowable.</p>
+        </div>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {USPS.map(({ icon: Icon, title, body }) => (
-            <Card key={title} className="group p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-black/5">
+            <Card
+              key={title}
+              className="group p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-black/5"
+            >
               <div className="mb-4 inline-flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
                 <Icon className="size-5" />
               </div>
@@ -185,10 +344,13 @@ function Landing() {
         </div>
       </section>
 
-      <StackStrip />
+      <TrustBand />
 
       <section className="mt-28">
-        <h2 className="text-center text-2xl font-bold tracking-tight sm:text-3xl">From repo to shared model in three steps</h2>
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="eyebrow text-primary">How it works</h2>
+          <p className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">From repo to shared model in three steps.</p>
+        </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
           {STEPS.map(([title, cmd, body], i) => (
             <Card key={title} className="p-6">
@@ -201,24 +363,35 @@ function Landing() {
             </Card>
           ))}
         </div>
-        <div className="mt-12 flex justify-center">
-          <SignInButton>
-            <Button size="lg" className="gap-2">
-              Start free <ArrowRight className="size-4" />
-            </Button>
-          </SignInButton>
-        </div>
       </section>
 
-      <footer className="mt-28 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-        Archmantic — a living, trustworthy architecture model. ·{" "}
-        <Link href="/docs" className="text-foreground/80 transition-colors hover:text-primary">
-          Docs
-        </Link>{" "}
-        ·{" "}
-        <a href="https://github.com/mgionas/Archmantic" className="text-foreground/80 transition-colors hover:text-primary">
-          GitHub
-        </a>
+      <section className="mt-28">
+        <Card className="relative overflow-hidden p-10 text-center sm:p-14">
+          <div aria-hidden className="glow pointer-events-none absolute inset-x-0 -top-20 h-56" />
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Give your team and your agents one source of truth.</h2>
+          <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+            Free to start. Point it at a repo and see your architecture in minutes.
+          </p>
+          <div className="mt-8 flex justify-center">
+            <SignInButton>
+              <Button size="lg" className="gap-2">
+                Start free <ArrowRight className="size-4" />
+              </Button>
+            </SignInButton>
+          </div>
+        </Card>
+      </section>
+
+      <footer className="mt-20 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-8 text-sm text-muted-foreground">
+        <span>Archmantic — a living, trustworthy architecture model.</span>
+        <span className="flex items-center gap-5">
+          <Link href="/docs" className="text-foreground/80 transition-colors hover:text-primary">
+            Docs
+          </Link>
+          <a href="https://github.com/mgionas/Archmantic" className="text-foreground/80 transition-colors hover:text-primary">
+            GitHub
+          </a>
+        </span>
       </footer>
     </div>
   );

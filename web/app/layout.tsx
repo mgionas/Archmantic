@@ -16,8 +16,9 @@ const geistSans = Geist({ subsets: ["latin"], variable: "--font-sans" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata = {
-  title: "Archmantic",
-  description: "A living, trustworthy architecture model for humans and AI agents.",
+  title: "Archmantic — architecture your team and agents trust",
+  description:
+    "Archmantic reverse-engineers a living, grounded model of your codebase — capability map, diagrams, data model, API surface — that your team reads as docs and your AI agents query over MCP. Every element traced to a line of code.",
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
