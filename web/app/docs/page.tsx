@@ -76,12 +76,12 @@ export default function Docs() {
     <div className="grid gap-10 lg:grid-cols-[200px_1fr]">
       <aside className="hidden lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto">
         <nav className="space-y-1 text-sm">
-          <div className="mb-2 font-semibold text-foreground">On this page</div>
+          <div className="eyebrow mb-3 px-2 text-muted-foreground">On this page</div>
           {NAV.map((n) => (
             <a
               key={n.id}
               href={`#${n.id}`}
-              className="block rounded px-2 py-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="block rounded-md px-2 py-1 text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
             >
               {n.label}
             </a>
@@ -91,7 +91,8 @@ export default function Docs() {
 
       <article className="min-w-0 max-w-3xl space-y-10">
         <header>
-          <h1 className="text-3xl font-bold tracking-tight">Documentation</h1>
+          <div className="eyebrow text-primary">Documentation</div>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight">Set up Archmantic</h1>
           <p className="mt-2 text-muted-foreground">
             Archmantic turns any repo into a living, provenance-grounded architecture model — visual diagrams for
             humans, an MCP surface for agents.
