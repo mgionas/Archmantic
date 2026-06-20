@@ -40,7 +40,7 @@ function DomainCard({ data, selected }: NodeProps & { data: { label: string; cou
   return (
     <div
       className={cn(
-        "flex flex-col gap-1.5 rounded-lg border bg-card px-3 py-2 text-card-foreground shadow-sm",
+        "flex flex-col gap-1.5 rounded-sm border bg-card px-3 py-2 text-card-foreground shadow-sm",
         selected ? "border-primary ring-1 ring-primary" : "border-border",
         // Misc = collapsed singletons: a de-emphasized "leftovers" pile, not a real domain.
         data.muted ? "border-dashed bg-muted/30 opacity-60" : "",
@@ -70,7 +70,7 @@ function ExternalNode({ data, selected }: NodeProps & { data: { label: string; e
   return (
     <div
       className={cn(
-        "flex items-center gap-2 rounded-full border-2 border-dashed bg-card px-3 text-card-foreground",
+        "flex items-center gap-2 rounded-sm border border-dashed bg-card px-3 text-card-foreground",
         selected ? "ring-1 ring-primary" : "",
       )}
       style={{ width: XW, height: XH, borderColor: color }}

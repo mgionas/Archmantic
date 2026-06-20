@@ -25,11 +25,15 @@ export function AppRail() {
   return (
     <nav
       aria-label="Primary"
-      className="flex w-[var(--rail-w)] shrink-0 flex-col gap-0.5 border-r border-border/60 bg-sidebar p-2"
+      className="bp-grid flex w-[var(--rail-w)] shrink-0 flex-col gap-0.5 border-r border-border/70 bg-sidebar p-2"
     >
-      <Link href="/" aria-label="Archmantic home" className="mb-2 flex items-center gap-2 px-2 py-1.5 font-bold tracking-tight">
-        <span className="size-3 shrink-0 rounded-sm bg-primary" />
-        Archmantic
+      <Link href="/" aria-label="Archmantic home" className="mb-3 flex items-center gap-2.5 px-2 py-1.5">
+        <span className="relative inline-grid size-5 place-items-center">
+          <span className="absolute inset-0 rounded-[3px] border border-primary/50" />
+          <span className="absolute inset-0 bp-ticks" />
+          <span className="size-1.5 rounded-[1px] bg-primary" />
+        </span>
+        <span className="bp-title text-sm tracking-tight">archmantic</span>
       </Link>
       {NAV.map(({ href, label, icon: Icon, match }) => {
         const active = match(pathname);
@@ -39,12 +43,13 @@ export function AppRail() {
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring",
-              active ? "bg-primary/10 font-medium text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground",
+              "relative flex items-center gap-2.5 rounded-sm px-2.5 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+              active ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
             )}
           >
-            <Icon className="size-[18px] shrink-0" />
-            {label}
+            {active ? <span className="absolute inset-y-1 left-0 w-0.5 rounded-full bg-primary" /> : null}
+            <Icon className="size-[17px] shrink-0" />
+            <span className="bp-label text-[0.62rem]">{label}</span>
           </Link>
         );
       })}
