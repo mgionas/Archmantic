@@ -45,27 +45,13 @@ const STACKS: { name: string; slug: string }[] = [
   { name: "SQLite", slug: "sqlite" },
 ];
 
-/** A drafting "registration tick" eyebrow chip. */
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-2 border border-border bg-card/60 px-3 py-1 text-foreground/80">
-      <span className="size-1.5 bg-primary" />
-      <span className="bp-label text-[0.6rem]">{children}</span>
-    </span>
-  );
-}
-
 function StackStrip() {
   return (
     <section className="mt-28 text-center">
-      <div className="bp-label text-muted-foreground">Detects your stack · TS/JS &amp; PHP · monorepos · APIs &amp; data models</div>
-      <div className="mx-auto mt-8 grid max-w-3xl grid-cols-4 gap-px overflow-hidden border border-border bg-border sm:grid-cols-6 lg:grid-cols-9">
+      <h2 className="eyebrow text-muted-foreground">Detects your stack — TS/JS &amp; PHP, monorepos, APIs &amp; data models</h2>
+      <div className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-x-9 gap-y-7">
         {STACKS.map(({ name, slug }) => (
-          <span
-            key={slug}
-            className="group flex flex-col items-center justify-center gap-2 bg-background py-5 transition-colors hover:bg-card"
-            title={name}
-          >
+          <span key={slug} className="group inline-flex flex-col items-center gap-2" title={name}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`https://cdn.simpleicons.org/${slug}`}
@@ -73,9 +59,9 @@ function StackStrip() {
               width={26}
               height={26}
               loading="lazy"
-              className="size-6 opacity-70 grayscale transition-all duration-200 group-hover:opacity-100 group-hover:grayscale-0"
+              className="size-6 opacity-60 transition-opacity duration-200 group-hover:opacity-100"
             />
-            <span className="text-[0.6rem] text-muted-foreground">{name}</span>
+            <span className="text-xs text-muted-foreground">{name}</span>
           </span>
         ))}
       </div>
@@ -83,8 +69,7 @@ function StackStrip() {
   );
 }
 
-/** The signature visual: a drawing sheet — capability list + a context diagram on
- *  graph paper with cyan linework, amber nodes, mono labels, and a title block. */
+/** Product preview: a clean window with the capability list + a context diagram. */
 function HeroPreview() {
   const caps: [string, "high" | "medium"][] = [
     ["Charge a card", "high"],
@@ -99,71 +84,50 @@ function HeroPreview() {
         y={y}
         width={w}
         height={28}
-        rx={2}
-        className={primary ? "fill-[var(--amber)]/15 stroke-[var(--amber)]" : "fill-card stroke-[var(--blueprint)]"}
-        strokeWidth={1.25}
+        rx={7}
+        className={primary ? "fill-primary stroke-primary" : "fill-card stroke-border"}
+        strokeWidth={1}
       />
-      <text
-        x={x + w / 2}
-        y={y + 18}
-        textAnchor="middle"
-        fontSize={9}
-        fontFamily="var(--font-mono)"
-        className={primary ? "fill-[var(--amber)]" : "fill-foreground"}
-      >
+      <text x={x + w / 2} y={y + 18} textAnchor="middle" fontSize={9} className={primary ? "fill-primary-foreground" : "fill-foreground"}>
         {label}
       </text>
     </g>
   );
   return (
     <div className="mt-16 w-full max-w-4xl">
-      <div className="relative overflow-hidden border border-border bg-card shadow-2xl shadow-primary/10">
-        {/* title bar */}
-        <div className="flex items-center gap-2 border-b border-border bg-background/60 px-4 py-2.5">
-          <span className="size-2 rounded-full bg-danger/70" />
-          <span className="size-2 rounded-full bg-warning/70" />
-          <span className="size-2 rounded-full bg-success/70" />
-          <span className="ml-2 bp-label text-[0.6rem] text-muted-foreground">dwg · payments-api · context</span>
-          <span className="ml-auto bp-label text-[0.55rem] text-muted-foreground/70">scale 1:1</span>
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-2xl shadow-black/20">
+        <div className="flex items-center gap-2 border-b border-border bg-muted/40 px-4 py-2.5">
+          <span className="size-2.5 rounded-full bg-foreground/15" />
+          <span className="size-2.5 rounded-full bg-foreground/15" />
+          <span className="size-2.5 rounded-full bg-foreground/15" />
+          <span className="ml-2 font-mono text-xs text-muted-foreground">archmantic · payments-api</span>
         </div>
-        <div className="grid gap-px bg-border sm:grid-cols-[1fr_1.25fr]">
-          <div className="space-y-2 bg-card p-5 text-left">
-            <div className="bp-label text-[0.6rem] text-muted-foreground">Capability map</div>
+        <div className="grid gap-5 p-5 text-left sm:grid-cols-[1fr_1.2fr]">
+          <div className="space-y-2">
+            <div className="text-xs font-medium text-muted-foreground">Capability map</div>
             {caps.map(([n, b]) => (
-              <div key={n} className="flex items-center justify-between border border-border bg-background/40 px-3 py-2 text-sm">
+              <div key={n} className="flex items-center justify-between rounded-lg border border-border bg-background/50 px-3 py-2 text-sm">
                 <span>{n}</span>
-                <span className={`bp-label text-[0.58rem] ${b === "high" ? "text-success" : "text-warning"}`}>
-                  ● {b}
-                </span>
+                <span className={`text-xs ${b === "high" ? "text-success" : "text-warning"}`}>● {b}</span>
               </div>
             ))}
           </div>
-          <div className="bp-grid bg-canvas p-3">
-            <div className="bp-label mb-1 text-[0.6rem] text-muted-foreground">Context</div>
-            <svg viewBox="0 0 320 175" className="w-full">
-              <defs>
-                <marker id="bp-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto">
-                  <path d="M0,0 L6,3 L0,6" className="fill-none stroke-[var(--blueprint)]" strokeWidth={1.2} />
-                </marker>
-              </defs>
-              <g className="stroke-[var(--blueprint)]" strokeWidth={1.25} markerEnd="url(#bp-arrow)" fill="none">
-                <line x1={62} y1={76} x2={126} y2={76} />
-                <line x1={212} y1={76} x2={258} y2={33} />
-                <line x1={212} y1={76} x2={258} y2={120} />
-                <line x1={170} y1={90} x2={170} y2={132} />
+          <div className="rounded-lg border border-border bg-background/40 p-3">
+            <div className="mb-1 text-xs font-medium text-muted-foreground">Context</div>
+            <svg viewBox="0 0 320 170" className="w-full">
+              <g className="stroke-border" strokeWidth={1.5} fill="none">
+                <line x1={62} y1={75} x2={128} y2={75} />
+                <line x1={212} y1={75} x2={260} y2={32} />
+                <line x1={212} y1={75} x2={260} y2={120} />
+                <line x1={170} y1={89} x2={170} y2={133} />
               </g>
-              <Node x={8} y={62} w={54} label="Gateway" />
-              <Node x={128} y={62} w={82} label="payments-api" primary />
-              <Node x={260} y={19} w={52} label="Stripe" />
+              <Node x={8} y={61} w={54} label="Gateway" />
+              <Node x={128} y={61} w={82} label="payments-api" primary />
+              <Node x={260} y={18} w={52} label="Stripe" />
               <Node x={260} y={106} w={52} label="Ledger" />
-              <Node x={132} y={132} w={76} label="Webhooks" />
+              <Node x={132} y={133} w={76} label="Webhooks" />
             </svg>
           </div>
-        </div>
-        {/* title block */}
-        <div className="flex items-center justify-between border-t border-border bg-background/60 px-4 py-2">
-          <span className="bp-label text-[0.55rem] text-muted-foreground/80">archmantic</span>
-          <span className="bp-label text-[0.55rem] text-muted-foreground/60">sheet 01 · grounded in code</span>
         </div>
       </div>
     </div>
@@ -173,15 +137,18 @@ function HeroPreview() {
 function Landing() {
   return (
     <div className="relative isolate">
+      <div aria-hidden className="glow pointer-events-none absolute inset-x-0 -top-24 -z-10 h-[560px]" />
+      <div
+        aria-hidden
+        className="dot-grid pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(60%_45%_at_50%_0%,black,transparent)]"
+      />
+
       <section className="flex flex-col items-center pt-16 text-center">
-        <Eyebrow>humans + agents · one model</Eyebrow>
-        <h1 className="mt-7 max-w-4xl text-balance text-4xl font-bold leading-[1.08] tracking-tight sm:text-6xl">
-          The architecture model your team and your{" "}
-          <span className="relative whitespace-nowrap text-primary">
-            AI agents
-            <span aria-hidden className="absolute -bottom-1 left-0 h-[3px] w-full bg-primary/70" />
-          </span>{" "}
-          actually trust.
+        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur">
+          <span className="size-1.5 rounded-full bg-primary" /> Living architecture · humans + agents
+        </span>
+        <h1 className="mt-7 max-w-4xl text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
+          The architecture model your team and your <span className="text-primary">AI agents</span> actually trust.
         </h1>
         <p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
           Point Archmantic at a repo → an accurate capability map, context &amp; sequence diagrams, an ERD, the API
@@ -190,37 +157,30 @@ function Landing() {
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <SignInButton>
-            <Button size="lg" className="gap-2 rounded-none">
+            <Button size="lg" className="gap-2">
               Get started <ArrowRight className="size-4" />
             </Button>
           </SignInButton>
-          <a
-            href="https://github.com/mgionas/Archmantic"
-            className={cn(buttonVariants({ size: "lg", variant: "outline" }), "rounded-none")}
-          >
+          <a href="https://github.com/mgionas/Archmantic" className={buttonVariants({ size: "lg", variant: "outline" })}>
             View on GitHub
           </a>
         </div>
-        <code className="mt-8 border border-border bg-card/70 px-4 py-2 font-mono text-sm text-muted-foreground backdrop-blur">
+        <code className="mt-8 rounded-lg border border-border bg-card/60 px-4 py-2 font-mono text-sm text-muted-foreground backdrop-blur">
           <span className="text-primary">$</span> npx archmantic analyze &amp;&amp; archmantic push
         </code>
         <HeroPreview />
       </section>
 
       <section className="mt-28">
-        <div className="bp-label mb-5 text-muted-foreground">// what you get</div>
-        <div className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-          {USPS.map(({ icon: Icon, title, body }, i) => (
-            <div key={title} className="group relative bg-card p-6 transition-colors hover:bg-accent/40">
-              <div className="flex items-center justify-between">
-                <span className="inline-flex size-9 items-center justify-center border border-primary/40 text-primary">
-                  <Icon className="size-4.5" />
-                </span>
-                <span className="bp-label text-[0.6rem] text-muted-foreground/60">{String(i + 1).padStart(2, "0")}</span>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {USPS.map(({ icon: Icon, title, body }) => (
+            <Card key={title} className="group p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-black/5">
+              <div className="mb-4 inline-flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
+                <Icon className="size-5" />
               </div>
-              <div className="bp-title mt-4 text-[0.95rem]">{title}</div>
+              <div className="font-semibold tracking-tight">{title}</div>
               <p className="mt-1.5 text-sm text-muted-foreground">{body}</p>
-            </div>
+            </Card>
           ))}
         </div>
       </section>
@@ -228,41 +188,37 @@ function Landing() {
       <StackStrip />
 
       <section className="mt-28">
-        <div className="bp-label mb-5 text-center text-muted-foreground">// repo → shared model, in three steps</div>
-        <div className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-3">
+        <h2 className="text-center text-2xl font-bold tracking-tight sm:text-3xl">From repo to shared model in three steps</h2>
+        <div className="mt-10 grid gap-4 sm:grid-cols-3">
           {STEPS.map(([title, cmd, body], i) => (
-            <div key={title} className="bg-card p-6">
-              <div className="flex items-baseline gap-3">
-                <span className="bp-title text-2xl text-primary">{String(i + 1).padStart(2, "0")}</span>
-                <span className="bp-title text-[0.95rem]">{title}</span>
+            <Card key={title} className="p-6">
+              <div className="flex size-9 items-center justify-center rounded-full bg-primary/12 text-sm font-semibold text-primary">
+                {i + 1}
               </div>
-              <code className="mt-3 block font-mono text-xs text-primary/90">{cmd}</code>
+              <div className="mt-4 font-semibold tracking-tight">{title}</div>
+              <code className="mt-2 block font-mono text-xs text-primary/90">{cmd}</code>
               <p className="mt-2 text-sm text-muted-foreground">{body}</p>
-            </div>
+            </Card>
           ))}
         </div>
         <div className="mt-12 flex justify-center">
           <SignInButton>
-            <Button size="lg" className="gap-2 rounded-none">
+            <Button size="lg" className="gap-2">
               Start free <ArrowRight className="size-4" />
             </Button>
           </SignInButton>
         </div>
       </section>
 
-      <footer className="mt-28 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-8">
-        <span className="bp-label text-[0.6rem] text-muted-foreground">archmantic · living architecture</span>
-        <span className="flex items-center gap-4">
-          <Link href="/docs" className="bp-label text-[0.6rem] text-muted-foreground hover:text-primary">
-            Docs
-          </Link>
-          <a
-            href="https://github.com/mgionas/Archmantic"
-            className="bp-label text-[0.6rem] text-muted-foreground hover:text-primary"
-          >
-            GitHub
-          </a>
-        </span>
+      <footer className="mt-28 border-t border-border pt-8 text-center text-sm text-muted-foreground">
+        Archmantic — a living, trustworthy architecture model. ·{" "}
+        <Link href="/docs" className="text-foreground/80 transition-colors hover:text-primary">
+          Docs
+        </Link>{" "}
+        ·{" "}
+        <a href="https://github.com/mgionas/Archmantic" className="text-foreground/80 transition-colors hover:text-primary">
+          GitHub
+        </a>
       </footer>
     </div>
   );
@@ -270,14 +226,13 @@ function Landing() {
 
 function EmptyState() {
   return (
-    <Card className="flex flex-col items-start gap-3 rounded-none border-dashed p-8">
-      <div className="bp-title text-lg">No projects in this organization yet</div>
+    <Card className="flex flex-col items-start gap-3 p-8">
+      <div className="text-lg font-semibold tracking-tight">No projects in this organization yet</div>
       <p className="max-w-md text-sm text-muted-foreground">
-        Generate a CLI token, add it to your repo&apos;s{" "}
-        <code className="border border-border bg-muted px-1.5 py-0.5 font-mono text-xs">.env.local</code>, and run{" "}
-        <code className="border border-border bg-muted px-1.5 py-0.5 font-mono text-xs">archmantic push</code>.
+        Generate a CLI token, add it to your repo&apos;s <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">.env.local</code>,
+        and run <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">archmantic push</code>.
       </p>
-      <Link href="/settings" className={cn(buttonVariants(), "mt-1 rounded-none")}>
+      <Link href="/settings" className={cn(buttonVariants(), "mt-1")}>
         Get a CLI token →
       </Link>
     </Card>
@@ -301,17 +256,16 @@ export default async function Home() {
     <div>
       <div className="mb-6 flex items-center justify-between gap-4">
         <div>
-          <div className="bp-label text-[0.6rem] text-muted-foreground">// organization</div>
-          <h1 className="bp-title mt-1 text-2xl">Your projects</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Your projects</h1>
           <p className="text-sm text-muted-foreground">Shared architecture knowledge for your organization.</p>
         </div>
-        <Link href="/settings" className={cn(buttonVariants({ variant: "outline" }), "rounded-none")}>
+        <Link href="/settings" className={buttonVariants({ variant: "outline" })}>
           Manage CLI tokens
         </Link>
       </div>
 
       {error ? (
-        <Card className="flex items-start gap-3 rounded-none border-danger/40 bg-danger/5 p-6 text-sm">
+        <Card className="flex items-start gap-3 border-danger/30 bg-danger/5 p-6 text-sm">
           <AlertCircle className="mt-0.5 size-4 shrink-0 text-danger" />
           <div>
             <div className="font-medium text-danger">Could not reach the store</div>
