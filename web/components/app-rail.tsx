@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutGrid, Boxes, Library, Activity, BookText, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Mark } from "@/components/marketing-shell";
 
 const NAV = [
   { href: "/", label: "Projects", icon: LayoutGrid, match: (p: string) => isProjectsArea(p) },
@@ -25,11 +26,11 @@ export function AppRail() {
   return (
     <nav
       aria-label="Primary"
-      className="flex w-[var(--rail-w)] shrink-0 flex-col gap-0.5 border-r border-border/60 bg-sidebar p-2"
+      className="flex w-[var(--rail-w)] shrink-0 flex-col gap-0.5 border-r border-border/70 bg-sidebar p-2"
     >
-      <Link href="/" aria-label="Archmantic home" className="mb-2 flex items-center gap-2 px-2 py-1.5 font-bold tracking-tight">
-        <span className="size-3 shrink-0 rounded-sm bg-primary" />
-        Archmantic
+      <Link href="/" aria-label="Archmantic home" className="mb-3 flex items-center gap-2.5 px-2 py-1.5">
+        <Mark className="size-5" />
+        <span className="text-sm font-semibold tracking-tight">Archmantic</span>
       </Link>
       {NAV.map(({ href, label, icon: Icon, match }) => {
         const active = match(pathname);
@@ -39,11 +40,12 @@ export function AppRail() {
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring",
-              active ? "bg-primary/10 font-medium text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground",
+              "relative flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+              active ? "bg-primary/10 font-medium text-primary" : "text-muted-foreground hover:bg-accent hover:text-foreground",
             )}
           >
-            <Icon className="size-[18px] shrink-0" />
+            {active ? <span className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-primary" /> : null}
+            <Icon className="size-[17px] shrink-0" />
             {label}
           </Link>
         );

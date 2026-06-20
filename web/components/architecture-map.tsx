@@ -70,7 +70,7 @@ function ExternalNode({ data, selected }: NodeProps & { data: { label: string; e
   return (
     <div
       className={cn(
-        "flex items-center gap-2 rounded-full border-2 border-dashed bg-card px-3 text-card-foreground",
+        "flex items-center gap-2 rounded-full border border-dashed bg-card px-3 text-card-foreground",
         selected ? "ring-1 ring-primary" : "",
       )}
       style={{ width: XW, height: XH, borderColor: color }}
