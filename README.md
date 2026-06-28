@@ -4,7 +4,7 @@
 
 Point Archmantic at a repo and it reverse-engineers a single grounded **architecture model** (the IR). Every diagram is a *projection* of that one model, every element is traceable to `file:line`, and the same model answers your agent's questions over MCP. No drift between views, no ungrounded "AI diagram" guesswork.
 
-> Status: **v1.19.1** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 24 LTS · TypeScript 6 · NodeNext.
+> Status: **v1.19.2** — published as [`archmantic`](https://www.npmjs.com/package/archmantic). Dependency-light TypeScript CLI, dogfooded on this repo. Node 20+ · TypeScript 6 · NodeNext.
 > _Note: the `amt` short alias was removed in 1.12.0 (it collided with a system binary on macOS) — use `archmantic` / `npx archmantic`._
 
 ---
@@ -20,7 +20,7 @@ Most tools pick one camp: agent code-graph tools emit symbols/calls (no human vi
 - **PR architecture diff** — how a change reshapes the architecture (not a line diff), postable as a PR comment.
 - **Architecture history** — how the system's shape evolved, commit by commit.
 - **Data model (ERD)** — entities, fields, and relations parsed from your Prisma schema, Drizzle tables, SQL `CREATE TABLE` migrations, or **Laravel migrations** (`Schema::create`, foreign keys, `resource`-style relations), grounded to `file:line` and projected as an interactive ERD (React Flow in the web; field tables in the CLI's HTML viewer). Laravel framework scaffolding tables (cache/jobs/sessions…) are filtered out.
-- **Schema-drift check** — `archmantic db-check` compares your Laravel migrations against the **live database** (MySQL/PostgreSQL/SQLite, from `.env` `DB_*`) and reports tables/columns that exist in one but not the other. Opt-in only — it's the one command that connects to a DB and reads credentials; nothing it reads is persisted. `--check` exits 1 on drift (CI gate). DB drivers are optional deps (SQLite uses Node's built-in).
+- **Schema-drift check** — `archmantic db-check` compares your Laravel migrations against the **live database** (MySQL/PostgreSQL/SQLite, from `.env` `DB_*`) and reports tables/columns that exist in one but not the other. Opt-in only — it's the one command that connects to a DB and reads credentials; nothing it reads is persisted. `--check` exits 1 on drift (CI gate). DB drivers are optional deps (SQLite uses Node's built-in `node:sqlite`, which needs **Node 22.5+** — everything else runs on Node 20+).
 - **API surface** — REST routes (Next.js App Router/Pages, Express/Fastify/Koa/Hono, **NestJS** `@Controller`/`@Get` decorators, **Laravel** `routes/*.php` incl. prefix groups + `resource`/`apiResource`), tRPC procedures, and GraphQL operations, grounded to `file:line` — the contract layer for humans and agents.
 - **Polyglot, multi-framework** — TypeScript/JavaScript **and** PHP/Laravel; frontends in **React, Vue/Inertia** (`.vue` SFCs), plus **Blade** templates and **Livewire** components. Components are role-classified (page/route/ui/layout/view/model/…) and the tech stack is detected from `package.json` **and** `composer.json` — the **curated stack** (framework/UI/DB/ORM/auth/…) plus the **full runtime library list** (every `dependencies`/`require` entry, shown under a collapsible "Libraries" in the web Overview).
 - **Monorepo aware** — analyzes npm/yarn/pnpm **workspaces** (and `apps/*`/`packages/*` by convention) as one model, tagging every component, endpoint, and entity with its owning package; the web groups Components & API by package.
