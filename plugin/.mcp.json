@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "archmantic": {
+      "command": "npx",
+      "args": ["-y", "archmantic@latest", "mcp"],
+      "cwd": "${CLAUDE_PROJECT_DIR}"
+    }
+  }
+}

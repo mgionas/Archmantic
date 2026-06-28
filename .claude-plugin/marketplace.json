@@ -1,0 +1,14 @@
+{
+  "name": "archmantic",
+  "description": "Archmantic — a living, grounded architecture model for humans and AI agents.",
+  "owner": { "name": "Archmantic", "url": "https://github.com/mgionas/Archmantic" },
+  "plugins": [
+    {
+      "name": "archmantic",
+      "source": "./plugin",
+      "description": "Query a grounded architecture model of your codebase over MCP instead of reading files. Bundles the MCP server (auto-registered) and a skill that makes your agent reach for it automatically.",
+      "category": "productivity",
+      "keywords": ["architecture", "mcp", "context", "codebase", "ai-agents"]
+    }
+  ]
+}

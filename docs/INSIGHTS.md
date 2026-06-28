@@ -12,6 +12,30 @@
 
 ---
 
+### INS-022 · Archmantic gets ignored in multi-plugin setups — ship it as a Claude Code plugin — SHIPPED (v1)
+- **category:** agent-dx · **audience:** both · **status:** shipped (plugin v0.1.0)
+- **insight:** A founder reported that across several projects, once **superpowers** + other
+  plugins were installed, the agent **stopped using Archmantic**. Root causes (grounded): (1)
+  Archmantic was a *passive, manually-wired MCP server* with descriptive-only tool text and
+  **no trigger** telling the agent *when* to use it — while superpowers ships skills with
+  aggressive "use this before ANY response" priming that crowds it out; (2) with many plugins,
+  Claude Code **defers** MCP tools (schemas not loaded; the agent must search to find them) — so
+  Archmantic is effectively invisible unless something points at it; (3) the generated
+  `AGENTS.md` quietly substitutes, so the live tools go unused; (4) per-tool permission prompts
+  (INS-015) add avoidance; (5) no slash command / hook / CLAUDE.md nudge.
+- **fix:** Ship Archmantic as a **Claude Code plugin** (`plugin/` + repo-as-marketplace):
+  a **trigger skill** (`use-archmantic` — "before reading/grepping many files, query the model")
+  is the behavioral hook that makes the agent reach for it; the **MCP server auto-registers**
+  (no manual `claude mcp add`, pinned `@latest` which also dodges INS-017 staleness); a
+  **`/architecture`** command; and a documented `mcp__archmantic__*` allow-list (plugins can't
+  set permissions, so it's in the plugin README). Install: `/plugin marketplace add
+  mgionas/Archmantic` → `/plugin install archmantic@archmantic`.
+- **why:** Adoption — Archmantic only earns its "for agents" thesis if agents actually reach for
+  it. A passive MCP server loses to trigger-rich skills; a plugin puts it on the same shelf and
+  primes usage. Distribution win too (marketplace install path = same as superpowers).
+- **still open:** plugins can't bundle permission rules (must be documented); a hook that nudges
+  "query Archmantic before a large file read" could push adoption further.
+
 ### INS-020 · Singleton-collapse "Misc" can swallow a legitimately-separate group
 - **category:** dx · **audience:** humans · **status:** open (INS-014 follow-up)
 - **insight:** `deriveGroups` collapses every <2-member domain into "Misc". Dogfooding on
