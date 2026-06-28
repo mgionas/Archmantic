@@ -18,6 +18,7 @@ import { type UsageEvent } from "../cloud/store.js";
 /** Tools whose file-reading alternative is "scan a lot of the repo". */
 const BROAD_TOOLS = new Set([
   "get_context",
+  "get_architecture_map", // flagship onboarding view — replaces reading the whole repo
   "list_components",
   "search_capabilities",
   "get_data_model",
@@ -152,14 +153,25 @@ export class UsageRecorder {
   }
 }
 
-/** Parse the local usage log into events (for `archmantic usage`). */
+/** Parse the local usage log into events (for `archmantic usage`). Tolerant: a single
+ *  malformed line (e.g. an interleaved concurrent append, or a hard kill mid-write) is
+ *  skipped rather than blanking the entire log — earlier this returned [] on one bad line. */
 export function readUsageLog(root: string): UsageEvent[] {
+  let text: string;
   try {
-    return readFileSync(join(root, USAGE_LOG), "utf8")
-      .split("\n")
-      .filter(Boolean)
-      .map((line) => JSON.parse(line) as UsageEvent);
+    text = readFileSync(join(root, USAGE_LOG), "utf8");
   } catch {
     return [];
   }
+  const out: UsageEvent[] = [];
+  for (const line of text.split("\n")) {
+    const s = line.trim();
+    if (!s) continue;
+    try {
+      out.push(JSON.parse(s) as UsageEvent);
+    } catch {
+      /* skip a corrupted line; keep every valid event */
+    }
+  }
+  return out;
 }

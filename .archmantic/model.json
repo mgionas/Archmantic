@@ -1180,7 +1180,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/env.ts:12",
+          "ref": "src/env.ts:40",
           "source": "code"
         }
       ]
@@ -1596,7 +1596,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:35",
+          "ref": "src/mcp/usage.ts:36",
           "source": "code"
         }
       ]
@@ -1612,7 +1612,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:45",
+          "ref": "src/mcp/usage.ts:46",
           "source": "code"
         }
       ]
@@ -1628,7 +1628,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:156",
+          "ref": "src/mcp/usage.ts:159",
           "source": "code"
         }
       ]
@@ -1644,7 +1644,7 @@
       "provenance": [
         {
           "confidence": 0.6,
-          "ref": "src/mcp/usage.ts:55",
+          "ref": "src/mcp/usage.ts:56",
           "source": "code"
         }
       ]
@@ -3658,7 +3658,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-28T11:14:58.437Z",
+  "generatedAt": "2026-06-28T12:01:33.164Z",
   "groups": [
     {
       "confidence": 0.9,
@@ -3789,7 +3789,7 @@
       "provenance": [
         {
           "confidence": 0.85,
-          "ref": "src/drift/schema-drift.ts",
+          "ref": "plugin/hooks/nudge.mjs",
           "source": "code"
         }
       ]
@@ -6958,11 +6958,26 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/env.ts:9",
+          "ref": "src/env.ts:13",
           "source": "code"
         }
       ],
       "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:src/env.ts",
+      "id": "rel:comp:src/env.ts=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:src/env.ts → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "src/env.ts:14",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
     },
     {
       "confidence": 0.95,
@@ -6973,7 +6988,7 @@
       "provenance": [
         {
           "confidence": 0.95,
-          "ref": "src/env.ts:10",
+          "ref": "src/env.ts:15",
           "source": "code"
         }
       ],

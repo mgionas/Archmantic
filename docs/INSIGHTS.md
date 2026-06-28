@@ -12,6 +12,36 @@
 
 ---
 
+### INS-024 · Subagents inherit the MCP tools but nothing tells them to use it — FIXED (plugin v0.3.0)
+- **category:** agent-dx · **audience:** both · **status:** shipped (skill guidance + explorer subagent)
+- **insight:** In multi-agent runs the *subagents* are the heavy file-readers, so that's where the
+  token savings should land — but (confirmed against Claude Code mechanics): **plugin/settings
+  `PreToolUse` hooks do NOT fire for subagent tool calls** (only the main agent's), and
+  **`Explore`/`Plan` subagents skip CLAUDE.md/AGENTS.md**. Subagents *do* inherit `mcp__archmantic__*`
+  by default — so the tools are there, nothing nudges them. The levers that work are the
+  **subagent system prompt** and the **parent's delegation message**, not hooks/inheritance.
+- **fix:** (1) the `use-archmantic` skill now tells the main agent to instruct subagents to query
+  the model (or delegate to the explorer); (2) ship an **`archmantic-explorer`** read-only plugin
+  subagent whose system prompt mandates "query the model first, files as fallback."
+- **why:** Otherwise the optimization stops at the orchestrator while a fleet of subagents reads
+  files raw — the worst case for tokens.
+
+### INS-023 · One corrupted line blanked the entire usage log (under-reported savings) — FIXED (1.19.3)
+- **category:** dx · **audience:** humans · **status:** shipped
+- **insight:** `readUsageLog` did `.split("\n").map(JSON.parse)` in one try/catch, so a **single**
+  malformed line (interleaved concurrent append from multiple MCP server processes, or a hard kill
+  mid-write) made it return `[]` — `archmantic usage` and the cloud backlog flush then showed
+  **zero** events. Dogfood: this repo's log had exactly one bad line. Also `get_architecture_map`
+  (the flagship onboarding tool) was missing from `BROAD_TOOLS`, so its "tokens saved" used the
+  small 12%-of-repo baseline → undercounted. And the plugin's `.mcp.json` passed no env, so usage
+  only reached the cloud dashboard if a project had `.env.local` with a token.
+- **fix:** tolerant line-by-line parsing (skip bad lines, keep the rest); add `get_architecture_map`
+  to `BROAD_TOOLS`; `loadEnv` now also reads `~/.archmantic/.env` so one global `ARCHMANTIC_TOKEN`
+  makes every project report. **Reality check:** the log also showed actual MCP *reads* have been
+  low (~4 ever) — adoption (INS-022's plugin/skill/hook, just shipped) is the bigger lever; this
+  fix ensures the savings actually *show* once reads climb.
+- **why:** "It saves tokens but usage doesn't show it" erodes the whole proof-of-value loop.
+
 ### INS-022 · Archmantic gets ignored in multi-plugin setups — ship it as a Claude Code plugin — SHIPPED (v1)
 - **category:** agent-dx · **audience:** both · **status:** shipped (plugin v0.1.0)
 - **insight:** A founder reported that across several projects, once **superpowers** + other
