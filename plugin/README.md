@@ -7,6 +7,7 @@ What it bundles:
 - **MCP server**, auto-registered (no manual `claude mcp add`) — runs `npx archmantic@latest mcp` in your project.
 - **A skill** (`use-archmantic`) whose triggers make Claude reach for the model on its own when onboarding to / exploring / reasoning about a repo.
 - **`/architecture`** command for an on-demand, grounded overview.
+- **A PreToolUse hook** that, *once per session* in a repo that has a model, nudges the agent to query Archmantic before reading/grepping many files — non-blocking (it never delays or denies a tool call) and silent when there's no model.
 
 ## Install
 

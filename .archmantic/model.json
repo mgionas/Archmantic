@@ -2485,6 +2485,22 @@
   "components": [
     {
       "confidence": 0.95,
+      "groupId": "group:domain:misc",
+      "id": "comp:plugin/hooks/nudge.mjs",
+      "kind": "module",
+      "name": "plugin/hooks/nudge.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "plugin/hooks/nudge.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "hook",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
       "groupId": "group:domain:root",
       "id": "comp:src/agent.ts",
       "kind": "module",
@@ -3642,7 +3658,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-28T10:41:08.879Z",
+  "generatedAt": "2026-06-28T11:14:58.437Z",
   "groups": [
     {
       "confidence": 0.9,
@@ -3766,6 +3782,7 @@
       "id": "group:domain:misc",
       "kind": "domain",
       "members": [
+        "comp:plugin/hooks/nudge.mjs",
         "comp:src/drift/schema-drift.ts"
       ],
       "name": "Misc",
@@ -3923,6 +3940,23 @@
         {
           "confidence": 0.8,
           "ref": "derived:layer:domain",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.8,
+      "id": "group:layer:state",
+      "kind": "layer",
+      "members": [
+        "comp:plugin/hooks/nudge.mjs"
+      ],
+      "name": "State",
+      "order": 2,
+      "provenance": [
+        {
+          "confidence": 0.8,
+          "ref": "derived:layer:state",
           "source": "code"
         }
       ]
@@ -4145,6 +4179,51 @@
   ],
   "project": "archmantic",
   "relations": [
+    {
+      "confidence": 0.95,
+      "from": "comp:plugin/hooks/nudge.mjs",
+      "id": "rel:comp:plugin/hooks/nudge.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:plugin/hooks/nudge.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "plugin/hooks/nudge.mjs:11",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:plugin/hooks/nudge.mjs",
+      "id": "rel:comp:plugin/hooks/nudge.mjs=>sys:ext:node:os",
+      "kind": "depends_on",
+      "name": "comp:plugin/hooks/nudge.mjs → sys:ext:node:os",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "plugin/hooks/nudge.mjs:13",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:os"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:plugin/hooks/nudge.mjs",
+      "id": "rel:comp:plugin/hooks/nudge.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:plugin/hooks/nudge.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "plugin/hooks/nudge.mjs:12",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
     {
       "confidence": 0.95,
       "from": "comp:src/agent.ts",
