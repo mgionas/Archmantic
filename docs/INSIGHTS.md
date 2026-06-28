@@ -33,8 +33,11 @@
 - **why:** Adoption — Archmantic only earns its "for agents" thesis if agents actually reach for
   it. A passive MCP server loses to trigger-rich skills; a plugin puts it on the same shelf and
   primes usage. Distribution win too (marketplace install path = same as superpowers).
-- **still open:** plugins can't bundle permission rules (must be documented); a hook that nudges
-  "query Archmantic before a large file read" could push adoption further.
+- **follow-up shipped (plugin v0.2.0):** added a **PreToolUse hook** (Read/Grep/Glob) — once per
+  session, in a repo with a model, it injects a non-blocking `additionalContext` nudge to query
+  Archmantic before reading many files (a stronger behavioral push than the skill alone, to beat
+  other plugins' priming). Silent when no model / after the first fire. Node-based (no `jq`).
+- **still open:** plugins can't bundle permission rules (must be documented).
 
 ### INS-020 · Singleton-collapse "Misc" can swallow a legitimately-separate group
 - **category:** dx · **audience:** humans · **status:** open (INS-014 follow-up)
