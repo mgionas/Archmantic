@@ -1,0 +1,11 @@
+{
+  "name": "archmantic",
+  "displayName": "Archmantic",
+  "version": "0.1.0",
+  "description": "Query a grounded architecture model of your codebase over MCP — capability map, diagrams, data model, API surface, dependencies — instead of reading whole files. ~98% fewer tokens; every answer grounded to file:line. Ships a skill so your agent reaches for it automatically.",
+  "author": { "name": "Archmantic", "url": "https://github.com/mgionas/Archmantic" },
+  "homepage": "https://github.com/mgionas/Archmantic#readme",
+  "repository": "https://github.com/mgionas/Archmantic",
+  "license": "Apache-2.0",
+  "keywords": ["architecture", "mcp", "codebase", "context", "diagrams", "data-model", "ai-agents"]
+}

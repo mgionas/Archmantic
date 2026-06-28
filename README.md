@@ -104,7 +104,17 @@ node dist/cli.js analyze
 
 ## Use it with your AI agent (MCP)
 
-Build the model once, then register the server with your agent — you don't run it by hand:
+**Claude Code — install the plugin** (auto-registers the MCP server *and* ships a skill so the agent reaches for the model on its own, instead of reading files):
+
+```bash
+/plugin marketplace add mgionas/Archmantic
+/plugin install archmantic@archmantic
+npx archmantic analyze        # build .archmantic/model.json once per repo (commit it)
+```
+
+Recommended: add `{ "permissions": { "allow": ["mcp__archmantic__*"] } }` to your `.claude/settings.json` to skip the per-tool prompt. See [`plugin/`](./plugin/) for details and a reads-only variant.
+
+**Manual / other hosts** — register the server directly:
 
 ```bash
 archmantic analyze                            # build .archmantic/model.json (once)
