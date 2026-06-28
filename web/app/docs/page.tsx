@@ -13,6 +13,7 @@ const NAV: { id: string; label: string }[] = [
   { id: "quickstart", label: "Quickstart" },
   { id: "cloud", label: "Connect a team" },
   { id: "cli", label: "CLI reference" },
+  { id: "plugin", label: "Claude Code plugin" },
   { id: "mcp", label: "MCP for agents" },
   { id: "monorepo", label: "Monorepos" },
   { id: "multirepo", label: "Multi-repo systems" },
@@ -205,10 +206,34 @@ npx archmantic pull      # fetch the latest team model`}</Code>
           </div>
         </Section>
 
-        <Section id="mcp" title="MCP for agents">
+        <Section id="plugin" title="Claude Code plugin">
           <p>
-            Expose the model to any MCP-compatible agent (Claude Code, Claude Desktop, Cursor, …). First build the model
-            once, then register the server with your agent — you don&apos;t run it by hand.
+            The <strong>recommended way to use Archmantic in Claude Code.</strong> The plugin auto-registers the MCP
+            server <em>and</em> ships a skill so your agent reaches for the model on its own — instead of reading whole
+            files — when it onboards to or reasons about a repo. (A bare MCP server is passive; with many plugins
+            installed, agents tend to overlook it. The skill is the behavioral nudge that fixes that.)
+          </p>
+          <Code>{`/plugin marketplace add mgionas/Archmantic
+/plugin install archmantic@archmantic
+npx archmantic analyze        # build .archmantic/model.json once per repo (commit it)`}</Code>
+          <p>
+            It also adds an <Inline>/architecture</Inline> command for an on-demand, grounded overview. To skip the
+            per-tool permission prompt, add one rule to your <Inline>.claude/settings.json</Inline> (plugins can&apos;t
+            set permissions for you):
+          </p>
+          <Code>{`{ "permissions": { "allow": ["mcp__archmantic__*"] } }`}</Code>
+          <p>
+            Prefer a reads-only allow-list? List the read tools explicitly so the write tools (
+            <Inline>refresh</Inline>/<Inline>sync</Inline>/<Inline>sync_features</Inline>/<Inline>curate</Inline>) stay
+            gated — see the{" "}
+            <a href="https://github.com/mgionas/Archmantic/tree/main/plugin">plugin README</a>.
+          </p>
+        </Section>
+
+        <Section id="mcp" title="MCP for agents (manual)">
+          <p>
+            Prefer to wire it yourself, or using another host (Claude Desktop, Cursor, …)? Build the model once, then
+            register the server directly — you don&apos;t run it by hand.
           </p>
           <Code>{`archmantic analyze        # build .archmantic/model.json (once)`}</Code>
           <p>

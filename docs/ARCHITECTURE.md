@@ -175,6 +175,7 @@ We use **Claude** via the Anthropic TypeScript SDK (`@anthropic-ai/sdk`), tiered
 | **CLI** (`archmantic`) | primary for devs/advanced; powers init, analyze, serve-MCP, preview | Node/TS, single binary-ish via npm |
 | **Web platform** | manage projects, view diagrams, subscriptions | Next.js (React) on **Vercel** + **React Flow** (`@xyflow/react`) graphs; **Neon** Postgres |
 | **MCP server** | agent integration | MCP TS SDK (shipped by the CLI: `archmantic mcp`) |
+| **Claude Code plugin** | adoption — agents reach for the model by default | `plugin/` (manifest + auto-registered MCP + `use-archmantic` trigger skill + `/architecture`); repo doubles as the marketplace. Fixes INS-022 (passive MCP gets ignored amid other plugins) |
 
 CLI commands (MVP-ish): `archmantic init`, `archmantic analyze [--tier N]`, `archmantic mcp` (start server), `archmantic view <diagram>` (terminal preview — render to image + iTerm2/Kitty inline protocol, ASCII fallback). **(confirm)** in-terminal image preview is feasible on modern terminals; we degrade to "open in browser" elsewhere.
 
