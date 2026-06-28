@@ -20,7 +20,7 @@ answers carry `file:line` provenance you can cite and verify.
 ## Default behavior
 
 When you need to understand *anything structural* about this repo, reach for the
-`mcp__archmantic__*` tools **first**, then read specific files only to confirm a detail.
+Archmantic MCP tools **first**, then read specific files only to confirm a detail.
 
 If a tool errors with "no model", the repo hasn't been analyzed yet — run
 `npx archmantic@latest analyze` (writes `.archmantic/model.json`), then retry.
@@ -55,12 +55,12 @@ for humans. These are writes — only call them when you've actually changed str
 
 ## Delegating to subagents / parallel workflows
 
-Subagents **inherit the `mcp__archmantic__*` tools** — but the PreToolUse nudge does *not*
+Subagents **inherit the Archmantic MCP tools** — but the PreToolUse nudge does *not*
 fire inside them, so they won't think to use the model unless told. When you spawn subagents
 (Task tool, parallel workflows, Explore) to understand or research this codebase:
 
 - **Say so in the delegation prompt** — e.g. *"This repo has an Archmantic model; use
-  `mcp__archmantic__get_context` / `get_architecture_map` / `whats_related` / `search_capabilities`
+  `get_context` / `get_architecture_map` / `whats_related` / `search_capabilities`
   before reading files."* — so each subagent optimizes tokens too, not just you.
 - Or **delegate codebase-understanding to the `archmantic-explorer` subagent**, which is built to
   query the model first and read files only as fallback.

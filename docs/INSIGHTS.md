@@ -12,17 +12,27 @@
 
 ---
 
-### INS-024 · Subagents inherit the MCP tools but nothing tells them to use it — FIXED (plugin v0.3.0)
-- **category:** agent-dx · **audience:** both · **status:** shipped (skill guidance + explorer subagent)
+### INS-024 · Subagents inherit the MCP tools but nothing tells them to use it — FIXED (plugin v0.4.0)
+- **category:** agent-dx · **audience:** both · **status:** shipped (SubagentStart hook + skill/explorer)
 - **insight:** In multi-agent runs the *subagents* are the heavy file-readers, so that's where the
-  token savings should land — but (confirmed against Claude Code mechanics): **plugin/settings
-  `PreToolUse` hooks do NOT fire for subagent tool calls** (only the main agent's), and
-  **`Explore`/`Plan` subagents skip CLAUDE.md/AGENTS.md**. Subagents *do* inherit `mcp__archmantic__*`
-  by default — so the tools are there, nothing nudges them. The levers that work are the
-  **subagent system prompt** and the **parent's delegation message**, not hooks/inheritance.
-- **fix:** (1) the `use-archmantic` skill now tells the main agent to instruct subagents to query
-  the model (or delegate to the explorer); (2) ship an **`archmantic-explorer`** read-only plugin
-  subagent whose system prompt mandates "query the model first, files as fallback."
+  token savings should land. Confirmed live: the founder ran a **6-subagent** task in `guide-deck`;
+  `usage.jsonl` showed the **main agent used Archmantic (12 reads) but the subagents recorded zero** —
+  they read files raw. Mechanics: **`PreToolUse` hooks do NOT fire inside subagents**, and
+  `Explore`/`Plan` skip CLAUDE.md/AGENTS.md. The advisory v0.3.0 levers (skill nudge + explorer)
+  weren't enough because a generic fan-out doesn't delegate to the explorer or pass the instruction.
+  Also a real bug: the plugin registers tools as **`mcp__plugin_archmantic_archmantic__*`** but the
+  skill/hook/command/explorer/README said **`mcp__archmantic__*`** — a name that doesn't exist in a
+  plugin-only install (the main agent resolved it; a small-model subagent wouldn't), and the README's
+  permission allow-list didn't match the real tool names.
+- **fix (v0.4.0):** (1) **`SubagentStart` hook** — fires for *every* subagent (incl. parallel
+  fan-outs / other plugins' workflows / Explore-Plan), allowed in a plugin's top-level `hooks.json`
+  with global scope, injecting `additionalContext` that nudges the subagent to query the model first
+  (gated on a model existing; skips Archmantic's own agents). This is the only mechanism that reaches
+  arbitrary subagents. (2) All guidance switched to **bare tool names** (`get_context`, …) so it works
+  regardless of namespace; (3) README allow-list corrected to `mcp__plugin_archmantic_archmantic__*`.
+  Kept from v0.3.0: skill delegation guidance + the `archmantic-explorer` subagent.
+- **still open:** SubagentStart is a *nudge*, not enforcement — a subagent can still read files. Hard
+  enforcement would need custom subagent definitions that drop Read/Grep (heavier, opt-in).
 - **why:** Otherwise the optimization stops at the orchestrator while a fleet of subagents reads
   files raw — the worst case for tokens.
 

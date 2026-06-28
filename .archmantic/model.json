@@ -2485,7 +2485,7 @@
   "components": [
     {
       "confidence": 0.95,
-      "groupId": "group:domain:misc",
+      "groupId": "group:domain:plugin",
       "id": "comp:plugin/hooks/nudge.mjs",
       "kind": "module",
       "name": "plugin/hooks/nudge.mjs",
@@ -2493,6 +2493,22 @@
         {
           "confidence": 0.95,
           "ref": "plugin/hooks/nudge.mjs:1",
+          "source": "code"
+        }
+      ],
+      "role": "hook",
+      "systemId": "sys:archmantic"
+    },
+    {
+      "confidence": 0.95,
+      "groupId": "group:domain:plugin",
+      "id": "comp:plugin/hooks/subagent-nudge.mjs",
+      "kind": "module",
+      "name": "plugin/hooks/subagent-nudge.mjs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "plugin/hooks/subagent-nudge.mjs:1",
           "source": "code"
         }
       ],
@@ -3658,7 +3674,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-28T12:01:33.164Z",
+  "generatedAt": "2026-06-28T14:14:19.314Z",
   "groups": [
     {
       "confidence": 0.9,
@@ -3782,10 +3798,26 @@
       "id": "group:domain:misc",
       "kind": "domain",
       "members": [
-        "comp:plugin/hooks/nudge.mjs",
         "comp:src/drift/schema-drift.ts"
       ],
       "name": "Misc",
+      "provenance": [
+        {
+          "confidence": 0.85,
+          "ref": "src/drift/schema-drift.ts",
+          "source": "code"
+        }
+      ]
+    },
+    {
+      "confidence": 0.85,
+      "id": "group:domain:plugin",
+      "kind": "domain",
+      "members": [
+        "comp:plugin/hooks/nudge.mjs",
+        "comp:plugin/hooks/subagent-nudge.mjs"
+      ],
+      "name": "Plugin",
       "provenance": [
         {
           "confidence": 0.85,
@@ -3949,7 +3981,8 @@
       "id": "group:layer:state",
       "kind": "layer",
       "members": [
-        "comp:plugin/hooks/nudge.mjs"
+        "comp:plugin/hooks/nudge.mjs",
+        "comp:plugin/hooks/subagent-nudge.mjs"
       ],
       "name": "State",
       "order": 2,
@@ -4219,6 +4252,36 @@
         {
           "confidence": 0.95,
           "ref": "plugin/hooks/nudge.mjs:12",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:path"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:plugin/hooks/subagent-nudge.mjs",
+      "id": "rel:comp:plugin/hooks/subagent-nudge.mjs=>sys:ext:node:fs",
+      "kind": "depends_on",
+      "name": "comp:plugin/hooks/subagent-nudge.mjs → sys:ext:node:fs",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "plugin/hooks/subagent-nudge.mjs:12",
+          "source": "code"
+        }
+      ],
+      "to": "sys:ext:node:fs"
+    },
+    {
+      "confidence": 0.95,
+      "from": "comp:plugin/hooks/subagent-nudge.mjs",
+      "id": "rel:comp:plugin/hooks/subagent-nudge.mjs=>sys:ext:node:path",
+      "kind": "depends_on",
+      "name": "comp:plugin/hooks/subagent-nudge.mjs → sys:ext:node:path",
+      "provenance": [
+        {
+          "confidence": 0.95,
+          "ref": "plugin/hooks/subagent-nudge.mjs:13",
           "source": "code"
         }
       ],

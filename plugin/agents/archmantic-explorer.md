@@ -15,7 +15,7 @@ accurately and cheaply by **querying the model instead of reading the whole code
 
 ## Method (in order)
 
-1. Start with `mcp__archmantic__get_context` and `mcp__archmantic__get_architecture_map`
+1. Start with `get_context` and `get_architecture_map`
    to get the shape: project, systems, external dependencies, domains, primary process.
 2. Drill with the tool that fits the question:
    - module roles / deps / dependents → `get_component`, `list_components`

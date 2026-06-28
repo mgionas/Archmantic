@@ -42,7 +42,7 @@ try {
   const additionalContext =
     "This repo has an Archmantic architecture model (.archmantic/model.json). Before reading or " +
     "grepping many files to build context, prefer the Archmantic MCP tools: " +
-    "mcp__archmantic__get_context and mcp__archmantic__get_architecture_map for the overall shape, then " +
+    "`get_context` and `get_architecture_map` for the overall shape, then " +
     "list_components / whats_related / search_capabilities / get_data_model / get_api_surface for specifics. " +
     "They return grounded (file:line) answers in far fewer tokens. Reading a specific file to confirm a detail is still fine.";
 
