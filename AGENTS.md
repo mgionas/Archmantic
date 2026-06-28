@@ -19,11 +19,11 @@ status: active · author: Giorgi (mgionas) (https://github.com/mgionas)
 
 **Links:** [npm](https://www.npmjs.com/package/archmantic) · [GitHub](https://github.com/mgionas/Archmantic) · [App](https://archmantic.vercel.app)
 
-62 components · 155 capabilities · 0 endpoints · 0 data entities.
+63 components · 155 capabilities · 0 endpoints · 0 data entities.
 
-**Component roles:** 60 module · 2 util
+**Component roles:** 60 module · 2 util · 1 hook
 
-**Domains:** Analysis pipeline (24) · Spec & projections (11) · CLI & orchestration (8) · Skills (5) · Diff & history (4) · MCP server (4) · Team cloud (3) · Architecture model (IR) (2) · Misc (1)
+**Domains:** Analysis pipeline (24) · Spec & projections (11) · CLI & orchestration (8) · Skills (5) · Diff & history (4) · MCP server (4) · Team cloud (3) · Architecture model (IR) (2) · Misc (2)
 
 ### What it does (capabilities)
 - **src/** — Analyze Links, Build System View, Editor Features, Ensure Anthropic Auth, Has Anthropic Credentials, Load Env, Pull Feature Edits, Run Autonomous Build, Run Handoff, Shared Externals, Start Editor, Summarize Service, System Html, Write Feature Edit

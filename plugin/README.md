@@ -8,6 +8,7 @@ What it bundles:
 - **A skill** (`use-archmantic`) whose triggers make Claude reach for the model on its own when onboarding to / exploring / reasoning about a repo.
 - **`/architecture`** command for an on-demand, grounded overview.
 - **A PreToolUse hook** that, *once per session* in a repo that has a model, nudges the agent to query Archmantic before reading/grepping many files — non-blocking (it never delays or denies a tool call) and silent when there's no model.
+- **An `archmantic-explorer` subagent** — read-only, queries the model first. Delegate codebase-understanding/research here (especially in multi-agent runs); subagents inherit the MCP tools but the hook doesn't fire inside them, so this is how subagents get the token savings too.
 
 ## Install
 
@@ -32,6 +33,18 @@ Plugins can't set permissions, so add this one rule to your `~/.claude/settings.
 ```json
 { "permissions": { "allow": ["mcp__archmantic__*"] } }
 ```
+
+## Recommended: report usage to the cloud dashboard once, globally
+
+So usage from every project (not just ones with a per-repo `.env.local`) shows on the
+web `/usage` dashboard, set your token once in **`~/.archmantic/.env`**:
+
+```
+ARCHMANTIC_TOKEN=your-org-token
+ARCHMANTIC_API_URL=https://<your-archmantic-deployment>
+```
+
+The MCP server picks these up as a fallback (project `.env.local` still wins).
 
 Reads-only variant (keeps the write tools `refresh`/`sync`/`sync_features`/`curate` gated):
 

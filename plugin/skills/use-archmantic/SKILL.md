@@ -53,6 +53,21 @@ After you change the architecture, call `refresh` (re-analyze) or `sync` so the 
 stays current; `curate` lets you name/describe domains + write the positioning narrative
 for humans. These are writes — only call them when you've actually changed structure.
 
+## Delegating to subagents / parallel workflows
+
+Subagents **inherit the `mcp__archmantic__*` tools** — but the PreToolUse nudge does *not*
+fire inside them, so they won't think to use the model unless told. When you spawn subagents
+(Task tool, parallel workflows, Explore) to understand or research this codebase:
+
+- **Say so in the delegation prompt** — e.g. *"This repo has an Archmantic model; use
+  `mcp__archmantic__get_context` / `get_architecture_map` / `whats_related` / `search_capabilities`
+  before reading files."* — so each subagent optimizes tokens too, not just you.
+- Or **delegate codebase-understanding to the `archmantic-explorer` subagent**, which is built to
+  query the model first and read files only as fallback.
+
+This matters most for multi-agent runs: the subagents are usually the heavy file-readers, so
+that's where the token savings are largest.
+
 ## Why prefer this
 
 The whole point: get the *exact architectural slice* you need in a few hundred tokens,
