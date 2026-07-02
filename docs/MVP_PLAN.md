@@ -76,7 +76,7 @@ Each milestone is demoable. Accuracy (provenance) and the white-space USPs are f
 ---
 
 ## After MVP (the long-term moat)
-1. Web platform with **editable** diagram canvas (`bpmn-js` + ~~Mermaid~~ React Flow) — USP 7 fully realized.
+1. Web platform with **editable** model (~~`bpmn-js` canvas~~ → feature/curation editing; ~~Mermaid~~ → React Flow views) — USP 7 realized as edit-the-model, not edit-the-drawing.
 2. **Edit-then-build** loop → emit build spec → external agent implements. *(No competitor in either camp does this — the ultimate differentiator.)*
 3. Freemium/subscriptions (editing = paid; small projects free).
 4. More language grammars (Go, Java, C#, Ruby, …).
@@ -87,5 +87,5 @@ Each milestone is demoable. Accuracy (provenance) and the white-space USPs are f
 - **Topology:** local-first hybrid (free local CLI+MCP+in-repo; paid cloud platform for editing/collab).
 - **LLM/privacy:** BYOK first (code stays local), managed+configurable later.
 - **Languages for v1:** ~~**TypeScript/JS only**~~ — *superseded:* PHP/Laravel added in 1.6.0+ (Vue/Inertia, Blade/Livewire, migrations→data-model). Still dogfooded on this codebase.
-- **Diagram formats:** ~~Mermaid (context/sequence)~~ → **React Flow** (context/components/sequence/ERD, since 1.16.0) + BPMN 2.0 (process).
+- **Diagram formats:** ~~Mermaid (context/sequence)~~ → **React Flow** for every view (context/components/sequence/**process**/ERD; ~~BPMN 2.0 / `bpmn-js`~~ removed in 1.19.0 — "BPMN" survives only as the market-facing label for the business-process USP).
 - **Sample dogfood repo:** the Archmantic codebase itself (this repo) as we build it.
