@@ -13,14 +13,14 @@ Open the wedge; charge for the hosted network and managed compute. The dividing 
 ### Open-source (public, Apache-2.0) — `/src`, the CLI & engine
 The local engine is the top of funnel and the trust story (code never leaves the machine):
 - CLI: `analyze · update · view · drift · diff · log · spec · bench`
-- IR/model, analyzers (Tier 0/1 + structural derivation), projections (capability map, Mermaid, BPMN, trust)
+- IR/model, analyzers (Tier 0/1 + structural derivation), projections (capability map, React Flow views incl. the business process, trust)
 - MCP server (read tools) — token savings is table stakes; free
 - Tier-2 LLM + `handoff` + autonomous build in **BYOK** mode (your keys)
 
 Apache-2.0 → maximal adoption + enterprise-friendly + invites community **language analyzers** (Go/Python/Java).
 
 ### Source-available (public, AGPL-3.0) — `/web`, the cloud platform
-- Multi-tenant web app (orgs, shared model, **editable BPMN canvas**, **commit-history timeline**, team review)
+- Multi-tenant web app (orgs, shared model, **editable feature/curation layer**, **commit-history timeline**, team review)
 - Authenticated push/pull API, token management
 AGPL keeps it open/auditable (great for a dev/architect audience) while preventing a competitor from hosting it as-is for profit.
 

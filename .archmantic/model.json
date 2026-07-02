@@ -3674,7 +3674,7 @@
       ]
     }
   ],
-  "generatedAt": "2026-06-28T14:14:19.314Z",
+  "generatedAt": "2026-07-02T14:31:46.123Z",
   "groups": [
     {
       "confidence": 0.9,
@@ -3821,7 +3821,7 @@
       "provenance": [
         {
           "confidence": 0.85,
-          "ref": "plugin/hooks/nudge.mjs",
+          "ref": "plugin/hooks/subagent-nudge.mjs",
           "source": "code"
         }
       ]

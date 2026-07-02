@@ -112,7 +112,7 @@ node dist/cli.js analyze
 npx archmantic analyze        # build .archmantic/model.json once per repo (commit it)
 ```
 
-Recommended: add `{ "permissions": { "allow": ["mcp__archmantic__*"] } }` to your `.claude/settings.json` to skip the per-tool prompt. See [`plugin/`](./plugin/) for details and a reads-only variant.
+Recommended: add `{ "permissions": { "allow": ["mcp__plugin_archmantic_archmantic__*"] } }` to your `.claude/settings.json` to skip the per-tool prompt (plugin tools are namespaced `mcp__plugin_<plugin>_<server>__*`; use `mcp__archmantic__*` only for the manual wiring below). See [`plugin/`](./plugin/) for details and a reads-only variant.
 
 **Manual / other hosts** — register the server directly:
 

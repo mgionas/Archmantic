@@ -34,22 +34,50 @@ code-graph commodity territory?
 | ✅ done | Experience layer (1.18.0) | Collect→curate→present: classify externals (libs≠systems) + Dependencies page; semantic Groups + **Architecture Map**; agent-driven **curation** (`get_architecture_map`/`curate` MCP + BYOK CLI `curate`/`publish --ai`); schema 0.2.0. See [design/EXPERIENCE-LAYER.md](./design/EXPERIENCE-LAYER.md) | Very High · High |
 | ✅ done | Map polish (1.18.1) | Exact L2→L3 drill: Map opens Components filtered by domain `groupId` (not a name match) + group-by-domain + filter chip (INS-013); the "Misc" catch-all is de-emphasized and dropped from structural edges (INS-014); ships the deterministic AGENTS.md + sharpened `sync` from main | Med · Low |
 | ✅ done | BPMN removed | Dropped `bpmn-js` + BPMN 2.0 entirely; the business process renders as a React Flow graph (Start → tasks → End) like every other view — one process renderer. Removed the editable BPMN canvas, the `apply` edit-then-build command, the `process.bpmn` artifact, and the HTML-viewer BPMN | Med · Low |
-| ✅ done | Claude Code plugin | Ship Archmantic as a plugin (`plugin/` + repo-as-marketplace): a **trigger skill** (`use-archmantic`) so the agent reaches for the model instead of reading files, auto-registered MCP (pinned `@latest`), a `/architecture` command, and a documented `mcp__archmantic__*` allow-list. Fixes "agent ignores Archmantic once superpowers/other plugins are installed" (INS-022). `/plugin install archmantic@archmantic` | Very High · Med |
+| ✅ done | Claude Code plugin (0.1 → 0.4) | Ship Archmantic as a plugin (`plugin/` + repo-as-marketplace): the **trigger skill** (`use-archmantic`), auto-registered MCP (pinned `@latest`), `/architecture` command, **PreToolUse nudge** (0.2), **subagent propagation** — skill delegation guidance + `archmantic-explorer` agent (0.3) + **SubagentStart hook** and correct `mcp__plugin_archmantic_archmantic__*` tool names (0.4). Fixes "agent ignores Archmantic once superpowers/other plugins are installed" (INS-022/024). `/plugin install archmantic@archmantic` | Very High · Med |
+| ✅ done | Path aliases + de-noised surfaces (1.19.1) | `tsconfig`/`jsconfig` `paths` resolve to internal files (fake `@/lib` externals gone; internal edges 8 → 176 on a real Next.js app — INS-021); every human/agent surface filters to real external systems; AI SDKs classified `saas` (INS-019) | High · Low |
+| ✅ done | Node 20 floor (1.19.2) | `engines.node` `>=24` → `>=20` (only `node:sqlite`/db-check needs 22.5+, already guarded) — kills the `EBADENGINE` noise on the common default Node | Med · Low |
+| ✅ done | Usage loop fixed + global token (1.19.3) | Tolerant `usage.jsonl` parsing (one corrupted line no longer blanks the log — INS-023), `get_architecture_map` in the broad-savings baseline, `~/.archmantic/.env` user-level `ARCHMANTIC_TOKEN` fallback so every project reports to `/usage` | Med · Low |
+| ✅ done | Web redesign (dev-tool aesthetic) | Vercel/Next/Laravel-school visual language: neutral high-contrast base + warm coral accent, Geist type, new landing (two-audiences thesis band, trust band), coral facet nav/rail — replaced the purple-gradient look | Med · Med |
 | **DEFER** | Function-level tracking | Red-ocean; dilutes positioning. Drill-down only, if ever | Low · High |
 
 ## Next — future development & missing areas
 
-The MVP and Spec/Skills layers have shipped (M0–M6 + 1.3.0–1.17.0). What follows is
-the forward plan, grouped by theme and judged against the north star: does it make
-the model more **trustworthy**, more **useful to agents**, or more **adoptable** —
-without sliding into code-graph commodity territory. Each item names the gap it
-closes (verified against `src/` as of 1.17.0).
+The MVP, Spec/Skills layers, the experience layer, and the Claude Code plugin have
+shipped (M0–M6 + 1.3.0–1.19.3, plugin 0.4). What follows is the forward plan, grouped
+by theme and judged against the north star: does it make the model more
+**trustworthy**, more **useful to agents**, or more **adoptable** — without sliding
+into code-graph commodity territory. Each item names the gap it closes (verified
+against `src/` as of 1.19.3).
+
+### Hardening backlog — July 2026 audit (do these before new features)
+
+A three-reviewer audit (core / web / plugin+docs) surfaced concrete, verified defects.
+Highest first; file refs are in the audit PRs and `docs/INSIGHTS.md`.
+
+| # | Sev | Finding | Fix sketch |
+|---|---|---|---|
+| H1 | high | **`incrementalUpdate` diverges from full `analyze`** — never re-runs data-model/endpoint/feature detectors or `refineRoles`/`tagPackages`, and **deletes Laravel Blade/Livewire components on every `update`** (they're not in `walkSourceFiles`' current-set). The pre-commit hook slowly degrades committed models. | Re-run the cheap detectors in `incremental.ts`; exempt non-JS component ids from the current-set filter; add an equivalence test vs `analyzeRepo` |
+| H2 | high | **`update` clobbers feature flows** — incremental ends with `deriveProcessAndFlow`, resetting `flows`/`processes` to the single entry-point chain instead of re-deriving feature flows like `analyze` does. | Mirror `index.ts`'s `deriveFeatureFlows` override in `incremental.ts` |
+| H3 | high | **Web: permanently-cached mutable snapshots** — `modelAtCommit` uses `unstable_cache(revalidate: false)` but pushes upsert the same `commit` row (`"working-tree"` default) → the web serves stale models forever; `null` misses are cached too. | Bypass cache for `working-tree` / tag + `revalidateTag` on push |
+| H4 | high | **Web: unvalidated push body can 500 a project page** — `/api/push` stores any JSON unchecked; a model missing top-level arrays crashes `trust()`/`page.tsx` server-side until a good push replaces it. | Validate minimal shape in the route (400) + default missing arrays on read + size cap |
+| H5 | med | **Non-atomic `model.json`/`AGENTS.md` writes** — plugin-era = multiple concurrent MCP servers; a reader mid-write gets truncated JSON (server dies at startup). | `write tmp + renameSync` in `reanalyze()`/`persistModel()` |
+| H6 | med | **`curate` merge destroys prior curation** — shallow domain spread + undefined fields drop a previously-curated `name` when only `description` is sent. | Per-slug merge of defined fields only; test the MCP write tools |
+| H7 | med | **Usage backlog re-sends last 1000 events on every server spawn** (no watermark, log never rotated) and misreports the count. | Persist a synced high-water mark; rotate the log; report actual pending |
+| H8 | med | **No timeout on cloud fetches** — a stalled connection hangs MCP tool calls (`sync`, `suggest_links`) forever. | `AbortSignal.timeout(15s)` in `cloud/api.ts:send()` |
+| H9 | med | **`loadAliases` misses `extends` + workspace-member tsconfigs** — monorepos with `tsconfig.base.json` paths get zero aliases (the 1.19.1 fix doesn't reach them). | `ts.parseJsonConfigFileContent` + per-member configs |
+| H10 | med | **`npm test` broken on Node 20** (the supported floor) — `--test` glob needs Node ≥21; CI runs 24 so it's invisible. | `"test": "node --test test/"` + CI on Node 20 |
+| H11 | med | **Plugin PreToolUse hook auto-approves the nudged call** — returning `permissionDecision: "allow"` bypasses the permission prompt for that Read/Grep/Glob. | Return only `additionalContext` (fixed in plugin 0.4.1) |
+| H12 | low | Cross-platform `CURATION_PATH` (win32 `\` in provenance refs breaks `isCurated` cross-OS); hardcoded MCP server version string; unhandled rejection in the startup feature-pull `.then`; recomputed components lose role refinement/package tags (subsumed by H1) | Small individual fixes |
+| H13 | low | **Web polish batch** — `flowGraph` drops steps whose target isn't a participant; simpleicons black logos invisible on dark; feature-editor sends unfiltered empty/untrimmed lines; raw DB error text rendered to users; snapshot picker discards query params; `focusNode` never cleared; `processGraph` roles have no CSS vars; docs page says "Node 24+" and `am_xxx` tokens | One batch PR |
+| H14 | low | **Plugin hygiene** — tmpdir markers never cleaned (add SessionEnd unlink); tmp-unwritable path nags every call (contradicts comment); `nosession` fallback dedupes across sessions; verify `cwd` key support in plugin `.mcp.json` and `disallowedTools` in agent frontmatter | Small batch with 0.4.x |
+
+**Test gaps to close with H1/H2:** incremental-vs-full equivalence on a non-empty base; `loadAliases`/`resolveAlias`; `UsageRecorder` failure paths; `cloud/api` with stubbed fetch; MCP write tools (`refresh`/`sync`/`curate`); two-process write safety.
 
 ### Top candidates (highest signal first)
 
 | Item | Theme | Why now | Impact · Effort |
 |---|---|---|---|
-| **Experience layer (collect → curate → present)** | the concept | The diagrams are mechanical because they project the raw import graph. Reframe: deterministic analysis **collects** everything (for agents), an incremental **AI curation** pass cleans/names/narrates it (for humans), each audience gets the form it needs. The headline direction — see **[docs/design/EXPERIENCE-LAYER.md](./design/EXPERIENCE-LAYER.md)**. | Very High · High |
 | **Architecture rule/violation engine** | trust | Cycles, layering violations, change-amplifier hot-spots — turns the model from *descriptive* to *prescriptive*. The `monorepo-dependency-map` skill already *recommends* this; nothing computes it. Model-native, defensible, not code-graph. **Must stay generative, not a straitjacket** (principles below). | High · Med |
 | **Breaking-change detection in `diff`/PR diff** | trust | Lead with **cross-repo consumer impact** ("this PR removes `GET /orders/:id`, which `billing` consumes") — nobody does contract-breakage at the architecture level. The teeth on the PR-diff USP; promote it. | High · Med |
 | **Language expansion (backend langs + mobile family)** | adoption | Two families, not five equal parsers (below). Backend-pattern langs reuse the endpoint/data-model detectors; mobile needs new projections. Biggest adoption lever. | High · High |

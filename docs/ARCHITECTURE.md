@@ -1,6 +1,6 @@
 # Archmantic — Technical Architecture
 
-> Status: **Design v0.2** — derived from `docs/CONCEPT.md`, reconciled with the shipped system (through 1.17.0). Last updated: 2026-06-18.
+> Status: **Design v0.2** — derived from `docs/CONCEPT.md`, reconciled with the shipped system (through 1.19.3 / plugin 0.4). Last updated: 2026-07-02.
 > This describes *how* we build the platform. Recommendations are decisive; anything marked **(confirm)** is a judgment call worth a second look before we commit code.
 >
 > Two layers above the original reverse-engineered structure have since shipped and are documented here: the **Spec layer** (§2.5, human-authored intent — see `docs/design/SPEC-LAYER.md`) and the **Skills layer** (§8.5, model-resolved playbooks — see `docs/design/SKILLS.md`). The model-first / provenance-on-every-derived-element invariant holds for all of it.
@@ -38,7 +38,7 @@ The IR is the product. Diagrams and MCP are interfaces onto it.
 
 ## 2. The Architecture Model (IR)
 
-A versioned graph (`src/ir/types.ts`, `SCHEMA_VERSION 0.1.0`). The full set of element types as shipped — every one extends `ElementBase` (id, name, description?, **provenance[]**, **confidence**, package?):
+A versioned graph (`src/ir/types.ts`, `SCHEMA_VERSION 0.2.0`). The full set of element types as shipped — every one extends `ElementBase` (id, name, description?, **provenance[]**, **confidence**, package?):
 
 | Element | Examples | Key fields beyond the base |
 |---|---|---|
@@ -85,7 +85,7 @@ The pipeline produces/updates the IR. Each tier is more expensive (in tokens/tim
 | Tier | Source | Cost | What it extracts | Tech |
 |---|---|---|---|---|
 | **0** | Repo structure & manifests | ~free | systems, top-level components, dependency edges, entry points | file walk, parse `package.json`/`pyproject`/`go.mod`/etc., lockfiles |
-| **1** | Static code analysis | cheap, deterministic | imports/exports graph, routes, call edges, public APIs | **tree-sitter** (multi-language), language servers where available |
+| **1** | Static code analysis | cheap, deterministic | imports/exports graph, routes, call edges, public APIs | **TypeScript compiler API** (TS/JS/Vue) + pattern-based PHP/Laravel detectors, as shipped; tree-sitter (multi-language) is the planned expansion path |
 | **2** | LLM semantic pass | metered tokens | responsibilities, capability descriptions, flows/sequences, naming intent | **Claude** — Haiku for summarization, Opus 4.8 for synthesis (see §7) |
 | **3** | Runtime / observability *(later)* | infra-dependent | *real* sequences & frequencies, confirms Tier 1–2 guesses | OpenTelemetry traces, logs |
 
@@ -208,7 +208,7 @@ These extend the pipeline (§3) and the IR (§2); each keeps the model-first/pro
 | **Architecture diff + history** | Reconstructs the IR at past commits (non-destructive git-archive) and diffs consecutive versions → a per-commit record of how the architecture changed | `src/diff/` (`model-diff`, `history`, `snapshot`) |
 | **Multi-repo system view** | Aggregates per-repo models (each declares `system` + `consumes` in `.archmantic/config.json`) into one cross-service context diagram + cross-repo link inference | `src/system.ts`, `suggest_links` |
 | **Usage metering** | Records each read tool call's returned/saved tokens to a durable `.archmantic/usage.jsonl` outbox, best-effort flushed to the cloud `/usage` dashboard (idempotent by event id; cloud failures never surface to the agent) | `src/mcp/usage.ts` |
-| **Agent hand-off / autonomous build** | Runs the build spec (§9) through Claude Opus 4.8 (BYOK) to produce a concrete, file-level implementation plan a coding agent executes — read-only, it plans, it does not edit the repo | `src/agent.ts` |
+| **Agent hand-off / autonomous build** | Runs the build spec (§9) through Claude Opus 4.8 (BYOK) to produce a concrete, file-level implementation plan; the default is read-only planning, while `handoff --apply` runs an autonomous loop that edits the repo **and self-verifies** (build + tests until green) | `src/agent.ts` |
 
 ---
 

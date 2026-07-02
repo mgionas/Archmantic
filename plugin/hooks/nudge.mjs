@@ -46,11 +46,13 @@ try {
     "list_components / whats_related / search_capabilities / get_data_model / get_api_surface for specifics. " +
     "They return grounded (file:line) answers in far fewer tokens. Reading a specific file to confirm a detail is still fine.";
 
+  // No permissionDecision: the nudge must not auto-approve the tool call it fires
+  // on (that would bypass the permission prompt) — inject guidance only and let the
+  // normal permission flow decide.
   process.stdout.write(
     JSON.stringify({
       hookSpecificOutput: {
         hookEventName: "PreToolUse",
-        permissionDecision: "allow",
         additionalContext,
       },
     }),

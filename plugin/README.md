@@ -61,7 +61,8 @@ Reads-only variant (keeps the write tools `refresh`/`sync`/`sync_features`/`cura
   "mcp__plugin_archmantic_archmantic__get_feature", "mcp__plugin_archmantic_archmantic__list_features",
   "mcp__plugin_archmantic_archmantic__get_process", "mcp__plugin_archmantic_archmantic__get_sequence",
   "mcp__plugin_archmantic_archmantic__get_project", "mcp__plugin_archmantic_archmantic__suggest_skills",
-  "mcp__plugin_archmantic_archmantic__list_skills", "mcp__plugin_archmantic_archmantic__get_skill"
+  "mcp__plugin_archmantic_archmantic__list_skills", "mcp__plugin_archmantic_archmantic__get_skill",
+  "mcp__plugin_archmantic_archmantic__suggest_links"
 ] } }
 ```
 

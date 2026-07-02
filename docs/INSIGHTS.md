@@ -175,7 +175,7 @@
   high-leverage fix in `src/project/knowledge.ts` (+ the hook snippet).
 
 ### INS-015 · Document the MCP allow-list — users hit per-tool permission friction
-- **category:** dx · **audience:** humans · **status:** open
+- **category:** dx · **audience:** humans · **status:** shipped (documented in README + plugin README, incl. the `mcp__plugin_archmantic_archmantic__*` plugin namespace + reads-only variant)
 - **insight:** When you wire archmantic as an MCP server in a host (Claude Code, etc.), the
   host prompts "Allow tool use?" on *every* tool call. The fix is one permission rule —
   `mcp__archmantic__*` in the host's `.claude/settings.json` `permissions.allow` (the bare
@@ -230,7 +230,7 @@
   curated backlog; agents get a memory of "what's known-broken / known-planned."
 
 ### INS-010 · Diagrams projected the raw import graph (the root cause)
-- **category:** architecture · **audience:** both · **status:** shipping (Phase A)
+- **category:** architecture · **audience:** both · **status:** shipped (1.18.0 experience layer)
 - **insight:** Context/Components/Sequence were 1:1 projections of `tier1` import edges —
   every bare import (incl. `lucide-react`, `node:fs`) became an "external system," and
   "sequences" were import edges relabeled "calls."
@@ -238,7 +238,7 @@
   onboarding tool. The ERD is good precisely because it projects *meaning*, not imports.
 
 ### INS-009 · One model, two audiences, an AI layer between (the concept)
-- **category:** design · **audience:** both · **status:** planned
+- **category:** design · **audience:** both · **status:** shipped (1.18.0 — collect/curate/present)
 - **insight:** Agents want *semantic structure* (the grounded graph, provenance, slices);
   humans want *context + a story*. So: **collect** deterministically (cheap, for agents),
   **curate** with AI (clean/name/narrate, for humans), **present** per audience.
@@ -255,7 +255,7 @@
   → 2 real systems** (Neon + Anthropic). One classifier fixed ~6 of the founder's complaints.
 
 ### INS-007 · Agent-facing MCP surface needs the *curated* model, not just the raw graph
-- **category:** agent-dx · **audience:** agents · **status:** open
+- **category:** agent-dx · **audience:** agents · **status:** shipped (`get_architecture_map` + classified `get_context`) / open (track *which* skills/agents are served)
 - **insight:** Add `get_architecture_map` (curated L1/L2 containers + edges) and make
   `get_context` report classified externals + domains, not a flat import dump. Track *which*
   skills/agents `suggest_skills`/`get_skill` serve (subject on the usage event).
@@ -271,7 +271,7 @@
   renderer is fine; what feeds it is wrong (`flows.ts` walks import edges).
 
 ### INS-005 · Semantic grouping (domains/layers) is the missing middle level
-- **category:** architecture · **audience:** both · **status:** planned
+- **category:** architecture · **audience:** both · **status:** shipped (1.18.0 — `Group`/`groupId`, Architecture Map)
 - **insight:** There's nothing between "whole repo" and "every file." Add an IR `Group`
   (layer/domain/area/package) derived from folder+role+package, curated/named by AI.
 - **why:** Enables the C4 L1→L4 zoom (System → Map → Components → Code) — the onboarding
